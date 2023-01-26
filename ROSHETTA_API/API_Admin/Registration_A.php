@@ -2,13 +2,17 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Only
+session_start();
+session_regenerate_id();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
     //I Expect To Receive This Data
 
     if (
         isset($_POST['first_name'])             && !empty($_POST['first_name'])
         && isset($_POST['last_name'])           && !empty($_POST['last_name'])
+        && isset($_POST['email'])               && !empty($_POST['email'])
         && isset($_POST['gender'])              && !empty($_POST['gender'])
         && isset($_POST['ssd'])                 && !empty($_POST['ssd'])
         && isset($_POST['phone_number'])        && !empty($_POST['phone_number'])
@@ -21,68 +25,75 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
             require_once("../API_C_A/Connection.php"); //Connect To DataBases
 
-            $ssd = filter_var($_POST['ssd'], FILTER_SANITIZE_NUMBER_INT); //Filter Data 'INT'
+            $ssd    = filter_var($_POST['ssd'], FILTER_SANITIZE_NUMBER_INT); //Filter Data 'INT'
+            $email  = filter_var($_POST['email'] , FILTER_SANITIZE_EMAIL); //Filter Data 'email'
+            $phone_number = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT); //Filter Data 'Int'
 
-            if (filter_var($ssd, FILTER_VALIDATE_INT) !== FALSE) {
+            if (filter_var($ssd, FILTER_VALIDATE_INT) !== FALSE && strlen($ssd) == 14 &&  filter_var($email , FILTER_VALIDATE_EMAIL) !== FALSE) {
 
-                //Verify That It Has Not Been Present Before
+                if (strlen($phone_number) == 11) {
 
-                $checkssd = $database->prepare("SELECT * FROM admin WHERE ssd =:ssd");
-                $checkssd->bindparam("ssd", $ssd);
-                $checkssd->execute();
+                    //Verify That It Has Not Been Present Before
 
-                if ($checkssd->rowCount() > 0) {
+                    $checkssd = $database->prepare("SELECT * FROM admin WHERE ssd =:ssd OR email = :email");
+                    $checkssd->bindparam("ssd", $ssd);
+                    $checkssd->bindparam("email", $email);
+                    $checkssd->execute();
 
-                    print_r(json_encode(["Error" => "موجود من قبل"]));
+                    if ($checkssd->rowCount() > 0) {
 
-                } else {
-
-                    $phone_number = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT); //Filter Data 'Int'
-
-                    $check_phone = $database->prepare("SELECT * FROM admin WHERE phone_number = :phone_number");
-                    $check_phone->bindparam("phone_number", $phone_number);
-                    $check_phone->execute();
-
-                    if ($check_phone->rowCount() > 0) {
-
-                        print_r(json_encode(["Error" => "رقم الهاتف موجود من قبل"]));
+                        print_r(json_encode(["Error" => "الرقم القومى او الايميل موجود من قبل"]));
 
                     } else {
 
-                        //Filter Data 'STRING' && Hash Password
+                        $check_phone = $database->prepare("SELECT * FROM admin WHERE phone_number = :phone_number");
+                        $check_phone->bindparam("phone_number", $phone_number);
+                        $check_phone->execute();
 
-                        $first_name     = filter_var($_POST['first_name'], FILTER_SANITIZE_STRING);
-                        $last_name      = filter_var($_POST['last_name'], FILTER_SANITIZE_STRING);
-                        $admin_name     = $first_name . ' ' . $last_name;
-                        $gender         = filter_var($_POST['gender'], FILTER_SANITIZE_STRING);
-                        $password_hash  = password_hash($_POST['password'], PASSWORD_DEFAULT);
-                        $birth_date     = $_POST['birth_date'];
+                        if ($check_phone->rowCount() > 0) {
 
-                        //Add To Pharmcists Table
-
-                        $addData = $database->prepare("INSERT INTO admin(admin_name,gender,ssd,phone_number,birth_date,password,role)
-                                                                    VALUES(:admin_name,:gender,:ssd,:phone_number,:birth_date,:password,'ADMIN')");
-
-                        $addData->bindparam("admin_name", $admin_name);
-                        $addData->bindparam("gender", $gender);
-                        $addData->bindparam("ssd", $ssd);
-                        $addData->bindparam("phone_number", $phone_number);
-                        $addData->bindparam("birth_date", $birth_date);
-                        $addData->bindparam("password", $password_hash);
-
-                        if ($addData->execute()) {
-
-                            print_r(json_encode(["Message" => "تم تسجيل مدير بنجاح"]));
+                            print_r(json_encode(["Error" => "رقم الهاتف موجود من قبل"]));
 
                         } else {
-                            print_r(json_encode(["Error" => "فشل تسجيل المدير"]));
 
+                            //Filter Data 'STRING' && Hash Password
+
+                            $first_name     = filter_var($_POST['first_name'], FILTER_SANITIZE_STRING);
+                            $last_name      = filter_var($_POST['last_name'], FILTER_SANITIZE_STRING);
+                            $admin_name     = $first_name . ' ' . $last_name;
+                            $gender         = filter_var($_POST['gender'], FILTER_SANITIZE_STRING);
+                            $password_hash  = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                            $birth_date     = $_POST['birth_date'];
+
+                            //Add To Admin Table
+
+                            $addData = $database->prepare("INSERT INTO admin(admin_name,gender,ssd,email,phone_number,birth_date,password,role)
+                                                                        VALUES(:admin_name,:gender,:ssd,:email,:phone_number,:birth_date,:password,'ADMIN')");
+
+                            $addData->bindparam("admin_name", $admin_name);
+                            $addData->bindparam("gender", $gender);
+                            $addData->bindparam("ssd", $ssd);
+                            $addData->bindparam("email", $email);
+                            $addData->bindparam("phone_number", $phone_number);
+                            $addData->bindparam("birth_date", $birth_date);
+                            $addData->bindparam("password", $password_hash);
+                            $addData->execute();
+
+                            if ($addData->rowCount() > 0 ) {
+
+                                print_r(json_encode(["Message" => "تم تسجيل مدير بنجاح"]));
+
+                            } else {
+                                print_r(json_encode(["Error" => "فشل تسجيل المدير"]));
+
+                            }
                         }
                     }
+                } else {
+                    print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
                 }
-
             } else {
-                print_r(json_encode(["Error" => "يجب ادخال بيانات من نوع الارقام"]));
+                print_r(json_encode(["Error" => "الرقم القومى او الايميل غير صالح"]));
             }
         } else {
             print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));

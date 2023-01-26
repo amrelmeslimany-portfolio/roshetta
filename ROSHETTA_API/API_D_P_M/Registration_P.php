@@ -1,13 +1,13 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Only
+session_start();
+session_regenerate_id();
 
-    session_start();
-    session_regenerate_id();
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
     //I Expect To Receive This Data
 
-    if (isset($_POST['rediscovery_date']) && !empty($_POST['rediscovery_date'])) {
+    if (isset($_POST['rediscovery_date']) && ! empty($_POST['rediscovery_date'])) {
 
         if (isset($_SESSION['disease']) && isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
 
@@ -65,6 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
                                             $prescript = $get_Prescript->fetchObject();
 
                                             $_SESSION['prescript'] = $prescript;
+                                            
                                             print_r(json_encode(["Message" => "تم وضع الروشتة بنجاح جارى التجهيز لاضافة الادوية"]));
 
                                         } else {

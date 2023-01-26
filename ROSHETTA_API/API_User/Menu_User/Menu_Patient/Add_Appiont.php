@@ -2,10 +2,10 @@
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Only
+session_start();
+session_regenerate_id();
 
-    session_start();
-    session_regenerate_id();
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
     if (isset($_SESSION['patient'])) {
 
@@ -30,8 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
             $add_appoint->bindparam("appoint_date", $appoint_date);
             $add_appoint->bindparam("patient_id", $patient_id);
             $add_appoint->bindparam("clinic_id", $clinic_id);
+            $add_appoint->execute();
 
-            if ($add_appoint->execute()) {
+            if ($add_appoint->rowCount() > 0 ) {
 
                 print_r(json_encode(["Message" => "تم اضافة الحجز بنجاح"]));
 

@@ -1,9 +1,10 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Only
+session_start();
+session_regenerate_id();
 
-    session_start();
-    session_regenerate_id();
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
+
 
     if (isset($_SESSION['doctor'])) {
 
@@ -60,63 +61,66 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
                             //Check Phone Number
 
-                            $check_number_phone = $database->prepare("SELECT * FROM clinic WHERE  phone_number = :phone_number");
-                            $check_number_phone->bindparam("phone_number", $phone_number);
-                            $check_number_phone->execute();
+                            if (strlen($phone_number) == 11 ) {
 
-                            if ($check_number_phone->rowCount() > 0) {
+                                $check_number_phone = $database->prepare("SELECT * FROM clinic WHERE  phone_number = :phone_number");
+                                $check_number_phone->bindparam("phone_number", $phone_number);
+                                $check_number_phone->execute();
 
-                                print_r(json_encode(["Error" => "رقم الهاتف مرتبط بعيادة اخرى"]));
-                                die("");
+                                if ($check_number_phone->rowCount() > 0) {
 
-                            } else {
+                                    print_r(json_encode(["Error" => "رقم الهاتف مرتبط بعيادة اخرى"]));
+                                    die("");
 
-                                //Add To clinic Table
+                                } else {
 
-                                $addData = $database->prepare("INSERT INTO clinic(clinic_name,owner,phone_number,start_working,end_working,address,governorate,doctor_id,clinic_specialist,clinic_price,ser_id)
-                                                                                VALUES(:clinic_name,:owner,:phone_number,:start_working,:end_working,:address,:governorate,:doctor_id,:clinic_specialist,:clinic_price,:ser_id)");
+                                    //Add To clinic Table
 
-                                $addData->bindparam("clinic_name", $clinic_name);
-                                $addData->bindparam("phone_number", $phone_number);
-                                $addData->bindparam("address", $address);
-                                $addData->bindparam("governorate", $governorate);
-                                $addData->bindparam("clinic_specialist", $clinic_specialist);
-                                $addData->bindparam("clinic_price", $clinic_price);
-                                $addData->bindparam("start_working", $start_working);
-                                $addData->bindparam("end_working", $end_working);
-                                $addData->bindparam("doctor_id", $doc_id);
-                                $addData->bindparam("owner", $owner);
-                                $addData->bindparam("ser_id", $ser_id);
+                                    $addData = $database->prepare("INSERT INTO clinic(clinic_name,owner,phone_number,start_working,end_working,address,governorate,doctor_id,clinic_specialist,clinic_price,ser_id)
+                                                                                    VALUES(:clinic_name,:owner,:phone_number,:start_working,:end_working,:address,:governorate,:doctor_id,:clinic_specialist,:clinic_price,:ser_id)");
 
-                                if ($addData->execute()) {
+                                    $addData->bindparam("clinic_name", $clinic_name);
+                                    $addData->bindparam("phone_number", $phone_number);
+                                    $addData->bindparam("address", $address);
+                                    $addData->bindparam("governorate", $governorate);
+                                    $addData->bindparam("clinic_specialist", $clinic_specialist);
+                                    $addData->bindparam("clinic_price", $clinic_price);
+                                    $addData->bindparam("start_working", $start_working);
+                                    $addData->bindparam("end_working", $end_working);
+                                    $addData->bindparam("doctor_id", $doc_id);
+                                    $addData->bindparam("owner", $owner);
+                                    $addData->bindparam("ser_id", $ser_id);
 
-                                    if($addData->rowCount() > 0 ) {
+                                    if ($addData->execute()) {
 
-                                        print_r(json_encode(["Message" => "تم تسجيل العيادة بنجاح"]));
+                                        if($addData->rowCount() > 0 ) {
 
-                                        header("refresh:2;");
+                                            print_r(json_encode(["Message" => "تم تسجيل العيادة بنجاح"]));
 
+                                            header("refresh:2;");
+
+                                        } else {
+                                            print_r(json_encode(["Error" => "فشل تسجيل العيادة"]));
+                                        }
                                     } else {
                                         print_r(json_encode(["Error" => "فشل تسجيل العيادة"]));
                                     }
-                                } else {
-                                    print_r(json_encode(["Error" => "فشل تسجيل العيادة"]));
                                 }
+                            } else {
+                                print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
                             }
+                            
                         } else {
                             print_r(json_encode(["Error" => "يجب عليك اكمال جميع البيانات"]));
                         }
                     } else {
                         print_r(json_encode(["Error" => "لايمكنك تسجيل اكثر من '2' عيادة"]));
-                        die("");
                     }
                 } else {
                     print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل الادمن"]));
-                    die("");
                 }
             } else {
                 print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
-                die("");
             }
         } else {
             print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));

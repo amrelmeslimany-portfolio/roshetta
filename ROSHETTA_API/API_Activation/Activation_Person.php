@@ -2,10 +2,10 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Only
+session_start();
+session_regenerate_id();
 
-    session_start();
-    session_regenerate_id();
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
     if (isset($_SESSION['pharmacist']) || isset($_SESSION['doctor'])) { //If Find Pharmacist Or Doctor Session  
 

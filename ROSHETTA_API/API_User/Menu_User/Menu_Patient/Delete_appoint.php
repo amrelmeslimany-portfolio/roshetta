@@ -5,41 +5,46 @@ require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 session_start();
 session_regenerate_id();
 
-if (isset($_SESSION['patient'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-    if (isset($_POST['appointment_id']) && !empty($_POST['appointment_id'])) {
+    if (isset($_SESSION['patient'])) {
 
-        require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
+        if (isset($_POST['appointment_id']) && !empty($_POST['appointment_id'])) {
 
-        $appointment_id = filter_var($_POST['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
-        $patient_id     = $_SESSION['patient']->id;
+            require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
-        // Delete From Appointment Table
+            $appointment_id = filter_var($_POST['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
+            $patient_id = $_SESSION['patient']->id;
 
-        $delete_appoint = $database->prepare("DELETE FROM appointment WHERE appointment.id = :appointment_id AND appointment.patient_id = :patient_id ");
+            // Delete From Appointment Table
 
-        $delete_appoint->bindparam("appointment_id", $appointment_id);
-        $delete_appoint->bindparam("patient_id", $patient_id);
+            $delete_appoint = $database->prepare("DELETE FROM appointment WHERE appointment.id = :appointment_id AND appointment.patient_id = :patient_id ");
 
-        if ($delete_appoint->execute()) {
+            $delete_appoint->bindparam("appointment_id", $appointment_id);
+            $delete_appoint->bindparam("patient_id", $patient_id);
 
-            if ($delete_appoint->rowCount() > 0) {
+            if ($delete_appoint->execute()) {
 
-                print_r(json_encode(["Message" => "تم الحذف بنجاح"]));
+                if ($delete_appoint->rowCount() > 0) {
+
+                    print_r(json_encode(["Message" => "تم الحذف بنجاح"]));
+
+                } else {
+                    print_r(json_encode(["Error" => "فشل حذف الحجز"]));
+                }
 
             } else {
                 print_r(json_encode(["Error" => "فشل حذف الحجز"]));
             }
 
         } else {
-            print_r(json_encode(["Error" => "فشل حذف الحجز"]));
+            print_r(json_encode(["Error" => "لم يتم العثورالحجز"]));
         }
 
     } else {
-        print_r(json_encode(["Error" => "لم يتم العثورالحجز"]));
+        print_r(json_encode(["Error" => "لم يتم العثور على مستخدم"]));
     }
-
-} else {
-    print_r(json_encode(["Error" => "لم يتم العثور على مستخدم"]));
+} else { //If The Entry Method Is Not 'POST'
+    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
 }
 ?>

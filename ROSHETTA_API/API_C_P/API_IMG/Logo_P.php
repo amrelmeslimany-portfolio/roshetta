@@ -2,12 +2,13 @@
 
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Only
+session_start();
+session_regenerate_id();
 
-    session_start();
-    session_regenerate_id();
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-    if (isset($_SESSION['pharmacy'])) { //If Find Pharmacist Session
+
+    if (isset($_SESSION['pharmacy'])) { //If Find Pharmacy Session
 
         //I Expect To Receive This Data
 
@@ -58,20 +59,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
                             $uploadImg->bindparam("logo", $logo_img);
                             $uploadImg->bindparam("id", $id);
+                            $uploadImg->execute();
 
-                            if ($uploadImg->execute()) {
+                            if ($uploadImg->rowCount() > 0 ) {
 
                                 //Get Logo From pharmacy
 
-                                $getImg = $database->prepare("SELECT logo FROM pharmacy WHERE id = :id ");
+                                $getImg = $database->prepare("SELECT * FROM pharmacy WHERE id = :id ");
 
                                 $getImg->bindparam("id", $id);
+                                $getImg->execute();
 
-                                if ($getImg->execute()) {
+                                if ($getImg->rowCount() > 0 ) {
 
-                                    $getImg = $getImg->fetchAll(PDO::FETCH_ASSOC);
-                                    print_r(json_encode(["Message" => "تم تعديل الشعار بنجاح"]));
-                                    print_r(json_encode($getImg));
+                                    $getImg = $getImg->fetchObject();
+                                    $_SESSION['pharmacy'] = $getImg;
+                                    $data_message = array(
+
+                                        "Message" => "تم تعديل الشعار بنجاح",
+                                        "URL"     => $getImg->logo
+                                    );
+
+                                    print_r(json_encode($data_message));
 
                                 } else {
                                     print_r(json_encode("فشل جلب الملف"));
@@ -101,20 +110,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
                     $uploadImg->bindparam("logo", $logo_img);
                     $uploadImg->bindparam("id", $id);
+                    $uploadImg->execute();
 
-                    if ($uploadImg->execute()) {
+                    if ($uploadImg->rowCount() > 0 ) {
 
                         //Get Logo From pharmacy
 
-                        $getImg = $database->prepare("SELECT logo FROM pharmacy WHERE id = :id ");
+                        $getImg = $database->prepare("SELECT * FROM pharmacy WHERE id = :id ");
 
                         $getImg->bindparam("id", $id);
+                        $getImg->execute();
 
-                        if ($getImg->execute()) {
+                        if ($getImg->rowCount() > 0 ) {
 
-                            $getImg = $getImg->fetchAll(PDO::FETCH_ASSOC);
-                            print_r(json_encode(["Message" => "تم تعديل الشعار بنجاح"]));
-                            print_r(json_encode($getImg));
+                            $getImg = $getImg->fetchObject();
+                            $_SESSION['pharmacy'] = $getImg;
+                            $data_message = array(
+
+                                "Message" => "تم تعديل الشعار بنجاح",
+                                "URL"     => $getImg->logo
+                            );
+
+                            print_r(json_encode($data_message));
 
                         } else {
                             print_r(json_encode(["Error" => "فشل جلب الملف"]));

@@ -28,45 +28,112 @@ if (isset($_SESSION['doctor']) || isset($_SESSION['assistant'])) {
             $clinic_price   = filter_var($_POST['clinic_price'], FILTER_SANITIZE_NUMBER_INT);
             $governorate    = filter_var($_POST['governorate'], FILTER_SANITIZE_STRING);
 
+            if (strlen($phone_number) == 11 ) {
 
-            //UpDate Clinic Table
+                $check_number_phone = $database->prepare("SELECT * FROM clinic WHERE  phone_number = :phone_number");
+                $check_number_phone->bindparam("phone_number", $phone_number);
+                $check_number_phone->execute();
 
-            $Update = $database->prepare("UPDATE clinic SET phone_number = :phone_number , address = :address , clinic_price = :clinic_price , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
+                if ($check_number_phone->rowCount() > 0) {
 
-            $Update->bindparam("id", $id);
-            $Update->bindparam("phone_number", $phone_number);
-            $Update->bindparam("address", $address);
-            $Update->bindparam("clinic_price", $clinic_price);
-            $Update->bindparam("governorate", $governorate);
-            $Update->bindparam("start_working", $start_working);
-            $Update->bindparam("end_working", $end_working);
+                    $check_number_phone_id = $database->prepare("SELECT * FROM clinic WHERE  phone_number = :phone_number AND id = :id");
+                    $check_number_phone_id->bindparam("phone_number", $phone_number);
+                    $check_number_phone_id->bindparam("id", $id);
+                    $check_number_phone_id->execute();
 
-            if ($Update->execute()) {
+                    if ($check_number_phone_id->rowCount() > 0) {
 
-                //Get New Data From Clinic Table
+                         //UpDate Clinic Table
 
-                $get_data = $database->prepare("SELECT * FROM clinic WHERE id = :id ");
+                        $Update = $database->prepare("UPDATE clinic SET phone_number = :phone_number , address = :address , clinic_price = :clinic_price , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
 
-                $get_data->bindparam("id", $id);
+                        $Update->bindparam("id", $id);
+                        $Update->bindparam("phone_number", $phone_number);
+                        $Update->bindparam("address", $address);
+                        $Update->bindparam("clinic_price", $clinic_price);
+                        $Update->bindparam("governorate", $governorate);
+                        $Update->bindparam("start_working", $start_working);
+                        $Update->bindparam("end_working", $end_working);
+                        $Update->execute();
 
-                if ($get_data->execute()) {
+                        if ($Update->rowCount() > 0 ) {
 
-                    $clinic_up = $get_data->fetchObject();
+                            //Get New Data From Clinic Table
 
-                    $_SESSION['clinic'] = $clinic_up; //UpDate SESSION Clinic
+                            $get_data = $database->prepare("SELECT * FROM clinic WHERE id = :id ");
 
-                    print_r(json_encode(["Message" => "تم تعديل البيانات بنجاح"]));
+                            $get_data->bindparam("id", $id);
+                            $get_data->execute();
 
-                    header("refresh:2;");
+                            if ($get_data->rowCount() > 0 ) {
 
+                                $clinic_up = $get_data->fetchObject();
+
+                                $_SESSION['clinic'] = $clinic_up; //UpDate SESSION Clinic
+
+                                print_r(json_encode(["Message" => "تم تعديل البيانات بنجاح"]));
+
+                                header("refresh:2;");
+
+                            } else {
+                                print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                            }
+                        } else {
+                            print_r(json_encode(["Error" => "فشل تعديل البيانات"]));
+                        }
+
+                    } else {
+                        print_r(json_encode(["Error" => "رقم الهاتف مرتبط بعيادة اخرى"]));
+                        die("");
+                    }
 
                 } else {
-                    print_r(json_encode(["Error" => "فشل جلب البيانات"]));
-                }
-            } else {
-                print_r(json_encode(["Error" => "فشل تعديل البيانات"]));
-            }
 
+                    //UpDate Clinic Table
+
+                    $Update = $database->prepare("UPDATE clinic SET phone_number = :phone_number , address = :address , clinic_price = :clinic_price , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
+
+                    $Update->bindparam("id", $id);
+                    $Update->bindparam("phone_number", $phone_number);
+                    $Update->bindparam("address", $address);
+                    $Update->bindparam("clinic_price", $clinic_price);
+                    $Update->bindparam("governorate", $governorate);
+                    $Update->bindparam("start_working", $start_working);
+                    $Update->bindparam("end_working", $end_working);
+                    $Update->execute();
+
+                    if ($Update->rowCount() > 0 ) {
+
+                        //Get New Data From Clinic Table
+
+                        $get_data = $database->prepare("SELECT * FROM clinic WHERE id = :id ");
+
+                        $get_data->bindparam("id", $id);
+                        $get_data->execute();
+
+                        if ($get_data->rowCount() > 0 ) {
+
+                            $clinic_up = $get_data->fetchObject();
+
+                            $_SESSION['clinic'] = $clinic_up; //UpDate SESSION Clinic
+
+                            print_r(json_encode(["Message" => "تم تعديل البيانات بنجاح"]));
+
+                            header("refresh:2;");
+
+
+                        } else {
+                            print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                        }
+                    } else {
+                        print_r(json_encode(["Error" => "فشل تعديل البيانات"]));
+                    }
+                }
+
+            } else {
+                print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
+            }
+            
         } else {
 
             //Print Clinic Data From Session
@@ -100,7 +167,6 @@ if (isset($_SESSION['doctor']) || isset($_SESSION['assistant'])) {
 
             print_r(json_encode($clinic_data));
         }
-
 
     } else {
         print_r(json_encode(["Error" => "فشل العثور على عيادة"]));

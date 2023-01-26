@@ -27,41 +27,109 @@ if (isset($_SESSION['pharmacy']) || isset($_SESSION['pharmacist'])) {
             $governorate    = filter_var($_POST['governorate'], FILTER_SANITIZE_STRING);
 
 
-            //UpDate Pharmacy Table
+            if (strlen($phone_number) == 11 ) {
 
-            $Update = $database->prepare("UPDATE pharmacy SET phone_number = :phone_number , address = :address , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
+                $check_number_phone = $database->prepare("SELECT * FROM pharmacy WHERE  phone_number = :phone_number");
+                $check_number_phone->bindparam("phone_number", $phone_number);
+                $check_number_phone->execute();
 
-            $Update->bindparam("id", $id);
-            $Update->bindparam("phone_number", $phone_number);
-            $Update->bindparam("address", $address);
-            $Update->bindparam("governorate", $governorate);
-            $Update->bindparam("start_working", $start_working);
-            $Update->bindparam("end_working", $end_working);
+                if ($check_number_phone->rowCount() > 0) {
 
-            if ($Update->execute()) {
+                    $check_number_phone_id = $database->prepare("SELECT * FROM pharmacy WHERE  phone_number = :phone_number AND id = :id");
+                    $check_number_phone_id->bindparam("phone_number", $phone_number);
+                    $check_number_phone_id->bindparam("id", $id);
+                    $check_number_phone_id->execute();
 
-                //Get New Data From Pharmacy Table
+                    if ($check_number_phone_id->rowCount() > 0) {
 
-                $get_data = $database->prepare("SELECT * FROM pharmacy WHERE id = :id ");
+                        //UpDate Pharmacy Table
 
-                $get_data->bindparam("id", $id);
+                        $Update = $database->prepare("UPDATE pharmacy SET phone_number = :phone_number , address = :address , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
 
-                if ($get_data->execute()) {
+                        $Update->bindparam("id", $id);
+                        $Update->bindparam("phone_number", $phone_number);
+                        $Update->bindparam("address", $address);
+                        $Update->bindparam("governorate", $governorate);
+                        $Update->bindparam("start_working", $start_working);
+                        $Update->bindparam("end_working", $end_working);
+                        $Update->execute();
 
-                    $pharmacy_up = $get_data->fetchObject();
+                        if ($Update->rowCount() > 0 ) {
 
-                    $_SESSION['pharmacy'] = $pharmacy_up; //UpDate SESSION Pharmacy
+                            //Get New Data From Pharmacy Table
 
-                    print_r(json_encode(["Message" => "تم تعديل البيانات بنجاح"]));
+                            $get_data = $database->prepare("SELECT * FROM pharmacy WHERE id = :id ");
 
-                    header("refresh:2;");
+                            $get_data->bindparam("id", $id);
+                            $get_data->execute();
 
+                            if ($get_data->rowCount() > 0 ) {
+
+                                $pharmacy_up = $get_data->fetchObject();
+
+                                $_SESSION['pharmacy'] = $pharmacy_up; //UpDate SESSION Pharmacy
+
+                                print_r(json_encode(["Message" => "تم تعديل البيانات بنجاح"]));
+
+                                header("refresh:2;");
+
+
+                            } else {
+                                print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                            }
+                        } else {
+                            print_r(json_encode(["Error" => "فشل تعديل البيانات"]));
+                        }
+
+                    } else {
+                        print_r(json_encode(["Error" => "رقم الهاتف مرتبط بصيدلية اخرى"]));
+                        die("");
+                    }
 
                 } else {
-                    print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+
+                    //UpDate Pharmacy Table
+
+                    $Update = $database->prepare("UPDATE pharmacy SET phone_number = :phone_number , address = :address , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
+
+                    $Update->bindparam("id", $id);
+                    $Update->bindparam("phone_number", $phone_number);
+                    $Update->bindparam("address", $address);
+                    $Update->bindparam("governorate", $governorate);
+                    $Update->bindparam("start_working", $start_working);
+                    $Update->bindparam("end_working", $end_working);
+                    $Update->execute();
+
+                    if ($Update->rowCount() > 0 ) {
+
+                        //Get New Data From Pharmacy Table
+
+                        $get_data = $database->prepare("SELECT * FROM pharmacy WHERE id = :id ");
+
+                        $get_data->bindparam("id", $id);
+                        $get_data->execute();
+
+                        if ($get_data->rowCount() > 0 ) {
+
+                            $pharmacy_up = $get_data->fetchObject();
+
+                            $_SESSION['pharmacy'] = $pharmacy_up; //UpDate SESSION Pharmacy
+
+                            print_r(json_encode(["Message" => "تم تعديل البيانات بنجاح"]));
+
+                            header("refresh:2;");
+
+
+                        } else {
+                            print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                        }
+                    } else {
+                        print_r(json_encode(["Error" => "فشل تعديل البيانات"]));
+                    }
                 }
+                
             } else {
-                print_r(json_encode(["Error" => "فشل تعديل البيانات"]));
+                print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
             }
 
         } else {

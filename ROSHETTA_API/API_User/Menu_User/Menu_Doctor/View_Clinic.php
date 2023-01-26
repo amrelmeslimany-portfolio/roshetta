@@ -26,14 +26,16 @@ if (isset($_SESSION['doctor'])) {
 
             $get_clinic->bindparam("doctor_id", $doctor_id);
 
-            if ($get_clinic->execute()) {
+            $get_clinic->execute();
+
+            if ($get_clinic->rowCount() > 0 ) {
 
                 $get_clinic = $get_clinic->fetchAll(PDO::FETCH_ASSOC);
 
                 print_r(json_encode($get_clinic));
 
             } else {
-                print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                print_r(json_encode(["Error" => "ليس لديك عيادة"]));
             }
         } else {
             print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل الادمن"]));

@@ -2,7 +2,10 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Only
+session_start();
+session_regenerate_id();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
     //I Expect To Receive This Data
 
@@ -10,9 +13,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
         isset($_POST['email']) && !empty($_POST['email'])
         && isset($_POST['message']) && !empty($_POST['message'])
     ) {
-
-        session_start();
-        session_regenerate_id();
 
         if (
             isset($_SESSION['patient'])

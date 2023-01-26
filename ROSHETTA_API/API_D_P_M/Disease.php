@@ -1,11 +1,12 @@
 <?php
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Only
+session_start();
+session_regenerate_id();
+
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
+
 
     date_default_timezone_set('Africa/Cairo'); //Set To Cairo TimeZone
-
-    session_start();
-    session_regenerate_id();
 
     //I Expect To Receive This Data
 

@@ -1,103 +1,78 @@
 <?php
 
-    require_once("../API_C_A/Allow.php");   //Allow All Headers
+session_start();
+session_regenerate_id();
 
-    if($_SERVER['REQUEST_METHOD'] == 'POST'){   //Allow Access Via 'POST' Method Only
-    
-        //I Expect To Receive This Data
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-        if(isset($_POST['medicne_name'])       && ! empty($_POST['medicne_name'])
-            && isset($_POST['medicne_size'])   && ! empty($_POST['medicne_size'])
-            && isset($_POST['duration'])       && ! empty($_POST['duration'])
-            && isset($_POST['description'])    && ! empty($_POST['description'])){
+    //I Expect To Receive This Data
 
-                session_start();
-                session_regenerate_id();
+    if (isset($_POST['medicine']) && !empty($_POST['medicine'])) {
 
-                if(isset($_SESSION['prescript']) && isset($_SESSION['doctor'])){
+        if (isset($_SESSION['prescript']) && isset($_SESSION['doctor'])) {
 
-                    if($_SESSION['doctor']->role === "DOCTOR"){
-                        
-                        require_once("../API_C_A/Connection.php");    //Connect To DataBase
+            if ($_SESSION['doctor']->role === "DOCTOR") {
 
-                        $d_id = $_SESSION['doctor']->id;
+                $d_id = $_SESSION['doctor']->id;
 
-                        //Check Activation
+                //Check Activation
 
-                        $checkActivation = $database->prepare("SELECT * FROM activation_person WHERE  activation_person.user_id = doctor.id  AND doctor.id = :id ");
-                        $checkActivation->bindparam("id",$d_id);
-                        $checkActivation->execute();
+                $checkActivation = $database->prepare("SELECT * FROM activation_person,doctor  WHERE  activation_person.doctor_id = doctor.id  AND doctor.id = :id ");
+                    $checkActivation->bindparam("id", $d_id);
+                    $checkActivation->execute();
 
-                            if($checkActivation->rowCount() > 0){
+                if ($checkActivation->rowCount() > 0) {
 
-                                $Activation = $checkActivation->fetchObject();
+                    $Activation = $checkActivation->fetchObject();
 
-                                    if($Activation->isactive == 1 ){
+                    if ($Activation->isactive == 1) {
 
-                                        //Filter Data 'String'
+                        //Filter Data 'String'
 
-                                        $medicne_name    = filter_var($_POST['medicne_name'], FILTER_SANITIZE_STRING);
-                                        $medicne_size    = filter_var($_POST['medicne_size'], FILTER_SANITIZE_STRING);
-                                        $duration        = filter_var($_POST['duration'], FILTER_SANITIZE_STRING);
-                                        $description     = filter_var($_POST['description'], FILTER_SANITIZE_STRING);
-                                        $prescript_id    = $_SESSION['prescript']->id;
+                        $medicine_data = $_POST['medicine'];
+                        $prescript_id = $_SESSION['prescript']->id;
 
-                                        //Add To Medcine Table
+                        // Hash Data With Base64
 
-                                        $addMedicne = $database->prepare("INSERT INTO medicne(medicne_name,medicne_size,duration,description,prescript_id)
-                                                                        VALUES(:medicne_name,:medicne_size,:duration,:description,:prescript_id)");
+                        $data_hash = base64_encode(serialize($medicine_data));
 
-                                            $addMedicne->bindparam("medicne_name",$medicne_name);
-                                            $addMedicne->bindparam("medicne_size",$medicne_size);
-                                            $addMedicne->bindparam("duration",$duration);
-                                            $addMedicne->bindparam("description",$description);
-                                            $addMedicne->bindparam("prescript_id",$prescript_id);
+                        //Add To Medicine Table
 
-                                                if($addMedicne->execute()){
+                        $addMedicine = $database->prepare("INSERT INTO medicine(medicine_data,prescript_id)VALUES(:medicine_data,:prescript_id)");
 
-                                                    print_r(json_encode(["Message"=>"تم اضافة الدواء بنجاح"]));
-                                                                                                                                                                                                         
-                                                    $get_Medicne_Prescript = $database->prepare("SELECT  id,medicne_name,medicne_size,duration,description  FROM  medicne  WHERE  medicne.prescript_id = prescript.id  AND prescript.id = :id ");
+                        $addMedicine->bindparam("medicine_data", $data_hash);
+                        $addMedicine->bindparam("prescript_id", $prescript_id);
+                        $addMedicine->execute();
 
-                                                        $get_Medicne_Prescript->bindparam("id",$prescript_id);
+                        if ($addMedicine->rowCount() > 0 ) {
 
-                                                            if($get_Medicne_Prescript->execute()){
+                            print_r(json_encode(["Message" => "تم اضافة الدواء بنجاح"]));
 
-                                                                $get_Medicne_Prescript = $get_Medicne_Prescript->fetchAll(PDO::FETCH_ASSOC);
+                            unset($_SESSION['disease']);
+                            unset($_SESSION['prescript']);
 
-                                                                    print_r(json_encode($get_Medicne_Prescript));
-
-                                                            }else{
-                                                                print_r(json_encode(["Error"=>"فشل جلب الدواء"]));
-                                                                die(""); 
-                                                            }
-                                                }else{
-                                                    print_r(json_encode(["Error"=>"فشل اضافة الدواء"])); 
-                                                    die("");
-                                                }
-                                    }else{
-                                        print_r(json_encode(["Error"=>"الرجاء الانتظار حتى يتم المراجعة من قبل الادمن"]));
-                                        die("");
-                                    }
-
-                            }else{
-                                print_r(json_encode(["Error"=>"يجب تفعيل الحساب"]));
-                                die("");
-                            }
-                    }else{
-                        print_r(json_encode(["Error"=>"ليس لديك الصلاحية"]));
-                        die("");
+                        } else {
+                            print_r(json_encode(["Error" => "فشل اضافة الدواء"]));
+                        }
+                    } else {
+                        print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم المراجعة من قبل الادمن"]));
                     }
 
-                }else{
-                    print_r(json_encode(["Error"=>"فشل العثور على الشيشن"]));
-                    die("");
+                } else {
+                    print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
                 }
+            } else {
+                print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+            }
 
-        }else{
-                print_r(json_encode(["Error"=>"يجب عليك اكمال جميع البيانات"]));
-        } 
-    }else{  //If The Entry Method Is Not 'POST'
-        print_r(json_encode(["Error"=>"غير مسرح بالدخول عبر هذة الطريقة"]));
+        } else {
+            print_r(json_encode(["Error" => "فشل العثور على الشيشن"]));
+        }
+
+    } else {
+        print_r(json_encode(["Error" => "يجب عليك اكمال جميع البيانات"]));
     }
+} else { //If The Entry Method Is Not 'POST'
+    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+}
 ?>

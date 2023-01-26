@@ -2,10 +2,10 @@
 
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Only
+session_start();
+session_regenerate_id();
 
-    session_start();
-    session_regenerate_id();
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
     if (
         isset($_SESSION['patient'])
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
         if (in_array($formul, $allowed_formulas)) {
 
-            if ($img_size > 1000000) { //To Specify The Image Size  < 1M
+            if ($img_size > 1000000) { //To Specify The Image Size  > 1M
 
                 print_r(json_encode(["Error" => "الحجم كبير"]));
 
@@ -65,16 +65,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
                                 $uploadImg->bindparam("profile_img", $profile_img);
                                 $uploadImg->bindparam("id", $id);
+                                $uploadImg->execute();
 
-                                if ($uploadImg->execute()) {
+                                if ($uploadImg->rowCount() > 0 ) {
 
                                     //Get Pro_Img From Patient
 
                                     $getImg = $database->prepare("SELECT * FROM patient WHERE id = :id ");
 
                                     $getImg->bindparam("id", $id);
+                                    $getImg->execute();
 
-                                    if ($getImg->execute()) {
+                                    if ($getImg->rowCount() > 0 ) {
 
                                         $new_session = $getImg->fetchObject();
                                         $_SESSION['patient'] = $new_session;
@@ -114,16 +116,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
                         $uploadImg->bindparam("profile_img", $profile_img);
                         $uploadImg->bindparam("id", $id);
+                        $uploadImg->execute();
 
-                        if ($uploadImg->execute()) {
+                        if ($uploadImg->rowCount() > 0 ) {
 
                             //Get Pro_Img From Patient
 
                             $getImg = $database->prepare("SELECT * FROM patient WHERE id = :id ");
 
                             $getImg->bindparam("id", $id);
+                            $getImg->execute();
 
-                            if ($getImg->execute()) {
+                            if ($getImg->rowCount() > 0 ) {
 
                                 $new_session = $getImg->fetchObject();
                                 $_SESSION['patient'] = $new_session;
@@ -172,16 +176,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
                                 $uploadImg->bindparam("profile_img", $profile_img);
                                 $uploadImg->bindparam("id", $id);
+                                $uploadImg->execute();
 
-                                if ($uploadImg->execute()) {
+                                if ($uploadImg->rowCount() > 0 ) {
 
                                     //Get Pro_Img From Doctor
 
                                     $getImg = $database->prepare("SELECT * FROM doctor WHERE id = :id ");
 
                                     $getImg->bindparam("id", $id);
+                                    $getImg->execute();
 
-                                    if ($getImg->execute()) {
+                                    if ($getImg->rowCount() > 0 ) {
 
                                         $new_session = $getImg->fetchObject();
                                         $_SESSION['doctor'] = $new_session;
@@ -221,16 +227,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
                         $uploadImg->bindparam("profile_img", $profile_img);
                         $uploadImg->bindparam("id", $id);
+                        $uploadImg->execute();
 
-                        if ($uploadImg->execute()) {
+                        if ($uploadImg->rowCount() > 0 ) {
 
                             //Get Pro_Img From Doctor
 
                             $getImg = $database->prepare("SELECT * FROM doctor WHERE id = :id ");
 
                             $getImg->bindparam("id", $id);
+                            $getImg->execute();
 
-                            if ($getImg->execute()) {
+                            if ($getImg->rowCount() > 0 ) {
 
                                 $new_session = $getImg->fetchObject();
                                 $_SESSION['doctor'] = $new_session;
@@ -279,16 +287,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
                                 $uploadImg->bindparam("profile_img", $profile_img);
                                 $uploadImg->bindparam("id", $id);
+                                $uploadImg->execute();
 
-                                if ($uploadImg->execute()) {
+                                if ($uploadImg->rowCount() > 0) {
 
                                     //Get Pro_Img From Pharmacist
 
                                     $getImg = $database->prepare("SELECT * FROM pharmacist WHERE id = :id ");
 
                                     $getImg->bindparam("id", $id);
+                                    $getImg->execute();
 
-                                    if ($getImg->execute()) {
+                                    if ($getImg->rowCount() > 0 ) {
 
                                         $new_session = $getImg->fetchObject();
                                         $_SESSION['pharmacist'] = $new_session;
@@ -328,16 +338,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
                         $uploadImg->bindparam("profile_img", $profile_img);
                         $uploadImg->bindparam("id", $id);
+                        $uploadImg->execute();
 
-                        if ($uploadImg->execute()) {
+                        if ($uploadImg->rowCount() > 0 ) {
 
                             //Get Pro_Img From Pharmacist
 
                             $getImg = $database->prepare("SELECT * FROM pharmacist WHERE id = :id ");
 
                             $getImg->bindparam("id", $id);
+                            $getImg->execute();
 
-                            if ($getImg->execute()) {
+                            if ($getImg->rowCount() > 0 ) {
 
                                 $new_session = $getImg->fetchObject();
                                 $_SESSION['pharmacist'] = $new_session;
@@ -386,16 +398,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
                                 $uploadImg->bindparam("profile_img", $profile_img);
                                 $uploadImg->bindparam("id", $id);
+                                $uploadImg->execute();
 
-                                if ($uploadImg->execute()) {
+                                if ($uploadImg->rowCount() > 0 ) {
 
                                     //Get Pro_Img From Assistant
 
                                     $getImg = $database->prepare("SELECT * FROM assistant WHERE id = :id ");
 
                                     $getImg->bindparam("id", $id);
+                                    $getImg->execute();
 
-                                    if ($getImg->execute()) {
+                                    if ($getImg->rowCount() > 0 ) {
 
                                         $new_session = $getImg->fetchObject();
                                         $_SESSION['assistant'] = $new_session;
@@ -435,16 +449,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
 
                         $uploadImg->bindparam("profile_img", $profile_img);
                         $uploadImg->bindparam("id", $id);
+                        $uploadImg->execute();
 
-                        if ($uploadImg->execute()) {
+                        if ($uploadImg->rowCount() > 0 ) {
 
                             //Get Pro_Img From Assistant
 
                             $getImg = $database->prepare("SELECT * FROM assistant WHERE id = :id ");
 
                             $getImg->bindparam("id", $id);
+                            $getImg->execute();
 
-                            if ($getImg->execute()) {
+                            if ($getImg->rowCount() > 0 ) {
 
                                 $new_session = $getImg->fetchObject();
                                 $_SESSION['assistant'] = $new_session;
