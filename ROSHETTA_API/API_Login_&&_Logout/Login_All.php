@@ -1,6 +1,7 @@
 <?php
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
+require_once("../API_C_A/Connection.php"); //Connect To DataBases
 
 session_start();
 session_regenerate_id();
@@ -21,13 +22,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             if (filter_var($user_id, FILTER_VALIDATE_INT) !== FALSE  || filter_var($user_id, FILTER_VALIDATE_EMAIL) !== FALSE) {
 
-                require_once("../API_C_A/Connection.php"); //Connect To DataBases
-
                 if ($_POST['role'] === "patient") {
 
                     //Verify Patients Table
 
-                    $LoginPatient = $database->prepare("SELECT * FROM patient WHERE ssd = :ssd OR email = :email");
+                    $LoginPatient = $database->prepare("SELECT * FROM patient WHERE (ssd = :ssd OR email = :email) AND email_isactive = 1");
                     $LoginPatient->bindparam("ssd", $user_id);
                     $LoginPatient->bindparam("email", $user_id);
                     $LoginPatient->execute();
@@ -60,7 +59,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                     //Verify Doctors Table
 
-                    $LoginDoctor = $database->prepare("SELECT * FROM doctor WHERE ssd = :ssd OR email = :email");
+                    $LoginDoctor = $database->prepare("SELECT * FROM doctor WHERE (ssd = :ssd OR email = :email) AND email_isactive = 1");
                     $LoginDoctor->bindparam("ssd", $user_id);
                     $LoginDoctor->bindparam("email", $user_id);
                     $LoginDoctor->execute();
@@ -93,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                     //Verify Pharmacists Table
 
-                    $LoginPharmacist = $database->prepare("SELECT * FROM pharmacist WHERE ssd = :ssd OR email = :email");
+                    $LoginPharmacist = $database->prepare("SELECT * FROM pharmacist WHERE (ssd = :ssd OR email = :email) AND email_isactive = 1");
                     $LoginPharmacist->bindparam("ssd", $user_id);
                     $LoginPharmacist->bindparam("email", $user_id);
                     $LoginPharmacist->execute();
@@ -126,7 +125,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                     //Verify Assistants Table
 
-                    $LoginAssistant = $database->prepare("SELECT * FROM assistant WHERE ssd = :ssd OR email = :email");
+                    $LoginAssistant = $database->prepare("SELECT * FROM assistant WHERE (ssd = :ssd OR email = :email) AND email_isactive = 1");
                     $LoginAssistant->bindparam("ssd", $user_id);
                     $LoginAssistant->bindparam("email", $user_id);
                     $LoginAssistant->execute();

@@ -1,11 +1,15 @@
 <?php
 
-require_once("../API_C_A/Allow.php"); //Allow All Headers  
+require_once("../API_C_A/Allow.php"); //Allow All Headers
+require_once("../API_C_A/Connection.php"); //Connect To DataBases 
+require_once("../API_Mail/Mail.php");  //To Send Email
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
 
     if (isset($_POST['role']) && !empty($_POST['role'])) {
+
+        $URL_Verify = 'http://localhost:3000/ROSHETTA_API/API_User/Verify_User_Account.php';
 
         //******************************  Start Patients Table  ****************************//
 
@@ -30,8 +34,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 if ($_POST['password'] == $_POST['confirm_password']) {
 
-                    require_once("../API_C_A/Connection.php"); //Connect To DataBases 
-
                     $ssd            = filter_var($_POST['ssd'], FILTER_SANITIZE_NUMBER_INT); //Filter Data 'INT'
                     $email          = filter_var($_POST['email'] , FILTER_SANITIZE_EMAIL); //Filter Data 'email'
                     $phone_number   = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT); //Filter Data 'INT'
@@ -49,7 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             if ($checkssd->rowCount() > 0) {
 
-                                print_r(json_encode(["Error" => "الرقم القومى او الايميل موجود من قبل"]));
+                                print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى موجود من قبل"]));
 
                             } else {
 
@@ -64,11 +66,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 $height         = filter_var($_POST['height'], FILTER_SANITIZE_NUMBER_INT);
                                 $password_hash  = password_hash($_POST['password'], PASSWORD_DEFAULT);
                                 $birth_date     = $_POST['birth_date'];
+                                $security_code  = md5(date('h:i:s Y-m-d'));
 
                                 //Add To Table Patients
 
-                                $addData = $database->prepare("INSERT INTO patient(patient_name,ssd,email,phone_number,gender,birth_date,weight,height,governorate,password,role)
-                                                                            VALUES(:patient_name,:ssd,:email,:phone_number,:gender,:birth_date,:weight,:height,:governorate,:password,'PATIENT')");
+                                $addData = $database->prepare("INSERT INTO patient(patient_name,ssd,email,phone_number,gender,birth_date,weight,height,governorate,password,security_code,email_isactive,role)
+                                                                            VALUES(:patient_name,:ssd,:email,:phone_number,:gender,:birth_date,:weight,:height,:governorate,:password,:security_code,0,'PATIENT')");
 
                                 $addData->bindparam("patient_name", $patient_name);
                                 $addData->bindparam("ssd", $ssd);
@@ -80,12 +83,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 $addData->bindparam("height", $height);
                                 $addData->bindparam("governorate", $governorate);
                                 $addData->bindparam("password", $password_hash);
+                                $addData->bindparam("security_code", $security_code);
                                 $addData->execute();
 
                                 if ($addData->rowCount() > 0 ) {
 
-                                    print_r(json_encode(["Message" => "تم تسجيل مريض بنجاح"]));
+                                    //Send  Message To Verify Email
 
+                                    $message_url = $URL_Verify."?email=".$email."&role=PATIENT"."&code=".$security_code;
+
+                                    $mail->setFrom('roshettateam@gmail.com', 'Roshetta Team');
+                                    $mail->addAddress($email);
+                                    $mail->Subject = 'تفعيل حسابك فى روشتة';
+                                    $mail->Body    = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
+                                    <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                                    <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
+                                    <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: 0 auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
+                                    <h2 style="text-align: center;font-family: cursive;"> مرحبا بك </h2>
+                                    <h3 style="text-align: center;font-family: cursive;">'.$patient_name.'</h3>
+                                    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">سعداء لانضمامك لروشتة سنفعل ما بوسعنا لتقديم للعملاء افضل الخدمات للاستمتاع بافضل المميزات والخدمات الرجاء تفعيل الحساب الخاص بك من خلال</p></br>
+                                    <p style="margin-top: 6px;font-family: cursive;">الضغط على الزر بلاسفل</p>                                    
+                                    <a href="'.$message_url.'" style="background: #49ce91;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 20px;display: block;margin: 15px auto ;">تفعيل الحساب</a>
+                                    <p style="font-family: cursive;color: #2d2d2d;"> <b> : أو أكد عن طريق الرابط التالي</b> <a href="'.$message_url.'" style="display: block;margin-top: 10px;">'.$message_url.'</a> </p>
+                                    <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
+                                    <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
+                                    <div style="text-align: center;">
+                                    <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                                    </div></div>';
+
+                                    if ($mail->send()) {
+
+                                        print_r(json_encode(["Message" => "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى والضغط على الرابط لتفعيل الحساب"]));
+
+                                    } else {
+
+                                        print_r(json_encode(["Error" => "فشل ارسال رسالة التفعيل"]));
+                                    }
+                                    
                                 } else {
                                     print_r(json_encode(["Error" => "فشل تسجيل المريض"]));
                                 }
@@ -94,7 +128,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "الرقم القومى او الايميل غير صالح"]));
+                        print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى غير صالح"]));
                     }
                 } else {
                     print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
@@ -127,8 +161,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 if ($_POST['password'] == $_POST['confirm_password']) {
 
-                    require_once("../API_C_A/Connection.php"); //Connect To DataBases
-
                     $ssd            = filter_var($_POST['ssd'], FILTER_SANITIZE_NUMBER_INT); //Filter Data 'INT'
                     $email          = filter_var($_POST['email'] , FILTER_SANITIZE_EMAIL); //Filter Data 'email'
                     $phone_number   = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT); //Filter Data 'INT'
@@ -146,7 +178,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             if ($checkssd->rowCount() > 0) {
 
-                                print_r(json_encode(["Error" => "الرقم القومى او الايميل موجود من قبل"]));
+                                print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى موجود من قبل"]));
 
                             } else {
 
@@ -170,11 +202,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                     $specialist     = filter_var($_POST['specialist'], FILTER_SANITIZE_STRING);
                                     $password_hash  = password_hash($_POST['password'], PASSWORD_DEFAULT);
                                     $birth_date     = $_POST['birth_date'];
+                                    $security_code  = md5(date('h:i:s Y-m-d'));
 
                                     //Add To Table Doctors
 
-                                    $addData = $database->prepare("INSERT INTO doctor(doctor_name,gender,ssd,email,phone_number,birth_date,password,specialist,governorate,role)
-                                                                                    VALUES(:doctor_name,:gender,:ssd,:email,:phone_number,:birth_date,:password,:specialist,:governorate,'DOCTOR')");
+                                    $addData = $database->prepare("INSERT INTO doctor(doctor_name,gender,ssd,email,phone_number,birth_date,password,security_code,specialist,governorate,email_isactive,role)
+                                                                                    VALUES(:doctor_name,:gender,:ssd,:email,:phone_number,:birth_date,:password,:security_code,:specialist,:governorate,0,'DOCTOR')");
 
                                     $addData->bindparam("doctor_name", $doctor_name);
                                     $addData->bindparam("governorate", $governorate);
@@ -185,14 +218,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                     $addData->bindparam("birth_date", $birth_date);
                                     $addData->bindparam("specialist", $specialist);
                                     $addData->bindparam("password", $password_hash);
+                                    $addData->bindparam("security_code", $security_code);
                                     $addData->execute();
 
                                     if ($addData->rowCount() > 0 ) {
 
-                                        print_r(json_encode(["Message" => "تم تسجيل دكتور بنجاح"]));
+                                        //Send  Message To Verify Email
+
+                                        $message_url = $URL_Verify."?email=".$email."&role=DOCTOR"."&code=".$security_code;
+
+                                        $mail->setFrom('roshettateam@gmail.com', 'Roshetta Team');
+                                        $mail->addAddress($email);
+                                        $mail->Subject = 'تفعيل حسابك فى روشتة';
+                                        $mail->Body    = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
+                                        <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                                        <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
+                                        <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
+                                        <h2 style="text-align: center;font-family: cursive;"> مرحبا بك دكتور </h2>
+                                        <h3 style="text-align: center;font-family: cursive;">'.$doctor_name.'</h3>                                        <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;">سعداء لانضمامك لروشتة سنفعل ما بوسعنا لتقديم للعملاء افضل الخدمات للاستمتاع بافضل المميزات والخدمات الرجاء تفعيل الحساب الخاص بك من خلال</p></br>
+                                        <p style="margin-top: 10px;font-family: cursive;">الضغط على الزر بلاسفل</p>                                    
+                                        <a href="'.$message_url.'" style="background: #49ce91;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 20px;display: block;margin: 15px auto ;">تفعيل الحساب</a>
+                                        <p style="font-family: cursive;color: #2d2d2d;"> <b> : أو أكد عن طريق الرابط التالي</b> <a href="'.$message_url.'" style="display: block;margin-top: 10px;">'.$message_url.'</a> </p>
+                                        <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
+                                        <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
+                                        <div style="text-align: center;">
+                                        <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                                        </div></div>';
+
+                                        if ($mail->send()) {
+
+                                            print_r(json_encode(["Message" => "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى والضغط على الرابط لتفعيل الحساب"]));
+
+                                        } else {
+
+                                            print_r(json_encode(["Error" => "فشل ارسال رسالة التفعيل"]));
+                                        }
 
                                     } else {
-                                        print_r(json_encode(["Error" => "فشل تسجيل المريض"]));
+                                        print_r(json_encode(["Error" => "فشل تسجيل الدكتور"]));
                                     }
                                 }
                             }
@@ -200,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "الرقم القومى او الايميل غير صالح"]));
+                        print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى غير صالح"]));
                     }
                 } else {
                     print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
@@ -232,8 +295,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 if ($_POST['password'] == $_POST['confirm_password']) {
 
-                    require_once("../API_C_A/Connection.php"); //Connect To DataBases
-
                     $ssd            = filter_var($_POST['ssd'], FILTER_SANITIZE_NUMBER_INT); //Filter Data 'INT'
                     $email          = filter_var($_POST['email'] , FILTER_SANITIZE_EMAIL); //Filter Data 'email'
                     $phone_number   = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT); //Filter Data 'INT'
@@ -251,7 +312,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             if ($checkssd->rowCount() > 0) {
 
-                                print_r(json_encode(["Error" => "الرقم القومى او الايميل موجود من قبل"]));
+                                print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى موجود من قبل"]));
 
                             } else {
 
@@ -274,11 +335,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                     $gender             = filter_var($_POST['gender'], FILTER_SANITIZE_STRING);
                                     $password_hash      = password_hash($_POST['password'], PASSWORD_DEFAULT);
                                     $birth_date         = $_POST['birth_date'];
+                                    $security_code      = md5(date('h:i:s Y-m-d'));
 
                                     //Add To Pharmacists Table
 
-                                    $addData = $database->prepare("INSERT INTO pharmacist(pharmacist_name,gender,ssd,email,phone_number,birth_date,password,governorate,role)
-                                                                                VALUES(:pharmacist_name,:gender,:ssd,:email,:phone_number,:birth_date,:password,:governorate,'PHARMACIST')");
+                                    $addData = $database->prepare("INSERT INTO pharmacist(pharmacist_name,gender,ssd,email,phone_number,birth_date,password,security_code,governorate,email_isactive,role)
+                                                                                VALUES(:pharmacist_name,:gender,:ssd,:email,:phone_number,:birth_date,:password,:security_code,:governorate,0,'PHARMACIST')");
 
                                     $addData->bindparam("pharmacist_name", $pharmacist_name);
                                     $addData->bindparam("governorate", $governorate);
@@ -288,11 +350,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                     $addData->bindparam("phone_number", $phone_number);
                                     $addData->bindparam("birth_date", $birth_date);
                                     $addData->bindparam("password", $password_hash);
+                                    $addData->bindparam("security_code", $security_code);
                                     $addData->execute();
 
                                     if ($addData->rowCount() > 0 ) {
 
-                                        print_r(json_encode(["Message" => "تم تسجيل صيدلى بنجاح"]));
+                                        //Send  Message To Verify Email
+
+                                        $message_url = $URL_Verify."?email=".$email."&role=PHARMACIST"."&code=".$security_code;
+
+                                        $mail->setFrom('roshettateam@gmail.com', 'Roshetta Team');
+                                        $mail->addAddress($email);
+                                        $mail->Subject = 'تفعيل حسابك فى روشتة';
+                                        $mail->Body    = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
+                                        <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                                        <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
+                                        <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
+                                        <h2 style="text-align: center;font-family: cursive;"> مرحبا بك دكتور </h2>
+                                        <h3 style="text-align: center;font-family: cursive;">'.$pharmacist_name.'</h3>                                        <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;">سعداء لانضمامك لروشتة سنفعل ما بوسعنا لتقديم للعملاء افضل الخدمات للاستمتاع بافضل المميزات والخدمات الرجاء تفعيل الحساب الخاص بك من خلال</p></br>
+                                        <p style="margin-top: 10px;font-family: cursive;">الضغط على الزر بلاسفل</p>                                    
+                                        <a href="'.$message_url.'" style="background: #49ce91;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 20px;display: block;margin: 15px auto ;">تفعيل الحساب</a>
+                                        <p style="font-family: cursive;color: #2d2d2d;"> <b> : أو أكد عن طريق الرابط التالي</b> <a href="'.$message_url.'" style="display: block;margin-top: 10px;">'.$message_url.'</a> </p>
+                                        <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
+                                        <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
+                                        <div style="text-align: center;">
+                                        <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                                        </div></div>';
+
+                                        if ($mail->send()) {
+
+                                            print_r(json_encode(["Message" => "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى والضغط على الرابط لتفعيل الحساب"]));
+
+                                        } else {
+
+                                            print_r(json_encode(["Error" => "فشل ارسال رسالة التفعيل"]));
+                                        }
 
                                     } else {
                                         print_r(json_encode(["Error" => "فشل تسجيل الصيدلى"]));
@@ -304,7 +396,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "الرقم القومى او الايميل غير صالح"]));
+                        print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى غير صالح"]));
                     }
                 } else {
                     print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
@@ -337,8 +429,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 if ($_POST['password'] == $_POST['confirm_password']) {
 
-                    require_once("../API_C_A/Connection.php"); //Connect To DataBases
-
                     $ssd            = filter_var($_POST['ssd'], FILTER_SANITIZE_NUMBER_INT); //Filter Data 'INT'
                     $email          = filter_var($_POST['email'] , FILTER_SANITIZE_EMAIL); //Filter Data 'email'
                     $phone_number   = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT); //Filter Data 'INT'
@@ -356,7 +446,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             if ($checkssd->rowCount() > 0) {
 
-                                print_r(json_encode(["Error" => "الرقم القومى او الايميل موجود من قبل"]));
+                                print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى موجود من قبل"]));
 
                             } else {
 
@@ -378,11 +468,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                     $gender         = filter_var($_POST['gender'], FILTER_SANITIZE_STRING);
                                     $password_hash  = password_hash($_POST['password'], PASSWORD_DEFAULT);
                                     $birth_date     = $_POST['birth_date'];
+                                    $security_code  = md5(date('h:i:s Y-m-d'));
 
                                     //Add To Assistants Table
 
-                                    $addData = $database->prepare("INSERT INTO assistant(assistant_name,gender,ssd,email,phone_number,birth_date,password,governorate,role)
-                                                                                    VALUES(:assistant_name,:gender,:ssd,:email,:phone_number,:birth_date,:password,:governorate,'ASSISTANT')");
+                                    $addData = $database->prepare("INSERT INTO assistant(assistant_name,gender,ssd,email,phone_number,birth_date,password,security_code,governorate,email_isactive,role)
+                                                                                    VALUES(:assistant_name,:gender,:ssd,:email,:phone_number,:birth_date,:password,:security_code,:governorate,0,'ASSISTANT')");
 
                                     $addData->bindparam("assistant_name", $assistant_name);
                                     $addData->bindparam("governorate", $governorate);
@@ -392,11 +483,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                     $addData->bindparam("phone_number", $phone_number);
                                     $addData->bindparam("birth_date", $birth_date);
                                     $addData->bindparam("password", $password_hash);
+                                    $addData->bindparam("security_code", $security_code);
                                     $addData->execute();
 
                                     if ($addData->rowCount() > 0 ) {
 
-                                        print_r(json_encode(["Message" => "تم تسجيل مساعد بنجاح"]));
+                                        //Send  Message To Verify Email 
+
+                                        $message_url = $URL_Verify."?email=".$email."&role=ASSISTANT"."&code=".$security_code;
+
+                                        $mail->setFrom('roshettateam@gmail.com', 'Roshetta Team');
+                                        $mail->addAddress($email);
+                                        $mail->Subject = 'تفعيل حسابك فى روشتة';
+                                        $mail->Body    = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
+                                        <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                                        <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
+                                        <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
+                                        <h2 style="text-align: center;font-family: cursive;"> مرحبا بك </h2>
+                                        <h3 style="text-align: center;font-family: cursive;">'.$assistant_name.'</h3>                                        <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;">سعداء لانضمامك لروشتة سنفعل ما بوسعنا لتقديم للعملاء افضل الخدمات للاستمتاع بافضل المميزات والخدمات الرجاء تفعيل الحساب الخاص بك من خلال</p></br>
+                                        <p style="margin-top: 10px;font-family: cursive;">الضغط على الزر بلاسفل</p>                                    
+                                        <a href="'.$message_url.'" style="background: #49ce91;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 20px;display: block;margin: 15px auto ;">تفعيل الحساب</a>
+                                        <p style="font-family: cursive;color: #2d2d2d;"> <b> : أو أكد عن طريق الرابط التالي</b> <a href="'.$message_url.'" style="display: block;margin-top: 10px;">'.$message_url.'</a> </p>
+                                        <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
+                                        <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
+                                        <div style="text-align: center;">
+                                        <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                                        </div></div>';
+
+                                        if ($mail->send()) {
+
+                                            print_r(json_encode(["Message" => "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى والضغط على الرابط لتفعيل الحساب"]));
+
+                                        } else {
+
+                                            print_r(json_encode(["Error" => "فشل ارسال رسالة التفعيل"]));
+                                        }
 
                                     } else {
                                         print_r(json_encode(["Error" => "فشل تسجيل المساعد"]));
@@ -407,7 +528,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "الرقم القومى او الايميل غير صالح"]));
+                        print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى غير صالح"]));
                     }
                 } else {
                     print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
@@ -420,7 +541,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             //****************************** End Assistants Table  ****************************//
 
         } else { //If Didn't Find The Name Of The Role Available
-            print_r(json_encode(["Error" => "لا يوجد داتا بيز"]));
+            print_r(json_encode(["Error" => "لا يوجد قاعدة بيانات"]));
         }
     } else { //If Didn't Find The Role
         print_r(json_encode(["Error" => "لا يوجد دور"]));
