@@ -2,11 +2,18 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../API_Mail/Mail.php"); //To Send Email
+require_once("Get_Ip_User.php"); //To Get The User IP Address
+date_default_timezone_set('Africa/Cairo'); //Set To Cairo TimeZone
 
 session_start();
 session_regenerate_id();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
+
+    $ip = get_user_ip();  // Function To Get The User IP Address
+    $date_time = date('h:i:s Y-m-d');
+    $URL_Verify = 'http://localhost:3000/ROSHETTA_API/API_Forget_Password/Edit_Password_With_Email.php';
 
     //I Expect To Receive This Data
 
@@ -49,6 +56,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             $_SESSION['patient'] = $patient;
 
+                            $email          = $patient->email;
+                            $security_code  = $patient->security_code;
+                            $role           = $patient->role;
+                            $name           = $patient->patient_name;
+
+                            $message_url = $URL_Verify . "?email=" . $email . "&role=" . $role . "&code=" . $security_code;
+
+                            //Send  Message To Login
+
+                            $mail->setFrom('roshettateam@gmail.com', 'Roshetta Login');
+                            $mail->addAddress($email);
+                            $mail->Subject = 'تنبية تسجيل دخول إلى حساب روشتة';
+                            $mail->Body = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
+                            <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                            <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
+                            <img src="https://img.icons8.com/material-rounded/200/22C3E6/break.png" style="display: block;margin:  auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
+                            <h2 style="text-align: center;font-family: cursive;margin: -20px ;"> مرحبا بك </h2>
+                            <h3 style="text-align: center;font-family: cursive; margin: -20px ;">' . $name . '</h3>
+                            <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">هل قمت بتسجيل الدخول من جهاز جديد أو موقع جديد ؟</p></br>         
+                            <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">جديد(ip)لاحظنا أن حسابك تم الوصول إلية من عنوان </p></br>
+                            <p style="text-align: center;font-family: cursive; margin: -20px ;">'. $ip .' :(ip) عنوان</p>
+                            <p style="text-align: center;font-family: cursive; margin: -20px ;"> ' . $date_time .' : (بتوقيت القاهرة) التوقيت</p>
+                            <h5 style="text-align: center;font-family: cursive; margin: -20px ;">هل ليس أنت ؟ برجاء إعادة تعيين كلمة المرور على الفور</h5>
+                            <a href="' . $message_url . '" style="background: red;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 15px;display: block;margin: 15px auto ;">إعادة تعيين كلمة المرور</a>
+                            <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحضة / </b>هذة الرسالة ألية برجاء عدم الرد</p>
+                            <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
+                            <div style="text-align: center;">
+                            <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                            </div></div>';
+                            $mail->send();
+
                         } else {
                             print_r(json_encode(["Error" => "الرقم القومى او كلمة المرور غير صحيح"]));
                         }
@@ -81,6 +119,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             print_r(json_encode($data_message));
 
                             $_SESSION['doctor'] = $doctor;
+
+                            $email          = $doctor->email;
+                            $security_code  = $doctor->security_code;
+                            $role           = $doctor->role;
+                            $name           = $doctor->doctor_name;
+
+                            $message_url = $URL_Verify . "?email=" . $email . "&role=" . $role . "&code=" . $security_code;
+
+                            //Send  Message To Login
+
+                            $mail->setFrom('roshettateam@gmail.com', 'Roshetta Login');
+                            $mail->addAddress($email);
+                            $mail->Subject = 'تنبية تسجيل دخول إلى حساب روشتة';
+                            $mail->Body = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
+                            <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                            <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
+                            <img src="https://img.icons8.com/material-rounded/200/22C3E6/break.png" style="display: block;margin:  auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
+                            <h2 style="text-align: center;font-family: cursive;margin: -20px ;"> مرحبا بك دكتور </h2>
+                            <h3 style="text-align: center;font-family: cursive; margin: -20px ;">' . $name . '</h3>
+                            <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">هل قمت بتسجيل الدخول من جهاز جديد أو موقع جديد ؟</p></br>         
+                            <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">جديد(ip)لاحظنا أن حسابك تم الوصول إلية من عنوان </p></br>
+                            <p style="text-align: center;font-family: cursive; margin: -20px ;">'. $ip .' :(ip) عنوان</p>
+                            <p style="text-align: center;font-family: cursive; margin: -20px ;"> ' . $date_time .' : (بتوقيت القاهرة) التوقيت</p>
+                            <h5 style="text-align: center;font-family: cursive; margin: -20px ;">هل ليس أنت ؟ برجاء إعادة تعيين كلمة المرور على الفور</h5>
+                            <a href="' . $message_url . '" style="background: red;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 15px;display: block;margin: 15px auto ;">إعادة تعيين كلمة المرور</a>
+                            <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحضة / </b>هذة الرسالة ألية برجاء عدم الرد</p>
+                            <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
+                            <div style="text-align: center;">
+                            <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                            </div></div>';
+                            $mail->send();
 
                         } else {
                             print_r(json_encode(["Error" => "الرقم القومى او كلمة المرور غير صحيح"]));
@@ -115,6 +184,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             $_SESSION['pharmacist'] = $pharmacist;
 
+                            $email          = $pharmacist->email;
+                            $security_code  = $pharmacist->security_code;
+                            $role           = $pharmacist->role;
+                            $name           = $pharmacist->pharmacist_name;
+
+                            $message_url = $URL_Verify . "?email=" . $email . "&role=" . $role . "&code=" . $security_code;
+
+                            //Send  Message To Login
+
+                            $mail->setFrom('roshettateam@gmail.com', 'Roshetta Login');
+                            $mail->addAddress($email);
+                            $mail->Subject = 'تنبية تسجيل دخول إلى حساب روشتة';
+                            $mail->Body = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
+                            <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                            <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
+                            <img src="https://img.icons8.com/material-rounded/200/22C3E6/break.png" style="display: block;margin:  auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
+                            <h2 style="text-align: center;font-family: cursive;margin: -20px ;"> مرحبا بك دكتور </h2>
+                            <h3 style="text-align: center;font-family: cursive; margin: -20px ;">' . $name . '</h3>
+                            <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">هل قمت بتسجيل الدخول من جهاز جديد أو موقع جديد ؟</p></br>         
+                            <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">جديد(ip)لاحظنا أن حسابك تم الوصول إلية من عنوان </p></br>
+                            <p style="text-align: center;font-family: cursive; margin: -20px ;">'. $ip .' :(ip) عنوان</p>
+                            <p style="text-align: center;font-family: cursive; margin: -20px ;"> ' . $date_time .' : (بتوقيت القاهرة) التوقيت</p>
+                            <h5 style="text-align: center;font-family: cursive; margin: -20px ;">هل ليس أنت ؟ برجاء إعادة تعيين كلمة المرور على الفور</h5>
+                            <a href="' . $message_url . '" style="background: red;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 15px;display: block;margin: 15px auto ;">إعادة تعيين كلمة المرور</a>
+                            <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحضة / </b>هذة الرسالة ألية برجاء عدم الرد</p>
+                            <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
+                            <div style="text-align: center;">
+                            <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                            </div></div>';
+                            $mail->send();
+
                         } else {
                             print_r(json_encode(["Error" => "الرقم القومى او كلمة المرور غير صحيح"]));
                         }
@@ -147,6 +247,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             print_r(json_encode($data_message));
 
                             $_SESSION['assistant'] = $assistant;
+
+                            $email          = $assistant->email;
+                            $security_code  = $assistant->security_code;
+                            $role           = $assistant->role;
+                            $name           = $assistant->assistant_name;
+
+                            $message_url = $URL_Verify . "?email=" . $email . "&role=" . $role . "&code=" . $security_code;
+
+                            //Send  Message To Login
+
+                            $mail->setFrom('roshettateam@gmail.com', 'Roshetta Login');
+                            $mail->addAddress($email);
+                            $mail->Subject = 'تنبية تسجيل دخول إلى حساب روشتة';
+                            $mail->Body = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
+                            <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                            <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
+                            <img src="https://img.icons8.com/material-rounded/200/22C3E6/break.png" style="display: block;margin:  auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
+                            <h2 style="text-align: center;font-family: cursive;margin: -20px ;"> مرحبا بك </h2>
+                            <h3 style="text-align: center;font-family: cursive; margin: -20px ;">' . $name . '</h3>
+                            <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">هل قمت بتسجيل الدخول من جهاز جديد أو موقع جديد ؟</p></br>         
+                            <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">جديد(ip)لاحظنا أن حسابك تم الوصول إلية من عنوان </p></br>
+                            <p style="text-align: center;font-family: cursive; margin: -20px ;">'. $ip .' :(ip) عنوان</p>
+                            <p style="text-align: center;font-family: cursive; margin: -20px ;"> ' . $date_time .' : (بتوقيت القاهرة) التوقيت</p>
+                            <h5 style="text-align: center;font-family: cursive; margin: -20px ;">هل ليس أنت ؟ برجاء إعادة تعيين كلمة المرور على الفور</h5>
+                            <a href="' . $message_url . '" style="background: red;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 15px;display: block;margin: 15px auto ;">إعادة تعيين كلمة المرور</a>
+                            <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحضة / </b>هذة الرسالة ألية برجاء عدم الرد</p>
+                            <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
+                            <div style="text-align: center;">
+                            <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                            </div></div>';
+                            $mail->send();
 
                         } else {
                             print_r(json_encode(["Error" => "الرقم القومى او كلمة المرور غير صحيح"]));
