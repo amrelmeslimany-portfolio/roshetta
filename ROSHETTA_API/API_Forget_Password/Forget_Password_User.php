@@ -48,17 +48,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         $mail->Body = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
                         <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
                         <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
-                        <img src="https://img.icons8.com/ios-filled/200/22C3E6/keyhole-shield.png" style="display: block;margin:  auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
-                        <h2 style="text-align: center;font-family: cursive;margin: -20px ;"> مرحبا بك </h2>
-                        <h3 style="text-align: center;font-family: cursive; margin: -20px ;">' . $name. '</h3>
-                        <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">لإعادة تعيين كلمة المرور الخاصة بحسابك الرجاء إتباع الأتى</p></br>
-                        <p style="margin-top: 6px;font-family: cursive;">الضغط على الزر بلاسفل</p>                                    
-                        <a href="' . $message_url . '" style="background: red;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 15px;display: block;margin: 15px auto ;">إعادة تعيين كلمة المرور</a>
-                        <p style="font-family: cursive;color: #2d2d2d;"> <b>أو عن طريق الرابط التالي</b> <a href="' . $message_url . '" style="display: block;margin-top: 10px;">' . $message_url . '</a> </p>
+                        <img src="https://img.icons8.com/ios-filled/200/22C3E6/keyhole-shield.png" style="display: block;margin:  auto ; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
+                        <h3 style="text-align: center;font-family: cursive;margin: -20px ;font-style: italic;"> مـــــرحبــــــا بــــك </h3>
+                        <h3 style="text-align: center;font-family: cursive; margin: -20px ;font-style: italic;">' . $name. '</h3>
+                        <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">لإعادة تعيين كلمة المرور الخاصة بحسابك الرجاء إتباع الأتـــــى</p></br>
+                        <p style="margin-top: 6px;font-family: cursive;font-weight: 600;">الضغط على الزر بلاسفل</p>                                    
+                        <a href="' . $message_url . '" style="background: red;color: white;text-decoration: none;padding: 5px 5px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 14px;display: block;margin: 15px auto ;">إعادة تعيين كلمة المرور</a>
+                        <p style="font-family: cursive;color: #2d2d2d;font-weight: 400;"> <b>أو عن طريق الرابط التالـــي</b> <a href="' . $message_url . '" style="display: block;margin-top: 10px;">' . $message_url . '</a> </p>
                         <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
                         <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
-                        <div style="text-align: center;">
-                        <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                        <div style="text-align: center;margin: auto">
+                        <small style="color: #3e3e3e; font-weight: 500;font-family: cursive;">مع تحيات فريق روشتة</small><br>
+                        <div style="margin-top: 10px">
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/facebook-new.png" />
+                            </a>
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/instagram-new.png" />
+                            </a>
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/linkedin.png" />
+                            </a>
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/youtube--v1.png" />
+                            </a>
+                        </div>                 
                         </div></div>';
 
                         if ($mail->send()) {
@@ -102,17 +116,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         $mail->Body = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
                         <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
                         <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
-                        <img src="https://img.icons8.com/ios-filled/200/22C3E6/keyhole-shield.png" style="display: block;margin:  auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
-                        <h2 style="text-align: center;font-family: cursive;margin: -20px ;"> مرحبا بك دكتور </h2>
-                        <h3 style="text-align: center;font-family: cursive; margin: -20px ;">' . $name . '</h3>
-                        <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">لإعادة تعيين كلمة المرور الخاصة بحسابك الرجاء إتباع الأتى</p></br>
-                        <p style="margin-top: 6px;font-family: cursive;">الضغط على الزر بلاسفل</p>                                    
-                        <a href="' . $message_url . '" style="background: red;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 15px;display: block;margin: 15px auto ;">إعادة تعيين كلمة المرور</a>
-                        <p style="font-family: cursive;color: #2d2d2d;"> <b>أو عن طريق الرابط التالي</b> <a href="' . $message_url . '" style="display: block;margin-top: 10px;">' . $message_url . '</a> </p>
+                        <img src="https://img.icons8.com/ios-filled/200/22C3E6/keyhole-shield.png" style="display: block;margin:  auto ; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
+                        <h3 style="text-align: center;font-family: cursive;margin: -20px ;font-style: italic;"> مـــــرحبـــــا بــــك دكتــــور </h3>
+                        <h3 style="text-align: center;font-family: cursive; margin: -20px ;font-style: italic;">' . $name. '</h3>
+                        <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">لإعادة تعيين كلمة المرور الخاصة بحسابك الرجاء إتباع الأتـــــى</p></br>
+                        <p style="margin-top: 6px;font-family: cursive;font-weight: 600;">الضغط على الزر بلاسفل</p>                                    
+                        <a href="' . $message_url . '" style="background: red;color: white;text-decoration: none;padding: 5px 5px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 14px;display: block;margin: 15px auto ;">إعادة تعيين كلمة المرور</a>
+                        <p style="font-family: cursive;color: #2d2d2d;font-weight: 400;"> <b>أو عن طريق الرابط التالـــي</b> <a href="' . $message_url . '" style="display: block;margin-top: 10px;">' . $message_url . '</a> </p>
                         <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
                         <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
-                        <div style="text-align: center;">
-                        <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                        <div style="text-align: center;margin: auto">
+                        <small style="color: #3e3e3e; font-weight: 500;font-family: cursive;">مع تحيات فريق روشتة</small><br>
+                        <div style="margin-top: 10px">
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/facebook-new.png" />
+                            </a>
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/instagram-new.png" />
+                            </a>
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/linkedin.png" />
+                            </a>
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/youtube--v1.png" />
+                            </a>
+                        </div>                 
                         </div></div>';
 
                         if ($mail->send()) {
@@ -156,17 +184,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         $mail->Body = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
                         <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
                         <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
-                        <img src="https://img.icons8.com/ios-filled/200/22C3E6/keyhole-shield.png" style="display: block;margin:  auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
-                        <h2 style="text-align: center;font-family: cursive;margin: -20px ;"> مرحبا بك دكتور </h2>
-                        <h3 style="text-align: center;font-family: cursive; margin: -20px ;">' . $name . '</h3>
-                        <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">لإعادة تعيين كلمة المرور الخاصة بحسابك الرجاء إتباع الأتى</p></br>
-                        <p style="margin-top: 6px;font-family: cursive;">الضغط على الزر بلاسفل</p>                                    
-                        <a href="' . $message_url . '" style="background: red;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 15px;display: block;margin: 15px auto ;">إعادة تعيين كلمة المرور</a>
-                        <p style="font-family: cursive;color: #2d2d2d;"> <b>أو عن طريق الرابط التالي</b> <a href="' . $message_url . '" style="display: block;margin-top: 10px;">' . $message_url . '</a> </p>
+                        <img src="https://img.icons8.com/ios-filled/200/22C3E6/keyhole-shield.png" style="display: block;margin:  auto ; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
+                        <h3 style="text-align: center;font-family: cursive;margin: -20px ;font-style: italic;"> مـــــرحبـــــا بــــك دكتــــور </h3>
+                        <h3 style="text-align: center;font-family: cursive; margin: -20px ;font-style: italic;">' . $name. '</h3>
+                        <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">لإعادة تعيين كلمة المرور الخاصة بحسابك الرجاء إتباع الأتـــــى</p></br>
+                        <p style="margin-top: 6px;font-family: cursive;font-weight: 600;">الضغط على الزر بلاسفل</p>                                    
+                        <a href="' . $message_url . '" style="background: red;color: white;text-decoration: none;padding: 5px 5px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 14px;display: block;margin: 15px auto ;">إعادة تعيين كلمة المرور</a>
+                        <p style="font-family: cursive;color: #2d2d2d;font-weight: 400;"> <b>أو عن طريق الرابط التالـــي</b> <a href="' . $message_url . '" style="display: block;margin-top: 10px;">' . $message_url . '</a> </p>
                         <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
                         <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
-                        <div style="text-align: center;">
-                        <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                        <div style="text-align: center;margin: auto">
+                        <small style="color: #3e3e3e; font-weight: 500;font-family: cursive;">مع تحيات فريق روشتة</small><br>
+                        <div style="margin-top: 10px">
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/facebook-new.png" />
+                            </a>
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/instagram-new.png" />
+                            </a>
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/linkedin.png" />
+                            </a>
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/youtube--v1.png" />
+                            </a>
+                        </div>                 
                         </div></div>';
 
                         if ($mail->send()) {
@@ -208,20 +250,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         $mail->addAddress($email);
                         $mail->Subject = 'إعادة تعيين كلمة المرور';
                         $mail->Body = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
-                         <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
-                         <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
-                         <img src="https://img.icons8.com/ios-filled/200/22C3E6/keyhole-shield.png" style="display: block;margin:  auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
-                         <h2 style="text-align: center;font-family: cursive;margin: -20px ;"> مرحبا بك </h2>
-                         <h3 style="text-align: center;font-family: cursive; margin: -20px ;">' . $name . '</h3>
-                         <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">لإعادة تعيين كلمة المرور الخاصة بحسابك الرجاء إتباع الأتى</p></br>
-                         <p style="margin-top: 6px;font-family: cursive;">الضغط على الزر بلاسفل</p>                                    
-                         <a href="' . $message_url . '" style="background: red;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 15px;display: block;margin: 15px auto ;">إعادة تعيين كلمة المرور</a>
-                         <p style="font-family: cursive;color: #2d2d2d;"> <b>أو عن طريق الرابط التالي</b> <a href="' . $message_url . '" style="display: block;margin-top: 10px;">' . $message_url . '</a> </p>
-                         <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
-                         <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
-                         <div style="text-align: center;">
-                         <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
-                         </div></div>';
+                        <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                        <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
+                        <img src="https://img.icons8.com/ios-filled/200/22C3E6/keyhole-shield.png" style="display: block;margin:  auto ; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
+                        <h3 style="text-align: center;font-family: cursive;margin: -20px ;font-style: italic;"> مـــــرحبـــــا بــــك دكتــــور </h3>
+                        <h3 style="text-align: center;font-family: cursive; margin: -20px ;font-style: italic;">' . $name. '</h3>
+                        <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">لإعادة تعيين كلمة المرور الخاصة بحسابك الرجاء إتباع الأتـــــى</p></br>
+                        <p style="margin-top: 6px;font-family: cursive;font-weight: 600;">الضغط على الزر بلاسفل</p>                                    
+                        <a href="' . $message_url . '" style="background: red;color: white;text-decoration: none;padding: 5px 5px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 14px;display: block;margin: 15px auto ;">إعادة تعيين كلمة المرور</a>
+                        <p style="font-family: cursive;color: #2d2d2d;font-weight: 400;"> <b>أو عن طريق الرابط التالـــي</b> <a href="' . $message_url . '" style="display: block;margin-top: 10px;">' . $message_url . '</a> </p>
+                        <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
+                        <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
+                        <div style="text-align: center;margin: auto">
+                        <small style="color: #3e3e3e; font-weight: 500;font-family: cursive;">مع تحيات فريق روشتة</small><br>
+                        <div style="margin-top: 10px">
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/facebook-new.png" />
+                            </a>
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/instagram-new.png" />
+                            </a>
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/linkedin.png" />
+                            </a>
+                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                <img src="https://img.icons8.com/ios-glyphs/30/null/youtube--v1.png" />
+                            </a>
+                        </div>                 
+                        </div></div>';
 
                         if ($mail->send()) {
 

@@ -98,17 +98,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                     $mail->Body    = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
                                     <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
                                     <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
-                                    <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: 0 auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
-                                    <h2 style="text-align: center;font-family: cursive;"> مرحبا بك </h2>
-                                    <h3 style="text-align: center;font-family: cursive;">'.$patient_name.'</h3>
+                                    <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: 0 auto ; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
+                                    <h3 style="text-align: center;font-family: cursive;font-style: italic;"> مـــــرحبــــــا بــــك </h3>
+                                    <h3 style="text-align: center;font-family: cursive;font-style: italic;">'.$patient_name.'</h3>
                                     <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">سعداء لانضمامك لروشتة سنفعل ما بوسعنا لتقديم للعملاء افضل الخدمات للاستمتاع بافضل المميزات والخدمات الرجاء تفعيل الحساب الخاص بك من خلال</p></br>
-                                    <p style="margin-top: 6px;font-family: cursive;">الضغط على الزر بلاسفل</p>                                    
-                                    <a href="'.$message_url.'" style="background: #49ce91;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 20px;display: block;margin: 15px auto ;">تفعيل الحساب</a>
-                                    <p style="font-family: cursive;color: #2d2d2d;"> <b> : أو أكد عن طريق الرابط التالي</b> <a href="'.$message_url.'" style="display: block;margin-top: 10px;">'.$message_url.'</a> </p>
+                                    <p style="margin-top: 6px;font-family: cursive;font-weight: 600;">الضغط على الزر بلاسفل</p>                                    
+                                    <a href="'.$message_url.'" style="background: #49ce91;color: white;text-decoration: none;padding: 5px 5px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 18px;display: block;margin: 15px auto ;">تفعيل الحساب</a>
+                                    <p style="font-family: cursive;color: #2d2d2d;"> <b style="font-weight: 600;"> : أو أكد عن طريق الرابط التالـــي</b> <a href="'.$message_url.'" style="display: block;margin-top: 10px;">'.$message_url.'</a> </p>
                                     <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
                                     <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
-                                    <div style="text-align: center;">
-                                    <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                                    <div style="text-align: center;margin: auto">
+                                    <small style="color: #3e3e3e; font-weight: 500;font-family: cursive;">مع تحيات فريق روشتة</small><br>
+                                    <div style="margin-top: 10px">
+                                        <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                            <img src="https://img.icons8.com/ios-glyphs/30/null/facebook-new.png" />
+                                        </a>
+                                        <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                            <img src="https://img.icons8.com/ios-glyphs/30/null/instagram-new.png" />
+                                        </a>
+                                        <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                            <img src="https://img.icons8.com/ios-glyphs/30/null/linkedin.png" />
+                                        </a>
+                                        <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                            <img src="https://img.icons8.com/ios-glyphs/30/null/youtube--v1.png" />
+                                        </a>
+                                    </div>
                                     </div></div>';
 
                                     if ($mail->send()) {
@@ -233,16 +247,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                         $mail->Body    = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
                                         <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
                                         <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
-                                        <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
-                                        <h2 style="text-align: center;font-family: cursive;"> مرحبا بك دكتور </h2>
-                                        <h3 style="text-align: center;font-family: cursive;">'.$doctor_name.'</h3>                                        <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;">سعداء لانضمامك لروشتة سنفعل ما بوسعنا لتقديم للعملاء افضل الخدمات للاستمتاع بافضل المميزات والخدمات الرجاء تفعيل الحساب الخاص بك من خلال</p></br>
-                                        <p style="margin-top: 10px;font-family: cursive;">الضغط على الزر بلاسفل</p>                                    
-                                        <a href="'.$message_url.'" style="background: #49ce91;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 20px;display: block;margin: 15px auto ;">تفعيل الحساب</a>
-                                        <p style="font-family: cursive;color: #2d2d2d;"> <b> : أو أكد عن طريق الرابط التالي</b> <a href="'.$message_url.'" style="display: block;margin-top: 10px;">'.$message_url.'</a> </p>
+                                        <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: 0 auto ; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
+                                        <h3 style="text-align: center;font-family: cursive;font-style: italic;"> مـــــرحبـــــا بــــك دكتـــــور </h3>
+                                        <h3 style="text-align: center;font-family: cursive;font-style: italic;">'.$doctor_name.'</h3>
+                                        <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">سعداء لانضمامك لروشتة سنفعل ما بوسعنا لتقديم للعملاء افضل الخدمات للاستمتاع بافضل المميزات والخدمات الرجاء تفعيل الحساب الخاص بك من خلال</p></br>
+                                        <p style="margin-top: 6px;font-family: cursive;font-weight: 600;">الضغط على الزر بلاسفل</p>                                    
+                                        <a href="'.$message_url.'" style="background: #49ce91;color: white;text-decoration: none;padding: 5px 5px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 18px;display: block;margin: 15px auto ;">تفعيل الحساب</a>
+                                        <p style="font-family: cursive;color: #2d2d2d;"> <b style="font-weight: 600;"> : أو أكد عن طريق الرابط التالـــي</b> <a href="'.$message_url.'" style="display: block;margin-top: 10px;">'.$message_url.'</a> </p>
                                         <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
                                         <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
-                                        <div style="text-align: center;">
-                                        <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                                        <div style="text-align: center;margin: auto">
+                                        <small style="color: #3e3e3e; font-weight: 500;font-family: cursive;">مع تحيات فريق روشتة</small><br>
+                                        <div style="margin-top: 10px">
+                                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                                <img src="https://img.icons8.com/ios-glyphs/30/null/facebook-new.png" />
+                                            </a>
+                                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                                <img src="https://img.icons8.com/ios-glyphs/30/null/instagram-new.png" />
+                                            </a>
+                                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                                <img src="https://img.icons8.com/ios-glyphs/30/null/linkedin.png" />
+                                            </a>
+                                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                                <img src="https://img.icons8.com/ios-glyphs/30/null/youtube--v1.png" />
+                                            </a>
+                                        </div>
                                         </div></div>';
 
                                         if ($mail->send()) {
@@ -365,18 +394,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                         $mail->Body    = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
                                         <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
                                         <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
-                                        <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
-                                        <h2 style="text-align: center;font-family: cursive;"> مرحبا بك دكتور </h2>
-                                        <h3 style="text-align: center;font-family: cursive;">'.$pharmacist_name.'</h3>                                        <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;">سعداء لانضمامك لروشتة سنفعل ما بوسعنا لتقديم للعملاء افضل الخدمات للاستمتاع بافضل المميزات والخدمات الرجاء تفعيل الحساب الخاص بك من خلال</p></br>
-                                        <p style="margin-top: 10px;font-family: cursive;">الضغط على الزر بلاسفل</p>                                    
-                                        <a href="'.$message_url.'" style="background: #49ce91;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 20px;display: block;margin: 15px auto ;">تفعيل الحساب</a>
-                                        <p style="font-family: cursive;color: #2d2d2d;"> <b> : أو أكد عن طريق الرابط التالي</b> <a href="'.$message_url.'" style="display: block;margin-top: 10px;">'.$message_url.'</a> </p>
+                                        <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: 0 auto ; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
+                                        <h3 style="text-align: center;font-family: cursive;font-style: italic;"> مـــــرحبـــــا بــــك دكتـــــور </h3>
+                                        <h3 style="text-align: center;font-family: cursive;font-style: italic;">'.$pharmacist_name.'</h3>
+                                        <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">سعداء لانضمامك لروشتة سنفعل ما بوسعنا لتقديم للعملاء افضل الخدمات للاستمتاع بافضل المميزات والخدمات الرجاء تفعيل الحساب الخاص بك من خلال</p></br>
+                                        <p style="margin-top: 6px;font-family: cursive;font-weight: 600;">الضغط على الزر بلاسفل</p>                                    
+                                        <a href="'.$message_url.'" style="background: #49ce91;color: white;text-decoration: none;padding: 5px 5px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 18px;display: block;margin: 15px auto ;">تفعيل الحساب</a>
+                                        <p style="font-family: cursive;color: #2d2d2d;"> <b style="font-weight: 600;"> : أو أكد عن طريق الرابط التالـــي</b> <a href="'.$message_url.'" style="display: block;margin-top: 10px;">'.$message_url.'</a> </p>
                                         <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
                                         <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
-                                        <div style="text-align: center;">
-                                        <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
+                                        <div style="text-align: center;margin: auto">
+                                        <small style="color: #3e3e3e; font-weight: 500;font-family: cursive;">مع تحيات فريق روشتة</small><br>
+                                        <div style="margin-top: 10px">
+                                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                                <img src="https://img.icons8.com/ios-glyphs/30/null/facebook-new.png" />
+                                            </a>
+                                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                                <img src="https://img.icons8.com/ios-glyphs/30/null/instagram-new.png" />
+                                            </a>
+                                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                                <img src="https://img.icons8.com/ios-glyphs/30/null/linkedin.png" />
+                                            </a>
+                                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                                <img src="https://img.icons8.com/ios-glyphs/30/null/youtube--v1.png" />
+                                            </a>
+                                        </div>
                                         </div></div>';
-
+    
                                         if ($mail->send()) {
 
                                             print_r(json_encode(["Message" => "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى والضغط على الرابط لتفعيل الحساب"]));
@@ -498,17 +542,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                         $mail->Body    = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
                                         <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
                                         <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
-                                        <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: auto ; width: 150px ; heigh: 150px;" alt="تأكيد الاميل">
-                                        <h2 style="text-align: center;font-family: cursive;"> مرحبا بك </h2>
-                                        <h3 style="text-align: center;font-family: cursive;">'.$assistant_name.'</h3>                                        <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;">سعداء لانضمامك لروشتة سنفعل ما بوسعنا لتقديم للعملاء افضل الخدمات للاستمتاع بافضل المميزات والخدمات الرجاء تفعيل الحساب الخاص بك من خلال</p></br>
-                                        <p style="margin-top: 10px;font-family: cursive;">الضغط على الزر بلاسفل</p>                                    
-                                        <a href="'.$message_url.'" style="background: #49ce91;color: white;text-decoration: none;padding: 5px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 20px;display: block;margin: 15px auto ;">تفعيل الحساب</a>
-                                        <p style="font-family: cursive;color: #2d2d2d;"> <b> : أو أكد عن طريق الرابط التالي</b> <a href="'.$message_url.'" style="display: block;margin-top: 10px;">'.$message_url.'</a> </p>
+                                        <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: 0 auto ; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
+                                        <h3 style="text-align: center;font-family: cursive;font-style: italic;"> مـــــرحبــــــا بــــك </h3>
+                                        <h3 style="text-align: center;font-family: cursive;font-style: italic;">'.$assistant_name.'</h3>
+                                        <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">سعداء لانضمامك لروشتة سنفعل ما بوسعنا لتقديم للعملاء افضل الخدمات للاستمتاع بافضل المميزات والخدمات الرجاء تفعيل الحساب الخاص بك من خلال</p></br>
+                                        <p style="margin-top: 6px;font-family: cursive;font-weight: 600;">الضغط على الزر بلاسفل</p>                                    
+                                        <a href="'.$message_url.'" style="background: #49ce91;color: white;text-decoration: none;padding: 5px 5px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 18px;display: block;margin: 15px auto ;">تفعيل الحساب</a>
+                                        <p style="font-family: cursive;color: #2d2d2d;"> <b style="font-weight: 600;"> : أو أكد عن طريق الرابط التالـــي</b> <a href="'.$message_url.'" style="display: block;margin-top: 10px;">'.$message_url.'</a> </p>
                                         <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الرابط متاح للاستخدام مرة واحدة فقط</p>
                                         <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
-                                        <div style="text-align: center;">
-                                        <small style="color: #3e3e3e; font-weight: 600;font-family: cursive;">مع تحيات فريق روشتة</small>
-                                        </div></div>';
+                                        <div style="text-align: center;margin: auto">
+                                        <small style="color: #3e3e3e; font-weight: 500;font-family: cursive;">مع تحيات فريق روشتة</small><br>
+                                        <div style="margin-top: 10px">
+                                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                                <img src="https://img.icons8.com/ios-glyphs/30/null/facebook-new.png" />
+                                            </a>
+                                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                                <img src="https://img.icons8.com/ios-glyphs/30/null/instagram-new.png" />
+                                            </a>
+                                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                                <img src="https://img.icons8.com/ios-glyphs/30/null/linkedin.png" />
+                                            </a>
+                                            <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
+                                                <img src="https://img.icons8.com/ios-glyphs/30/null/youtube--v1.png" />
+                                            </a>
+                                        </div>
+                                        </div></div>';    
 
                                         if ($mail->send()) {
 
