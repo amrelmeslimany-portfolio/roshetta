@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../API_C_A/Connection.php"); //Connect To DataBase
 
 session_start();
 session_regenerate_id();
@@ -47,8 +48,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             $HTTP_HOST = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
                             $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                             $profile_img = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Admin/API_IMG/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                            require_once("../../API_C_A/Connection.php"); //Connect To DataBase
 
                             $id = $_SESSION['admin']->id;
 
@@ -98,8 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                     $HTTP_HOST = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
                     $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                     $profile_img = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Admin/API_IMG/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                    require_once("../../API_C_A/Connection.php"); //Connect To DataBase
 
                     $id = $_SESSION['admin']->id;
 

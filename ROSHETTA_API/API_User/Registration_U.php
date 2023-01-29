@@ -96,7 +96,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                     $mail->addAddress($email);
                                     $mail->Subject = 'تفعيل حسابك فى روشتة';
                                     $mail->Body    = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
-                                    <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                                    <img src="https://i.ibb.co/hVcMYnQ/lg-text.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
                                     <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
                                     <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: 0 auto ; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
                                     <h3 style="text-align: center;font-family: cursive;font-style: italic;"> مـــــرحبــــــا بــــك </h3>
@@ -245,7 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                         $mail->addAddress($email);
                                         $mail->Subject = 'تفعيل حسابك فى روشتة';
                                         $mail->Body    = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
-                                        <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                                        <img src="https://i.ibb.co/hVcMYnQ/lg-text.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
                                         <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
                                         <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: 0 auto ; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
                                         <h3 style="text-align: center;font-family: cursive;font-style: italic;"> مـــــرحبـــــا بــــك دكتـــــور </h3>
@@ -392,7 +392,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                         $mail->addAddress($email);
                                         $mail->Subject = 'تفعيل حسابك فى روشتة';
                                         $mail->Body    = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
-                                        <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                                        <img src="https://i.ibb.co/hVcMYnQ/lg-text.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
                                         <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
                                         <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: 0 auto ; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
                                         <h3 style="text-align: center;font-family: cursive;font-style: italic;"> مـــــرحبـــــا بــــك دكتـــــور </h3>
@@ -540,7 +540,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                         $mail->addAddress($email);
                                         $mail->Subject = 'تفعيل حسابك فى روشتة';
                                         $mail->Body    = '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
-                                        <img src="https://iili.io/H0zAibe.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
+                                        <img src="https://i.ibb.co/hVcMYnQ/lg-text.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
                                         <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
                                         <img src="https://img.icons8.com/fluency/300/null/reading-confirmation.png" style="display: block;margin: 0 auto ; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
                                         <h3 style="text-align: center;font-family: cursive;font-style: italic;"> مـــــرحبــــــا بــــك </h3>

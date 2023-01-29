@@ -12,8 +12,6 @@ if (
     || isset($_SESSION['assistant'])
 ) {
 
-    require_once("../../API_C_A/Connection.php"); //Connect To DataBases
-
     if (isset($_SESSION['patient'])) { //If Patient
 
         $patient_name   = $_SESSION['patient']->patient_name;
@@ -55,7 +53,7 @@ if (
 
         $top_menu_data = array(
 
-            "pharmacist_name"    => $pharmacist_name,
+            "pharmacist_name"   => $pharmacist_name,
             "ssd"               => $ssd,
             "profile_img"       => $profile_img
 
@@ -63,7 +61,7 @@ if (
 
         print_r(json_encode($top_menu_data));
 
-    } elseif (isset($_SESSION['assistant'])) { //IfAssistant
+    } elseif (isset($_SESSION['assistant'])) { //If Assistant
 
         $assistant_name = $_SESSION['assistant']->assistant_name;
         $ssd            = $_SESSION['assistant']->ssd;

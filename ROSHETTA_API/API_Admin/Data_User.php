@@ -115,10 +115,10 @@ if (isset($_SESSION['admin'])) {
 
             // Array Of All
 
-            "data_patient" => $data_patient,
-            "data_doctor" => $data_doctor,
-            "data_pharmacist" => $data_pharmacist,
-            "data_assistant" => $data_assistant
+            "data_patient"      => $data_patient,
+            "data_doctor"       => $data_doctor,
+            "data_pharmacist"   => $data_pharmacist,
+            "data_assistant"    => $data_assistant
 
         );
 

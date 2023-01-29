@@ -8,7 +8,7 @@ session_regenerate_id();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-    if (
+    if (  //If Found SESSION
         isset($_SESSION['patient'])
         || isset($_SESSION['doctor'])
         || isset($_SESSION['pharmacist'])
@@ -16,218 +16,78 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
     ) {
 
         if (isset($_SESSION['patient'])) {
-
-            //I Expect To Receive This Data
-
-            if (
-                isset($_POST['password'])            && !empty($_POST['password'])
-                && isset($_POST['confirm_password']) && !empty($_POST['confirm_password'])
-            ) {
-
-                if ($_POST['password'] == $_POST['confirm_password']) { //Verify password = confirm_password
-
-                    $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT); //password_hash
-                    $id            = $_SESSION['patient']->id;
-
-                    //UpDate Patient Table
-
-                    $Update = $database->prepare("UPDATE patient SET password = :password WHERE id = :id ");
-
-                    $Update->bindparam("id", $id);
-                    $Update->bindparam("password", $password_hash);
-                    $Update->execute();
-
-                    if ($Update->rowCount() > 0 ) {
-
-                        //Get New Data From Patient Table
-
-                        $get_data = $database->prepare("SELECT * FROM patient WHERE id = :id ");
-
-                        $get_data->bindparam("id", $id);
-                        $get_data->execute();
-
-                        if ($get_data->rowCount() > 0 ) {
-
-                            $patient_up = $get_data->fetchObject();
-                            $_SESSION['patient'] = $patient_up; //UpDate SESSION Patient
-
-                            print_r(json_encode(["Message" => "تم تعديل كلمة المرور بنجاح"]));
-
-                            header("refresh:2;");
-
-                        } else {
-                            print_r(json_encode(["Error" => "فشل جلب البيانات"]));
-                        }
-                    } else {
-                        print_r(json_encode(["Error" => "فشل تعديل كلمة المرور"]));
-                    }
-                } else {
-                    print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
-                }
-            } else {
-                print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
-            }
-
+            $table_name = 'patient';
+            $id         = $_SESSION['patient']->id;
         } elseif (isset($_SESSION['doctor'])) {
-
-            //I Expect To Receive This Data
-
-            if (
-                isset($_POST['password'])            && !empty($_POST['password'])
-                && isset($_POST['confirm_password']) && !empty($_POST['confirm_password'])
-            ) {
-
-                if ($_POST['password'] == $_POST['confirm_password']) { //Verify password = confirm_password
-
-                    $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT); //password_hash
-                    $id            = $_SESSION['doctor']->id;
-
-                    //UpDate Doctor Table
-
-                    $Update = $database->prepare("UPDATE doctor SET password = :password WHERE id = :id ");
-
-                    $Update->bindparam("id", $id);
-                    $Update->bindparam("password", $password_hash);
-                    $Update->execute();
-
-                    if ($Update->rowCount() > 0 ) {
-
-                        //Get New Data From Doctor Table
-
-                        $get_data = $database->prepare("SELECT * FROM doctor WHERE id = :id ");
-
-                        $get_data->bindparam("id", $id);
-                        $get_data->execute();
-
-                        if ($get_data->rowCount() > 0 ) {
-
-                            $doctor_up = $get_data->fetchObject();
-                            $_SESSION['doctor'] = $doctor_up; //UpDate SESSION Doctor
-
-                            print_r(json_encode(["Message" => "تم تعديل كلمة المرور بنجاح"]));
-
-                            header("refresh:2;");
-
-                        } else {
-                            print_r(json_encode(["Error" => "فشل جلب البيانات"]));
-                        }
-                    } else {
-                        print_r(json_encode(["Error" => "فشل تعديل كلمة المرور"]));
-                    }
-                } else {
-                    print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
-                }
-            } else {
-                print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
-            }
-
+            $table_name = 'doctor';
+            $id         = $_SESSION['doctor']->id;
         } elseif (isset($_SESSION['pharmacist'])) {
-
-            //I Expect To Receive This Data
-
-            if (
-                isset($_POST['password'])            && !empty($_POST['password'])
-                && isset($_POST['confirm_password']) && !empty($_POST['confirm_password'])
-            ) {
-
-                if ($_POST['password'] == $_POST['confirm_password']) { //Verify password = confirm_password
-
-                    $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT); //password_hash
-                    $id            = $_SESSION['pharmacist']->id;
-
-                    //UpDate Pharmacist Table
-
-                    $Update = $database->prepare("UPDATE pharmacist SET password = :password WHERE id = :id ");
-
-                    $Update->bindparam("id", $id);
-                    $Update->bindparam("password", $password_hash);
-                    $Update->execute();
-
-                    if ($Update->rowCount() > 0 ) {
-
-                        //Get New Data From Pharmacist Table
-
-                        $get_data = $database->prepare("SELECT * FROM pharmacist WHERE id = :id ");
-
-                        $get_data->bindparam("id", $id);
-                        $get_data->execute();
-
-                        if ($get_data->rowCount() > 0 ) {
-
-                            $pharmacist_up = $get_data->fetchObject();
-                            $_SESSION['pharmacist'] = $pharmacist_up; //UpDate SESSION Pharmacist
-
-                            print_r(json_encode(["Message" => "تم تعديل كلمة المرور بنجاح"]));
-
-                            header("refresh:2;");
-
-                        } else {
-                            print_r(json_encode(["Error" => "فشل جلب البيانات"]));
-                        }
-                    } else {
-                        print_r(json_encode(["Error" => "فشل تعديل كلمة المرور"]));
-                    }
-                } else {
-                    print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
-                }
-            } else {
-                print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
-            }
-
+            $table_name = 'pharmacist';
+            $id         = $_SESSION['pharmacist']->id;
         } elseif (isset($_SESSION['assistant'])) {
+            $table_name = 'assistant';
+            $id         = $_SESSION['assistant']->id;
+        } else {
+            $table_name = '';
+            $id = '';
+        }
 
-            //I Expect To Receive This Data
+        //I Expect To Receive This Data
 
-            if (
-                isset($_POST['password'])            && !empty($_POST['password'])
-                && isset($_POST['confirm_password']) && !empty($_POST['confirm_password'])
-            ) {
+        if (
+            isset($_POST['password'])               && !empty($_POST['password'])
+            && isset($_POST['confirm_password'])    && !empty($_POST['confirm_password'])
+        ) {
 
-                if ($_POST['password'] == $_POST['confirm_password']) { //Verify password = confirm_password
+            if ($_POST['password'] == $_POST['confirm_password']) { //Verify password = confirm_password
 
-                    $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT); //password_hash
-                    $id            = $_SESSION['assistant']->id;
+                $password_hash = password_hash($_POST['password'], PASSWORD_DEFAULT); //password_hash
 
-                    //UpDate Assistant Table
+                //UpDate User Table
 
-                    $Update = $database->prepare("UPDATE assistant SET password = :password WHERE id = :id ");
+                $Update = $database->prepare("UPDATE $table_name SET password = :password WHERE id = :id ");
+                $Update->bindparam("id", $id);
+                $Update->bindparam("password", $password_hash);
+                $Update->execute();
 
-                    $Update->bindparam("id", $id);
-                    $Update->bindparam("password", $password_hash);
-                    $Update->execute();
+                if ($Update->rowCount() > 0) {
 
-                    if ($Update->rowCount() > 0 ) {
+                    //Get New Data From User Table
 
-                        //Get New Data From Assistant Table
+                    $get_data = $database->prepare("SELECT * FROM $table_name WHERE id = :id ");
+                    $get_data->bindparam("id", $id);
+                    $get_data->execute();
 
-                        $get_data = $database->prepare("SELECT * FROM assistant WHERE id = :id ");
+                    if ($get_data->rowCount() > 0) {
 
-                        $get_data->bindparam("id", $id);
-                        $get_data->execute();
+                        $data_user = $get_data->fetchObject();
 
-                        if ($get_data->rowCount() > 0 ) {
-
-                            $assistant_up = $get_data->fetchObject();
-                            $_SESSION['assistant'] = $assistant_up; //UpDate SESSION Assistant
-
-                            print_r(json_encode(["Message" => "تم تعديل كلمة المرور بنجاح"]));
-
-                            header("refresh:2;");
-
+                        if ($table_name == "patient") {
+                            $_SESSION['patient'] = $data_user;
+                        } elseif ($table_name == "doctor") {
+                            $_SESSION['doctor'] = $data_user;
+                        } elseif ($table_name == "pharmacist") {
+                            $_SESSION['pharmacist'] = $data_user;
+                        } elseif ($table_name == "assistant") {
+                            $_SESSION['assistant'] = $data_user;
                         } else {
-                            print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                            $_SESSION['null'] = '';
                         }
+
+                        print_r(json_encode(["Message" => "تم تعديل كلمة المرور بنجاح"]));
+                        header("refresh:2;");
+
                     } else {
-                        print_r(json_encode(["Error" => "فشل تعديل كلمة المرور"]));
+                        print_r(json_encode(["Error" => "فشل جلب البيانات"]));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
+                    print_r(json_encode(["Error" => "فشل تعديل كلمة المرور"]));
                 }
             } else {
-                print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
+                print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
             }
         } else {
-            print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+            print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
         }
     } else {
         print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
