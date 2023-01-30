@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
 session_start();
 session_regenerate_id();
@@ -14,8 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             if (isset($_POST['number']) && !empty($_POST['number'])) {
 
                 if ($_POST['type'] === 'ssd') {
-
-                    require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
                     $number = filter_var($_POST['number'], FILTER_SANITIZE_NUMBER_INT);
 
@@ -42,8 +41,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                     }
 
                 } elseif ($_POST['type'] === 'ser_id') {
-
-                    require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
                     $number = filter_var($_POST['number'], FILTER_SANITIZE_NUMBER_INT);
 
@@ -100,30 +97,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 } else {
                                     print_r(json_encode(["Error" => "لم يتم العثور على بيانات"]));
                                 }
-
                             } else {
                                 print_r(json_encode(["Error" => "لم يتم العثور على بيانات"]));
                             }
-
                         } else {
                             print_r(json_encode(["Error" => "فشل جلب البيانات"]));
                         }
-
                     } else {
                         print_r(json_encode(["Error" => "معرف الروشتة غير صحيح"]));
                     }
-
                 } else {
                     print_r(json_encode(["Error" => "فشل العثور على نوع البحث"]));
                 }
             } else {
                 print_r(json_encode(["Error" => "لم يتم ادخال الرقم القومى او معرف الروشتة"]));
             }
-
         } else {
             print_r(json_encode(["Error" => "لم يتم تحديد نوع البحث"]));
         }
-
     } else {
         print_r(json_encode(["Error" => "غير مسموح لك القيام بالعرض"]));
     }

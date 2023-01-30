@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
 session_start();
 session_regenerate_id();
@@ -10,8 +11,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
     if (isset($_SESSION['doctor'])) {
 
         if (isset($_POST['clinic_id']) && !empty($_POST['clinic_id'])) {
-
-            require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
             $clinic_id = filter_var($_POST['clinic_id'], FILTER_SANITIZE_NUMBER_INT);
             $doctor_id = $_SESSION['doctor']->id;

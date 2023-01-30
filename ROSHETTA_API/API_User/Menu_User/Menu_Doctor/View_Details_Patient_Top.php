@@ -1,22 +1,20 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Only
+session_start();
+session_regenerate_id();
 
-    session_start();
-    session_regenerate_id();
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
     if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
 
         if (isset($_POST['patient_id']) && !empty($_POST['patient_id'])) {
 
-            require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
-
             $patient_id = filter_var($_POST['patient_id'], FILTER_SANITIZE_NUMBER_INT);
 
             $check_patient = $database->prepare("SELECT patient.id as patient_id , patient.profile_img , patient.patient_name FROM  patient WHERE patient.id = :patient_id ");
-
             $check_patient->bindparam("patient_id", $patient_id);
             $check_patient->execute();
 
@@ -29,7 +27,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
             } else {
                 print_r(json_encode(["Error" => "رقم المريض غير صحيح"]));
             }
-
         } else {
             print_r(json_encode(["Error" => "لم يتم العثور على المريض"]));
         }

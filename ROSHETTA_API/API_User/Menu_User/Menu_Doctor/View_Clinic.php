@@ -1,13 +1,12 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
 session_start();
 session_regenerate_id();
 
 if (isset($_SESSION['doctor'])) {
-
-    require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
     $doctor_id = $_SESSION['doctor']->id;
 
@@ -38,12 +37,10 @@ if (isset($_SESSION['doctor'])) {
                 print_r(json_encode(["Error" => "ليس لديك عيادة"]));
             }
         } else {
-            print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل الادمن"]));
-            die("");
+            print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل المشرف"]));
         }
     } else {
         print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
-        die("");
     }
 } else {
     print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));

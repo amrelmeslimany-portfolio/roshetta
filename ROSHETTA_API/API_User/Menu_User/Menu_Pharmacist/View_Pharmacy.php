@@ -1,13 +1,12 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
 session_start();
 session_regenerate_id();
 
 if (isset($_SESSION['pharmacist'])) {
-
-    require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
     $pharmacist_id = $_SESSION['pharmacist']->id;
 
@@ -23,9 +22,7 @@ if (isset($_SESSION['pharmacist'])) {
 
             //Get From Pharmacy Table
             $get_pharmacy = $database->prepare("SELECT id as pharmacy_id,logo as pharmacy_logo,pharmacy_name,start_working,end_working FROM pharmacy WHERE pharmacist_id = :pharmacist_id ORDER BY start_working ");
-
             $get_pharmacy->bindparam("pharmacist_id", $pharmacist_id);
-            
             $get_pharmacy->execute();
 
             if ($get_pharmacy->rowCount() > 0) {
@@ -39,11 +36,9 @@ if (isset($_SESSION['pharmacist'])) {
             }
         } else {
             print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل الادمن"]));
-            die("");
         }
     } else {
         print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
-        die("");
     }
 } else {
     print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));

@@ -1,15 +1,13 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
-
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 date_default_timezone_set('Africa/Cairo'); //Set To Cairo TimeZone
 
 session_start();
 session_regenerate_id();
 
 if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
-
-    require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
     $date = date('Y-m-d');
 
@@ -66,7 +64,6 @@ if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
             print_r(json_encode(["Error" => "فشل جلب البيانات"]));
         }
     }
-
 } else {
     print_r(json_encode(["Error" => "غير مسموح لك عرض الحجز"]));
 }

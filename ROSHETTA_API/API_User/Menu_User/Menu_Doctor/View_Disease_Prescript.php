@@ -1,15 +1,14 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Only
+session_start();
+session_regenerate_id();
 
-    session_start();
-    session_regenerate_id();
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
     if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
-
-        require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
         if (isset($_POST['disease_id']) && !empty($_POST['disease_id'])) {
 

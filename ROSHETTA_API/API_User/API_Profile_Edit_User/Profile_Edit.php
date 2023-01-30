@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../API_C_A/Connection.php"); //Connect To DataBases
 
 session_start();
 session_regenerate_id();
@@ -11,8 +12,6 @@ if (
     || isset($_SESSION['pharmacist'])
     || isset($_SESSION['assistant'])
 ) {
-
-    require_once("../../API_C_A/Connection.php"); //Connect To DataBases
 
     if (isset($_SESSION['patient'])) {
 

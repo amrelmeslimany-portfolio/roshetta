@@ -1,13 +1,12 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
 session_start();
 session_regenerate_id();
 
 if (isset($_SESSION['patient'])) {
-
-    require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
     $id = $_SESSION['patient']->id;
 
@@ -32,7 +31,6 @@ if (isset($_SESSION['patient'])) {
     } else {
         print_r(json_encode(["Error" => "فشل جلب البيانات"]));
     }
-
 } else {
     print_r(json_encode(["Error" => "غير مسموح لك القيام بالعرض"]));
 }

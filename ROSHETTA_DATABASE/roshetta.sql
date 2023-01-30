@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 30, 2023 at 12:22 AM
+-- Generation Time: Jan 30, 2023 at 05:07 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -81,6 +81,8 @@ CREATE TABLE `admin` (
   `gender` varchar(10) NOT NULL,
   `birth_date` date NOT NULL,
   `password` varchar(255) NOT NULL,
+  `security_code` text NOT NULL,
+  `email_isactive` tinyint(1) NOT NULL,
   `profile_img` text DEFAULT NULL,
   `role` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
@@ -89,10 +91,10 @@ CREATE TABLE `admin` (
 -- Dumping data for table `admin`
 --
 
-INSERT INTO `admin` (`id`, `admin_name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `password`, `profile_img`, `role`) VALUES
-(1, 'samy mohamed', 2222, 'sam@gmail.com', '12345678912', 'ذكر', '2023-01-12', '$2y$10$YeH2107mwMOwoYs1XbtJ7ukKthMJRYzIhla.9lo6tTWh7GrYwJFbK', 'http://localhost:3000/ROSHETTA_API/API_Admin/API_IMG/Profile_Img_Admin/2222/4069972222.jpg', 'ADMIN'),
-(3, 'hamdy ahmed', 33333333333333, 'ha@gmail.com', '01010101010', 'ذكر', '2023-01-18', '$2y$10$IuvMcAe49/0Top/QpZZfouVH7ec8ZY.vGxrDhwckrMqc5x82uwDNa', NULL, 'ADMIN'),
-(4, 'ali ahmed', 12345678912345, 'ali@gmail.com', '01020231410', 'ذكر', '2023-01-05', '$2y$10$ah/NCnRsFJBmVjfCRZbGo.xgA8FPar4IdfUOro/b3Q9VMNli3WnLG', NULL, 'ADMIN');
+INSERT INTO `admin` (`id`, `admin_name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
+(1, 'samy mohamed', 2222, 'sam@gmail.com', '12345678912', 'ذكر', '2023-01-12', '$2y$10$YeH2107mwMOwoYs1XbtJ7ukKthMJRYzIhla.9lo6tTWh7GrYwJFbK', '', 1, 'http://localhost:3000/ROSHETTA_API/API_Admin/API_IMG/Profile_Img_Admin/2222/4069972222.jpg', 'ADMIN'),
+(3, 'hamdy ahmed', 33333333333333, 'ha@gmail.com', '01010101010', 'ذكر', '2023-01-18', '$2y$10$IuvMcAe49/0Top/QpZZfouVH7ec8ZY.vGxrDhwckrMqc5x82uwDNa', '', 0, NULL, 'ADMIN'),
+(4, 'ali ahmed', 12345678912345, 'ali@gmail.com', '01020231410', 'ذكر', '2023-01-05', '$2y$10$ah/NCnRsFJBmVjfCRZbGo.xgA8FPar4IdfUOro/b3Q9VMNli3WnLG', '', 0, NULL, 'ADMIN');
 
 -- --------------------------------------------------------
 
@@ -140,6 +142,30 @@ INSERT INTO `assistant` (`id`, `assistant_name`, `ssd`, `email`, `phone_number`,
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `chat`
+--
+
+CREATE TABLE `chat` (
+  `id` int(11) DEFAULT NULL,
+  `name` varchar(255) NOT NULL,
+  `time` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `profile_img` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `chat`
+--
+
+INSERT INTO `chat` (`id`, `name`, `time`, `message`, `profile_img`) VALUES
+(NULL, 'عمرو  المسلمانى', '06:03', 'مرحبا', NULL),
+(NULL, 'محمد سعيد', '06:04', 'اهلا عمور', NULL),
+(NULL, 'عمرو  المسلمانى', '06:04', 'عمور مين يا علق متدلعنيش', NULL),
+(NULL, 'محمد سعيد', '06:04', 'خلاص متزعلش', NULL);
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `clinic`
 --
 
@@ -159,6 +185,13 @@ CREATE TABLE `clinic` (
   `doctor_id` smallint(6) NOT NULL,
   `assistant_id` smallint(6) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `clinic`
+--
+
+INSERT INTO `clinic` (`id`, `clinic_name`, `owner`, `clinic_specialist`, `phone_number`, `clinic_price`, `start_working`, `end_working`, `governorate`, `address`, `logo`, `ser_id`, `doctor_id`, `assistant_id`) VALUES
+(3, 'kkkkkkkk', 'kkkkkkkkkk', 'kkkkkkkk', 'kkkkkkkkkk', 44, '71:28:26', '45:28:26', 'kkkkkkkkk', 'kkkkkkkkkkk', 'kkkkkkkkkk', '5555555', 13, 1);
 
 -- --------------------------------------------------------
 
@@ -204,7 +237,8 @@ CREATE TABLE `doctor` (
 --
 
 INSERT INTO `doctor` (`id`, `doctor_name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `specialist`, `governorate`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
-(13, 'عمرو  المسلمانى', 11111111111115, 'mohamedsaeed00451@gmail.com', '01000000001', 'ذكر', '2023-01-12', 'تتتنن', 'البحيرة', '$2y$10$p23C6hkyVxjYN6HLaWoeu.dneS6658b/VQ6hTDBqlVPqiV6AH7dai', 'e184be411ff02df2e47efeb47ef52541', 1, NULL, 'DOCTOR');
+(13, 'عمرو  المسلمانى', 11111111111115, 'mohamedsaeed00451@gmail.com', '01000000001', 'ذكر', '2023-01-12', 'تتتنن', 'البحيرة', '$2y$10$IYm3fOKcoceVXMNGH.uKMu05auB2UT7iLtgNXdn/X7YhHKRIvdo/W', 'e184be411ff02df2e47efeb47ef52541', 1, NULL, 'DOCTOR'),
+(14, 'محمد سعيد', 41052063096325, 'mo@gmail.com', '01020305040', 'ذكر', '2023-01-04', 'ggggggg', 'البحيرة', '$2y$10$1/H4rcTWBe0v42Updbfy4eabwv.qZS6ABZ8v1jqauCd4BNr1OY5Xq', 'bcd0783a21e5220cc3375e09f59d3a0a', 1, NULL, 'DOCTOR');
 
 -- --------------------------------------------------------
 
@@ -522,7 +556,7 @@ ALTER TABLE `activation_place`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` tinyint(4) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `appointment`
@@ -540,7 +574,7 @@ ALTER TABLE `assistant`
 -- AUTO_INCREMENT for table `clinic`
 --
 ALTER TABLE `clinic`
-  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `disease`
@@ -552,7 +586,7 @@ ALTER TABLE `disease`
 -- AUTO_INCREMENT for table `doctor`
 --
 ALTER TABLE `doctor`
-  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `medicine`

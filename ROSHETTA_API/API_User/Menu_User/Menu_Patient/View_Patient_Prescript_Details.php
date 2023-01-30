@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
 session_start();
 session_regenerate_id();
@@ -12,13 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
         if (isset($_POST['prescript_id']) && !empty($_POST['prescript_id'])) {
 
-            require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
-
             $patient_id = $_SESSION['patient']->id;
             $prescript_id = filter_var($_POST['prescript_id'], FILTER_SANITIZE_NUMBER_INT);  //Filter Number INT
 
             $check_prescript = $database->prepare("SELECT * FROM  prescript WHERE prescript.id = :prescript_id ");
-
             $check_prescript->bindparam("prescript_id", $prescript_id);
             $check_prescript->execute();
 
@@ -72,11 +70,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         } else {
                             print_r(json_encode(["Error" => "لم يتم العثور على بيانات"]));
                         }
-
                     } else {
                         print_r(json_encode(["Error" => "لم يتم العثور على بيانات"]));
                     }
-
                 } else {
                     print_r(json_encode(["Error" => "فشل جلب البيانات"]));
                 }

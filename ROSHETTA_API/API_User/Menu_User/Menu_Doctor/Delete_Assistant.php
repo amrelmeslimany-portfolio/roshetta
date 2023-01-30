@@ -1,13 +1,12 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
 session_start();
 session_regenerate_id();
 
 if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
-
-    require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
     $clinic_id = $_SESSION['clinic']->id;
     $doctor_id = $_SESSION['doctor']->id;
@@ -41,11 +40,9 @@ if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
             } else {
                 print_r(json_encode(["Error" => "فشل جلب البيانات"]));
             }
-
         } else {
             print_r(json_encode(["Error" => "فشل حذف المساعد"]));
         }
-
     } else {
         print_r(json_encode(["Error" => "فشل حذف المساعد"]));
     }

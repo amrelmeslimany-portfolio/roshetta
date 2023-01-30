@@ -17,6 +17,8 @@ if (isset($_GET['email']) && isset($_GET['code']) && isset($_GET['role'])) {
         $table_name = 'pharmacist';
     } elseif ($role == "ASSISTANT") {
         $table_name = 'assistant';
+    } elseif ($role == "ADMIN") {
+        $table_name = 'admin';
     } else {
         $table_name = '';
     }

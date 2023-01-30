@@ -1,13 +1,13 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
 session_start();
 session_regenerate_id();
 
 if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
 
-    require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
     $doctor_id = $_SESSION['doctor']->id;
     $clinic_id = $_SESSION['clinic']->id;
 
@@ -20,7 +20,6 @@ if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
         //Check Assistant
 
         $check_assistant = $database->prepare("SELECT * FROM assistant WHERE assistant.id = :assistant_id ");
-
         $check_assistant->bindparam("assistant_id", $assistant_id);
         $check_assistant->execute();
 
@@ -41,7 +40,6 @@ if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
                     //Get From Clinic Table
 
                     $get_clinic = $database->prepare("SELECT * FROM clinic WHERE clinic.id = :clinic_id AND clinic.doctor_id = :doctor_id ");
-
                     $get_clinic->bindparam("clinic_id", $clinic_id);
                     $get_clinic->bindparam("doctor_id", $doctor_id);
 
@@ -61,11 +59,9 @@ if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
                 } else {
                     print_r(json_encode(["Error" => "فشل تعديل المساعد"]));
                 }
-
             } else {
                 print_r(json_encode(["Error" => "فشل تعديل المساعد"]));
             }
-
         } else {
             print_r(json_encode(["Error" => "رقم المساعد غير صحيح"]));
         }
@@ -75,7 +71,6 @@ if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
         //Get From Assistant Table
 
         $get_assistant = $database->prepare("SELECT profile_img,assistant_name,assistant.phone_number FROM assistant,clinic WHERE assistant.id = clinic.assistant_id AND clinic.doctor_id = :doctor_id AND clinic.id = :clinic_id ");
-
         $get_assistant->bindparam("clinic_id", $clinic_id);
         $get_assistant->bindparam("doctor_id", $doctor_id);
 
@@ -90,12 +85,10 @@ if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
             } else {
                 print_r(json_encode(["Error" => "لم يتم العثور على مساعد"]));
             }
-
         } else {
             print_r(json_encode(["Error" => "فشل جلب البيانات"]));
         }
     }
-
 } else {
     print_r(json_encode(["Error" => "لم يتم العثور على مستخدم"]));
 }

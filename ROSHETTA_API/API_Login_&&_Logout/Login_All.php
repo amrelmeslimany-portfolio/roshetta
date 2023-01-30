@@ -30,6 +30,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             $table_name = 'pharmacist';
         } elseif ($role == "assistant") {
             $table_name = 'assistant';
+        } elseif ($role == "admin") {
+            $table_name = 'admin';
         } else {
             $table_name = '';
         }
@@ -77,6 +79,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 $_SESSION['assistant'] = $data_user;
                                 $name   = $data_user->assistant_name;
                                 $Hi     = 'مـــــرحبــــــا بــــك';
+                            } elseif ($table_name == "admin") {
+                                $_SESSION['admin'] = $data_user;
+                                $name   = $data_user->admin_name;
+                                $Hi     = 'مـــــرحبـــــا بــــك مـــديـــر';
                             } else {
                                 $name = '';
                                 $Hi = '';

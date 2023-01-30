@@ -1,13 +1,12 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
 session_start();
 session_regenerate_id();
 
 if (isset($_SESSION['assistant'])) {
-
-    require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
     $assistant_id = $_SESSION['assistant']->id;
 
@@ -26,7 +25,6 @@ if (isset($_SESSION['assistant'])) {
         } else {
             print_r(json_encode(["Error" => "ليس لديك اي عيادة"]));
         }
-
     } else {
         print_r(json_encode(["Error" => "فشل جلب البيانات"]));
     }

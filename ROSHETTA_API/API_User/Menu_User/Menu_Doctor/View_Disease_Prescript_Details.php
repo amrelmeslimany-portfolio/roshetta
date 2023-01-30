@@ -1,22 +1,20 @@
 <?php
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Only
+session_start();
+session_regenerate_id();
 
-    session_start();
-    session_regenerate_id();
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
     if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
 
         if (isset($_POST['prescript_id']) && !empty($_POST['prescript_id'])) {
 
-            require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
-
             $prescript_id = filter_var($_POST['prescript_id'], FILTER_SANITIZE_NUMBER_INT);
 
             $check_prescript = $database->prepare("SELECT * FROM  prescript WHERE prescript.id = :prescript_id ");
-
             $check_prescript->bindparam("prescript_id", $prescript_id);
             $check_prescript->execute();
 
@@ -39,7 +37,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
                         // Get From Medicine 
 
                         $get_medicine = $database->prepare("SELECT medicine_data FROM medicine,patient,prescript WHERE medicine.prescript_id = prescript.id AND prescript.id = :prescript_id AND prescript.patient_id = patient.id ");
-
                         $get_medicine->bindparam("prescript_id", $prescript_id);
                         $get_medicine->execute();
 
@@ -68,15 +65,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') { //Allow Access Via 'POST' Method Onl
                         } else {
                             print_r(json_encode(["Error" => "لم يتم العثور على بيانات"]));
                         }
-
                     } else {
                         print_r(json_encode(["Error" => "لم يتم العثور على بيانات"]));
                     }
-
                 } else {
                     print_r(json_encode(["Error" => "فشل جلب البيانات"]));
                 }
-
             } else {
                 print_r(json_encode(["Error" => "معرف الروشتة غير صحيح"]));
             }
