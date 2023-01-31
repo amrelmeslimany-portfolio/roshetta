@@ -107,7 +107,6 @@ if (isset($_SESSION['doctor']) || isset($_SESSION['assistant'])) {
                         //Get New Data From Clinic Table
 
                         $get_data = $database->prepare("SELECT * FROM clinic WHERE id = :id ");
-
                         $get_data->bindparam("id", $id);
                         $get_data->execute();
 
@@ -121,7 +120,6 @@ if (isset($_SESSION['doctor']) || isset($_SESSION['assistant'])) {
 
                             header("refresh:2;");
 
-
                         } else {
                             print_r(json_encode(["Error" => "فشل جلب البيانات"]));
                         }
@@ -129,11 +127,9 @@ if (isset($_SESSION['doctor']) || isset($_SESSION['assistant'])) {
                         print_r(json_encode(["Error" => "فشل تعديل البيانات"]));
                     }
                 }
-
             } else {
                 print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
             }
-            
         } else {
 
             //Print Clinic Data From Session

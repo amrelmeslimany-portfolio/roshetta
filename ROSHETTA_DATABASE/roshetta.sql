@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jan 30, 2023 at 05:07 PM
+-- Generation Time: Jan 31, 2023 at 02:40 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -260,11 +260,24 @@ CREATE TABLE `medicine` (
 
 CREATE TABLE `message` (
   `id` smallint(6) NOT NULL,
-  `username` varchar(50) NOT NULL,
-  `ssd` bigint(20) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `ssd` bigint(14) NOT NULL,
   `email` varchar(255) NOT NULL,
-  `message` longtext NOT NULL
+  `message` longtext NOT NULL,
+  `time` timestamp NOT NULL DEFAULT current_timestamp(),
+  `m_case` tinyint(1) NOT NULL,
+  `role` varchar(25) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `message`
+--
+
+INSERT INTO `message` (`id`, `name`, `ssd`, `email`, `message`, `time`, `m_case`, `role`) VALUES
+(1, 'محمد سعيد جمعة', 12345222296333, 'mohamedsaeed00451@gmail.com', 'اريد المساعدة', '2023-01-31 13:18:34', 1, 'PATIENT'),
+(2, 'محمد سعيد جمعة', 12345222296333, 'mohamedsaeed00451@gmail.com', 'اريد المساعدة', '2023-01-31 13:19:58', 1, 'PATIENT'),
+(3, 'عمرو  المسلمانى', 11111111111115, 'mohamedsaeed00451@gmail.com', 'اريد المساعدة', '2023-01-31 13:20:59', 1, 'DOCTOR'),
+(4, 'عمرو المسلمانى', 99999999999999, 'ammghdefe45353@gmail.com', 'اريد المساعدة', '2023-01-31 13:27:04', 1, 'PHARMACIST');
 
 -- --------------------------------------------------------
 
@@ -295,7 +308,7 @@ CREATE TABLE `patient` (
 --
 
 INSERT INTO `patient` (`id`, `patient_name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `weight`, `height`, `governorate`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
-(15, 'محمد سعيد جمعة', 12345222296333, 'mohamedsaeed00451@gmail.com', '01010205045', 'ذكر', '2023-01-04', 5, 3, 'البحيرة', '$2y$10$H9PUaHVBLbNG90DYgt3LkOA/bGAnRffyRIazuAFniS9hX38M1SbCy', '44fb830f6c27ffb1ca3f52c4860a1fc1', 1, NULL, 'PATIENT');
+(15, 'محمد سعيد جمعة', 12345222296333, 'mohamedsaeed00451@gmail.com', '01010205045', 'ذكر', '2023-01-04', 5, 3, 'البحيرة', '$2y$10$H3./OlFNg.kjCm5Gu7qRTuIekovlzJD2yHxquDWVLAv1kpOiTHVCK', '44fb830f6c27ffb1ca3f52c4860a1fc1', 1, NULL, 'PATIENT');
 
 -- --------------------------------------------------------
 
@@ -324,7 +337,7 @@ CREATE TABLE `pharmacist` (
 --
 
 INSERT INTO `pharmacist` (`id`, `pharmacist_name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `governorate`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
-(1, 'ahmed ali', 99999999999999, 'ammghdefe45353@gmail.com', '36985214789', 'ذكر', '2023-01-12', 'البحيرة', '$2y$10$53zyweTCQd/SOiu7fjS71eawHwd/z1yDjPH9AEZfbYmsfU6lO6vI.', '589cb4b906218c4209c1bbbafada8845', 1, 'http://localhost:3000/ROSHETTA_API/API_User/API_IMG/Profile_Img/Profile_pharmacist_img/99999999999999/51849799999999999999.jpg', 'PHARMACIST');
+(1, 'عمرو المسلمانى', 99999999999999, 'ammghdefe45353@gmail.com', '36985214789', 'ذكر', '2023-01-12', 'البحيرة', '$2y$10$53zyweTCQd/SOiu7fjS71eawHwd/z1yDjPH9AEZfbYmsfU6lO6vI.', '589cb4b906218c4209c1bbbafada8845', 1, 'http://localhost:3000/ROSHETTA_API/API_User/API_IMG/Profile_Img/Profile_pharmacist_img/99999999999999/51849799999999999999.jpg', 'PHARMACIST');
 
 -- --------------------------------------------------------
 
@@ -556,7 +569,7 @@ ALTER TABLE `activation_place`
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
-  MODIFY `id` tinyint(4) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `appointment`
@@ -598,7 +611,7 @@ ALTER TABLE `medicine`
 -- AUTO_INCREMENT for table `message`
 --
 ALTER TABLE `message`
-  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `patient`

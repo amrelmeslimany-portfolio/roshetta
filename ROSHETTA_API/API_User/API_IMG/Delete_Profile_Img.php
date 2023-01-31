@@ -6,6 +6,8 @@ require_once("../../API_C_A/Connection.php"); //Connect To DataBase
 session_start();
 session_regenerate_id();
 
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
+
     if (
         isset($_SESSION['patient'])
         || isset($_SESSION['doctor'])
@@ -67,4 +69,7 @@ session_regenerate_id();
     } else {
         print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
     }
+} else { //If The Entry Method Is Not 'POST'
+    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+}    
 ?>
