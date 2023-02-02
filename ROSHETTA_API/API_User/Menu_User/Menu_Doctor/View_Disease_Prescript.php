@@ -12,7 +12,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
         if (isset($_POST['disease_id']) && !empty($_POST['disease_id'])) {
 
-            $disease_id = filter_var($_POST['disease_id'], FILTER_SANITIZE_NUMBER_INT);
+            $disease_id = filter_var($_POST['disease_id'], FILTER_SANITIZE_NUMBER_INT);  // Filter 'INT'
+
+            //Check Disease
 
             $check_disease = $database->prepare("SELECT * FROM  disease WHERE disease.id = :disease_id ");
 
@@ -36,7 +38,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                 } else {
                     print_r(json_encode(["Error" => "لم يتم العثور على اي روشتة"]));
                 }
-
             } else {
                 print_r(json_encode(["Error" => "رقم المرض غير صحيح"]));
             }

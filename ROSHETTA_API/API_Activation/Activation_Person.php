@@ -1,6 +1,7 @@
 <?php
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
+require_once("../API_C_A/Connection.php"); //Connect To DataBase
 
 session_start();
 session_regenerate_id();
@@ -64,10 +65,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 //To Input A Random Name For The Image
 
-                $front_new_name         = rand(0, 1000000000) . rand(0, 1000000000) . rand(0, 1000000000) . '.' . $formul_front;
-                $back_new_name          = rand(0, 1000000000) . rand(0, 1000000000) . rand(0, 1000000000) . '.' . $formul_back;
-                $graduation_new_name    = rand(0, 1000000000) . rand(0, 1000000000) . rand(0, 1000000000) . '.' . $formul_graduation;
-                $card_new_name          = rand(0, 1000000000) . rand(0, 1000000000) . rand(0, 1000000000) . '.' . $formul_card;
+                $front_new_name         = bin2hex(random_bytes(10)) . '.' . $formul_front;
+                $back_new_name          = bin2hex(random_bytes(10)) . '.' . $formul_back;
+                $graduation_new_name    = bin2hex(random_bytes(10)) . '.' . $formul_graduation;
+                $card_new_name          = bin2hex(random_bytes(10)) . '.' . $formul_card;
 
                 if (isset($_SESSION['pharmacist'])) { //If Find Pharmacist Session
 
@@ -95,8 +96,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 $back_nationtional_card     = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $back_new_name;
                                 $graduation_cer             = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $graduation_new_name;
                                 $card_id_img                = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $card_new_name;
-
-                                require_once("../API_C_A/Connection.php"); //Connect To DataBase
 
                                 $pharmacist_id = $_SESSION['pharmacist']->id;
 
@@ -178,7 +177,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         $graduation_cer             = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $graduation_new_name;
                         $card_id_img                = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $card_new_name;
 
-                        require_once("../API_C_A/Connection.php"); //Connect To DataBase
 
                         $pharmacist_id = $_SESSION['pharmacist']->id;
 
@@ -270,8 +268,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 $graduation_cer             = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $graduation_new_name;
                                 $card_id_img                = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $card_new_name;
 
-                                require_once("../API_C_A/Connection.php"); //Connect To DataBase
-
                                 $doctor_id = $_SESSION['doctor']->id;
 
                                 $check_doctor = $database->prepare("SELECT * FROM activation_person,doctor  WHERE  activation_person.doctor_id = doctor.id  AND doctor.id = :id ");
@@ -351,8 +347,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         $back_nationtional_card     = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $back_new_name;
                         $graduation_cer             = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $graduation_new_name;
                         $card_id_img                = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $card_new_name;
-
-                        require_once("../API_C_A/Connection.php"); //Connect To DataBase
 
                         $doctor_id = $_SESSION['doctor']->id;
 

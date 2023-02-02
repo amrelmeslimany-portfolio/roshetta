@@ -6,7 +6,6 @@ require_once("../API_Mail/Mail.php");  //To Send Email
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-
     if (isset($_POST['role']) && !empty($_POST['role'])) {
 
         $URL_Verify = 'http://localhost:3000/ROSHETTA_API/API_User/Verify_User_Account.php';

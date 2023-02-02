@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             } else {
 
                 $folder_name    = $_SESSION['pharmacy']->ser_id;
-                $img_new_name   = rand(0, 1000000) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
+                $img_new_name   = bin2hex(random_bytes(10)) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
                 $link           = 'Logo_Img/Pharmacy/' . $folder_name . '/' . ''; //File Link
 
                 if (is_dir($link)) { //If The File Exists

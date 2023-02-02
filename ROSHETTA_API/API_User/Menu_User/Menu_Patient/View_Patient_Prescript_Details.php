@@ -8,13 +8,12 @@ session_regenerate_id();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-
     if (isset($_SESSION['patient'])) {
 
         if (isset($_POST['prescript_id']) && !empty($_POST['prescript_id'])) {
 
-            $patient_id = $_SESSION['patient']->id;
-            $prescript_id = filter_var($_POST['prescript_id'], FILTER_SANITIZE_NUMBER_INT);  //Filter Number INT
+            $patient_id     = $_SESSION['patient']->id;
+            $prescript_id   = filter_var($_POST['prescript_id'], FILTER_SANITIZE_NUMBER_INT);  //Filter Number INT
 
             $check_prescript = $database->prepare("SELECT * FROM  prescript WHERE prescript.id = :prescript_id ");
             $check_prescript->bindparam("prescript_id", $prescript_id);

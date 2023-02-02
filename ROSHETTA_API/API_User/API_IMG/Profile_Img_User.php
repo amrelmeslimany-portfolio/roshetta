@@ -18,25 +18,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
         //Get User Data
 
         if (isset($_SESSION['patient'])) {
-            $type = 'Profile_patient_img/';
-            $folder_user = $_SESSION['patient']->ssd;
-            $table_name = 'patient';
-            $id = $_SESSION['patient']->id;
+            $type           = 'Profile_patient_img/';
+            $folder_user    = $_SESSION['patient']->ssd;
+            $table_name     = 'patient';
+            $id             = $_SESSION['patient']->id;
         } elseif (isset($_SESSION['doctor'])) {
-            $type = 'Profile_doctor_img/';
-            $folder_user = $_SESSION['doctor']->ssd;
-            $table_name = 'doctor';
-            $id = $_SESSION['doctor']->id;
+            $type           = 'Profile_doctor_img/';
+            $folder_user    = $_SESSION['doctor']->ssd;
+            $table_name     = 'doctor';
+            $id             = $_SESSION['doctor']->id;
         } elseif (isset($_SESSION['pharmacist'])) {
-            $type = 'Profile_pharmacist_img/';
-            $folder_user = $_SESSION['pharmacist']->ssd;
-            $table_name = 'pharmacist';
-            $id = $_SESSION['pharmacist']->id;
+            $type           = 'Profile_pharmacist_img/';
+            $folder_user    = $_SESSION['pharmacist']->ssd;
+            $table_name     = 'pharmacist';
+            $id             = $_SESSION['pharmacist']->id;
         } elseif (isset($_SESSION['assistant'])) {
-            $type = 'Profile_assistant_img/';
-            $folder_user = $_SESSION['assistant']->ssd;
-            $table_name = 'assistant';
-            $id = $_SESSION['assistant']->id;
+            $type           = 'Profile_assistant_img/';
+            $folder_user    = $_SESSION['assistant']->ssd;
+            $table_name     = 'assistant';
+            $id             = $_SESSION['assistant']->id;
         } else {
             $type = '';
             $folder_user = '';
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             } else {
 
                 $folder_name    = $folder_user;
-                $img_new_name   = rand(0, 1000000) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
+                $img_new_name   = bin2hex(random_bytes(10)) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
                 $link           = 'Profile_Img/' . $type . $folder_name . '/' . ''; //File Link
 
                 if (is_dir($link)) { //If The File Exists

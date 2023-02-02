@@ -6,43 +6,50 @@ require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 session_start();
 session_regenerate_id();
 
-if (isset($_SESSION['doctor'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow Access Via 'GET' Method Or Admin
 
-    $doctor_id = $_SESSION['doctor']->id;
+    if (isset($_SESSION['doctor'])) {
 
-    $checkActivation = $database->prepare("SELECT * FROM activation_person,doctor  WHERE  activation_person.doctor_id = doctor.id  AND doctor.id = :id ");
-    $checkActivation->bindparam("id", $doctor_id);
-    $checkActivation->execute();
+        $doctor_id = $_SESSION['doctor']->id;
 
-    if ($checkActivation->rowCount() > 0) {
+        //Check Activation Doctor
 
-        $Activation = $checkActivation->fetchObject();
+        $checkActivation = $database->prepare("SELECT * FROM activation_person,doctor  WHERE  activation_person.doctor_id = doctor.id  AND doctor.id = :id ");
+        $checkActivation->bindparam("id", $doctor_id);
+        $checkActivation->execute();
 
-        if ($Activation->isactive == 1) {
+        if ($checkActivation->rowCount() > 0) {
 
-            //Get From Clinic Table
-            $get_clinic = $database->prepare("SELECT id as clinic_id,logo as clinic_logo,clinic_name,start_working,end_working FROM clinic WHERE doctor_id = :doctor_id ORDER BY start_working ");
+            $Activation = $checkActivation->fetchObject();
 
-            $get_clinic->bindparam("doctor_id", $doctor_id);
+            if ($Activation->isactive == 1) {
 
-            $get_clinic->execute();
+                //Get From Clinic Table
+                $get_clinic = $database->prepare("SELECT id as clinic_id,logo as clinic_logo,clinic_name,start_working,end_working FROM clinic WHERE doctor_id = :doctor_id ORDER BY start_working ");
 
-            if ($get_clinic->rowCount() > 0 ) {
+                $get_clinic->bindparam("doctor_id", $doctor_id);
 
-                $get_clinic = $get_clinic->fetchAll(PDO::FETCH_ASSOC);
+                $get_clinic->execute();
 
-                print_r(json_encode($get_clinic));
+                if ($get_clinic->rowCount() > 0) {
 
+                    $get_clinic = $get_clinic->fetchAll(PDO::FETCH_ASSOC);
+
+                    print_r(json_encode($get_clinic));
+
+                } else {
+                    print_r(json_encode(["Error" => "ليس لديك عيادة"]));
+                }
             } else {
-                print_r(json_encode(["Error" => "ليس لديك عيادة"]));
+                print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل المشرف"]));
             }
         } else {
-            print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل المشرف"]));
+            print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
         }
     } else {
-        print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
+        print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
     }
-} else {
-    print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+} else { //If The Entry Method Is Not 'GET'
+    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
 }
 ?>

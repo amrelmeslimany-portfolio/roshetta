@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             } else {
 
                 $folder_name = $_SESSION['admin']->ssd;
-                $img_new_name = rand(0, 1000000) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
+                $img_new_name = bin2hex(random_bytes(10)) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
                 $link = 'Profile_Img_Admin/' . $folder_name . '/' . ''; //File Link
 
                 if (is_dir($link)) { //If The File Exists

@@ -1,6 +1,7 @@
 <?php
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
+require_once("../API_C_A/Connection.php"); //Connect To DataBase
 
 session_start();
 session_regenerate_id();
@@ -35,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                 if (isset($_SESSION['clinic'])) {
 
                     $folder_name    = $_SESSION['clinic']->ser_id;
-                    $img_new_name   = rand(0, 1000000) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
+                    $img_new_name   = bin2hex(random_bytes(10)) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
                     $link           = 'IMG/place_Img/Clinic/' . $folder_name . '/' . ''; //File Link
 
                     if (is_dir($link)) { //If The File Exists
@@ -51,8 +52,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
                                 $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                                 $license_img    = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                                require_once("../API_C_A/Connection.php"); //Connect To DataBase
 
                                 $id = $_SESSION['clinic']->id;
 
@@ -108,8 +107,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                         $license_img    = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $link . $img_new_name; //The Path WithIn The DataBase
 
-                        require_once("../API_C_A/Connection.php"); //Connect To DataBase
-
                         $id = $_SESSION['clinic']->id;
 
                         $check_clinic = $database->prepare("SELECT * FROM activation_place,clinic  WHERE  activation_place.clinic_id = clinic.id  AND clinic.id = :id ");
@@ -158,7 +155,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
 
                     $folder_name    = $_SESSION['pharmacy']->ser_id;
-                    $img_new_name   = rand(0, 1000000) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
+                    $img_new_name   = bin2hex(random_bytes(10)) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
                     $link           = 'IMG/place_Img/Pharmacy/' . $folder_name . '/' . ''; //File Link
 
                     if (is_dir($link)) { //If The File Exists
@@ -174,8 +171,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
                                 $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                                 $license_img    = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                                require_once("../API_C_A/Connection.php"); //Connect To DataBase
 
                                 $id = $_SESSION['pharmacy']->id;
 
@@ -230,8 +225,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
                         $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                         $license_img    = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                        require_once("../API_C_A/Connection.php"); //Connect To DataBase
 
                         $id = $_SESSION['pharmacy']->id;
 

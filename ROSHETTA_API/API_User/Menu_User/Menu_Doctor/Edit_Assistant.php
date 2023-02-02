@@ -6,90 +6,74 @@ require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 session_start();
 session_regenerate_id();
 
-if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-    $doctor_id = $_SESSION['doctor']->id;
-    $clinic_id = $_SESSION['clinic']->id;
+    if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
 
-    if (isset($_POST['assistant_id']) && !empty($_POST['assistant_id'])) {
+        $doctor_id = $_SESSION['doctor']->id;
+        $clinic_id = $_SESSION['clinic']->id;
 
-        //Filter Data 'Int'
+        if (isset($_POST['assistant_id']) && !empty($_POST['assistant_id'])) {
 
-        $assistant_id = filter_var($_POST['assistant_id'], FILTER_SANITIZE_NUMBER_INT);
+            //Filter Data 'Int'
 
-        //Check Assistant
+            $assistant_id = filter_var($_POST['assistant_id'], FILTER_SANITIZE_NUMBER_INT);
 
-        $check_assistant = $database->prepare("SELECT * FROM assistant WHERE assistant.id = :assistant_id ");
-        $check_assistant->bindparam("assistant_id", $assistant_id);
-        $check_assistant->execute();
+            //Check Assistant
 
-        if ($check_assistant->rowCount() > 0) {
+            $check_assistant = $database->prepare("SELECT * FROM assistant WHERE assistant.id = :assistant_id ");
+            $check_assistant->bindparam("assistant_id", $assistant_id);
+            $check_assistant->execute();
 
-            // UpDate Clinic Table
+            if ($check_assistant->rowCount() > 0) {
 
-            $Update = $database->prepare("UPDATE clinic SET assistant_id = :assistant_id WHERE clinic.id = :clinic_id AND clinic.doctor_id = :doctor_id ");
+                // UpDate Clinic Table
 
-            $Update->bindparam("assistant_id", $assistant_id);
-            $Update->bindparam("clinic_id", $clinic_id);
-            $Update->bindparam("doctor_id", $doctor_id);
+                $Update = $database->prepare("UPDATE clinic SET assistant_id = :assistant_id WHERE clinic.id = :clinic_id AND clinic.doctor_id = :doctor_id ");
 
-            if ($Update->execute()) {
+                $Update->bindparam("assistant_id", $assistant_id);
+                $Update->bindparam("clinic_id", $clinic_id);
+                $Update->bindparam("doctor_id", $doctor_id);
 
-                if ($Update->rowCount() > 0) {
+                if ($Update->execute()) {
 
-                    //Get From Clinic Table
+                    if ($Update->rowCount() > 0) {
 
-                    $get_clinic = $database->prepare("SELECT * FROM clinic WHERE clinic.id = :clinic_id AND clinic.doctor_id = :doctor_id ");
-                    $get_clinic->bindparam("clinic_id", $clinic_id);
-                    $get_clinic->bindparam("doctor_id", $doctor_id);
+                        //Get From Clinic Table
 
-                    if ($get_clinic->execute()) {
+                        $get_clinic = $database->prepare("SELECT * FROM clinic WHERE clinic.id = :clinic_id AND clinic.doctor_id = :doctor_id ");
+                        $get_clinic->bindparam("clinic_id", $clinic_id);
+                        $get_clinic->bindparam("doctor_id", $doctor_id);
 
-                        $get_clinic = $get_clinic->fetchObject();
+                        if ($get_clinic->execute()) {
 
-                        $_SESSION['clinic'] = $get_clinic;
+                            $get_clinic = $get_clinic->fetchObject();
 
-                        print_r(json_encode(["Message" => "تم التعديل بنجاح"]));
+                            $_SESSION['clinic'] = $get_clinic;
 
-                        header("refresh:2;");
+                            print_r(json_encode(["Message" => "تم التعديل بنجاح"]));
 
+                            header("refresh:2;");
+
+                        } else {
+                            print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                        }
                     } else {
-                        print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                        print_r(json_encode(["Error" => "فشل تعديل المساعد"]));
                     }
                 } else {
                     print_r(json_encode(["Error" => "فشل تعديل المساعد"]));
                 }
             } else {
-                print_r(json_encode(["Error" => "فشل تعديل المساعد"]));
+                print_r(json_encode(["Error" => "رقم المساعد غير صحيح"]));
             }
         } else {
-            print_r(json_encode(["Error" => "رقم المساعد غير صحيح"]));
+            print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
         }
-
     } else {
-
-        //Get From Assistant Table
-
-        $get_assistant = $database->prepare("SELECT profile_img,assistant_name,assistant.phone_number FROM assistant,clinic WHERE assistant.id = clinic.assistant_id AND clinic.doctor_id = :doctor_id AND clinic.id = :clinic_id ");
-        $get_assistant->bindparam("clinic_id", $clinic_id);
-        $get_assistant->bindparam("doctor_id", $doctor_id);
-
-        if ($get_assistant->execute()) {
-
-            if ($get_assistant->rowCount() > 0) {
-
-                $get_assistant = $get_assistant->fetchAll(PDO::FETCH_ASSOC);
-
-                print_r(json_encode($get_assistant));
-
-            } else {
-                print_r(json_encode(["Error" => "لم يتم العثور على مساعد"]));
-            }
-        } else {
-            print_r(json_encode(["Error" => "فشل جلب البيانات"]));
-        }
+        print_r(json_encode(["Error" => "لم يتم العثور على مستخدم"]));
     }
-} else {
-    print_r(json_encode(["Error" => "لم يتم العثور على مستخدم"]));
+} else { //If The Entry Method Is Not 'POST'
+    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
 }
 ?>

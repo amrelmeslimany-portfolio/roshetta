@@ -15,26 +15,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
         $clinic_id = $_SESSION['clinic']->id;
 
-        // Get From Patient And Appointment Table
+        if (isset($_GET['search']) && !empty($_GET['search'])) {
 
-        $get_reservation = $database->prepare("SELECT appointment.id as appointment_id , patient.id as patient_id , patient.patient_name , patient.phone_number  FROM  patient,appointment,clinic WHERE   appoint_date = :appoint_date AND appointment.clinic_id = :clinic_id AND appointment.patient_id = patient.id AND appointment.appoint_case = 1 ORDER BY appointment.id ");
+            $search = filter_var($_GET['search'], FILTER_SANITIZE_STRING);
 
-        $get_reservation->bindparam("clinic_id", $clinic_id);
-        $get_reservation->bindparam("appoint_date", $date);
+            // Get From Patient And Appointment Table
 
-        if ($get_reservation->execute()) {
+            $get_reservation = $database->prepare("SELECT patient.id as patient_id , patient.patient_name , patient.phone_number FROM  patient,appointment,clinic WHERE   appoint_date = :appoint_date AND appointment.clinic_id = :clinic_id AND appointment.patient_id = patient.id  AND patient.patient_name = :search ");
+            $get_reservation->bindparam("clinic_id", $clinic_id);
+            $get_reservation->bindparam("appoint_date", $date);
+            $get_reservation->bindparam("search", $search);
+            $get_reservation->execute();
 
-            if ($get_reservation->rowCount() > 0) {
+            if ($get_reservation->rowCount() > 0 ) {
 
                 $get_reservation = $get_reservation->fetchAll(PDO::FETCH_ASSOC);
 
                 print_r(json_encode($get_reservation));
 
             } else {
-                print_r(json_encode(["Error" => "لم يتم العثور على اي حجوزات"]));
+                print_r(json_encode(["Error" => "فشل جلب البيانات"]));
             }
         } else {
-            print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+            print_r(json_encode(["Error" => "لم يتم العثور على مريض"]));
         }
     } else {
         print_r(json_encode(["Error" => "غير مسموح لك عرض الحجز"]));
