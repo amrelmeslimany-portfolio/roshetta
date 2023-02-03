@@ -6,7 +6,7 @@ require_once("../API_C_A/Connection.php"); //Connect To DataBases
 session_start();
 session_regenerate_id();
 
-if ($_SERVER['REQUEST_METHOD'] == 'DELETE' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
+if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
     if (isset($_SESSION['admin'])) {
 

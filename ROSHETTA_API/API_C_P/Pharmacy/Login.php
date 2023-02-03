@@ -5,7 +5,6 @@ session_regenerate_id();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-
     if (isset($_SESSION['pharmacist'])) {
 
         if ($_SESSION['pharmacist']->role === "PHARMACIST") {
@@ -30,12 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         $pharmacy_id = filter_var($_POST['pharmacy_id'], FILTER_SANITIZE_NUMBER_INT);
 
-
                         if (filter_var($pharmacy_id, FILTER_VALIDATE_INT) !== FALSE) {
 
                             //Check Clinic Table
 
-                            $check_pharmacy = $database->prepare("SELECT * FROM pharmacy WHERE id = :pharmacy_id   AND pharmacist_id = :id ");
+                            $check_pharmacy = $database->prepare("SELECT * FROM pharmacy WHERE id = :pharmacy_id  AND pharmacist_id = :id ");
                             $check_pharmacy->bindparam("id", $ph_id);
                             $check_pharmacy->bindparam("pharmacy_id", $pharmacy_id);
                             $check_pharmacy->execute();

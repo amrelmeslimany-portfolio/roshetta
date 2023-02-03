@@ -30,7 +30,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                 } else {
                     print_r(json_encode(["Error" => "فشل حذف الصيدلية"]));
                 }
-
             } else {
                 print_r(json_encode(["Error" => "فشل حذف الصيدلية"]));
             }

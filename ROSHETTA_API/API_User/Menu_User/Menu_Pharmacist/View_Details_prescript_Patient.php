@@ -8,7 +8,6 @@ session_regenerate_id();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-
     if (isset($_SESSION['pharmacist']) && isset($_SESSION['pharmacy'])) {
 
         if (isset($_POST['prescript_id']) && !empty($_POST['prescript_id'])) {

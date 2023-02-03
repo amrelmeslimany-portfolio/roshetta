@@ -9,36 +9,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
         if (isset($_SESSION['clinic'])) {
 
-                //Print Clinic Data From Session
+            //Print Clinic Data From Session
 
-                $logo               = $_SESSION['clinic']->logo;
-                $clinic_name        = $_SESSION['clinic']->clinic_name;
-                $clinic_specialist  = $_SESSION['clinic']->clinic_specialist;
-                $phone_number       = $_SESSION['clinic']->phone_number;
-                $owner              = $_SESSION['clinic']->owner;
-                $clinic_price       = $_SESSION['clinic']->clinic_price;
-                $start_working      = $_SESSION['clinic']->start_working;
-                $end_working        = $_SESSION['clinic']->end_working;
-                $governorate        = $_SESSION['clinic']->governorate;
-                $address            = $_SESSION['clinic']->address;
+            $logo               = $_SESSION['clinic']->logo;
+            $clinic_name        = $_SESSION['clinic']->clinic_name;
+            $clinic_specialist  = $_SESSION['clinic']->clinic_specialist;
+            $phone_number       = $_SESSION['clinic']->phone_number;
+            $owner              = $_SESSION['clinic']->owner;
+            $clinic_price       = $_SESSION['clinic']->clinic_price;
+            $start_working      = $_SESSION['clinic']->start_working;
+            $end_working        = $_SESSION['clinic']->end_working;
+            $governorate        = $_SESSION['clinic']->governorate;
+            $address            = $_SESSION['clinic']->address;
 
 
-                $clinic_data = array(
+            $clinic_data = array(
 
-                    "logo"              => $logo,
-                    "clinic_name"       => $clinic_name,
-                    "clinic_specialist" => $clinic_specialist,
-                    "phone_number"      => $phone_number,
-                    "owner"             => $owner,
-                    "clinic_price"      => $clinic_price,
-                    "start_working"     => $start_working,
-                    "end_working"       => $end_working,
-                    "governorate"       => $governorate,
-                    "address"           => $address
+                "logo"              => $logo,
+                "clinic_name"       => $clinic_name,
+                "clinic_specialist" => $clinic_specialist,
+                "phone_number"      => $phone_number,
+                "owner"             => $owner,
+                "clinic_price"      => $clinic_price,
+                "start_working"     => $start_working,
+                "end_working"       => $end_working,
+                "governorate"       => $governorate,
+                "address"           => $address
 
-                );
+            );
 
-                print_r(json_encode($clinic_data));
+            print_r(json_encode($clinic_data));
 
         } else {
             print_r(json_encode(["Error" => "فشل العثور على عيادة"]));

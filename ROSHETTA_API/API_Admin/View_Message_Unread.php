@@ -6,22 +6,27 @@ require_once("../API_C_A/Connection.php"); //Connect To DataBases
 session_start();
 session_regenerate_id();
 
-if (isset($_SESSION['admin'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow Access Via 'GET' Method Or Admin
 
-    // Get From Message Table
+    if (isset($_SESSION['admin'])) {
 
-    $get_message = $database->prepare("SELECT name,email,message,role FROM message WHERE m_case = 0  ORDER BY time DESC");
-    $get_message->execute();
+        // Get From Message Table
 
-    if ($get_message->rowCount() > 0) {
+        $get_message = $database->prepare("SELECT name,email,message,role FROM message WHERE m_case = 0  ORDER BY time DESC");
+        $get_message->execute();
 
-        $data_message = $get_message->fetchAll(PDO::FETCH_ASSOC);
-        print_r(json_encode($data_message));
-        
+        if ($get_message->rowCount() > 0) {
+
+            $data_message = $get_message->fetchAll(PDO::FETCH_ASSOC);
+            print_r(json_encode($data_message));
+            
+        } else {
+            print_r(json_encode(["Error" => "لا يوجد رسائل"]));
+        }
     } else {
-        print_r(json_encode(["Error" => "لا يوجد رسائل"]));
+        print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
     }
-} else {
-    print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+} else { //If The Entry Method Is Not 'GET'
+    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
 }
 ?>

@@ -8,7 +8,6 @@ session_regenerate_id();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-
     if (isset($_SESSION['admin'])) {
 
         //If Clinic Account
@@ -97,58 +96,57 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
         } elseif (isset($_POST['pharmacy_id']) && !empty($_POST['pharmacy_id'])) {
 
-                // Filter Data INT
-    
-                $pharmacy_id = filter_var($_POST['pharmacy_id'], FILTER_SANITIZE_NUMBER_INT);
-    
-                // Get From Pharmacy Table
-    
-                $get_pharmacy = $database->prepare("SELECT pharmacy.id as pharmacy_id , pharmacy_name , owner , pharmacy.phone_number as pharmacy_phone_number , start_working , end_working , pharmacy.governorate as pharmacy_governorate , pharmacy.address as pharmacy_address , logo , ser_id FROM pharmacy WHERE pharmacy.id = :pharmacy_id");
-                $get_pharmacy->bindParam("pharmacy_id", $pharmacy_id);
-                $get_pharmacy->execute();
-    
-                if ($get_pharmacy->rowCount() > 0) {
-    
-                    $data_pharmacy = $get_pharmacy->fetchAll(PDO::FETCH_ASSOC);
+            // Filter Data INT
 
-                    //Get Pharmacist
-    
-                    $get_pharmacist = $database->prepare("SELECT pharmacist.id as pharmacist_id , pharmacist_name , pharmacist.profile_img as pharmacist_profile_img FROM pharmacist,pharmacy WHERE pharmacy.id = :pharmacy_id AND pharmacist.id = pharmacy.pharmacist_id");
-                    $get_pharmacist->bindParam("pharmacy_id", $pharmacy_id);
-                    $get_pharmacist->execute();
-    
-                    if($get_pharmacist->rowCount() > 0 ){
-                        $data_pharmacist = $get_pharmacist->fetchAll(PDO::FETCH_ASSOC);
-                    } else {
-                        $data_pharmacist = array(["Error" => "لا يوجد صيدلى"]);
-                    }
-    
-                    //Get Prescript Number
+            $pharmacy_id = filter_var($_POST['pharmacy_id'], FILTER_SANITIZE_NUMBER_INT);
 
-                    $get_prescript = $database->prepare("SELECT prescript.id FROM prescript,pharmacy,pharmacy_prescript WHERE prescript.id = pharmacy_prescript.prescript_id AND pharmacy.id = pharmacy_prescript.pharmacy_id AND pharmacy.id = :pharmacy_id");
-                    $get_prescript->bindParam("pharmacy_id", $pharmacy_id);
-                    $get_prescript->execute();
-    
-                    if($get_prescript->rowCount() > 0 ){
-                        $data_prescript = $get_prescript->rowCount();
-                    } else {
-                        $data_prescript = array(["Error" => "لا يوجد روشتات"]);
-                    }
-    
-                    $data_all = array(
+            // Get From Pharmacy Table
 
-                        "data_pharmacy"          => $data_pharmacy,
-                        "data_pharmacist"        => $data_pharmacist,
-                        "Number_Of_Prescript"    => $data_prescript
-    
-                    );
-    
-                    print_r(json_encode($data_all));
-    
+            $get_pharmacy = $database->prepare("SELECT pharmacy.id as pharmacy_id , pharmacy_name , owner , pharmacy.phone_number as pharmacy_phone_number , start_working , end_working , pharmacy.governorate as pharmacy_governorate , pharmacy.address as pharmacy_address , logo , ser_id FROM pharmacy WHERE pharmacy.id = :pharmacy_id");
+            $get_pharmacy->bindParam("pharmacy_id", $pharmacy_id);
+            $get_pharmacy->execute();
+
+            if ($get_pharmacy->rowCount() > 0) {
+
+                $data_pharmacy = $get_pharmacy->fetchAll(PDO::FETCH_ASSOC);
+
+                //Get Pharmacist
+
+                $get_pharmacist = $database->prepare("SELECT pharmacist.id as pharmacist_id , pharmacist_name , pharmacist.profile_img as pharmacist_profile_img FROM pharmacist,pharmacy WHERE pharmacy.id = :pharmacy_id AND pharmacist.id = pharmacy.pharmacist_id");
+                $get_pharmacist->bindParam("pharmacy_id", $pharmacy_id);
+                $get_pharmacist->execute();
+
+                if($get_pharmacist->rowCount() > 0 ){
+                    $data_pharmacist = $get_pharmacist->fetchAll(PDO::FETCH_ASSOC);
                 } else {
-                    print_r(json_encode(["Error" => "معرف الصيدلية غير صحيح"]));
+                    $data_pharmacist = array(["Error" => "لا يوجد صيدلى"]);
                 }
-        
+
+                //Get Prescript Number
+
+                $get_prescript = $database->prepare("SELECT prescript.id FROM prescript,pharmacy,pharmacy_prescript WHERE prescript.id = pharmacy_prescript.prescript_id AND pharmacy.id = pharmacy_prescript.pharmacy_id AND pharmacy.id = :pharmacy_id");
+                $get_prescript->bindParam("pharmacy_id", $pharmacy_id);
+                $get_prescript->execute();
+
+                if($get_prescript->rowCount() > 0 ){
+                    $data_prescript = $get_prescript->rowCount();
+                } else {
+                    $data_prescript = array(["Error" => "لا يوجد روشتات"]);
+                }
+
+                $data_all = array(
+
+                    "data_pharmacy"          => $data_pharmacy,
+                    "data_pharmacist"        => $data_pharmacist,
+                    "Number_Of_Prescript"    => $data_prescript
+
+                );
+
+                print_r(json_encode($data_all));
+
+            } else {
+                print_r(json_encode(["Error" => "معرف الصيدلية غير صحيح"]));
+            }
         } else {
             print_r(json_encode(["Error" => "لم يتم تحديد معرف المكان"]));
         }

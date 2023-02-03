@@ -6,41 +6,46 @@ require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
 session_start();
 session_regenerate_id();
 
-if (isset($_SESSION['pharmacist'])) {
+if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow Access Via 'GET' Method Or Admin
 
-    $pharmacist_id = $_SESSION['pharmacist']->id;
+    if (isset($_SESSION['pharmacist'])) {
 
-    $checkActivation = $database->prepare("SELECT * FROM activation_person,pharmacist  WHERE  activation_person.pharmacist_id = pharmacist.id  AND pharmacist.id = :id ");
-    $checkActivation->bindparam("id", $pharmacist_id);
-    $checkActivation->execute();
+        $pharmacist_id = $_SESSION['pharmacist']->id;
 
-    if ($checkActivation->rowCount() > 0) {
+        $checkActivation = $database->prepare("SELECT * FROM activation_person,pharmacist  WHERE  activation_person.pharmacist_id = pharmacist.id  AND pharmacist.id = :id ");
+        $checkActivation->bindparam("id", $pharmacist_id);
+        $checkActivation->execute();
 
-        $Activation = $checkActivation->fetchObject();
+        if ($checkActivation->rowCount() > 0) {
 
-        if ($Activation->isactive == 1) {
+            $Activation = $checkActivation->fetchObject();
 
-            //Get From Pharmacy Table
-            $get_pharmacy = $database->prepare("SELECT id as pharmacy_id,logo as pharmacy_logo,pharmacy_name,start_working,end_working FROM pharmacy WHERE pharmacist_id = :pharmacist_id ORDER BY start_working ");
-            $get_pharmacy->bindparam("pharmacist_id", $pharmacist_id);
-            $get_pharmacy->execute();
+            if ($Activation->isactive == 1) {
 
-            if ($get_pharmacy->rowCount() > 0) {
+                //Get From Pharmacy Table
+                $get_pharmacy = $database->prepare("SELECT id as pharmacy_id,logo as pharmacy_logo,pharmacy_name,start_working,end_working FROM pharmacy WHERE pharmacist_id = :pharmacist_id ORDER BY start_working ");
+                $get_pharmacy->bindparam("pharmacist_id", $pharmacist_id);
+                $get_pharmacy->execute();
 
-                $get_pharmacy = $get_pharmacy->fetchAll(PDO::FETCH_ASSOC);
+                if ($get_pharmacy->rowCount() > 0) {
 
-                print_r(json_encode($get_pharmacy));
+                    $get_pharmacy = $get_pharmacy->fetchAll(PDO::FETCH_ASSOC);
 
+                    print_r(json_encode($get_pharmacy));
+
+                } else {
+                    print_r(json_encode(["Error" => "ليس لديك صيدلية "]));
+                }
             } else {
-                print_r(json_encode(["Error" => "ليس لديك صيدلية "]));
+                print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل الادمن"]));
             }
         } else {
-            print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل الادمن"]));
+            print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
         }
     } else {
-        print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
+        print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
     }
-} else {
-    print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+} else { //If The Entry Method Is Not 'GET'
+    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
 }
 ?>

@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             if ($check_appointment->rowCount() > 0) {
 
-                $update_appoint = $database->prepare("UPDATE appointment SET appoint_case = 1 AND appointment.clinic_id = :clinic_id WHERE appointment.id = :appointment_id ");
+                $update_appoint = $database->prepare("UPDATE appointment SET appoint_case = 1 WHERE appointment.clinic_id = :clinic_id AND appointment.id = :appointment_id ");
 
                 $update_appoint->bindparam("appointment_id", $appointment_id);
                 $update_appoint->bindparam("clinic_id", $clinic_id);
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 if ($update_appoint->rowCount() > 0) {
 
-                    print_r(json_encode(["Message" => "تم الكشف بنجاح"]));
+                    print_r(json_encode(["Message" => "تم تحويل المريض للدكتور بنجاح"]));
 
                 } else {
                     print_r(json_encode(["Error" => "لم يتم العثور على اي حجز"]));

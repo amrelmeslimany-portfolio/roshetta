@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../API_C_A/Connection.php"); //Connect To DataBases
 
 session_start();
 session_regenerate_id();
@@ -9,13 +10,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
     if (isset($_SESSION['admin'])) {
 
-        require_once("../../API_C_A/Connection.php"); //Connect To DataBases
-
-        if (isset($_POST['user_id']) && !empty($_POST['user_id'])) {
+        if (isset($_POST['activation_person_id']) && !empty($_POST['activation_person_id'])) {
 
             //Filter Number INT
 
-            $user_id = filter_var($_POST['user_id'], FILTER_SANITIZE_NUMBER_INT);
+            $user_id = filter_var($_POST['activation_person_id'], FILTER_SANITIZE_NUMBER_INT);
 
             //Check Person
 
@@ -43,11 +42,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                 print_r(json_encode(["Error" => "المعرف غير صحيح"]));
             }
 
-        } elseif (isset($_POST['place_id']) && !empty($_POST['place_id'])) {
+        } elseif (isset($_POST['activation_place_id']) && !empty($_POST['activation_place_id'])) {
 
             //Filter Number INT
 
-            $place_id = filter_var($_POST['place_id'], FILTER_SANITIZE_NUMBER_INT);
+            $place_id = filter_var($_POST['activation_place_id'], FILTER_SANITIZE_NUMBER_INT);
 
             //Check Place
 

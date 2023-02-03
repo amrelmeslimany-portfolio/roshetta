@@ -8,7 +8,6 @@ session_regenerate_id();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-
     if (isset($_SESSION['admin'])) {
 
         //If Patient Account

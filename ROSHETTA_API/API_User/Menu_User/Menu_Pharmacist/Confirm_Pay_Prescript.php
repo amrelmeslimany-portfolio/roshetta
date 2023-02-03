@@ -35,7 +35,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                 } else {
                     print_r(json_encode(["Error" => "فشل صرف الروشتة"]));
                 }
-
             } else {
                 print_r(json_encode(["Error" => "معرف الروشتة غير صحيح"]));
             }
