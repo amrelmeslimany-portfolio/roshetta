@@ -6166,7 +6166,7 @@
 											"header": [
 												{
 													"key": "Date",
-													"value": "Thu, 02 Feb 2023 15:04:11 GMT"
+													"value": "Sun, 05 Feb 2023 19:24:31 GMT"
 												},
 												{
 													"key": "Server",
@@ -6206,11 +6206,11 @@
 												},
 												{
 													"key": "Set-Cookie",
-													"value": "PHPSESSID=ugvbie1q4m9o6u9n1rb6rp4i2j; path=/"
+													"value": "PHPSESSID=uk7kus429jdv25p1ss9243pbuc; path=/"
 												},
 												{
 													"key": "Content-Length",
-													"value": "253"
+													"value": "233"
 												},
 												{
 													"key": "Keep-Alive",
@@ -6226,7 +6226,7 @@
 												}
 											],
 											"cookie": [],
-											"body": "[\n    {\n        \"clinic_id\": 3,\n        \"clinic_logo\": null,\n        \"clinic_name\": \"Dr mohamed saeed\",\n        \"clinic_phone_number\": \"01092338086\",\n        \"clinic_specialist\": \"dentist\",\n        \"clinic_price\": 44,\n        \"start_working\": \"71:28:26\",\n        \"end_working\": \"45:28:26\",\n        \"governorate\": \"aswan\",\n        \"cilinic_address\": \"aswan\"\n    }\n]"
+											"body": "[\n    {\n        \"clinic_id\": 10,\n        \"clinic_logo\": \"http://localhost:3000/ROSHETTA_API/API_C_P/API_IMG/Logo_Img/Clinic/145238/1e499858fd3bd3494c04145238.png\",\n        \"clinic_name\": \"Dr mohamed saeed\",\n        \"clinic_specialist\": \"dentist\",\n        \"governorate\": \"aswan\"\n    }\n]"
 										}
 									]
 								},
@@ -6279,7 +6279,7 @@
 											"header": [
 												{
 													"key": "Date",
-													"value": "Thu, 02 Feb 2023 15:06:34 GMT"
+													"value": "Sun, 05 Feb 2023 19:36:18 GMT"
 												},
 												{
 													"key": "Server",
@@ -6319,11 +6319,11 @@
 												},
 												{
 													"key": "Set-Cookie",
-													"value": "PHPSESSID=jvrj9rt1c2vqvftkfluo9nl2cp; path=/"
+													"value": "PHPSESSID=rgitm079bfu2ojr8rh7rgmke9r; path=/"
 												},
 												{
 													"key": "Content-Length",
-													"value": "52"
+													"value": "156"
 												},
 												{
 													"key": "Keep-Alive",
@@ -6339,7 +6339,7 @@
 												}
 											],
 											"cookie": [],
-											"body": "[\n    {\n        \"disease_name\": \"headache\",\n        \"disease_place\": \"head\"\n    }\n]"
+											"body": "[\n    {\n        \"disease_name\": \"mmm\",\n        \"disease_place\": \"nnnnnn\",\n        \"disease_date\": \"2023-02-05\"\n    },\n    {\n        \"disease_name\": \"headache\",\n        \"disease_place\": \"head\",\n        \"disease_date\": \"2023-02-02\"\n    }\n]"
 										}
 									]
 								},
@@ -6640,7 +6640,7 @@
 											"header": [
 												{
 													"key": "Date",
-													"value": "Thu, 02 Feb 2023 15:10:00 GMT"
+													"value": "Sun, 05 Feb 2023 19:24:57 GMT"
 												},
 												{
 													"key": "Server",
@@ -6680,11 +6680,11 @@
 												},
 												{
 													"key": "Set-Cookie",
-													"value": "PHPSESSID=0cru6t46vdfr3tvnrvj0mngk9e; path=/"
+													"value": "PHPSESSID=8gmelhfd11fedsefmqft0kc04e; path=/"
 												},
 												{
 													"key": "Content-Length",
-													"value": "346"
+													"value": "255"
 												},
 												{
 													"key": "Keep-Alive",
@@ -6700,7 +6700,7 @@
 												}
 											],
 											"cookie": [],
-											"body": "[\n    {\n        \"pharmacy_logo\": \"http://localhost:3000/ROSHETTA_API/API_C_P/API_IMG/Logo_Img/Pharmacy/8211895764/4199418211895764.jpg\",\n        \"pharmacy_name\": \"Dr ali mohamed\",\n        \"pharmacy_phone_number\": \"01010101254\",\n        \"start_working\": \"04:04:00\",\n        \"end_working\": \"05:05:00\",\n        \"governorate\": \"البحيرة\",\n        \"pharmacy_address\": \"ooooooooooo\"\n    }\n]"
+											"body": "[\n    {\n        \"pharmacy_id\": 1,\n        \"pharmacy_logo\": \"http://localhost:3000/ROSHETTA_API/API_C_P/API_IMG/Logo_Img/Pharmacy/8211895764/e0d420c038561baf61b28211895764.jpg\",\n        \"pharmacy_name\": \"Dr ali mohamed\",\n        \"pharmacy_phone_number\": \"01222222222\",\n        \"governorate\": \"behira\"\n    }\n]"
 										}
 									]
 								},
@@ -6814,6 +6814,276 @@
 											],
 											"cookie": [],
 											"body": "[\n    {\n        \"appointment_id\": 26,\n        \"clinic_logo\": null,\n        \"clinic_name\": \"Dr mohamed saeed\",\n        \"clinic_phone_number\": \"01092338086\",\n        \"start_working\": \"71:28:26\",\n        \"end_working\": \"45:28:26\",\n        \"clinic_specialist\": \"dentist\",\n        \"clinic_address\": \"aswan\",\n        \"appoint_date\": \"2023-02-16\"\n    }\n]"
+										}
+									]
+								},
+								{
+									"name": "View_Clinic_Details",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "clinic_id",
+													"value": "",
+													"description": "id of clinic",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost:3000/ROSHETTA_API/API_User/Menu_User/Menu_Patient/View_Clinic_Details.php",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"ROSHETTA_API",
+												"API_User",
+												"Menu_User",
+												"Menu_Patient",
+												"View_Clinic_Details.php"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "View_Clinic_Details",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "clinic_id",
+															"value": "10",
+															"description": "id of clinic",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost:3000/ROSHETTA_API/API_User/Menu_User/Menu_Patient/View_Clinic_Details.php",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"ROSHETTA_API",
+														"API_User",
+														"Menu_User",
+														"Menu_Patient",
+														"View_Clinic_Details.php"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sun, 05 Feb 2023 19:26:54 GMT"
+												},
+												{
+													"key": "Server",
+													"value": "Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.1.12"
+												},
+												{
+													"key": "X-Powered-By",
+													"value": "PHP/8.1.12"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "*"
+												},
+												{
+													"key": "Access-Control-Allow-Methods",
+													"value": "*"
+												},
+												{
+													"key": "Access-Control-Max-Age",
+													"value": "3600"
+												},
+												{
+													"key": "Access-Control-Allow-Headers",
+													"value": "*"
+												},
+												{
+													"key": "Expires",
+													"value": "Thu, 19 Nov 1981 08:52:00 GMT"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-store, no-cache, must-revalidate"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Set-Cookie",
+													"value": "PHPSESSID=7cp7eqmv3to9gngler20n4pcbk; path=/"
+												},
+												{
+													"key": "Content-Length",
+													"value": "445"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5, max=100"
+												},
+												{
+													"key": "Connection",
+													"value": "Keep-Alive"
+												},
+												{
+													"key": "Content-Type",
+													"value": "application/json; charset=UTF-8"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"clinic_details\": [\n        {\n            \"clinic_id\": 10,\n            \"clinic_logo\": \"http://localhost:3000/ROSHETTA_API/API_C_P/API_IMG/Logo_Img/Clinic/145238/1e499858fd3bd3494c04145238.png\",\n            \"clinic_name\": \"Dr mohamed saeed\",\n            \"clinic_phone_number\": \"01000000000\",\n            \"clinic_specialist\": \"dentist\",\n            \"clinic_price\": 50,\n            \"start_working\": \"01:00:00\",\n            \"end_working\": \"08:00:00\",\n            \"governorate\": \"aswan\",\n            \"cilinic_address\": \"aswan\"\n        }\n    ],\n    \"number_reservation_clinic\": 3,\n    \"number_reservation_patient\": 1\n}"
+										}
+									]
+								},
+								{
+									"name": "View_Pharmacy_Details",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "pharmacy_id",
+													"value": "",
+													"description": "id of pharmacy",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost:3000/ROSHETTA_API/API_User/Menu_User/Menu_Patient/View_Pharmacy_Details.php",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"ROSHETTA_API",
+												"API_User",
+												"Menu_User",
+												"Menu_Patient",
+												"View_Pharmacy_Details.php"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "View_Pharmacy_Details",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "pharmacy_id",
+															"value": "1",
+															"description": "id of pharmacy",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost:3000/ROSHETTA_API/API_User/Menu_User/Menu_Patient/View_Pharmacy_Details.php",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"ROSHETTA_API",
+														"API_User",
+														"Menu_User",
+														"Menu_Patient",
+														"View_Pharmacy_Details.php"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Sun, 05 Feb 2023 19:30:57 GMT"
+												},
+												{
+													"key": "Server",
+													"value": "Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.1.12"
+												},
+												{
+													"key": "X-Powered-By",
+													"value": "PHP/8.1.12"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "*"
+												},
+												{
+													"key": "Access-Control-Allow-Methods",
+													"value": "*"
+												},
+												{
+													"key": "Access-Control-Max-Age",
+													"value": "3600"
+												},
+												{
+													"key": "Access-Control-Allow-Headers",
+													"value": "*"
+												},
+												{
+													"key": "Expires",
+													"value": "Thu, 19 Nov 1981 08:52:00 GMT"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-store, no-cache, must-revalidate"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Set-Cookie",
+													"value": "PHPSESSID=7r135gjksr76l2u751f5oge68r; path=/"
+												},
+												{
+													"key": "Content-Length",
+													"value": "411"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5, max=100"
+												},
+												{
+													"key": "Connection",
+													"value": "Keep-Alive"
+												},
+												{
+													"key": "Content-Type",
+													"value": "application/json; charset=UTF-8"
+												}
+											],
+											"cookie": [],
+											"body": "{\n    \"data_pharmacy\": [\n        {\n            \"pharmacy_id\": 1,\n            \"pharmacy_logo\": \"http://localhost:3000/ROSHETTA_API/API_C_P/API_IMG/Logo_Img/Pharmacy/8211895764/e0d420c038561baf61b28211895764.jpg\",\n            \"pharmacy_name\": \"Dr ali mohamed\",\n            \"pharmacy_phone_number\": \"01222222222\",\n            \"start_working\": \"06:00:00\",\n            \"end_working\": \"12:00:00\",\n            \"governorate\": \"behira\",\n            \"pharmacy_address\": \"aswan\"\n        }\n    ],\n    \"number_prescript_pharmacy\": 1,\n    \"number_prescript_patient\": 1\n}"
 										}
 									]
 								}

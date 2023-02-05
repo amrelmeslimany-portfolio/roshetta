@@ -65,9 +65,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                             $prescript = $get_Prescript->fetchObject();
 
                                             $_SESSION['prescript'] = $prescript;
-                                            
-                                            print_r(json_encode(["Message" => "تم وضع الروشتة بنجاح جارى التجهيز لاضافة الادوية"]));
 
+                                            //Add To Appointment Table
+
+                                            $add_appoint = $database->prepare("INSERT INTO appointment(appoint_date,patient_id,clinic_id,appoint_case)
+                                                                                VALUES(:appoint_date,:patient_id,:clinic_id,0)");
+
+                                            $add_appoint->bindparam("appoint_date", $rediscovery_date);
+                                            $add_appoint->bindparam("patient_id", $patient_id);
+                                            $add_appoint->bindparam("clinic_id", $clinic_id);
+                                            $add_appoint->execute();
+
+                                            if ($add_appoint->rowCount() > 0 ) {
+
+                                                print_r(json_encode(["Message" => "تم وضع الروشتة بنجاح جارى التجهيز لاضافة الادوية"]));
+
+                                            } else {
+                                                 print_r(json_encode(["Error" => "فشل اضافة الحجز"]));
+                                            }
+                                            
                                         } else {
                                             print_r(json_encode(["Error" => "فشل جلب الروشتة"]));
                                         }

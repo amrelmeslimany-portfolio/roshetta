@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
         // Get From Disease Table
 
-        $get_disease = $database->prepare("SELECT disease_name,disease_place  FROM  disease  WHERE  patient_id = :id  ORDER BY disease.id DESC ");
+        $get_disease = $database->prepare("SELECT disease_name,disease_place,disease_date  FROM  disease  WHERE  patient_id = :id  ORDER BY disease.disease_date DESC ");
         $get_disease->bindparam("id", $id);
         $get_disease->execute();
 
