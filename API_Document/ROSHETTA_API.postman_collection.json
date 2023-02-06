@@ -7086,6 +7086,165 @@
 											"body": "{\n    \"data_pharmacy\": [\n        {\n            \"pharmacy_id\": 1,\n            \"pharmacy_logo\": \"http://localhost:3000/ROSHETTA_API/API_C_P/API_IMG/Logo_Img/Pharmacy/8211895764/e0d420c038561baf61b28211895764.jpg\",\n            \"pharmacy_name\": \"Dr ali mohamed\",\n            \"pharmacy_phone_number\": \"01222222222\",\n            \"start_working\": \"06:00:00\",\n            \"end_working\": \"12:00:00\",\n            \"governorate\": \"behira\",\n            \"pharmacy_address\": \"aswan\"\n        }\n    ],\n    \"number_prescript_pharmacy\": 1,\n    \"number_prescript_patient\": 1\n}"
 										}
 									]
+								},
+								{
+									"name": "Send_Prescript_Pharmacy",
+									"request": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "formdata",
+											"formdata": [
+												{
+													"key": "pharmacy_id",
+													"value": "",
+													"description": "id of pharmacy",
+													"type": "text"
+												},
+												{
+													"key": "prescript_id[1][id]",
+													"value": "",
+													"description": "id of prescript",
+													"type": "text"
+												},
+												{
+													"key": "prescript_id[2][id]",
+													"value": "",
+													"description": "if more than 1 prescript",
+													"type": "text"
+												}
+											]
+										},
+										"url": {
+											"raw": "http://localhost:3000/ROSHETTA_API/API_User/Menu_User/Menu_Patient/Send_Prescript_Pharmacy.php",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"ROSHETTA_API",
+												"API_User",
+												"Menu_User",
+												"Menu_Patient",
+												"Send_Prescript_Pharmacy.php"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "Send_Prescript_Pharmacy",
+											"originalRequest": {
+												"method": "POST",
+												"header": [],
+												"body": {
+													"mode": "formdata",
+													"formdata": [
+														{
+															"key": "pharmacy_id",
+															"value": "1",
+															"description": "id of pharmacy",
+															"type": "text"
+														},
+														{
+															"key": "prescript_id[1][id]",
+															"value": "14",
+															"description": "id of prescript",
+															"type": "text"
+														},
+														{
+															"key": "prescript_id[2][id]",
+															"value": "15",
+															"description": "if more than 1 prescript",
+															"type": "text"
+														}
+													]
+												},
+												"url": {
+													"raw": "http://localhost:3000/ROSHETTA_API/API_User/Menu_User/Menu_Patient/Send_Prescript_Pharmacy.php",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"ROSHETTA_API",
+														"API_User",
+														"Menu_User",
+														"Menu_Patient",
+														"Send_Prescript_Pharmacy.php"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Mon, 06 Feb 2023 16:06:41 GMT"
+												},
+												{
+													"key": "Server",
+													"value": "Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.1.12"
+												},
+												{
+													"key": "X-Powered-By",
+													"value": "PHP/8.1.12"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "*"
+												},
+												{
+													"key": "Access-Control-Allow-Methods",
+													"value": "*"
+												},
+												{
+													"key": "Access-Control-Max-Age",
+													"value": "3600"
+												},
+												{
+													"key": "Access-Control-Allow-Headers",
+													"value": "*"
+												},
+												{
+													"key": "Expires",
+													"value": "Thu, 19 Nov 1981 08:52:00 GMT"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-store, no-cache, must-revalidate"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Set-Cookie",
+													"value": "PHPSESSID=9d72fr5e10lk8jmpr82h308lsk; path=/"
+												},
+												{
+													"key": "Content-Length",
+													"value": "136"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5, max=99"
+												},
+												{
+													"key": "Connection",
+													"value": "Keep-Alive"
+												},
+												{
+													"key": "Content-Type",
+													"value": "application/json; charset=UTF-8"
+												}
+											],
+											"cookie": [],
+											"body": "[\n    {\n        \"Message\": \"تم اضافة الطلب بنجاح\"\n    },\n    {\n        \"Error\": null\n    }\n]"
+										}
+									]
 								}
 							]
 						},
@@ -8744,6 +8903,119 @@
 											],
 											"cookie": [],
 											"body": "[\n    {\n        \"pharmacy_id\": 1,\n        \"pharmacy_logo\": \"http://localhost:3000/ROSHETTA_API/API_C_P/API_IMG/Logo_Img/Pharmacy/8211895764/4199418211895764.jpg\",\n        \"pharmacy_name\": \"Dr ali mohamed\",\n        \"start_working\": \"04:04:00\",\n        \"end_working\": \"05:05:00\"\n    }\n]"
+										}
+									]
+								},
+								{
+									"name": "View_Order",
+									"request": {
+										"method": "GET",
+										"header": [],
+										"url": {
+											"raw": "http://localhost:3000/ROSHETTA_API/API_User/Menu_User/Menu_Pharmacist/View_Order.php",
+											"protocol": "http",
+											"host": [
+												"localhost"
+											],
+											"port": "3000",
+											"path": [
+												"ROSHETTA_API",
+												"API_User",
+												"Menu_User",
+												"Menu_Pharmacist",
+												"View_Order.php"
+											]
+										}
+									},
+									"response": [
+										{
+											"name": "View_Order",
+											"originalRequest": {
+												"method": "GET",
+												"header": [],
+												"url": {
+													"raw": "http://localhost:3000/ROSHETTA_API/API_User/Menu_User/Menu_Pharmacist/View_Order.php",
+													"protocol": "http",
+													"host": [
+														"localhost"
+													],
+													"port": "3000",
+													"path": [
+														"ROSHETTA_API",
+														"API_User",
+														"Menu_User",
+														"Menu_Pharmacist",
+														"View_Order.php"
+													]
+												}
+											},
+											"status": "OK",
+											"code": 200,
+											"_postman_previewlanguage": "json",
+											"header": [
+												{
+													"key": "Date",
+													"value": "Mon, 06 Feb 2023 17:12:10 GMT"
+												},
+												{
+													"key": "Server",
+													"value": "Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.1.12"
+												},
+												{
+													"key": "X-Powered-By",
+													"value": "PHP/8.1.12"
+												},
+												{
+													"key": "Access-Control-Allow-Origin",
+													"value": "*"
+												},
+												{
+													"key": "Access-Control-Allow-Methods",
+													"value": "*"
+												},
+												{
+													"key": "Access-Control-Max-Age",
+													"value": "3600"
+												},
+												{
+													"key": "Access-Control-Allow-Headers",
+													"value": "*"
+												},
+												{
+													"key": "Expires",
+													"value": "Thu, 19 Nov 1981 08:52:00 GMT"
+												},
+												{
+													"key": "Cache-Control",
+													"value": "no-store, no-cache, must-revalidate"
+												},
+												{
+													"key": "Pragma",
+													"value": "no-cache"
+												},
+												{
+													"key": "Set-Cookie",
+													"value": "PHPSESSID=kmgphq1u4101jl732r0lavf2cd; path=/"
+												},
+												{
+													"key": "Content-Length",
+													"value": "309"
+												},
+												{
+													"key": "Keep-Alive",
+													"value": "timeout=5, max=100"
+												},
+												{
+													"key": "Connection",
+													"value": "Keep-Alive"
+												},
+												{
+													"key": "Content-Type",
+													"value": "application/json; charset=UTF-8"
+												}
+											],
+											"cookie": [],
+											"body": "[\n    {\n        \"prescript_id\": 15,\n        \"ser_id\": \"34898858\",\n        \"patient_name\": \"احمد \",\n        \"phone_number\": \"111\"\n    },\n    {\n        \"prescript_id\": 14,\n        \"ser_id\": \"235698\",\n        \"patient_name\": \"mohamed\",\n        \"phone_number\": \"01022223335\"\n    },\n    {\n        \"prescript_id\": 16,\n        \"ser_id\": \"18841058\",\n        \"patient_name\": \"محمود\",\n        \"phone_number\": \"011122\"\n    }\n]"
 										}
 									]
 								}
