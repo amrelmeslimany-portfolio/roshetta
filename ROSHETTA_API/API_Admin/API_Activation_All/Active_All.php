@@ -2,6 +2,7 @@
 
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../API_Function/All_Function.php"); //All Function
 require_once("../../API_Mail/Mail.php"); //To Send Email
 
 session_start();
@@ -61,7 +62,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         }
                     }
 
-                    print_r(json_encode(["Message" => "تم التفعيل بنجاح"]));
+                    $message = "تم التفعيل بنجاح";
+                    print_r(json_encode(Message(null , $message , 200)));
                     
                     //Send  Message To Login
 
@@ -97,10 +99,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                     $mail->send();
 
                 } else {
-                    print_r(json_encode(["Error" => "الحساب مفعل بالفعل"]));
+                    $message = "الحساب مفعل بالفعل";
+                    print_r(json_encode(Message(null , $message , 202)));
                 }
             } else {
-                print_r(json_encode(["Error" => "المعرف غير صحيح"]));
+                $message = "المعرف غير صحيح";
+                print_r(json_encode(Message(null , $message , 400)));
             }
 
         } elseif (isset($_POST['activation_place_id']) && !empty($_POST['activation_place_id'])) {
@@ -153,7 +157,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         }
                     }
 
-                    print_r(json_encode(["Message" => "تم التفعيل بنجاح"]));
+                    $message = "تم التفعيل بنجاح";
+                    print_r(json_encode(Message(null , $message , 200)));
 
                     //Send  Message To Login
 
@@ -189,18 +194,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                     $mail->send();
 
                 } else {
-                    print_r(json_encode(["Error" => "الحساب مفعل بالفعل"]));
+                    $message = "الحساب مفعل بالفعل";
+                    print_r(json_encode(Message(null , $message , 202)));
                 }
             } else {
-                print_r(json_encode(["Error" => "المعرف غير صحيح"]));
+                $message = "المعرف غير صحيح";
+                print_r(json_encode(Message(null , $message , 400)));
             }
         } else {
-            print_r(json_encode(["Error" => "يجب ارسال المعرف"]));
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null,$Message,400)));
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة"; 
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

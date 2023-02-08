@@ -1,6 +1,7 @@
 <?php
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
+require_once("../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -13,20 +14,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
         $ssd            = $_SESSION['admin']->ssd;
         $profile_img    = $_SESSION['admin']->profile_img;
 
-        $top_menu_data = array(
+        $top_menu_data = [
 
-            "admin_name"    => $admin_name,
+            "name"          => $admin_name,
             "ssd"           => $ssd,
             "profile_img"   => $profile_img
 
-        );
+        ];
 
-        print_r(json_encode($top_menu_data));
+        $message = 'تم جلب البيانات بنجاح';
+        print_r(json_encode(Message($top_menu_data , $message , 200)));
 
     } else{
-        print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+        $Message = "فشل العثور على مستخدم";
+        print_r(json_encode(Message(null,$Message,401)));
     }
 } else { //If The Entry Method Is Not 'GET'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

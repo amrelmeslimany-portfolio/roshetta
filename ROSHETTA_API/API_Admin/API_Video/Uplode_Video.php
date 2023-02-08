@@ -1,6 +1,7 @@
 <?php
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../API_C_A/Connection.php"); //Connect To DataBase
+require_once("../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -30,11 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 if ($video_size > 2000000) { //To Specify The Video Size  > 2M
 
-                    print_r(json_encode(["Error" => "الحجم كبير"]));
+                    $Message = "(2M)يجب أن يكون حجم الفيديو أقل من";
+                    print_r(json_encode(Message(null,$Message,400)));
 
                 } else {
 
-                    $video_new_name = rand(10000000, 99999999) . '.' . $formul; //To Input A Random Name For The Video 
+                    $video_new_name = bin2hex(random_bytes(10)) . '.' . $formul; //To Input A Random Name For The Video 
 
                     $link = 'Video/' . $type . '/'; //File Link
 
@@ -66,10 +68,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                     $upload_video->execute();
 
                                     if ($upload_video->rowCount() > 0) {
-                                        print_r(json_encode(["Message" => "تم التعديل بنجاح"]));
+                                        $Message = "تم التعديل بنجاح";
+                                        print_r(json_encode(Message(null,$Message,201)));
                                         header("refresh:2;");
                                     } else {
-                                        print_r(json_encode(["Error" => "فشل التعديل"]));
+                                        $Message = "فشل التعديل";
+                                        print_r(json_encode(Message(null,$Message,422)));
                                     }
 
                                 } else {
@@ -82,9 +86,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                     $upload_video->execute();
 
                                     if ($upload_video->rowCount() > 0) {
-                                        print_r(json_encode(["Message" => "تم الإضافة بنجاح"]));
+                                        $Message = "تم الإضافة بنجاح";
+                                        print_r(json_encode(Message(null,$Message,201)));
                                     } else {
-                                        print_r(json_encode(["Error" => "فشل الإضافة"]));
+                                        $Message = "فشل الإضافة";
+                                        print_r(json_encode(Message(null,$Message,422)));
                                     }
                                 }
                             }
@@ -114,10 +120,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             $upload_video->execute();
 
                             if ($upload_video->rowCount() > 0) {
-                                print_r(json_encode(["Message" => "تم التعديل بنجاح"]));
+                                $Message = "تم التعديل بنجاح";
+                                print_r(json_encode(Message(null,$Message,201)));
                                 header("refresh:2;");
                             } else {
-                                print_r(json_encode(["Error" => "فشل التعديل"]));
+                                $Message = "فشل التعديل";
+                                print_r(json_encode(Message(null,$Message,422)));
                             }
 
                         } else {
@@ -130,24 +138,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             $upload_video->execute();
 
                             if ($upload_video->rowCount() > 0) {
-                                print_r(json_encode(["Message" => "تم الإضافة بنجاح"]));
+                                $Message = "تم الإضافة بنجاح";
+                                print_r(json_encode(Message(null,$Message,201)));
                             } else {
-                                print_r(json_encode(["Error" => "فشل الإضافة"]));
+                                $Message = "فشل الإضافة";
+                                print_r(json_encode(Message(null,$Message,422)));
                             }
                         }
                     }
                 }
             } else {
-                print_r(json_encode(["Error" => "صيغة الملف غير مدعومة"]));
+                $Message = "صيغة الملف غير مدعومة";
+                print_r(json_encode(Message(null,$Message,415)));
             }
         } else {
-            print_r(json_encode(["Error" => "فشل العثور على نوع الصفحة"]));
+            $Message = "لم يتم تحديد نوع الحساب";
+            print_r(json_encode(Message(null,$Message,401)));
         }
-
     } else {
-        print_r(json_encode([ "Error" => "ليس لديك الصلاحية"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

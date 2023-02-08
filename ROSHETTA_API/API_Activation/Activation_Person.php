@@ -2,6 +2,7 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_C_A/Connection.php"); //Connect To DataBase
+require_once("../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -57,8 +58,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                 || $card_size > 1000000
             ) {
 
-                print_r(json_encode(["Error" => "الحجم كبير"]));
-
+                $Message = "(1M)يجب أن يكون حجم الصورة أقل من";
+                print_r(json_encode(Message(null,$Message,400)));
                 header("refresh:2;");
 
             } else {
@@ -119,14 +120,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                         if ($uploadfile->rowCount() > 0) {
 
-                                            print_r(json_encode(["Message" => "تم التقديم للمراجعة"]));
-
+                                            $Message = "تم التقديم للمراجعة";
+                                            print_r(json_encode(Message(null,$Message,201)));
                                             header("refresh:2;");
 
                                         } //not else
 
                                     } else {
-                                        print_r(json_encode(["Error" => "فشل تقديم المستندات"]));
+                                        $Message = "فشل رفع الملف";
+                                        print_r(json_encode(Message(null,$Message,422)));
                                     }
                                 } else {
 
@@ -145,16 +147,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                         if ($uploadfile->rowCount() > 0) {
 
-                                            print_r(json_encode(["Message" => "تم التقديم للمراجعة"]));
-
+                                            $Message = "تم التقديم للمراجعة";
+                                            print_r(json_encode(Message(null,$Message,201)));
                                             header("refresh:2;");
 
                                         } else {
-                                            print_r(json_encode(["Error" => "فشل رفع الملف"]));
+                                            $Message = "فشل رفع الملف";
+                                            print_r(json_encode(Message(null,$Message,422)));
                                         }
 
                                     } else {
-                                        print_r(json_encode(["Error" => "فشل تقديم المستندات"]));
+                                        $Message = "فشل رفع الملف";
+                                        print_r(json_encode(Message(null,$Message,422)));
                                     }
 
                                 }
@@ -200,14 +204,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                 if ($uploadfile->rowCount() > 0) {
 
-                                    print_r(json_encode(["Message" => "تم التقديم للمراجعة"]));
-
+                                    $Message = "تم التقديم للمراجعة";
+                                    print_r(json_encode(Message(null,$Message,201)));
                                     header("refresh:2;");
 
                                 } //not else
 
                             } else {
-                                print_r(json_encode(["Error" => "فشل تقديم المستندات"]));
+                                $Message = "فشل رفع الملف";
+                                print_r(json_encode(Message(null,$Message,422)));
                             }
                         } else {
 
@@ -226,16 +231,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                 if ($uploadfile->rowCount() > 0) {
 
-                                    print_r(json_encode(["Message" => "تم التقديم للمراجعة"]));
-
+                                    $Message = "تم التقديم للمراجعة";
+                                    print_r(json_encode(Message(null,$Message,201)));
                                     header("refresh:2;");
 
                                 } else {
-                                    print_r(json_encode(["Error" => "فشل رفع الملف"]));
+                                    $Message = "فشل رفع الملف";
+                                    print_r(json_encode(Message(null,$Message,422)));
                                 }
 
                             } else {
-                                print_r(json_encode(["Error" => "فشل تقديم المستندات"]));
+                                $Message = "فشل رفع الملف";
+                                print_r(json_encode(Message(null,$Message,422)));
                             }
 
                         }
@@ -290,14 +297,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                         if ($uploadfile->rowCount() > 0) {
 
-                                            print_r(json_encode(["Message" => "تم التقديم للمراجعة"]));
-
+                                            $Message = "تم التقديم للمراجعة";
+                                            print_r(json_encode(Message(null,$Message,201)));
                                             header("refresh:2;");
 
                                         } //not else
 
                                     } else {
-                                        print_r(json_encode(["Error" => "فشل تقديم المستندات"]));
+                                        $Message = "فشل رفع الملف";
+                                        print_r(json_encode(Message(null,$Message,422)));
                                     }
                                 } else {
 
@@ -316,16 +324,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                         if ($uploadfile->rowCount() > 0) {
 
-                                            print_r(json_encode(["Message" => "تم التقديم للمراجعة"]));
-
+                                            $Message = "تم التقديم للمراجعة";
+                                            print_r(json_encode(Message(null,$Message,201)));
                                             header("refresh:2;");
 
                                         } else {
-                                            print_r(json_encode(["Error" => "فشل رفع الملف"]));
+                                            $Message = "فشل رفع الملف";
+                                            print_r(json_encode(Message(null,$Message,422)));
                                         }
 
                                     } else {
-                                        print_r(json_encode(["Error" => "فشل تقديم المستندات"]));
+                                        $Message = "فشل رفع الملف";
+                                        print_r(json_encode(Message(null,$Message,422)));
                                     }
 
                                 }
@@ -370,14 +380,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                 if ($uploadfile->rowCount() > 0) {
 
-                                    print_r(json_encode(["Message" => "تم التقديم للمراجعة"]));
-
+                                    $Message = "تم التقديم للمراجعة";
+                                    print_r(json_encode(Message(null,$Message,201)));
                                     header("refresh:2;");
 
                                 } //not else
 
                             } else {
-                                print_r(json_encode(["Error" => "فشل تقديم المستندات"]));
+                                $Message = "فشل رفع الملف";
+                                print_r(json_encode(Message(null,$Message,422)));
                             }
                         } else {
 
@@ -396,31 +407,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                 if ($uploadfile->rowCount() > 0) {
 
-                                    print_r(json_encode(["Message" => "تم التقديم للمراجعة"]));
-
+                                    $Message = "تم التقديم للمراجعة";
+                                    print_r(json_encode(Message(null,$Message,201)));
                                     header("refresh:2;");
 
                                 } else {
-                                    print_r(json_encode(["Error" => "فشل رفع الملف"]));
+                                    $Message = "فشل رفع الملف";
+                                    print_r(json_encode(Message(null,$Message,422)));
                                 }
 
                             } else {
-                                print_r(json_encode(["Error" => "فشل تقديم المستندات"]));
+                                $Message = "فشل رفع الملف";
+                                print_r(json_encode(Message(null,$Message,422)));
                             }
 
                         }
                     }
                 } else {
-                    print_r(json_encode(["Error" => "فشل العثور على الشيشن"]));
+                    $Message = "فشل العثور على مستخدم";
+                    print_r(json_encode(Message(null,$Message,401)));
                 }
             }
         } else {
-            print_r(json_encode(["Error" => "صيغة الملف غير مدعومة"]));
+            $Message = "صيغة الملف غير مدعومة";
+            print_r(json_encode(Message(null,$Message,415)));
         }
     } else {
-        print_r(json_encode(["Error" => "فشل العثور على الشيشن"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة"; 
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

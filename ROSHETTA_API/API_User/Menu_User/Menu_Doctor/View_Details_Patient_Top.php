@@ -2,6 +2,7 @@
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -21,19 +22,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             if ($check_patient->rowCount() > 0) {
 
                 $patient_data = $check_patient->fetchAll(PDO::FETCH_ASSOC);
-
-                print_r(json_encode($patient_data));
+                $Message = "تم جلب البيانات ";
+                print_r(json_encode(Message($patient_data, $Message, 200)));
 
             } else {
-                print_r(json_encode(["Error" => "رقم المريض غير صحيح"]));
+                $Message = "رقم المريض غير صحيح";
+                print_r(json_encode(Message(null, $Message, 400)));
             }
         } else {
-            print_r(json_encode(["Error" => "لم يتم العثور على المريض"]));
+            $message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null , $message , 400)));
         }
     } else {
-        print_r(json_encode(["Error" => "غير مسموح لك بعرض تلك التفاصيل"]));
+        $Message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null, $Message, 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

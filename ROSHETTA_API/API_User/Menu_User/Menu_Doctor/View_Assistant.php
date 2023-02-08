@@ -2,6 +2,7 @@
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -23,20 +24,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
             if ($get_assistant->rowCount() > 0) {
 
-                $get_assistant = $get_assistant->fetchAll(PDO::FETCH_ASSOC);
-
-                print_r(json_encode($get_assistant));
+                $data_assistant = $get_assistant->fetchAll(PDO::FETCH_ASSOC);
+                $Message = "تم جلب البيانات ";
+                print_r(json_encode(Message($data_assistant, $Message, 200)));
 
             } else {
-                print_r(json_encode(["Error" => "لم يتم العثور على مساعد"]));
+                $Message = "لم يتم العثور على مساعد";
+                print_r(json_encode(Message(null, $Message, 204)));
             }
         } else {
-            print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+            $Message = "فشل جلب البيانات";
+            print_r(json_encode(Message(null, $Message, 422)));
         }
     } else {
-        print_r(json_encode(["Error" => "لم يتم العثور على مستخدم"]));
+        $Message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null, $Message, 403)));
     }
 } else { //If The Entry Method Is Not 'GET'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

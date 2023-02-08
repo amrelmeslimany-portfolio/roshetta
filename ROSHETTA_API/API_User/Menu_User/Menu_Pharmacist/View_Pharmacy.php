@@ -2,6 +2,7 @@
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -29,23 +30,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
                 if ($get_pharmacy->rowCount() > 0) {
 
-                    $get_pharmacy = $get_pharmacy->fetchAll(PDO::FETCH_ASSOC);
+                    $data_pharmacy = $get_pharmacy->fetchAll(PDO::FETCH_ASSOC);
 
-                    print_r(json_encode($get_pharmacy));
+                    $Message = "تم جلب البيانات ";
+                    print_r(json_encode(Message($data_pharmacy , $Message, 200)));
 
                 } else {
-                    print_r(json_encode(["Error" => "ليس لديك صيدلية "]));
+                    $Message = "لم يتم العثور على صيدلية";
+                    print_r(json_encode(Message(null, $Message, 204)));
                 }
             } else {
-                print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل الادمن"]));
+                $Message = "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل المشرف";
+                print_r(json_encode(Message(null, $Message, 202)));
             }
         } else {
-            print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
+            $Message = "يجب تفعيل الحساب";
+            print_r(json_encode(Message(null, $Message, 202)));
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+        $Message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null, $Message, 403)));
     }
 } else { //If The Entry Method Is Not 'GET'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

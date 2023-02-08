@@ -2,6 +2,7 @@
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../../API_Function/All_Function.php"); //All Function
 date_default_timezone_set('Africa/Cairo'); //Set To Cairo TimeZone
 
 session_start();
@@ -25,10 +26,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             $get_message->execute();
 
             if ($get_message->rowCount() > 0) {
+
                 $data_message = $get_message->fetchAll(PDO::FETCH_ASSOC);
-                print_r(json_encode($data_message));
+                $Message = "تم جلب البيانات ";
+                print_r(json_encode(Message($data_message, $Message, 200)));
+                
             } else {
-                print_r(json_encode(["Error" => "كن أول من يرسل رسالة"]));
+                $Message = "كن أول من يرسل رسالة";
+                print_r(json_encode(Message(null, $Message, 204)));
             }
 
         } else {
@@ -39,16 +44,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             $get_message->execute();
 
             if ($get_message->rowCount() > 0) {
+
                 $data_message = $get_message->fetchAll(PDO::FETCH_ASSOC);
-                print_r(json_encode($data_message));
+                $Message = "تم جلب البيانات ";
+                print_r(json_encode(Message($data_message, $Message, 200)));
+
             } else {
-                print_r(json_encode(["Error" => "كن أول من يرسل رسالة"]));
+                $Message = "كن أول من يرسل رسالة";
+                print_r(json_encode(Message(null, $Message, 204)));
             }
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+        $Message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null, $Message, 403)));
     }
 } else { //If The Entry Method Is Not 'GET'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

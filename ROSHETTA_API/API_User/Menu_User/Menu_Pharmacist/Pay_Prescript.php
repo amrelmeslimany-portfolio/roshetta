@@ -2,6 +2,7 @@
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -29,15 +30,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         if ($get_prescript->rowCount() > 0) {
 
-                            $get_prescript = $get_prescript->fetchAll(PDO::FETCH_ASSOC);
+                            $data_prescript = $get_prescript->fetchAll(PDO::FETCH_ASSOC);
 
-                            print_r(json_encode($get_prescript));
+                            $Message = "تم جلب البيانات ";
+                            print_r(json_encode(Message($data_prescript , $Message, 200)));
 
                         } else {
-                            print_r(json_encode(["Error" => "لم يتم العثور على اي روشتة"]));
+                            $Message = "لم يتم العثور على اي روشتة";
+                            print_r(json_encode(Message(null, $Message, 204)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                        $Message = "فشل جلب البيانات";
+                        print_r(json_encode(Message(null, $Message, 422)));
                     }
 
                 } elseif ($_POST['type'] === 'ser_id') {
@@ -84,41 +88,51 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                     }
 
-                                    $data_message_value = array(
+                                    $data = [
 
                                         // All Data In Array For Print 
 
-                                        "prescript_data" => $get_prescript,
-                                        "medicine_data" => $medicine_data_array
-                                    );
+                                        "prescript_data"    => $get_prescript,
+                                        "medicine_data"     => $medicine_data_array
+                                    ];
 
-                                    print_r(json_encode($data_message_value)); //Print Data
+                                    $Message = "تم جلب البيانات ";
+                                    print_r(json_encode(Message($data , $Message, 200)));
 
                                 } else {
-                                    print_r(json_encode(["Error" => "لم يتم العثور على بيانات"]));
+                                    $Message = "لم يتم العثور على بيانات";
+                                    print_r(json_encode(Message(null, $Message, 204)));
                                 }
                             } else {
-                                print_r(json_encode(["Error" => "لم يتم العثور على بيانات"]));
+                                $Message = "لم يتم العثور على بيانات ";
+                                print_r(json_encode(Message(null, $Message, 204)));
                             }
                         } else {
-                            print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                            $Message = "فشل جلب البيانات";
+                            print_r(json_encode(Message(null, $Message, 422)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "معرف الروشتة غير صحيح"]));
+                        $Message = "معرف الروشتة غير صحيح";
+                        print_r(json_encode(Message(null, $Message, 400)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "فشل العثور على نوع البحث"]));
+                    $Message = "فشل العثور على نوع البحث";
+                    print_r(json_encode(Message(null, $Message, 401)));
                 }
             } else {
-                print_r(json_encode(["Error" => "لم يتم ادخال الرقم القومى او معرف الروشتة"]));
+                $Message = "يجب اكمال البيانات";
+                print_r(json_encode(Message(null, $Message, 400)));
             }
         } else {
-            print_r(json_encode(["Error" => "لم يتم تحديد نوع البحث"]));
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null, $Message, 400)));
         }
     } else {
-        print_r(json_encode(["Error" => "غير مسموح لك القيام بالعرض"]));
+        $Message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null, $Message, 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

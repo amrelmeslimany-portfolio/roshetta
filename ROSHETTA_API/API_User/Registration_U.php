@@ -2,6 +2,7 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_C_A/Connection.php"); //Connect To DataBases 
+require_once("../API_Function/All_Function.php"); //All Function
 require_once("../API_Mail/Mail.php");  //To Send Email
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
@@ -50,7 +51,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             if ($checkssd->rowCount() > 0) {
 
-                                print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى موجود من قبل"]));
+                                $Message = "الرقم القومى او البريد الالكترونى موجود من قبل";
+                                print_r(json_encode(Message(null,$Message,400)));
 
                             } else {
 
@@ -126,28 +128,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                     if ($mail->send()) {
 
-                                        print_r(json_encode(["Message" => "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى والضغط على الرابط لتفعيل الحساب"]));
+                                        $Message = "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى لتفعيل الحساب";
+                                        print_r(json_encode(Message(null,$Message,201)));
 
                                     } else {
-
-                                        print_r(json_encode(["Error" => "فشل ارسال رسالة التفعيل"]));
+                                        $Message = "فشل ارسال رسالة التفعيل";
+                                        print_r(json_encode(Message(null,$Message,202)));
                                     }
                                     
                                 } else {
-                                    print_r(json_encode(["Error" => "فشل تسجيل المريض"]));
+                                    $Message = "فشل التسجيل";
+                                    print_r(json_encode(Message(null,$Message,422)));
                                 }
                             }
                         } else {
-                            print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
+                            $Message = "رقم الهاتف غير صالح";
+                            print_r(json_encode(Message(null,$Message,400)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى غير صالح"]));
+                        $Message = "الرقم القومى او البريد الالكترونى غير صالح";
+                        print_r(json_encode(Message(null,$Message,400)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
+                    $Message = "كلمة المرور غير متطابقة";
+                    print_r(json_encode(Message(null,$Message,400)));
                 }
             } else {
-                print_r(json_encode(["Error" => "يجب عليك اكمال جميع البيانات"]));
+                $Message = "يجب اكمال البيانات";
+                print_r(json_encode(Message(null,$Message,400)));
             }
 
             //****************************** End Patients Table  ****************************//  
@@ -191,7 +199,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             if ($checkssd->rowCount() > 0) {
 
-                                print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى موجود من قبل"]));
+                                $Message = "الرقم القومى او البريد الالكترونى موجود من قبل";
+                                print_r(json_encode(Message(null,$Message,400)));
 
                             } else {
 
@@ -201,7 +210,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                 if ($check_phone->rowCount() > 0) {
 
-                                    print_r(json_encode(["Error" => "رقم الهاتف موجود من قبل"]));
+                                    $Message = "رقم الهاتف موجود من قبل";
+                                    print_r(json_encode(Message(null,$Message,400)));
 
                                 } else {
 
@@ -275,29 +285,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                         if ($mail->send()) {
 
-                                            print_r(json_encode(["Message" => "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى والضغط على الرابط لتفعيل الحساب"]));
-
+                                            $Message = "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى لتفعيل الحساب";
+                                            print_r(json_encode(Message(null,$Message,201)));
+                                            
                                         } else {
-
-                                            print_r(json_encode(["Error" => "فشل ارسال رسالة التفعيل"]));
+                                            $Message = "فشل ارسال رسالة التفعيل";
+                                            print_r(json_encode(Message(null,$Message,202)));
                                         }
 
                                     } else {
-                                        print_r(json_encode(["Error" => "فشل تسجيل الدكتور"]));
+                                        $Message = "فشل التسجيل";
+                                        print_r(json_encode(Message(null,$Message,422)));
                                     }
                                 }
                             }
                         } else {
-                            print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
+                            $Message = "رقم الهاتف غير صالح";
+                            print_r(json_encode(Message(null,$Message,400)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى غير صالح"]));
+                        $Message = "الرقم القومى او البريد الالكترونى غير صالح";
+                        print_r(json_encode(Message(null,$Message,400)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
+                    $Message = "كلمة المرور غير متطابقة";
+                    print_r(json_encode(Message(null,$Message,400)));
                 }
             } else {
-                print_r(json_encode(["Error" => "يجب عليك اكمال جميع البيانات"]));
+                $Message = "يجب اكمال البيانات";
+                print_r(json_encode(Message(null,$Message,400)));
             }
 
             //****************************** End Doctors Table ****************************//  
@@ -340,7 +356,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             if ($checkssd->rowCount() > 0) {
 
-                                print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى موجود من قبل"]));
+                                $Message = "الرقم القومى او البريد الالكترونى موجود من قبل";
+                                print_r(json_encode(Message(null,$Message,400)));
 
                             } else {
 
@@ -350,7 +367,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                 if ($check_phone->rowCount() > 0) {
 
-                                    print_r(json_encode(["Error" => "رقم الهاتف موجود من قبل"]));
+                                    $Message = "رقم الهاتف موجود من قبل";
+                                    print_r(json_encode(Message(null,$Message,400)));
 
                                 } else {
 
@@ -422,31 +440,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
     
                                         if ($mail->send()) {
 
-                                            print_r(json_encode(["Message" => "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى والضغط على الرابط لتفعيل الحساب"]));
+                                            $Message = "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى لتفعيل الحساب";
+                                            print_r(json_encode(Message(null,$Message,201)));
 
                                         } else {
-
-                                            print_r(json_encode(["Error" => "فشل ارسال رسالة التفعيل"]));
+                                            $Message = "فشل ارسال رسالة التفعيل";
+                                            print_r(json_encode(Message(null,$Message,202)));
                                         }
 
                                     } else {
-                                        print_r(json_encode(["Error" => "فشل تسجيل الصيدلى"]));
-
+                                        $Message = "فشل التسجيل";
+                                        print_r(json_encode(Message(null,$Message,422)));
                                     }
                                 }
                             }
                         } else {
-                            print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
+                            $Message = "رقم الهاتف غير صالح";
+                            print_r(json_encode(Message(null,$Message,400)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى غير صالح"]));
+                        $Message = "الرقم القومى او البريد الالكترونى غير صالح";
+                        print_r(json_encode(Message(null,$Message,400)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
+                    $Message = "كلمة المرور غير متطابقة";
+                    print_r(json_encode(Message(null,$Message,400)));
                 }
             } else {
-                print_r(json_encode(["Error" => "يجب عليك اكمال جميع البيانات"]));
-
+                $Message = "يجب اكمال البيانات";
+                print_r(json_encode(Message(null,$Message,400)));
             }
 
             //****************************** End Pharmacists Table ****************************//
@@ -489,7 +511,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             if ($checkssd->rowCount() > 0) {
 
-                                print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى موجود من قبل"]));
+                                $Message = "الرقم القومى او البريد الالكترونى موجود من قبل";
+                                print_r(json_encode(Message(null,$Message,400)));
 
                             } else {
 
@@ -499,7 +522,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                 if ($check_phone->rowCount() > 0) {
 
-                                    print_r(json_encode(["Error" => "رقم الهاتف موجود من قبل"]));
+                                    $Message = "رقم الهاتف موجود من قبل";
+                                    print_r(json_encode(Message(null,$Message,400)));
 
                                 } else {
                                     //Filter Data 'STRING' && Hash Password
@@ -570,41 +594,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                         if ($mail->send()) {
 
-                                            print_r(json_encode(["Message" => "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى والضغط على الرابط لتفعيل الحساب"]));
+                                            $Message = "تم التسجيل بنجاح الرجاء التوجه الى البريد الالكترونى لتفعيل الحساب";
+                                            print_r(json_encode(Message(null,$Message,201)));
 
                                         } else {
-
-                                            print_r(json_encode(["Error" => "فشل ارسال رسالة التفعيل"]));
+                                            $Message = "فشل ارسال رسالة التفعيل";
+                                            print_r(json_encode(Message(null,$Message,202)));
                                         }
-
                                     } else {
-                                        print_r(json_encode(["Error" => "فشل تسجيل المساعد"]));
+                                        $Message = "فشل التسجيل";
+                                        print_r(json_encode(Message(null,$Message,422)));
                                     }
                                 }
                             }
                         } else {
-                            print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
+                            $Message = "رقم الهاتف غير صالح";
+                            print_r(json_encode(Message(null,$Message,400)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى غير صالح"]));
+                        $Message = "الرقم القومى او البريد الالكترونى غير صالح";
+                        print_r(json_encode(Message(null,$Message,400)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
+                    $Message = "كلمة المرور غير متطابقة";
+                    print_r(json_encode(Message(null,$Message,400)));
                 }
             } else {
-                print_r(json_encode(["Error" => "يجب عليك اكمال جميع البيانات"]));
-
+                $Message = "يجب اكمال البيانات";
+                print_r(json_encode(Message(null,$Message,400)));
             }
 
             //****************************** End Assistants Table  ****************************//
 
         } else { //If Didn't Find The Name Of The Role Available
-            print_r(json_encode(["Error" => "لا يوجد قاعدة بيانات"]));
+            $Message = "نوع الحساب غير متاح";
+            print_r(json_encode(Message(null,$Message,401)));
         }
     } else { //If Didn't Find The Role
-        print_r(json_encode(["Error" => "لا يوجد دور"]));
+        $Message = "يجب تحديد نوع الحساب";
+        print_r(json_encode(Message(null,$Message,401)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null,$Message,405)));
 }
 ?>

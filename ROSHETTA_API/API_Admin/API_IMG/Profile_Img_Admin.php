@@ -2,6 +2,7 @@
 
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../API_C_A/Connection.php"); //Connect To DataBase
+require_once("../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -27,7 +28,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             if ($img_size > 1000000) { //To Specify The Image Size  > 1M
 
-                print_r(json_encode(["Error" => "الحجم كبير"]));
+                $Message = "(1M)يجب أن يكون حجم الصورة أقل من";
+                print_r(json_encode(Message(null,$Message,400)));
 
             } else {
 
@@ -72,19 +74,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                     $new_session = $getImg->fetchObject();
                                     $_SESSION['admin'] = $new_session;
-                                    $data_img = array(
 
-                                        "Message" => "تم تعديل صورة الملف الشخصى بنجاح",
-                                        "URL" => $new_session->profile_img
-                                    );
-
-                                    print_r(json_encode($data_img));
+                                    $Message = "تم تعديل صورة الملف الشخصى بنجاح";
+                                    print_r(json_encode(Message(null,$Message,201)));
 
                                 } else {
-                                    print_r(json_encode(["Error" => "فشل جلب الملف"]));
+                                    $Message = "فشل تعديل الصورة";
+                                    print_r(json_encode(Message(null,$Message,422)));
                                 }
                             } else {
-                                print_r(json_encode(["Error" => "فشل رفع الملف"]));
+                                $Message = "فشل تعديل الصورة";
+                                print_r(json_encode(Message(null,$Message,422)));
                             }
                         }
                     }
@@ -121,29 +121,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             $new_session = $getImg->fetchObject();
                             $_SESSION['admin'] = $new_session;
-                            $data_img = array(
 
-                                "Message" => "تم تعديل صورة الملف الشخصى بنجاح",
-                                "URL" => $new_session->profile_img
-                            );
-
-                            print_r(json_encode($data_img));
+                            $Message = "تم تعديل صورة الملف الشخصى بنجاح";
+                            print_r(json_encode(Message(null,$Message,201)));
 
                         } else {
-                            print_r(json_encode(["Error" => "فشل جلب الملف"]));
+                            $Message = "فشل تعديل الصورة";
+                            print_r(json_encode(Message(null,$Message,422)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "فشل رفع الملف"]));
+                        $Message = "فشل تعديل الصورة";
+                        print_r(json_encode(Message(null,$Message,422)));
                     }
                 }
             }   
         } else {
-            print_r(json_encode(["Error" => "صيغة الملف غير مدعومة"]));
+            $Message = "صيغة الملف غير مدعومة";
+            print_r(json_encode(Message(null,$Message,415)));
         }
     } else {
-        print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+        $Message = "فشل العثور على مستخدم";
+        print_r(json_encode(Message(null,$Message,401)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

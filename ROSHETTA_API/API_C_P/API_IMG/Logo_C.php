@@ -1,6 +1,8 @@
 <?php
 
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../API_C_A/Connection.php"); //Connect To DataBase
+require_once("../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -27,7 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             if ($img_size > 1000000) { //To Specify The Image Size < 1M
 
-                print_r(json_encode(["Error" => "الحجم كبير"]));
+                $Message = "(1M)يجب أن يكون حجم الصورة أقل من";
+                print_r(json_encode(Message(null,$Message,400)));
 
             } else {
 
@@ -48,8 +51,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
                             $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                             $logo_img       = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_C_P/API_IMG/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                            require_once("../../API_C_A/Connection.php"); //Connect To DataBase
 
                             $id = $_SESSION['clinic']->id;
 
@@ -74,19 +75,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                     $getImg = $getImg->fetchObject();
                                     $_SESSION['clinic'] = $getImg;
-                                    $data_message = array(
 
-                                        "Message" => "تم تعديل الشعار بنجاح",
-                                        "URL"     => $getImg->logo
-                                    );
-                                    
-                                    print_r(json_encode($data_message));
+                                    $data = [
+                                        "URL"  => $getImg->logo
+                                    ];
+
+                                    $Message = "تم تعديل الشعار بنجاح";
+                                    print_r(json_encode(Message($data,$Message,201)));
 
                                 } else {
-                                    print_r(json_encode("فشل جلب الملف"));
+                                    $Message = "فشل جلب الشعار";
+                                    print_r(json_encode(Message(null,$Message,422)));
                                 }
                             } else {
-                                print_r(json_encode("فشل رفع الملف"));
+                                $Message = "فشل تعديل الشعار";
+                                print_r(json_encode(Message(null,$Message,422)));
                             }
                         }
                     }
@@ -99,8 +102,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                     $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
                     $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                     $logo_img       = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_C_P/API_IMG/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                    require_once("../../API_C_A/Connection.php"); //Connect To DataBase
 
                     $id = $_SESSION['clinic']->id;
 
@@ -125,29 +126,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             $getImg = $getImg->fetchObject();
                             $_SESSION['clinic'] = $getImg;
-                            $data_message = array(
 
-                                "Message" => "تم تعديل الشعار بنجاح",
-                                "URL"     => $getImg->logo
-                            );
+                            $data = [
+                                "URL"  => $getImg->logo
+                            ];
 
-                            print_r(json_encode($data_message));
+                            $Message = "تم تعديل الشعار بنجاح";
+                            print_r(json_encode(Message($data,$Message,201)));
 
                         } else {
-                            print_r(json_encode(["Error" => "فشل جلب الملف"]));
+                            $Message = "فشل جلب الشعار";
+                            print_r(json_encode(Message(null,$Message,422)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "فشل رفع الملف"]));
+                        $Message = "فشل تعديل الشعار";
+                        print_r(json_encode(Message(null,$Message,422)));
                     }
                 }
             }
         } else {
-            print_r(json_encode(["Error" => "صيغة الملف غير مدعومة"]));
+            $Message = "صيغة الملف غير مدعومة";
+            print_r(json_encode(Message(null,$Message,415))); 
         }
     } else {
-        print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+        $Message = "فشل العثور على مستخدم";
+        print_r(json_encode(Message(null,$Message,401)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

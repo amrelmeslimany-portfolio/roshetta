@@ -3,7 +3,7 @@
 require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_C_A/Connection.php"); //Connect To DataBases
 require_once("../API_Mail/Mail.php"); //To Send Email
-require_once("Get_Ip_User.php"); //To Get The User IP Address
+require_once("../API_Function/All_Function.php"); //All Function
 date_default_timezone_set('Africa/Cairo'); //Set To Cairo TimeZone
 
 session_start();
@@ -88,12 +88,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 $Hi = '';
                             }
 
-                            $data_message = array(
-                                "Message"       => $name . " : مرحبا بك ",
-                                "Account_Type"  => $data_user->role
-                            );
 
-                            print_r(json_encode($data_message));
+                            $Data       = ["Account" => $data_user->role];
+                            $Message    = $name . " : مـــرحبــــا بـــك ";
+                            
+                            print_r(json_encode(Message($Data,$Message,200)));
 
                             $email          = $data_user->email;
                             $security_code  = $data_user->security_code;
@@ -140,24 +139,31 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             $mail->send();
 
                         } else {
-                            print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
+                            $Message = "يجب تفعيل الحساب";
+                            print_r(json_encode(Message(null,$Message,202)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "الرقم القومى او كلمة المرور غير صحيح"]));
+                        $Message = "الرقم القومى او كلمة المرور غير صحيح";
+                        print_r(json_encode(Message(null,$Message,400)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "الرقم القومى او البريد الإلكترونى غير صحيح"]));
+                    $Message = "الرقم القومى او البريد الإلكترونى غير صحيح";
+                    print_r(json_encode(Message(null,$Message,400)));
                 }
             } else {
-                print_r(json_encode(["Error" => "الرقم القومى او البريد الإلكترونى غير صالح"]));
+                $Message = "الرقم القومى او البريد الإلكترونى غير صالح";
+                print_r(json_encode(Message(null,$Message,400)));
             }
         } else { //If Didn't Find SSD Or PASSWORD
-            print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null,$Message,400)));
         }
     } else { //If Didn't Find The Role
-        print_r(json_encode(["Error" => "يجب تحديد نوع الحساب"]));
+        $Message = "يجب تحديد نوع الحساب";
+        print_r(json_encode(Message(null,$Message,401)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null,$Message,405)));
 }
 ?>

@@ -2,6 +2,7 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -22,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($get_patient->rowCount() > 0) {
                 $data_patient = $get_patient->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_patient = array(["Error" => ":("]);
+                $data_patient = ["Message" => ":("];
             }
 
             //Get From Doctor Table
@@ -33,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($get_doctor->rowCount() > 0) {
                 $data_doctor = $get_doctor->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_doctor = array(["Error" => ":("]);
+                $data_doctor = ["Message" => ":("];
             }
 
             //Get From Pharmacist Table
@@ -44,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($get_pharmacist->rowCount() > 0) {
                 $data_pharmacist = $get_pharmacist->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_pharmacist = array(["Error" => ":("]);
+                $data_pharmacist = ["Message" => ":("];
             }
 
             //Get From Assistant Table
@@ -55,10 +56,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($get_assistant->rowCount() > 0) {
                 $data_assistant = $get_assistant->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_assistant = array(["Error" => ":("]);
+                $data_assistant = ["Message" => ":("];
             }
 
-            $data_search = array(
+            $data_search = [
 
                 // Array Of All
 
@@ -67,17 +68,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
                 "data_pharmacist"   => $data_pharmacist,
                 "data_assistant"    => $data_assistant
 
-            );
+            ];
 
-            print_r(json_encode($data_search));
+            $message = "تم جلب البيانات";
+            print_r(json_encode(Message($data_search , $message , 200)));
 
         } else {
-            print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null,$Message,400)));
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية لعرض الاحصائيات"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'GET'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null,$Message,405)));
 }
 ?>

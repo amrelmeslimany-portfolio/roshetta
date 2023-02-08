@@ -2,6 +2,7 @@
 
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -74,25 +75,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             $_SESSION['null'] = '';
                         }
 
-                        print_r(json_encode(["Message" => "تم تعديل كلمة المرور بنجاح"]));
+                        $Message = "تم تعديل كلمة المرور بنجاح";
+                        print_r(json_encode(Message(null,$Message,201)));
                         header("refresh:2;");
 
                     } else {
-                        print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                        $Message = "فشل جلب البيانات";
+                        print_r(json_encode(Message(null,$Message,422)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "فشل تعديل كلمة المرور"]));
+                    $Message = "فشل تعديل كلمة المرور";
+                    print_r(json_encode(Message(null,$Message,422)));
                 }
             } else {
-                print_r(json_encode(["Error" => "كلمة المرور غير متطابقة"]));
+                $Message = "كلمة المرور غير متطابقة";
+                print_r(json_encode(Message(null,$Message,400)));
             }
         } else {
-            print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null,$Message,400)));
         }
     } else {
-        print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+        $Message = "فشل العثور على مستخدم";
+        print_r(json_encode(Message(null,$Message,401)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

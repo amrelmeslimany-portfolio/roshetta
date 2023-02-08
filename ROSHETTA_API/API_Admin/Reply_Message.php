@@ -2,6 +2,7 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../API_Function/All_Function.php"); //All Function
 require_once("../API_Mail/Mail.php"); //To Send Email
 
 session_start();
@@ -31,9 +32,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                     $data_message = $get_message->fetchObject();
 
-                    $name = $data_message->name;
-                    $email = $data_message->email;
-                    $role = $data_message->role;
+                    $name   = $data_message->name;
+                    $email  = $data_message->email;
+                    $role   = $data_message->role;
 
                     if ($role == 'PATIENT' || $role == 'ASSISTANT') {
                         $Hi = 'مـــــرحبـــــا بــــك';
@@ -84,26 +85,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         $update_message->execute();
 
                         if ($update_message->rowCount() > 0 ) {
-                            print_r(json_encode(["Message" => "تم إرسال الرد بنجاح"]));
+
+                            $Message = "تم إرسال الرد بنجاح";
+                            print_r(json_encode(Message(null,$Message,201)));
+
                         } else {
-                            print_r(json_encode(["Error" => "فشل تعديل الحالة"]));
+                            $Message = "فشل تعديل الحالة";
+                            print_r(json_encode(Message(null,$Message,422)));
                         }
                     } else{
-                        print_r(json_encode(["Error" => "فشل إرسال الرد"]));
+                        $Message = "فشل إرسال الرد";
+                        print_r(json_encode(Message(null,$Message,422)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "لا يوجد رسائل"]));
+                    $Message = "لا يوجد رسائل";
+                    print_r(json_encode(Message(null,$Message,204)));
                 }
             } else {
-                print_r(json_encode(["Error" => "البريد الإلكترونى غير صالح"]));
+                $Message = "المعرف غير صالح";
+                print_r(json_encode(Message(null,$Message,400)));
             }
         } else {
-            print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null,$Message,400)));
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null,$Message,405)));
 }
 ?>

@@ -2,6 +2,7 @@
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -17,7 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             $clinic_id = filter_var($_POST['clinic_id'], FILTER_SANITIZE_NUMBER_INT);
 
             //Get From Clinic Table
-            $get_clinic = $database->prepare("SELECT id as clinic_id,logo as clinic_logo,clinic_name,phone_number as clinic_phone_number,clinic_specialist,clinic_price,start_working,end_working,governorate,address as cilinic_address FROM clinic WHERE clinic.id = :clinic_id");
+            $get_clinic = $database->prepare("SELECT id as clinic_id,logo as clinic_logo,clinic_name,phone_number as clinic_phone_number,clinic_specialist,clinic_price,start_working,end_working,governorate,address as clinic_address FROM clinic WHERE clinic.id = :clinic_id");
             $get_clinic->bindparam("clinic_id", $clinic_id);
             $get_clinic->execute();
 
@@ -45,24 +46,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                     $get_reservation_patient = 0;
                 }
 
-                $data_clinic = array(
-                    "clinic_details" => $get_clinic,
-                    "number_reservation_clinic" => $get_reservation,
-                    "number_reservation_patient" => $get_reservation_patient
-                );
+                $data_clinic = [
+                    "clinic_details"                => $get_clinic,
+                    "number_reservation_clinic"     => $get_reservation,
+                    "number_reservation_patient"    => $get_reservation_patient
+                ];
 
-                print_r(json_encode($data_clinic));
+                $Message = "تم جلب البيانات ";
+                print_r(json_encode(Message($data_clinic, $Message, 200)));
 
             } else {
-                print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                $Message = "لم يتم العثور على بيانات";
+                print_r(json_encode(Message(null, $Message, 204)));
             }
         } else {
-            print_r(json_encode(["Error" => "لم يتم العثور على معرف العيادة"]));
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null, $Message, 400)));
         }
     } else {
-        print_r(json_encode(["Error" => "لم يتم العثور على مستخدم"]));
+        $Message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null, $Message, 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

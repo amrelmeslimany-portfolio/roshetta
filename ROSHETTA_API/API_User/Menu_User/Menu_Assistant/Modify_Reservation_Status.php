@@ -2,6 +2,7 @@
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -30,22 +31,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 if ($update_appoint->rowCount() > 0) {
 
-                    print_r(json_encode(["Message" => "تم تحويل المريض للدكتور بنجاح"]));
+                    $message = "تم تحويل المريض للدكتور بنجاح";
+                    print_r(json_encode(Message(null , $message , 201)));
 
                 } else {
-                    print_r(json_encode(["Error" => "لم يتم العثور على اي حجز"]));
+                    $message = "لم يتم العثور على اي حجز";
+                    print_r(json_encode(Message(null , $message , 204)));
                 }
-
             } else {
-                print_r(json_encode(["Error" => "رقم الحجز غير صحيح"]));
+                $message = "رقم الحجز غير صحيح";
+                print_r(json_encode(Message(null , $message , 400)));
             }
         } else {
-            print_r(json_encode(["Error" => "لم يتم العثور على الحجز"]));
+            $message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null , $message , 400)));
         }
     } else {
-        print_r(json_encode(["Error" => "غير مسموح لك بعرض تلك التفاصيل"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

@@ -68,7 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                 if ($check_number_phone->rowCount() > 0) {
 
-                                    print_r(json_encode(["Error" => "رقم الهاتف مرتبط بعيادة اخرى"]));
+                                    $Message = "رقم الهاتف موجود من قبل";
+                                    print_r(json_encode(Message(null,$Message,400)));
                                     die("");
 
                                 } else {
@@ -93,41 +94,50 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                     if ($addData->execute()) {
 
                                         if($addData->rowCount() > 0 ) {
-
-                                            print_r(json_encode(["Message" => "تم تسجيل العيادة بنجاح"]));
-
+                                            
+                                            $Message = "تم تسجيل العيادة بنجاح";
+                                            print_r(json_encode(Message(null,$Message,201)));
                                             header("refresh:2;");
 
                                         } else {
-                                            print_r(json_encode(["Error" => "فشل تسجيل العيادة"]));
+                                            $Message = "فشل تسجيل العيادة";
+                                            print_r(json_encode(Message(null,$Message,422)));
                                         }
                                     } else {
-                                        print_r(json_encode(["Error" => "فشل تسجيل العيادة"]));
+                                        $Message = "فشل تسجيل العيادة";
+                                        print_r(json_encode(Message(null,$Message,422)));
                                     }
                                 }
                             } else {
-                                print_r(json_encode(["Error" => "رقم الهاتف غير صالح"]));
+                                $Message = "رقم الهاتف غير صالح";
+                                print_r(json_encode(Message(null,$Message,400)));
                             }
-                            
                         } else {
-                            print_r(json_encode(["Error" => "يجب عليك اكمال جميع البيانات"]));
+                            $Message = "يجب اكمال البيانات";
+                            print_r(json_encode(Message(null,$Message,400)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "لايمكنك تسجيل اكثر من '2' عيادة"]));
+                        $message = "لايمكنك تسجيل اكثر من '2' عيادة";
+                        print_r(json_encode(Message(null , $message , 202)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل الادمن"]));
+                    $message = "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل المشرف";
+                    print_r(json_encode(Message(null , $message , 202)));
                 }
             } else {
-                print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
+                $message = "يجب تفعيل الحساب";
+                print_r(json_encode(Message(null , $message , 202)));
             }
         } else {
-            print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+            $Message = "فشل العثور على مستخدم";
+            print_r(json_encode(Message(null,$Message,401)));
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة"; 
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

@@ -2,6 +2,7 @@
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -48,32 +49,38 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         if ($get_clinic->execute()) {
 
                             $get_clinic = $get_clinic->fetchObject();
-
                             $_SESSION['clinic'] = $get_clinic;
 
-                            print_r(json_encode(["Message" => "تم التعديل بنجاح"]));
-
+                            $Message = "تم التعديل بنجاح";
+                            print_r(json_encode(Message(null, $Message, 201)));
                             header("refresh:2;");
 
                         } else {
-                            print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                            $Message = "فشل جلب البيانات";
+                            print_r(json_encode(Message(null, $Message, 422)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "فشل تعديل المساعد"]));
+                        $Message = "فشل تعديل المساعد";
+                        print_r(json_encode(Message(null, $Message, 422)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "فشل تعديل المساعد"]));
+                    $Message = "فشل تعديل المساعد";
+                    print_r(json_encode(Message(null, $Message, 422)));
                 }
             } else {
-                print_r(json_encode(["Error" => "رقم المساعد غير صحيح"]));
+                $Message = "رقم المساعد غير صحيح";
+                print_r(json_encode(Message(null, $Message, 400)));
             }
         } else {
-            print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
+            $message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null , $message , 400)));
         }
     } else {
-        print_r(json_encode(["Error" => "لم يتم العثور على مستخدم"]));
+        $Message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null, $Message, 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

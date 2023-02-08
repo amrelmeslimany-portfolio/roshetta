@@ -20,4 +20,16 @@ function get_user_ip()
         $ipaddress = 'UNKNOWN';
     return $ipaddress;
 }
+
+// Function Message
+
+function Message($data = null,$message = null , $status = null){
+    $array = [
+        "Data"    => $data,
+        "Message" => $message ,
+        "Status"  => $status
+    ];
+    return $array;
+}
+
 ?>

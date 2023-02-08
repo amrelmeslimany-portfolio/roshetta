@@ -2,6 +2,7 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../API_Function/All_Function.php"); //All Function
 require_once("../API_Mail/Mail.php"); //To Send Email
 
 session_start();
@@ -11,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
     //I Expect To Receive This Data
 
-    if (isset($_POST['role']) && !empty($_POST['role'])) {
+    if (isset($_POST['role']) && !empty($_POST['role'])) { //Type Account
 
         $role = $_POST['role'];
 
@@ -27,7 +28,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             $table_name = '';
         }
 
-        if (isset($_POST['user_id']) && !empty($_POST['user_id'])) {
+        if (isset($_POST['user_id']) && !empty($_POST['user_id'])) {  //SSD or Email
 
             $user_id    = $_POST['user_id'];
             $URL_Verify = 'http://localhost:3000/ROSHETTA_API/API_Forget_Password/Edit_Password_With_Email.php';
@@ -59,6 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             $Hi   = 'مـــــرحبــــــا بــــك';
                         } else {
                             $name = '';
+                            $Hi = '';
                         }
 
                         $email          = $data_user->email;
@@ -103,23 +105,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         </div></div>';
 
                         if ($mail->send()) {
-                            print_r(json_encode(["Message" => "تم إرسال رسالة تأكيد عبر البريد الالكترونى المرتبط بحسابك"]));
+                            $Message = "تم إرسال رسالة تأكيد عبر البريد الالكترونى المرتبط بحسابك";
+                            print_r(json_encode(Message(null,$Message,200)));
                         } else {
-                            print_r(json_encode(["Error" => "فشل ارسال رسالة التأكيد"]));
+                            $Message = "فشل ارسال رسالة التأكيد";
+                            print_r(json_encode(Message(null,$Message,422)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى غير صحيح"]));
+                        $Message = "الرقم القومى او البريد الالكترونى غير صحيح";
+                        print_r(json_encode(Message(null,$Message,400)));
                     }
             } else {
-                print_r(json_encode(["Error" => "الرقم القومى او البريد الالكترونى غير صالح"]));
+                $Message = "الرقم القومى او البريد الالكترونى غير صالح";
+                print_r(json_encode(Message(null,$Message,400)));
             }
-        } else { //If Didn't Find SSD Or PASSWORD
-            print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
+        } else { //If Didn't Find SSD Or Email
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null,$Message,400)));
         }
     } else { //If Didn't Find The Role
-        print_r(json_encode(["Error" => "يجب تحديد نوع الحساب"]));
+        $Message = "يجب تحديد نوع الحساب";
+        print_r(json_encode(Message(null,$Message,401)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموع بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null,$Message,405)));
 }
 ?>

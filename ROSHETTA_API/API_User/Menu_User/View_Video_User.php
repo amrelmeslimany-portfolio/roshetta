@@ -36,15 +36,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
         if ($get_video->rowCount() > 0) {
 
             $data_video = $get_video->fetchAll(PDO::FETCH_ASSOC);
-            print_r(json_encode($data_video));
+            $message = 'تم جلب البيانات بنجاح';
+            print_r(json_encode(Message($data_video , $message , 200)));
 
         } else {
-            print_r(json_encode(["Error" => "لا يوجد فيديو"]));
+            $message = "لا يوجد فيديو";
+            print_r(json_encode(Message(null , $message , 204)));
         }
     } else {
-        print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+        $Message = "فشل العثور على مستخدم";
+        print_r(json_encode(Message(null,$Message,401)));
     }
 } else { //If The Entry Method Is Not 'GET'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 } 
 ?>

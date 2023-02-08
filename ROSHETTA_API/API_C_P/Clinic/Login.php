@@ -37,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         if (filter_var($clinic_id, FILTER_VALIDATE_INT) !== FALSE) {
 
-                            //Check Clinic Table
+                            //Check Clinic Table 
 
                             $check_clinic = $database->prepare("SELECT * FROM clinic WHERE id = :clinic_id   AND doctor_id = :id ");
                             $check_clinic->bindparam("id", $d_id);
@@ -48,7 +48,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                 $clinic_login = $check_clinic->fetchObject();
 
-                                print_r(json_encode(["Message" => "تم تسجيل الدخول الى العيادة"]));
+                                $Message = "تم تسجيل الدخول الى العيادة";
+                                print_r(json_encode(Message(null,$Message,200)));
 
                                 $_SESSION['clinic'] = $clinic_login;
 
@@ -60,22 +61,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 $delete_appoint->execute();
 
                             } else {
-                                print_r(json_encode(["Error" => "فشل تسجيل الدخول"]));
+                                $Message = "فشل تسجيل الدخول";
+                                print_r(json_encode(Message(null,$Message,422)));
                             }
                         } else {
-                            print_r(json_encode(["Error" => "يجب ادخال بيانات من نوع الارقام"]));
+                            $message = "المعرف الذى ادخلتة غير صالح";
+                            print_r(json_encode(Message(null , $message , 400)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "يجب ادخال رقم العيادة"]));
+                        $Message = "يجب اكمال البيانات";
+                        print_r(json_encode(Message(null,$Message,400)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل الادمن"]));
+                    $message = "الرجاء الانتظار حتى يتم تنشيط خسابك من قبل المشرف";
+                    print_r(json_encode(Message(null , $message , 202)));
                 }
             } else {
-                print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
+                $message = "يجب تفعيل الحساب";
+                print_r(json_encode(Message(null , $message , 202)));
             }
         } else {
-            print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+            $message = "ليس لديك الصلاحية";
+            print_r(json_encode(Message(null , $message , 403)));
         }
 
     } elseif (isset($_SESSION['assistant'])) {
@@ -103,7 +110,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                     if ($check_clinic->rowCount() > 0) {
 
                         $clinic_login = $check_clinic->fetchObject();
-                        print_r(json_encode(["Message" => "تم تسجيل الدخول الى العيادة"]));
+
+                        $Message = "تم تسجيل الدخول الى العيادة";
+                        print_r(json_encode(Message(null,$Message,200)));
 
                         $_SESSION['clinic'] = $clinic_login;
 
@@ -115,21 +124,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         $delete_appoint->execute();
 
                     } else {
-                        print_r(json_encode(["Error" => "فشل تسجيل الدخول"]));
+                        $Message = "فشل تسجيل الدخول";
+                        print_r(json_encode(Message(null,$Message,422)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "يجب ادخال بيانات من نوع الارقام"]));
+                    $message = "المعرف الذى ادخلتة غير صالح";
+                    print_r(json_encode(Message(null , $message , 400)));
                 }
             } else {
-                print_r(json_encode(["Error" => "يجب ادخال رقم العيادة"]));
+                $Message = "يجب اكمال البيانات";
+                print_r(json_encode(Message(null,$Message,400)));
             }
         } else {
-            print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+            $message = "فشل فى تحديد المستخدم";
+        print_r(json_encode(Message(null , $message , 401)));
         }
     } else {
-        print_r(json_encode(["Error" => "فشل العثور على السيشن"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

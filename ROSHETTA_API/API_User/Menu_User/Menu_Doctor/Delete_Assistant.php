@@ -2,6 +2,7 @@
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -33,25 +34,36 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
                 if ($get_clinic->execute()) {
 
-                    $get_clinic = $get_clinic->fetchObject();
+                    if ($get_clinic->rowCount() > 0 ) {
 
+                    $get_clinic = $get_clinic->fetchObject();
                     $_SESSION['clinic'] = $get_clinic;
 
-                    print_r(json_encode(["Message" => "تم الحذف بنجاح"]));
+                    $Message = "تم الحذف بنجاح";
+                    print_r(json_encode(Message(null, $Message, 200)));
 
+                    } else {
+                        $Message = "لم يتم العثور على عيادة";
+                        print_r(json_encode(Message(null, $Message, 204)));
+                    }
                 } else {
-                    print_r(json_encode(["Error" => "فشل جلب البيانات"]));
+                    $Message = "فشل جلب البيانات";
+                    print_r(json_encode(Message(null, $Message, 422)));
                 }
             } else {
-                print_r(json_encode(["Error" => "فشل حذف المساعد"]));
+                $Message = "فشل حذف المساعد";
+                print_r(json_encode(Message(null, $Message, 422)));
             }
         } else {
-            print_r(json_encode(["Error" => "فشل حذف المساعد"]));
+            $Message = "فشل حذف المساعد";
+            print_r(json_encode(Message(null, $Message, 422)));
         }
     } else {
-        print_r(json_encode(["Error" => "لم يتم العثور على مستخدم"]));
+        $Message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null, $Message, 403)));
     }
 } else { //If The Entry Method Is Not 'GET'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

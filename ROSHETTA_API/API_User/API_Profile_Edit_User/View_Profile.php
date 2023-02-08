@@ -1,7 +1,7 @@
 <?php
 
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
-require_once("../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -30,9 +30,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
              $governorate    = $_SESSION['patient']->governorate;
              $profile_img    = $_SESSION['patient']->profile_img;
  
-             $patient_data = array(
+             $patient_data = [
  
-                 "patient_name"  => $patient_name,
+                 "name"          => $patient_name,
                  "ssd"           => $ssd,
                  "email"         => $email,
                  "phone_number"  => $phone_number,
@@ -43,9 +43,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
                  "governorate"   => $governorate,
                  "profile_img"   => $profile_img
  
-             );
- 
-             print_r(json_encode($patient_data));
+             ];
+
+                $message = 'تم جلب البيانات بنجاح';
+                print_r(json_encode(Message($patient_data , $message , 200)));
 
         } elseif (isset($_SESSION['doctor'])) {
 
@@ -61,9 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             $governorate    = $_SESSION['doctor']->governorate;
             $profile_img    = $_SESSION['doctor']->profile_img;
 
-            $doctor_data = array(
+            $doctor_data = [
 
-                "doctor_name"   => $doctor_name,
+                "name"          => $doctor_name,
                 "ssd"           => $ssd,
                 "email"         => $email,
                 "phone_number"  => $phone_number,
@@ -73,9 +74,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
                 "governorate"   => $governorate,
                 "profile_img"   => $profile_img
 
-            );
+            ];
 
-            print_r(json_encode($doctor_data));
+                $message = 'تم جلب البيانات بنجاح';
+                print_r(json_encode(Message($doctor_data , $message , 200)));
 
         } elseif (isset($_SESSION['pharmacist'])) {
 
@@ -90,20 +92,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             $governorate        = $_SESSION['pharmacist']->governorate;
             $profile_img        = $_SESSION['pharmacist']->profile_img;
 
-            $pharmacist_data = array(
+            $pharmacist_data = [
 
-                "pharmacist_name"   => $pharmacist_name,
+                "name"              => $pharmacist_name,
                 "ssd"               => $ssd,
                 "email"             => $email,
                 "phone_number"      => $phone_number,
                 "gender"            => $gender,
                 "birth_date"        => $birth_date,
                 "governorate"       => $governorate,
-                "profile_img"       => $profile_img
+                "profile_img"       => $profile_img 
 
-            );
+            ];
 
-            print_r(json_encode($pharmacist_data));
+                $message = 'تم جلب البيانات بنجاح';
+                print_r(json_encode(Message($pharmacist_data , $message , 200)));
 
         } elseif (isset($_SESSION['assistant'])) {
 
@@ -118,9 +121,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             $governorate    = $_SESSION['assistant']->governorate;
             $profile_img    = $_SESSION['assistant']->profile_img;
 
-            $assistant_data = array(
+            $assistant_data = [
 
-                "assistant_name"    => $assistant_name,
+                "name"              => $assistant_name,
                 "ssd"               => $ssd,
                 "email"             => $email,
                 "phone_number"      => $phone_number,
@@ -129,17 +132,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
                 "governorate"       => $governorate,
                 "profile_img"       => $profile_img
 
-            );
+            ];
 
-            print_r(json_encode($assistant_data));
+                $message = 'تم جلب البيانات بنجاح';
+                print_r(json_encode(Message($assistant_data , $message , 200)));
 
         } else {
-            print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+            $Message = "فشل العثور على مستخدم";
+            print_r(json_encode(Message(null,$Message,401)));
         }
     } else {
-        print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+        $Message = "فشل العثور على مستخدم";
+        print_r(json_encode(Message(null,$Message,401)));
     }
 } else { //If The Entry Method Is Not 'GET'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 } 
 ?>

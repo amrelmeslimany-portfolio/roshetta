@@ -1,6 +1,7 @@
 <?php
 require_once("../API_C_A/Allow.php"); //Allow All Headers
-require_once("../API_C_A/Connection.php"); //Connect To DataBases 
+require_once("../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../API_Function/All_Function.php"); //All Function 
 require_once("../API_Mail/Mail.php"); //To Send Email
 
 if (isset($_GET['email']) && isset($_GET['code']) && isset($_GET['role'])) {
@@ -99,17 +100,22 @@ if (isset($_GET['email']) && isset($_GET['code']) && isset($_GET['role'])) {
                 </div></div>';
 
             if ($mail->send()) {
-                print_r(json_encode(["Message" => "تم إرسال كلمة مرور مؤقتة إلى بريدك الالكترونى"]));
+                    $Message = "تم إرسال كلمة مرور مؤقتة إلى بريدك الالكترونى";
+                    print_r(json_encode(Message(null,$Message,200)));
             } else {
-                print_r(json_encode(["Error" => "فشل إعادة تعيين كلمة المرور"]));
+                $Message = "فشل إرسال كلمة المرور الجديدة";
+                print_r(json_encode(Message(null,$Message,202)));
             }
         } else {
-            print_r(json_encode(["Error" => "فشل إعادة تعيين كلمة المرور"]));
+            $Message = "فشل إعادة تعيين كلمة المرور";
+            print_r(json_encode(Message(null,$Message,422)));
         }
     } else {
-        print_r(json_encode(["Error" => "هذا الرابط لم يعد صالح"]));
+        $Message = "هذا الرابط لم يعد صالح";
+        print_r(json_encode(Message(null,$Message,410)));
     }
 } else {
-    print_r(json_encode(["Error" => "فشل فى العثور على البيانات"]));
+    $Message = "فشل فى العثور على البيانات";
+    print_r(json_encode(Message(null,$Message,404)));
 }
 ?>

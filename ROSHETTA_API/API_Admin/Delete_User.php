@@ -2,6 +2,7 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -42,19 +43,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             if ($delete_user->rowCount() > 0) {
 
-                print_r(json_encode(["Message" => "تم الحذف بنجاح"]));
+                $Message = "تم الحذف بنجاح";
+                print_r(json_encode(Message(null,$Message,200)));
 
             } else {
-                print_r(json_encode(["Error" => "فشل الحذف"]));
+                $Message = "فشل الحذف";
+                print_r(json_encode(Message(null,$Message,422)));
             }
-
         } else {
-            print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null,$Message,400)));
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null,$Message,405)));
 }
 ?>

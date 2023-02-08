@@ -2,6 +2,7 @@
 
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -22,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($get_active_doctor->rowCount() > 0) {
                 $data_doctor_active = $get_active_doctor->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_doctor_active = array(["Error" => ":("]);
+                $data_doctor_active =["Message" => ":("];
             }
             //Get From Doctor Table When Doctor Account Not Active
 
@@ -32,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($get_not_active_doctor->rowCount() > 0) {
                 $data_doctor_not_active = $get_not_active_doctor->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_doctor_not_active = array(["Error" => ":("]);
+                $data_doctor_not_active = ["Message" => ":("];
             }
 
 
@@ -44,7 +45,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($get_active_pharmacist->rowCount() > 0) {
                 $data_pharmacist_active = $get_active_pharmacist->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_pharmacist_active = array(["Error" => ":("]);
+                $data_pharmacist_active = ["Message" => ":("];
             }
             //Get From Pharmacist Table When Pharmacist Account Not Active
 
@@ -54,7 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($get_not_active_pharmacist->rowCount() > 0) {
                 $data_pharmacist_not_active = $get_not_active_pharmacist->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_pharmacist_not_active = array(["Error" => ":("]);
+                $data_pharmacist_not_active = ["Message" => ":("];
             }
 
 
@@ -66,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($get_active_clinic->rowCount() > 0) {
                 $data_clinic_active = $get_active_clinic->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_clinic_active = array(["Error" => ":("]);
+                $data_clinic_active = ["Message" => ":("];
             }
             //Get From Clinic Table When Clinic Account Not Active
 
@@ -76,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($get_not_active_clinic->rowCount() > 0) {
                 $data_clinic_not_active = $get_not_active_clinic->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_clinic_not_active = array(["Error" => ":("]);
+                $data_clinic_not_active = ["Message" => ":("];
             }
 
             //Get From Pharmacy Table When Pharmacy Account Active
@@ -87,7 +88,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($get_active_pharmacy->rowCount() > 0) {
                 $data_pharmacy_active = $get_active_pharmacy->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_pharmacy_active = array(["Error" => ":("]);
+                $data_pharmacy_active = ["Message" => ":("];
             }
             //Get From Pharmacy Table When Pharmacy Account Active
 
@@ -97,11 +98,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($get_not_active_pharmacy->rowCount() > 0) {
                 $data_pharmacy_not_active = $get_not_active_pharmacy->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_pharmacy_not_active = array(["Error" => ":("]);
+                $data_pharmacy_not_active = ["Message" => ":("];
             }
 
 
-            $data_search = array(
+            $data_search = [
 
                 // Array Of All
 
@@ -114,17 +115,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
                 "data_pharmacy_active"          => $data_pharmacy_active,
                 "data_pharmacy_not_active"      => $data_pharmacy_not_active
 
-            );
+            ];
 
-            print_r(json_encode($data_search));
+            $message = "تم جلب البيانات";
+            print_r(json_encode(Message($data_search , $message , 200)));
 
         } else {
-            print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null,$Message,400)));
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية لعرض الاحصائيات"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'GET'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة"; 
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

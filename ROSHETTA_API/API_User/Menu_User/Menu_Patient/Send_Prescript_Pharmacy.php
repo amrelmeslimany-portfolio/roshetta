@@ -2,6 +2,7 @@
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../../API_Function/All_Function.php"); //All Function
 date_default_timezone_set('Africa/Cairo'); //Set To Cairo TimeZone
 
 session_start();
@@ -48,32 +49,39 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         $add_order->execute();
 
                         if ($add_order->rowCount() > 0) {
-                            $message = ["Message" => "تم اضافة الطلب بنجاح"];
+                            $message = "تم اضافة الطلب بنجاح";
                         } else {
-                            $message = ["Error" => "فشل اضافة الطلب"];
+                            $message = "فشل اضافة الطلب";
                         }
 
-                        $error = ["Error" => null];
+                        $error =  null;
                         
                     } else{
-                            $error = ["Error" => "معرف الروشتة غير صحيح"];
+                        $error = "معرف الروشتة غير صحيح";
                     }
                 }
 
-                $data_message = array($message ,$error);
+                $Message = [
+                    "Success" => $message,
+                    "Error"   => $error 
+                ];
 
-                print_r(json_encode($data_message));
+                print_r(json_encode(Message(null, $Message, 201)));
 
             }else{
-                print_r(json_encode(["Error" => "معرف الصيدلية غير صحيح"]));
+                $Message = "معرف الصيدلية غير صحيح";
+                print_r(json_encode(Message(null, $Message, 400)));
             }
         } else {
-            print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null, $Message, 400)));
         }
     } else {
-        print_r(json_encode(["Error" => "غير مسموح لك القيام بالطلب"]));
+        $Message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null, $Message, 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

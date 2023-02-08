@@ -2,6 +2,7 @@
 
 require_once("../../../API_C_A/Allow.php"); //Allow All Headers
 require_once("../../../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../../../API_Function/All_Function.php"); //All Function
 date_default_timezone_set('Africa/Cairo'); //Set To Cairo TimeZone
 
 session_start();
@@ -14,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
         $name           = $_SESSION['doctor']->doctor_name;     // Name Doctor
         $profile_img    = $_SESSION['doctor']->profile_img;     // Profile Image
         $time           = date("h:i");                          //Time Chat
-        $time_delete    = date("h:i", (time() - (300 * 60)));   //Time Delete Message  (5) Hours
+        $time_delete    = date("h:i", (time() - (1 * 5 * 60 * 60 )));   //Time Delete Message  (5) Hours
 
         if (isset($_POST['message']) && !empty($_POST['message'])) {
 
@@ -37,22 +38,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                 $get_message->execute();
 
                 if ($get_message->rowCount() > 0) {
+
                     $data_message = $get_message->fetchAll(PDO::FETCH_ASSOC);
-                    print_r(json_encode($data_message));
+
+                    $Message = "تم جلب البيانات ";
+                    print_r(json_encode(Message($data_message, $Message, 200)));
+
                 } else {
-                    print_r(json_encode(["Error" => "فشل جلب الرسائل"]));
+                    $Message = "فشل جلب البيانات";
+                    print_r(json_encode(Message(null, $Message, 422)));
                 }
             } else {
-                print_r(json_encode(["Error" => "فشل إرسال الرسالة"]));
+                $Message = "فشل إرسال الرسالة";
+                print_r(json_encode(Message(null, $Message, 422)));
             }
 
         } else {
             //******* */
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+        $Message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null, $Message, 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

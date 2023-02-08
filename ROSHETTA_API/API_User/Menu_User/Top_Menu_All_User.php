@@ -1,6 +1,7 @@
 <?php
 
 require_once("../../API_C_A/Allow.php"); //Allow All Headers
+require_once("../../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -20,16 +21,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             $ssd            = $_SESSION['patient']->ssd;
             $profile_img    = $_SESSION['patient']->profile_img;
 
-            $top_menu_data = array(
+            $top_menu_data = [
 
-                "patient_name"  => $patient_name,
+                "name"          => $patient_name,
                 "ssd"           => $ssd,
                 "profile_img"   => $profile_img
 
-            );
+            ];
 
-            print_r(json_encode($top_menu_data));
-
+            $message = 'تم جلب البيانات بنجاح';
+            print_r(json_encode(Message($top_menu_data , $message , 200)));
 
         } elseif (isset($_SESSION['doctor'])) { //If Doctor
 
@@ -37,15 +38,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             $ssd            = $_SESSION['doctor']->ssd;
             $profile_img    = $_SESSION['doctor']->profile_img;
 
-            $top_menu_data = array(
+            $top_menu_data = [
 
-                "doctor_name"   => $doctor_name,
+                "name"          => $doctor_name,
                 "ssd"           => $ssd,
                 "profile_img"   => $profile_img
 
-            );
+            ];
 
-            print_r(json_encode($top_menu_data));
+            $message = 'تم جلب البيانات بنجاح';
+            print_r(json_encode(Message($top_menu_data , $message , 200)));
 
         } elseif (isset($_SESSION['pharmacist'])) { //If Pharmacist
 
@@ -53,15 +55,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             $ssd                = $_SESSION['pharmacist']->ssd;
             $profile_img        = $_SESSION['pharmacist']->profile_img;
 
-            $top_menu_data = array(
+            $top_menu_data = [
 
-                "pharmacist_name"   => $pharmacist_name,
+                "name"              => $pharmacist_name,
                 "ssd"               => $ssd,
                 "profile_img"       => $profile_img
 
-            );
+            ];
 
-            print_r(json_encode($top_menu_data));
+            $message = 'تم جلب البيانات بنجاح';
+            print_r(json_encode(Message($top_menu_data , $message , 200)));
 
         } elseif (isset($_SESSION['assistant'])) { //If Assistant
 
@@ -69,23 +72,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             $ssd            = $_SESSION['assistant']->ssd;
             $profile_img    = $_SESSION['assistant']->profile_img;
 
-            $top_menu_data = array(
+            $top_menu_data = [
 
-                "assistant_name"    => $assistant_name,
+                "name"              => $assistant_name,
                 "ssd"               => $ssd,
                 "profile_img"       => $profile_img
 
-            );
+            ];
 
-            print_r(json_encode($top_menu_data));
+            $message = 'تم جلب البيانات بنجاح';
+            print_r(json_encode(Message($top_menu_data , $message , 200)));
 
         } else {
-            print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+            $Message = "فشل العثور على مستخدم";
+            print_r(json_encode(Message(null,$Message,401)));
         }
     } else {
-        print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+        $Message = "فشل العثور على مستخدم";
+        print_r(json_encode(Message(null,$Message,401)));
     }
 } else { //If The Entry Method Is Not 'GET'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 } 
 ?>

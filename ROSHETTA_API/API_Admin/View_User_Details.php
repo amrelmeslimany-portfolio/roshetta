@@ -2,6 +2,7 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -26,9 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             if ($get_patient->rowCount() > 0) {
                 $data_patient = $get_patient->fetchAll(PDO::FETCH_ASSOC);
-                print_r(json_encode($data_patient));
+                $message = 'تم جلب البيانات بنجاح';
+                print_r(json_encode(Message($data_patient , $message , 200)));
+
             } else {
-                print_r(json_encode(["Error" => "معرف المستخدم غير صحيح"]));
+                $Message = "معرف المستخدم غير صحيح";
+                print_r(json_encode(Message(null,$Message,400)));
             }
 
             //If Doctor Account
@@ -47,9 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             if ($get_doctor->rowCount() > 0) {
                 $data_doctor = $get_doctor->fetchAll(PDO::FETCH_ASSOC);
-                print_r(json_encode($data_doctor));
+                $message = 'تم جلب البيانات بنجاح';
+                print_r(json_encode(Message($data_doctor , $message , 200)));
             } else {
-                print_r(json_encode(["Error" => "معرف المستخدم غير صحيح"]));
+                $Message = "معرف المستخدم غير صحيح";
+                print_r(json_encode(Message(null,$Message,400)));
             }
 
             // If Pharmacist Account
@@ -68,9 +74,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             if ($get_pharmacist->rowCount() > 0) {
                 $data_pharmacist = $get_pharmacist->fetchAll(PDO::FETCH_ASSOC);
-                print_r(json_encode($data_pharmacist));
+                $message = 'تم جلب البيانات بنجاح';
+                print_r(json_encode(Message($data_pharmacist , $message , 200)));
             } else {
-                print_r(json_encode(["Error" => "معرف المستخدم غير صحيح"]));
+                $Message = "معرف المستخدم غير صحيح";
+                print_r(json_encode(Message(null,$Message,400)));
             }
 
             // If Assistant Account 
@@ -89,17 +97,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             if ($get_assistant->rowCount() > 0) {
                 $data_assistant = $get_assistant->fetchAll(PDO::FETCH_ASSOC);
-                print_r(json_encode($data_assistant));
+                $message = 'تم جلب البيانات بنجاح';
+                print_r(json_encode(Message($data_assistant , $message , 200)));
             } else {
-                print_r(json_encode(["Error" => "معرف المستخدم غير صحيح"]));
+                $Message = "معرف المستخدم غير صحيح";
+                print_r(json_encode(Message(null,$Message,400)));
             }
         } else {
-            print_r(json_encode(["Error" => "لم يتم تحديد معرف الحساب"]));
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null,$Message,400)));
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية لعرض الاحصائيات"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null,$Message,405)));
 }
 ?>

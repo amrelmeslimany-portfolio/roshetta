@@ -2,6 +2,7 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -18,16 +19,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
         ) {
 
             if (isset($_POST['patient_id'])) {
-                $id         = filter_var($_POST['patient_id'], FILTER_SANITIZE_NUMBER_INT);  //Filter Number INT
+                $id         = $_POST['patient_id'];
                 $table_name = 'patient';
             } elseif (isset($_POST['doctor_id'])) {
-                $id         = filter_var($_POST['doctor_id'], FILTER_SANITIZE_NUMBER_INT); //Filter Number INT
+                $id         = $_POST['doctor_id'];
                 $table_name = 'doctor';
             } elseif (isset($_POST['pharmacist_id'])) {
-                $id         = filter_var($_POST['pharmacist_id'], FILTER_SANITIZE_NUMBER_INT); //Filter Number INT
+                $id         = $_POST['pharmacist_id'];
                 $table_name = 'pharmacist';
             } elseif (isset($_POST['assistant_id'])) {
-                $id         = filter_var($_POST['assistant_id'], FILTER_SANITIZE_NUMBER_INT); //Filter Number INT
+                $id         = $_POST['assistant_id']; 
                 $table_name = 'assistant';
             } else {
                 $id = '';
@@ -39,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             if (isset($_POST['ssd']) && !empty($_POST['ssd'])) {
 
                 $ssd  = filter_var($_POST['ssd'], FILTER_SANITIZE_NUMBER_INT); //Filter Number INT
+                $id     = filter_var($id, FILTER_SANITIZE_NUMBER_INT); //Filter Number INT
 
                 if (filter_var($ssd, FILTER_VALIDATE_INT) !== FALSE  && strlen($ssd) == 14 ) {  //Verify SSD Is Valid 
 
@@ -48,7 +50,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                     if ($check_ssd->rowCount() > 0) {
 
-                        print_r(json_encode(["Error" => "الرقم القومى موجود من قبل"]));
+                        $Message = "الرقم القومى موجود من قبل";
+                        print_r(json_encode(Message(null,$Message,400)));
                         die();
 
                     } else {
@@ -61,28 +64,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         $Update->execute();
 
                         if ($Update->rowCount() > 0) {
-
-                            print_r(json_encode(["Message" => "تم تعديل الرقم القومى بنجاح"]));
-
+                            
+                            $Message = "تم تعديل الرقم القومى بنجاح";
+                            print_r(json_encode(Message(null,$Message,201)));
                             header("refresh:2;");
 
                         } else {
-                            print_r(json_encode(["Error" => "فشل تعديل الرقم القومى"]));
+                            $Message = "فشل تعديل البيانات";
+                            print_r(json_encode(Message(null,$Message,422)));
                         }
                     }
                 } else {
-                    print_r(json_encode(["Error" => "الرقم القومى غير صالح للاستخدام"]));
+                    $Message = "الرقم القومى غير صالح للاستخدام";
+                    print_r(json_encode(Message(null,$Message,400)));
                 }
             } else {
-                print_r(json_encode(["Error" => "يجب اكمال البيانات"]));
+                $Message = "يجب اكمال البيانات";
+                print_r(json_encode(Message(null,$Message,400)));
             }
         } else {
-            print_r(json_encode(["Error" => "فشل العثور على معرف المستخدم"]));
+            $Message = "يجب اكمال البيانات";
+            print_r(json_encode(Message(null,$Message,400)));
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null,$Message,405)));
 }
 ?>

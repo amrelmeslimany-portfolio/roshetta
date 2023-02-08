@@ -9,18 +9,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') { //Allow Access Via 'GET' Method
 
         unset($_SESSION['clinic']);
 
-        print_r(json_encode(["Message" => "تم تسجيل الخروج"]));
+        $Message = "تم تسجيل الخروج";
+        print_r(json_encode(Message(null, $Message, 200)));
 
     } elseif (isset($_SESSION['pharmacy'])) {
 
         unset($_SESSION['pharmacy']);
 
-        print_r(json_encode(["Message" => "تم تسجيل الخروج"]));
+        $Message = "تم تسجيل الخروج";
+        print_r(json_encode(Message(null, $Message, 200)));
 
     } else {
-        print_r(json_encode(["Message" => "لا يوجد مستخدمين لتسجيل الخروج"]));
+        //**** */
     }
 } else {
-    //***** */
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

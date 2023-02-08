@@ -2,6 +2,7 @@
 
 require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_C_A/Connection.php"); //Connect To DataBases
+require_once("../API_Function/All_Function.php"); //All Function
 
 session_start();
 session_regenerate_id();
@@ -65,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
                 $number_pharmacy = $count_pharmacy->rowCount();
             } //** */
 
-            $number_all = array(
+            $number_all = [
                 // Array Of All
 
                 "number_of_admin"       => $number_admin,
@@ -76,14 +77,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
                 "number_of_clinic"      => $number_clinic,
                 "number_of_pharmacy"    => $number_pharmacy
 
-            );
+            ];
 
-            print_r(json_encode($number_all));
+            $message = "تم جلب البيانات";
+            print_r(json_encode(Message($number_all , $message , 200)));
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية لعرض الاحصائيات"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'GET'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null,$Message,405)));
 }
 ?>

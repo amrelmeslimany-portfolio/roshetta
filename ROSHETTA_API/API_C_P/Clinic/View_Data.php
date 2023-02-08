@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             $address            = $_SESSION['clinic']->address;
 
 
-            $clinic_data = array(
+            $clinic_data = [
 
                 "logo"              => $logo,
                 "clinic_name"       => $clinic_name,
@@ -36,17 +36,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
                 "governorate"       => $governorate,
                 "address"           => $address
 
-            );
+            ];
 
-            print_r(json_encode($clinic_data));
+            $Message = "تم جلب البيانات";
+            print_r(json_encode(Message($clinic_data,$Message,200)));
 
         } else {
-            print_r(json_encode(["Error" => "فشل العثور على عيادة"]));
+            $Message = "فشل العثور على مستخدم";
+            print_r(json_encode(Message(null,$Message,401)));
         }
     } else {
-        print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+        $message = "ليس لديك الصلاحية";
+        print_r(json_encode(Message(null , $message , 403)));
     }
 } else { //If The Entry Method Is Not 'GET'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة"; 
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>
