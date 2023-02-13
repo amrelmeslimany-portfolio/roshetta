@@ -105,37 +105,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             $mail->setFrom('roshettateam@gmail.com', 'Roshetta Login');
                             $mail->addAddress($email);
                             $mail->Subject = 'تنبية تسجيل دخول إلى حساب روشتة';
-                            $mail->Body = '<div style="padding: 10px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
-                                <img src="https://i.ibb.co/hVcMYnQ/lg-text.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
-                                <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
-                                <img src="https://img.icons8.com/material-rounded/200/22C3E6/break.png" style="display: block;margin:  auto ;padding: 0px; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
-                                <h3 style="text-align: center;font-family: cursive;padding: 0px ;font-style: italic;">' . $Hi . '</h3>
-                                <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">' . $name . '</h3>
-                                <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">هل قمت بتسجيل الدخول من جهاز جديد أو موقع جديد ؟</p></br>         
-                                <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">جديد(ip)لاحظنا أن حسابك تم الوصول إلية من عنوان </p></br>
-                                <p style="text-align: center;font-family: cursive;">' . ($device_data) . '</p>
-                                <p style="text-align: center;font-family: cursive;">' . $ip . ' :(ip) عنوان</p>
-                                <p style="text-align: center;font-family: cursive;"> ' . $date_time . ' : (بتوقيت القاهرة) التوقيت</p>
-                                <h5 style="text-align: center;font-family: cursive;">هل ليس أنت ؟ <a href="' . $message_url . '">إعادة تعيين كلمة المرور</a></h5>
-                                <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذة الرسالة ألية برجاء عدم الرد</p>
-                                <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
-                                <div style="text-align: center;margin: auto">
-                                <small style="color: #3e3e3e; font-weight: 500;font-family: cursive;">مع تحيات فريق روشتة</small><br>
-                                <div style="margin-top: 10px">
-                                    <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                                        <img src="https://img.icons8.com/ios-glyphs/30/null/facebook-new.png" />
-                                    </a>
-                                    <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                                        <img src="https://img.icons8.com/ios-glyphs/30/null/instagram-new.png" />
-                                    </a>
-                                    <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                                        <img src="https://img.icons8.com/ios-glyphs/30/null/linkedin.png" />
-                                    </a>
-                                    <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                                        <img src="https://img.icons8.com/ios-glyphs/30/null/youtube--v1.png" />
-                                    </a>
-                                </div> 
-                                </div></div>';
+                            $mail->Body = EmailBody("https://img.icons8.com/material-rounded/200/22C3E6/break.png" , '
+                            <h3 style="text-align: center;font-family: cursive;padding: 0px ;font-style: italic;">' . $Hi . '</h3>
+                            <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">' . $name . '</h3>
+                            <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">هل قمت بتسجيل الدخول من جهاز جديد أو موقع جديد ؟</p></br>         
+                            <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">جديد(ip)لاحظنا أن حسابك تم الوصول إلية من عنوان </p></br>
+                            <p style="text-align: center;font-family: cursive;">' . ($device_data) . '</p>
+                            <p style="text-align: center;font-family: cursive;">' . $ip . ' :(ip) عنوان</p>
+                            <p style="text-align: center;font-family: cursive;"> ' . $date_time . ' : (بتوقيت القاهرة) التوقيت</p>
+                            <h5 style="text-align: center;font-family: cursive;">هل ليس أنت ؟ <a href="' . $message_url . '">إعادة تعيين كلمة المرور</a></h5>
+                            <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذة الرسالة ألية برجاء عدم الرد</p>
+                            ');
+                            
+
                             $mail->send();
 
                         } else {
@@ -166,4 +148,3 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
     $Message = "غير مسموح بالدخول عبر هذة الطريقة";
     print_r(json_encode(Message(null,$Message,405)));
 }
-?>
