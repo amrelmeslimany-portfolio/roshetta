@@ -1,5 +1,4 @@
 <?php
-require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_C_A/Connection.php"); //Connect To DataBases
 require_once("../API_Function/All_Function.php"); //All Function 
 require_once("../API_Mail/Mail.php"); //To Send Email
@@ -81,20 +80,24 @@ if (isset($_GET['email']) && isset($_GET['code']) && isset($_GET['role'])) {
           
             if ($mail->send()) {
                     $Message = "تم إرسال كلمة مرور مؤقتة إلى بريدك الالكترونى";
-                    print_r(json_encode(Message(null,$Message,200)));
+                    $data = Message(null,$Message,200);
             } else {
                 $Message = "فشل إرسال كلمة المرور الجديدة";
-                print_r(json_encode(Message(null,$Message,202)));
+                $data = Message(null,$Message,202);
             }
         } else {
             $Message = "فشل إعادة تعيين كلمة المرور";
-            print_r(json_encode(Message(null,$Message,422)));
+            $data = Message(null,$Message,422);
         }
     } else {
         $Message = "هذا الرابط لم يعد صالح";
-        print_r(json_encode(Message(null,$Message,410)));
+        $data = Message(null,$Message,410);
     }
 } else {
     $Message = "فشل فى العثور على البيانات";
-    print_r(json_encode(Message(null,$Message,404)));
+    $data = Message(null,$Message,404);
 }
+
+   // Message For User When Open This Page
+   echo MessageHtml($data);
+?>

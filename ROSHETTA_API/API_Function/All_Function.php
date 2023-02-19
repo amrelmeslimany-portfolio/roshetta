@@ -21,9 +21,10 @@ function get_user_ip()
     return $ipaddress;
 }
 
-// Function Message
+// Function Message All
 
-function Message($data = null,$message = null , $status = null){
+function Message($data = null,$message = null , $status = null)
+{
     $array = [
         "Data"    => $data,
         "Message" => $message ,
@@ -32,6 +33,20 @@ function Message($data = null,$message = null , $status = null){
     return $array;
 }
 
+// Function Message Html
+function MessageHtml($data = null)
+{
+    if($data['Status'] == 201 || $data['Status'] == 200) {
+        $message = '<div style="background: rgb(158, 250, 93);color: white;padding: 6px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 20px;display: block;margin: 200px auto ;">
+        ' . $data['Message'] . '</div>';
+    }else{
+        $message = '<div style="background: rgb(255, 47, 40);color: white;padding: 6px 10px;width: fit-content;font-weight: 600;font-family: cursive;border-radius: 5px;font-size: 20px;display: block;margin: 200px auto ;">
+        ' . $data['Message'] . '</div>';
+    }
+    return $message;
+}
+
+// Function Message Email
 function EmailBody($icon_src  , $html_body)
 {
     return '<div style="padding: 20px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">

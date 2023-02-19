@@ -1,5 +1,4 @@
 <?php
-require_once("../API_C_A/Allow.php"); //Allow All Headers
 require_once("../API_Function/All_Function.php"); //All Function
 require_once("../API_C_A/Connection.php"); //Connect To DataBases 
 
@@ -34,15 +33,18 @@ if (isset($_GET['email']) && isset($_GET['code']) && isset($_GET['role'])) {
 
     if ($update->rowCount() > 0) {
 
-        $Message = "تم تفعيل حسابك بنجاح";
-        print_r(json_encode(Message(null,$Message,201)));
+        $Message    = "تم تفعيل حسابك بنجاح";
+        $data       = Message(null,$Message,201);
 
     } else {
-        $Message = "هذا الرابط لم يعد صالح";
-        print_r(json_encode(Message(null,$Message,410)));
+        $Message    = "هذا الرابط لم يعد صالح";
+        $data       = Message(null,$Message,410);
     }
 } else {
-    $Message = "فشل فى العثور على البيانات";
-    print_r(json_encode(Message(null,$Message,400)));
+    $Message    = "فشل فى العثور على البيانات";
+    $data       = Message(null,$Message,400);
 }
+
+    // Message For User When Open This Page
+   echo MessageHtml($data);
 ?>
