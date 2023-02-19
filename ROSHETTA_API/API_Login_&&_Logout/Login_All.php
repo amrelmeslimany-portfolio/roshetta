@@ -89,8 +89,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             }
 
 
-                            $Data       = ["Account" => $data_user->role];
-                            $Message    = $name . " : مـــرحبــــا بـــك ";
+                            $Data = [
+                                "user_id"       => $data_user->id,
+                                "name"          => $name,
+                                "id_national"   => $data_user->ssd,
+                                "role"          => $data_user->role,
+                                "image"         => $data_user->profile_img
+                            ];
+
+                            $Message    = "تم تسجيل الدخول بنجاح";
                             
                             print_r(json_encode(Message($Data,$Message,200)));
 
@@ -117,7 +124,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذة الرسالة ألية برجاء عدم الرد</p>
                             ');
                             
-
                             $mail->send();
 
                         } else {
