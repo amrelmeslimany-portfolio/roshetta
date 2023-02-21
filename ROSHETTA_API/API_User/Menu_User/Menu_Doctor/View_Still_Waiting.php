@@ -14,11 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
         $date = date('Y-m-d');
 
-        $clinic_id = $_SESSION['clinic']->id;
+        $clinic_id = $_SESSION['clinic'];
 
         // Get From Patient And Appointment Table
 
-        $get_reservation = $database->prepare("SELECT appointment.id as appointment_id , patient.id as patient_id , patient.patient_name , patient.phone_number  FROM  patient,appointment,clinic WHERE   appoint_date = :appoint_date AND appointment.clinic_id = :clinic_id AND appointment.patient_id = patient.id AND appointment.appoint_case = 1 ORDER BY appointment.id ");
+        $get_reservation = $database->prepare("SELECT appointment.id as appointment_id , patient.id as patient_id , patient.name as patient_name , patient.phone_number  FROM  patient,appointment,clinic WHERE appoint_date = :appoint_date AND appointment.clinic_id = :clinic_id AND appointment.patient_id = patient.id AND appointment.appoint_case = 1 ORDER BY appointment.id ");
         $get_reservation->bindparam("clinic_id", $clinic_id);
         $get_reservation->bindparam("appoint_date", $date);
 

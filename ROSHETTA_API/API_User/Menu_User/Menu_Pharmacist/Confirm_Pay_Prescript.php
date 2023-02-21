@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
         if (isset($_POST['prescript_id']) && !empty($_POST['prescript_id'])) {
 
-            $pharmacy_id  = $_SESSION['pharmacy']->id;
+            $pharmacy_id  = $_SESSION['pharmacy'];
             $prescript_id = filter_var($_POST['prescript_id'], FILTER_SANITIZE_NUMBER_INT);
 
             $check_pre = $database->prepare("SELECT * FROM prescript WHERE prescript.id = :prescript_id");

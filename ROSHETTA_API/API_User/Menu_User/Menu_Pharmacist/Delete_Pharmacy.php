@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
         if (isset($_POST['pharmacy_id']) && !empty($_POST['pharmacy_id'])) {
 
             $pharmacy_id    = filter_var($_POST['pharmacy_id'], FILTER_SANITIZE_NUMBER_INT);
-            $pharmacist_id  = $_SESSION['pharmacist']->id;
+            $pharmacist_id  = $_SESSION['pharmacist'];
 
             // Delete From Pharmacy Table
 

@@ -49,32 +49,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                     $mail->setFrom('roshettateam@gmail.com', 'Roshetta Support');
                     $mail->addAddress($email);
                     $mail->Subject = 'رد على استفسارك من قبل فريق الدعم';
-                    $mail->Body = '<div style="padding: 10px; max-width: 500px; margin: auto;border: #d7d7d7 2px solid;border-radius: 10px;background-color: rgba(241, 241, 241 , 0.5) !important;text-align: center;">
-                    <img src="https://i.ibb.co/hVcMYnQ/lg-text.png" style="display: block;width: 110px;margin: auto;" alt="roshetta , روشته">
-                    <hr style="margin: 20px 0;border: 1px solid #d7d7d7">
-                    <img src="https://img.icons8.com/fluency/200/null/envelope-number.png" style="display: block;margin:  auto ;padding: 0px; width: 100px ; heigh: 100px;" alt="تأكيد الاميل">
+                    $mail->Body = EmailBody("https://img.icons8.com/fluency/200/null/envelope-number.png",'
                     <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">'.$Hi.'</h3>
                     <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">'. $name .'</h3>
                     <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">'.$message.'</p></br>         
                     <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>إذا كان لديك أى استفسار أخر برجاء التواصل معنا</p>
-                    <hr style="margin: 10px 0;border: 1px solid #d7d7d7">
-                    <div style="text-align: center;margin: auto">
-                    <small style="color: #3e3e3e; font-weight: 500;font-family: cursive;">مع تحيات فريق روشتة</small><br>
-                    <div style="margin-top: 10px;">
-                        <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                            <img src="https://img.icons8.com/ios-glyphs/30/null/facebook-new.png" />
-                        </a>
-                        <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                            <img src="https://img.icons8.com/ios-glyphs/30/null/instagram-new.png" />
-                        </a>
-                        <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                            <img src="https://img.icons8.com/ios-glyphs/30/null/linkedin.png" />
-                        </a>
-                        <a href="http://google.com" target="_blank" rel="noopener noreferrer" style="text-decoration: none;">
-                            <img src="https://img.icons8.com/ios-glyphs/30/null/youtube--v1.png" />
-                        </a>
-                    </div>                 
-                    </div></div>';
+                    ');
 
                     if ($mail->send()) {
 

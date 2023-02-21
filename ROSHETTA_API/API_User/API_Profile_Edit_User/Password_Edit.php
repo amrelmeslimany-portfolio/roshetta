@@ -18,16 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
         if (isset($_SESSION['patient'])) {
             $table_name = 'patient';
-            $id         = $_SESSION['patient']->id;
+            $id         = $_SESSION['patient'];
         } elseif (isset($_SESSION['doctor'])) {
             $table_name = 'doctor';
-            $id         = $_SESSION['doctor']->id;
+            $id         = $_SESSION['doctor'];
         } elseif (isset($_SESSION['pharmacist'])) {
             $table_name = 'pharmacist';
-            $id         = $_SESSION['pharmacist']->id;
+            $id         = $_SESSION['pharmacist'];
         } elseif (isset($_SESSION['assistant'])) {
             $table_name = 'assistant';
-            $id         = $_SESSION['assistant']->id;
+            $id         = $_SESSION['assistant'];
         } else {
             $table_name = '';
             $id = '';
@@ -53,36 +53,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 if ($Update->rowCount() > 0) {
 
-                    //Get New Data From User Table
+                    $Message = "تم تعديل كلمة المرور بنجاح";
+                    print_r(json_encode(Message(null,$Message,201)));
+                    header("refresh:2;");
 
-                    $get_data = $database->prepare("SELECT * FROM $table_name WHERE id = :id ");
-                    $get_data->bindparam("id", $id);
-                    $get_data->execute();
-
-                    if ($get_data->rowCount() > 0) {
-
-                        $data_user = $get_data->fetchObject();
-
-                        if ($table_name == "patient") {
-                            $_SESSION['patient'] = $data_user;
-                        } elseif ($table_name == "doctor") {
-                            $_SESSION['doctor'] = $data_user;
-                        } elseif ($table_name == "pharmacist") {
-                            $_SESSION['pharmacist'] = $data_user;
-                        } elseif ($table_name == "assistant") {
-                            $_SESSION['assistant'] = $data_user;
-                        } else {
-                            $_SESSION['null'] = '';
-                        }
-
-                        $Message = "تم تعديل كلمة المرور بنجاح";
-                        print_r(json_encode(Message(null,$Message,201)));
-                        header("refresh:2;");
-
-                    } else {
-                        $Message = "فشل جلب البيانات";
-                        print_r(json_encode(Message(null,$Message,422)));
-                    }
                 } else {
                     $Message = "فشل تعديل كلمة المرور";
                     print_r(json_encode(Message(null,$Message,422)));

@@ -69,13 +69,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             $number_all = [
                 // Array Of All
 
-                "number_of_admin"       => $number_admin,
-                "number_of_patient"     => $number_patient,
-                "number_of_doctor"      => $number_doctor,
-                "number_of_pharmacist"  => $number_pharmacist,
-                "number_of_assistant"   => $number_assistant,
-                "number_of_clinic"      => $number_clinic,
-                "number_of_pharmacy"    => $number_pharmacy
+                "admin"       => $number_admin,
+                "patient"     => $number_patient,
+                "doctor"      => $number_doctor,
+                "pharmacist"  => $number_pharmacist,
+                "assistant"   => $number_assistant,
+                "clinic"      => $number_clinic,
+                "pharmacy"    => $number_pharmacy
 
             ];
 

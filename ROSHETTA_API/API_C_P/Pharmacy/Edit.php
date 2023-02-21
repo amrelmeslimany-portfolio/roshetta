@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 //Filter Data 'Number_Int' And 'String'
 
-                $id             = $_SESSION['pharmacy']->id;
+                $id             = $_SESSION['pharmacy'];
                 $start_working  = $_POST['start_working'];
                 $end_working    = $_POST['end_working'];
                 $phone_number   = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT);
@@ -58,28 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             if ($Update->rowCount() > 0 ) {
 
-                                //Get New Data From Pharmacy Table
+                                $Message = "تم تعديل البيانات بنجاح";
+                                print_r(json_encode(Message(null,$Message,201)));
+                                header("refresh:2;");
 
-                                $get_data = $database->prepare("SELECT * FROM pharmacy WHERE id = :id ");
-
-                                $get_data->bindparam("id", $id);
-                                $get_data->execute();
-
-                                if ($get_data->rowCount() > 0 ) {
-
-                                    $pharmacy_up = $get_data->fetchObject();
-
-                                    $_SESSION['pharmacy'] = $pharmacy_up; //UpDate SESSION Pharmacy
-
-                                    $Message = "تم تعديل البيانات بنجاح";
-                                    print_r(json_encode(Message(null,$Message,201)));
-                                    header("refresh:2;");
-
-
-                                } else {
-                                    $Message = "فشل جلب البيانات";
-                                    print_r(json_encode(Message(null,$Message,422)));
-                                }
                             } else {
                                 $Message = "فشل تعديل البيانات";
                                 print_r(json_encode(Message(null,$Message,422)));
@@ -106,27 +88,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         if ($Update->rowCount() > 0 ) {
 
-                            //Get New Data From Pharmacy Table
+                            $Message = "تم تعديل البيانات بنجاح";
+                            print_r(json_encode(Message(null,$Message,201)));
+                            header("refresh:2;");
 
-                            $get_data = $database->prepare("SELECT * FROM pharmacy WHERE id = :id ");
-
-                            $get_data->bindparam("id", $id);
-                            $get_data->execute();
-
-                            if ($get_data->rowCount() > 0 ) {
-
-                                $pharmacy_up = $get_data->fetchObject();
-
-                                $_SESSION['pharmacy'] = $pharmacy_up; //UpDate SESSION Pharmacy
-
-                                $Message = "تم تعديل البيانات بنجاح";
-                                print_r(json_encode(Message(null,$Message,201)));
-                                header("refresh:2;");
-
-                            } else {
-                                $Message = "فشل جلب البيانات";
-                                print_r(json_encode(Message(null,$Message,422)));
-                            }
                         } else {
                             $Message = "فشل تعديل البيانات";
                             print_r(json_encode(Message(null,$Message,422)));

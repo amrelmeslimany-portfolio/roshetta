@@ -12,149 +12,154 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
     if (isset($_SESSION['admin'])) {
 
-        if (isset($_POST['activation_person_id']) && !empty($_POST['activation_person_id'])) {
+        if (
+            isset($_POST['activation_id']) && !empty($_POST['activation_id'])
+            && isset($_POST['type']) && !empty($_POST['type'])
+        ) {
 
-            //Filter Number INT
+            $type = $_POST['type'];
+            $id   = filter_var($_POST['activation_id'], FILTER_SANITIZE_NUMBER_INT); //Filter Number INT
 
-            $user_id = filter_var($_POST['activation_person_id'], FILTER_SANITIZE_NUMBER_INT);
+            if ($type == 'doctor' || $type == 'pharmacist') {
 
-            //Check Person
+                //Check Person
 
-            $check_user = $database->prepare("SELECT * FROM activation_person WHERE activation_person.id = :id");
-            $check_user->bindparam("id", $user_id);
-            $check_user->execute();
+                $check_user = $database->prepare("SELECT * FROM activation_person WHERE activation_person.id = :id");
+                $check_user->bindparam("id", $id);
+                $check_user->execute();
 
-            if ($check_user->rowCount() > 0) {
+                if ($check_user->rowCount() > 0) {
 
-                //Update Activation_Person Table
+                    //Update Activation_Person Table
 
-                $Update = $database->prepare("UPDATE activation_person SET isactive = 1 WHERE activation_person.id = :id");
-                $Update->bindparam("id", $user_id);
-                $Update->execute();
+                    $Update = $database->prepare("UPDATE activation_person SET isactive = 1 WHERE activation_person.id = :id");
+                    $Update->bindparam("id", $id);
+                    $Update->execute();
 
-                if ($Update->rowCount() > 0) {
+                    if ($Update->rowCount() > 0) {
 
-                    $get_doctor = $database->prepare("SELECT doctor_name,email FROM doctor,activation_person WHERE activation_person.id = :id AND activation_person.doctor_id = doctor.id AND isactive = 1");
-                    $get_doctor->bindparam("id", $user_id);
-                    $get_doctor->execute();
+                        $get_doctor = $database->prepare("SELECT name,email FROM doctor,activation_person WHERE activation_person.id = :id AND activation_person.doctor_id = doctor.id AND isactive = 1");
+                        $get_doctor->bindparam("id", $id);
+                        $get_doctor->execute();
 
-                    if ($get_doctor->rowCount() > 0) {
+                        if ($get_doctor->rowCount() > 0) {
 
-                        $data_user = $get_doctor->fetchObject();
+                            $data_user = $get_doctor->fetchObject();
 
-                        $name   = $data_user->doctor_name;
-                        $email  = $data_user->email;
-                    } else {
-                        $get_pharmacist = $database->prepare("SELECT pharmacist_name,email FROM pharmacist,activation_person WHERE activation_person.id = :id AND activation_person.pharmacist_id = pharmacist.id AND isactive = 1");
-                        $get_pharmacist->bindparam("id", $user_id);
-                        $get_pharmacist->execute();
-
-                        if ($get_pharmacist->rowCount() > 0) {
-
-                            $data_user = $get_pharmacist->fetchObject();
-
-                            $name   = $data_user->pharmacist_name;
+                            $name   = $data_user->name;
                             $email  = $data_user->email;
                         } else {
-                            $data_user = '';
+                            $get_pharmacist = $database->prepare("SELECT name,email FROM pharmacist,activation_person WHERE activation_person.id = :id AND activation_person.pharmacist_id = pharmacist.id AND isactive = 1");
+                            $get_pharmacist->bindparam("id", $id);
+                            $get_pharmacist->execute();
+
+                            if ($get_pharmacist->rowCount() > 0) {
+
+                                $data_user = $get_pharmacist->fetchObject();
+
+                                $name   = $data_user->name;
+                                $email  = $data_user->email;
+                            } else {
+                                $data_user = '';
+                            }
                         }
-                    }
 
-                    $message = "تم التفعيل بنجاح";
-                    print_r(json_encode(Message(null, $message, 200)));
+                        $message = "تم التفعيل بنجاح";
+                        print_r(json_encode(Message(null, $message, 200)));
 
-                    //Send  Message To Login
+                        //Send  Message To Login
 
-                    $mail->setFrom('roshettateam@gmail.com', 'Roshetta Activation');
-                    $mail->addAddress($email);
-                    $mail->Subject = 'تهنئة لتفعيل حسابك';
-                    $mail->Body = EmailBody("https://img.icons8.com/fluency/300/null/reading-confirmation.png", '
-                    <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;"> مـــــرحبـــــا بــــك دكتــــور </h3>
-                    <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">' . $name . '</h3>
-                    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">لقد تم تنشيط حسابك يمكنك الأن العمل والإستمتاع بكافة المميزات </p></br>         
-                    <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذة الرسالة ألية برجاء عدم الرد</p>
-                    ');
+                        $mail->setFrom('roshettateam@gmail.com', 'Roshetta Activation');
+                        $mail->addAddress($email);
+                        $mail->Subject = 'تهنئة لتفعيل حسابك';
+                        $mail->Body = EmailBody("https://img.icons8.com/fluency/300/null/reading-confirmation.png", '
+                        <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;"> مـــــرحبـــــا بــــك دكتــــور </h3>
+                        <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">' . $name . '</h3>
+                        <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">لقد تم تنشيط حسابك يمكنك الأن العمل والإستمتاع بكافة المميزات </p></br>         
+                        <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذة الرسالة ألية برجاء عدم الرد</p>
+                        ');
 
-
-                    $mail->send();
-                } else {
-                    $message = "الحساب مفعل بالفعل";
-                    print_r(json_encode(Message(null, $message, 202)));
-                }
-            } else {
-                $message = "المعرف غير صحيح";
-                print_r(json_encode(Message(null, $message, 400)));
-            }
-        } elseif (isset($_POST['activation_place_id']) && !empty($_POST['activation_place_id'])) {
-
-            //Filter Number INT
-
-            $place_id = filter_var($_POST['activation_place_id'], FILTER_SANITIZE_NUMBER_INT);
-
-            //Check Place
-
-            $check_place = $database->prepare("SELECT * FROM activation_place WHERE id = :id ");
-            $check_place->bindparam("id", $place_id);
-            $check_place->execute();
-
-            if ($check_place->rowCount() > 0) {
-
-                //Update Activation_Place Table
-
-                $Update = $database->prepare("UPDATE activation_place SET isactive = 1 WHERE id = :id ");
-                $Update->bindparam("id", $place_id);
-                $Update->execute();
-
-                if ($Update->rowCount() > 0) {
-
-                    $get_doctor = $database->prepare("SELECT doctor_name,email FROM doctor,activation_place,clinic WHERE activation_place.id = :id AND activation_place.clinic_id = clinic.id AND clinic.doctor_id = doctor.id AND isactive = 1");
-                    $get_doctor->bindparam("id", $place_id);
-                    $get_doctor->execute();
-
-                    if ($get_doctor->rowCount() > 0) {
-
-                        $data_user = $get_doctor->fetchObject();
-                        $name = $data_user->doctor_name;
-                        $email = $data_user->email;
+                        $mail->send();
                     } else {
+                        $message = "الحساب مفعل بالفعل";
+                        print_r(json_encode(Message(null, $message, 202)));
+                    }
+                } else {
+                    $message = "المعرف غير صحيح";
+                    print_r(json_encode(Message(null, $message, 400)));
+                }
+            } elseif ($type == 'clinic' || $type == 'pharmacy') {
 
-                        $get_pharmacist = $database->prepare("SELECT pharmacist_name,email FROM pharmacist,activation_place,pharmacy WHERE activation_place.id = :id AND activation_place.pharmacy_id = pharmacy.id AND pharmacy.pharmacist_id = pharmacist.id AND isactive = 1");
-                        $get_pharmacist->bindparam("id", $place_id);
-                        $get_pharmacist->execute();
+                //Check Place
 
-                        if ($get_pharmacist->rowCount() > 0) {
+                $check_place = $database->prepare("SELECT * FROM activation_place WHERE id = :id ");
+                $check_place->bindparam("id", $id);
+                $check_place->execute();
 
-                            $data_user = $get_pharmacist->fetchObject();
+                if ($check_place->rowCount() > 0) {
 
-                            $name   = $data_user->pharmacist_name;
+                    //Update Activation_Place Table
+
+                    $Update = $database->prepare("UPDATE activation_place SET isactive = 1 WHERE id = :id ");
+                    $Update->bindparam("id", $id);
+                    $Update->execute();
+
+                    if ($Update->rowCount() > 0) {
+
+                        $get_doctor = $database->prepare("SELECT doctor.name,email FROM doctor,activation_place,clinic WHERE activation_place.id = :id AND activation_place.clinic_id = clinic.id AND clinic.doctor_id = doctor.id AND isactive = 1");
+                        $get_doctor->bindparam("id", $id);
+                        $get_doctor->execute();
+
+                        if ($get_doctor->rowCount() > 0) {
+
+                            $data_user = $get_doctor->fetchObject();
+                            $name   = $data_user->name;
                             $email  = $data_user->email;
                         } else {
-                            $data_user = '';
+
+                            $get_pharmacist = $database->prepare("SELECT pharmacist.name,email FROM pharmacist,activation_place,pharmacy WHERE activation_place.id = :id AND activation_place.pharmacy_id = pharmacy.id AND pharmacy.pharmacist_id = pharmacist.id AND isactive = 1");
+                            $get_pharmacist->bindparam("id", $id);
+                            $get_pharmacist->execute();
+
+                            if ($get_pharmacist->rowCount() > 0) {
+
+                                $data_user = $get_pharmacist->fetchObject();
+
+                                $name   = $data_user->name;
+                                $email  = $data_user->email;
+                            } else {
+                                $data_user = '';
+                            }
                         }
+
+                        $message = "تم التفعيل بنجاح";
+                        print_r(json_encode(Message(null, $message, 200)));
+
+                        //Send  Message To Login
+
+                        $mail->setFrom('roshettateam@gmail.com', 'Roshetta Activation');
+                        $mail->addAddress($email);
+                        $mail->Subject = 'تهنئة لتفعيل حسابك';
+                        $mail->Body = EmailBody("https://img.icons8.com/fluency/300/null/reading-confirmation.png", '
+                        <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;"> مـــــرحبـــــا بــــك دكتــــور </h3>
+                        <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">' . $name . '</h3>
+                        <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">لقد تم تنشيط العيادة او الصيدلية الخاصة بك يمكنك الأن العمل والإستمتاع بكافة المميزات </p></br>         
+                        <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذة الرسالة ألية برجاء عدم الرد</p>
+                        ');
+
+                        $mail->send();
+
+                    } else {
+                        $message = "الحساب مفعل بالفعل";
+                        print_r(json_encode(Message(null, $message, 202)));
                     }
-
-                    $message = "تم التفعيل بنجاح";
-                    print_r(json_encode(Message(null, $message, 200)));
-
-                    //Send  Message To Login
-
-                    $mail->setFrom('roshettateam@gmail.com', 'Roshetta Activation');
-                    $mail->addAddress($email);
-                    $mail->Subject = 'تهنئة لتفعيل حسابك';
-                    $mail->Body = EmailBody("https://img.icons8.com/fluency/300/null/reading-confirmation.png", '
-                    <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;"> مـــــرحبـــــا بــــك دكتــــور </h3>
-                    <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">' . $name . '</h3>
-                    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">لقد تم تنشيط العيادة او الصيدلية الخاصة بك يمكنك الأن العمل والإستمتاع بكافة المميزات </p></br>         
-                    <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذة الرسالة ألية برجاء عدم الرد</p>');
-
-                    $mail->send();
                 } else {
-                    $message = "الحساب مفعل بالفعل";
-                    print_r(json_encode(Message(null, $message, 202)));
+                    $message = "المعرف غير صحيح";
+                    print_r(json_encode(Message(null, $message, 400)));
                 }
             } else {
-                $message = "المعرف غير صحيح";
-                print_r(json_encode(Message(null, $message, 400)));
+                $Message = "النوع غير معروف";
+                print_r(json_encode(Message(null, $Message, 401)));
             }
         } else {
             $Message = "يجب اكمال البيانات";

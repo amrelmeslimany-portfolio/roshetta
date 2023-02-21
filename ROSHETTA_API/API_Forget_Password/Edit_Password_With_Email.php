@@ -20,6 +20,8 @@ if (isset($_GET['email']) && isset($_GET['code']) && isset($_GET['role'])) {
         $table_name = 'pharmacist';
     } elseif ($role == "ASSISTANT") {
         $table_name = 'assistant';
+    } elseif ($role == "admin") {
+        $table_name = 'admin';
     } else {
         $table_name = '';
     }
@@ -35,21 +37,12 @@ if (isset($_GET['email']) && isset($_GET['code']) && isset($_GET['role'])) {
 
         $data_user = $check_user->fetchObject();
 
-        if ($table_name == "patient") {
-            $name   = $data_user->patient_name;
-            $Hi     = 'مـــــرحبــــــا بــــك';
-        } elseif ($table_name == "doctor") {
-            $name   = $data_user->doctor_name;
-            $Hi     = 'مـــــرحبـــــا بــــك دكتــــور';
-        } elseif ($table_name == "pharmacist") {
-            $name   = $data_user->pharmacist_name;
-            $Hi     = 'مـــــرحبـــــا بــــك دكتــــور';
-        } elseif ($table_name == "assistant") {
-            $name   = $data_user->assistant_name;
-            $Hi     = 'مـــــرحبــــــا بــــك';
+        $name = $data_user->name;
+
+        if ($table_name == "patient" || $table_name == "assistant" || $table_name = "admin") {
+            $Hi = 'مـــــرحبــــــا بــــك';
         } else {
-            $name = '';
-            $Hi = '';
+            $Hi = 'مـــــرحبـــــا بــــك دكتــــور';
         }
 
         //Update User Table

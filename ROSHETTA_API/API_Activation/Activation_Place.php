@@ -11,6 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
     if (isset($_SESSION['clinic']) || isset($_SESSION['pharmacy'])) {
 
+        if (isset($_SESSION['clinic'])) {
+            $table_name = 'clinic';
+            $id         = $_SESSION['clinic'];
+        } else {
+            $table_name = 'pharmacy';
+            $id         = $_SESSION['pharmacy'];
+        }
+
         //I Expect To Receive This Data
 
         $img_name   = $_FILES["license_img"]["name"];
@@ -34,11 +42,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             } else {
 
+                $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
+                $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
+
+                $get_data = $database->prepare("SELECT * FROM $table_name WHERE id = :id");
+                $get_data->bindparam("id", $id);
+                $get_data->execute();
+
+                if ($get_data->rowCount() > 0 ) {
+                    $data_place      = $get_data->fetchObject();
+                    $folder_place    = $data_place->ser_id;
+                } else {
+                    $folder_place = 'UNKNOWN';
+                }
+                
+                $folder_name    = $folder_place;
+                $img_new_name   = bin2hex(random_bytes(10)) . '.' . $formul; //To Input A Random Name For The Image 
+
                 if (isset($_SESSION['clinic'])) {
 
-                    $folder_name    = $_SESSION['clinic']->ser_id;
-                    $img_new_name   = bin2hex(random_bytes(10)) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
-                    $link           = 'IMG/place_Img/Clinic/' . $folder_name . '/' . ''; //File Link
+                    $link  = 'IMG/place_Img/Clinic/' . $folder_name . '/' . ''; //File Link
 
                     if (is_dir($link)) { //If The File Exists
 
@@ -50,11 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 unlink($link . $folder_content); //To Delete File Data
                                 move_uploaded_file($img_tmp, $link . $img_new_name); //To Transfer The New Image To The File
 
-                                $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
-                                $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                                 $license_img    = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                                $id = $_SESSION['clinic']->id;
 
                                 $check_clinic = $database->prepare("SELECT * FROM activation_place,clinic  WHERE  activation_place.clinic_id = clinic.id  AND clinic.id = :id ");
                                 $check_clinic->bindparam("id", $id);
@@ -107,11 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         move_uploaded_file($img_tmp, $link . $img_new_name); //To Transfer The New Image To The File
 
-                        $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
-                        $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                         $license_img    = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                        $id = $_SESSION['clinic']->id;
 
                         $check_clinic = $database->prepare("SELECT * FROM activation_place,clinic  WHERE  activation_place.clinic_id = clinic.id  AND clinic.id = :id ");
                         $check_clinic->bindparam("id", $id);
@@ -160,10 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 } elseif (isset($_SESSION['pharmacy'])) {
 
-
-                    $folder_name    = $_SESSION['pharmacy']->ser_id;
-                    $img_new_name   = bin2hex(random_bytes(10)) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
-                    $link           = 'IMG/place_Img/Pharmacy/' . $folder_name . '/' . ''; //File Link
+                    $link = 'IMG/place_Img/Pharmacy/' . $folder_name . '/' . ''; //File Link
 
                     if (is_dir($link)) { //If The File Exists
 
@@ -175,11 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 unlink($link . $folder_content); //To Delete File Data
                                 move_uploaded_file($img_tmp, $link . $img_new_name); //To Transfer The New Image To The File
 
-                                $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
-                                $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                                 $license_img    = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                                $id = $_SESSION['pharmacy']->id;
 
                                 $check_clinic = $database->prepare("SELECT * FROM activation_place,pharmacy  WHERE  activation_place.pharmacy_id = pharmacy.id  AND pharmacy.id = :id ");
                                 $check_clinic->bindparam("id", $id);
@@ -232,11 +240,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         move_uploaded_file($img_tmp, $link . $img_new_name); //To Transfer The New Image To The File
 
-                        $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
-                        $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                         $license_img    = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                        $id = $_SESSION['pharmacy']->id;
 
                         $check_clinic = $database->prepare("SELECT * FROM activation_place,pharmacy  WHERE  activation_place.pharmacy_id = pharmacy.id  AND pharmacy.id = :id ");
                         $check_clinic->bindparam("id", $id);

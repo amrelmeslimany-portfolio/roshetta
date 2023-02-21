@@ -11,8 +11,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
     if (isset($_SESSION['admin'])) { //If Find Admin Session
 
-        $id          = $_SESSION['admin']->id;
-        $folder_name = $_SESSION['admin']->ssd;
+        $id = $_SESSION['admin'];
+
+        $get_data = $database->prepare("SELECT ssd FROM admin WHERE id = :id");
+        $get_data->bindparam("id", $id);
+        $get_data->execute();
+
+        if ($get_data->rowCount() > 0 ) {
+            $data_user      = $get_data->fetchObject();
+            $folder_name    = $data_user->ssd;
+        } else {
+            $folder_name = '';
+        }
 
         // Delete From Video Folder
 

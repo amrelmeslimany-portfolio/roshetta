@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                     //UpDate Patient Table
 
-                    $Update = $database->prepare("UPDATE patient SET phone_number = :phone_number , weight = :weight , height = :height , governorate = :governorate , patient_name = :patient_name , gender = :gender , birth_date = :birth_date  WHERE id = :id");
+                    $Update = $database->prepare("UPDATE patient SET phone_number = :phone_number , weight = :weight , height = :height , governorate = :governorate , name = :patient_name , gender = :gender , birth_date = :birth_date  WHERE id = :id");
 
                     $Update->bindparam("id", $patient_id);
                     $Update->bindparam("phone_number", $phone_number);
@@ -112,7 +112,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             //UpDate Doctor Table
 
-                            $Update = $database->prepare("UPDATE doctor SET phone_number = :phone_number , specialist = :specialist , governorate = :governorate , doctor_name = :doctor_name , gender = :gender , birth_date = :birth_date WHERE id = :id");
+                            $Update = $database->prepare("UPDATE doctor SET phone_number = :phone_number , specialist = :specialist , governorate = :governorate , name = :doctor_name , gender = :gender , birth_date = :birth_date WHERE id = :id");
 
                             $Update->bindparam("id", $doctor_id);
                             $Update->bindparam("phone_number", $phone_number);
@@ -144,7 +144,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         //UpDate Doctor Table
 
-                        $Update = $database->prepare("UPDATE doctor SET phone_number = :phone_number , specialist = :specialist , governorate = :governorate , doctor_name = :doctor_name , gender = :gender , birth_date = :birth_date WHERE id = :id");
+                        $Update = $database->prepare("UPDATE doctor SET phone_number = :phone_number , specialist = :specialist , governorate = :governorate , name = :doctor_name , gender = :gender , birth_date = :birth_date WHERE id = :id");
 
                         $Update->bindparam("id", $doctor_id);
                         $Update->bindparam("phone_number", $phone_number);
@@ -214,7 +214,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             //UpDate Pharmacist Table
 
-                            $Update = $database->prepare("UPDATE pharmacist SET phone_number = :phone_number , governorate = :governorate , pharmacist_name = :pharmacist_name , gender = :gender , birth_date = :birth_date  WHERE id = :id");
+                            $Update = $database->prepare("UPDATE pharmacist SET phone_number = :phone_number , governorate = :governorate , name = :pharmacist_name , gender = :gender , birth_date = :birth_date  WHERE id = :id");
 
                             $Update->bindparam("id", $pharmacist_id);
                             $Update->bindparam("phone_number", $phone_number);
@@ -245,7 +245,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         //UpDate Pharmacist Table
 
-                        $Update = $database->prepare("UPDATE pharmacist SET phone_number = :phone_number , governorate = :governorate , pharmacist_name = :pharmacist_name , gender = :gender , birth_date = :birth_date WHERE id = :id");
+                        $Update = $database->prepare("UPDATE pharmacist SET phone_number = :phone_number , governorate = :governorate , name = :pharmacist_name , gender = :gender , birth_date = :birth_date WHERE id = :id");
 
                         $Update->bindparam("id", $pharmacist_id);
                         $Update->bindparam("phone_number", $phone_number);
@@ -314,7 +314,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             //UpDate Assistant Table
 
-                            $Update = $database->prepare("UPDATE assistant SET phone_number = :phone_number , governorate = :governorate , assistant_name = :assistant_name , gender = :gender , birth_date = :birth_date  WHERE id = :id");
+                            $Update = $database->prepare("UPDATE assistant SET phone_number = :phone_number , governorate = :governorate , name = :assistant_name , gender = :gender , birth_date = :birth_date  WHERE id = :id");
 
                             $Update->bindparam("id", $assistant_id);
                             $Update->bindparam("phone_number", $phone_number);
@@ -334,7 +334,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 $Message = "فشل تعديل البيانات";
                                 print_r(json_encode(Message(null,$Message,422)));
                             }
-
                         } else {
                             $Message = "رقم الهاتف موجود من قبل";
                             print_r(json_encode(Message(null,$Message,400)));
@@ -345,7 +344,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         //UpDate Assistant Table
 
-                        $Update = $database->prepare("UPDATE assistant SET phone_number = :phone_number , governorate = :governorate , assistant_name = :assistant_name , gender = :gender , birth_date = :birth_date WHERE id = :id");
+                        $Update = $database->prepare("UPDATE assistant SET phone_number = :phone_number , governorate = :governorate , name = :assistant_name , gender = :gender , birth_date = :birth_date WHERE id = :id");
 
                         $Update->bindparam("id", $assistant_id);
                         $Update->bindparam("phone_number", $phone_number);
@@ -370,12 +369,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                     $Message = "رقم الهاتف غير صالح";
                     print_r(json_encode(Message(null,$Message,400)));
                 }
-
             } else {
                 $Message = "يجب اكمال البيانات";
                 print_r(json_encode(Message(null,$Message,400)));
             }
-
         } else {
             $Message = "يجب اكمال البيانات";
             print_r(json_encode(Message(null,$Message,400)));

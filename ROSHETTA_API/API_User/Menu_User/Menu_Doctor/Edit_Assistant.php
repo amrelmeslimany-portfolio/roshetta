@@ -11,8 +11,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
     if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
 
-        $doctor_id = $_SESSION['doctor']->id;
-        $clinic_id = $_SESSION['clinic']->id;
+        $doctor_id = $_SESSION['doctor'];
+        $clinic_id = $_SESSION['clinic'];
 
         if (isset($_POST['assistant_id']) && !empty($_POST['assistant_id'])) {
 
@@ -40,25 +40,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                     if ($Update->rowCount() > 0) {
 
-                        //Get From Clinic Table
+                        $Message = "تم التعديل بنجاح";
+                        print_r(json_encode(Message(null, $Message, 201)));
+                        header("refresh:2;");
 
-                        $get_clinic = $database->prepare("SELECT * FROM clinic WHERE clinic.id = :clinic_id AND clinic.doctor_id = :doctor_id ");
-                        $get_clinic->bindparam("clinic_id", $clinic_id);
-                        $get_clinic->bindparam("doctor_id", $doctor_id);
-
-                        if ($get_clinic->execute()) {
-
-                            $get_clinic = $get_clinic->fetchObject();
-                            $_SESSION['clinic'] = $get_clinic;
-
-                            $Message = "تم التعديل بنجاح";
-                            print_r(json_encode(Message(null, $Message, 201)));
-                            header("refresh:2;");
-
-                        } else {
-                            $Message = "فشل جلب البيانات";
-                            print_r(json_encode(Message(null, $Message, 422)));
-                        }
                     } else {
                         $Message = "فشل تعديل المساعد";
                         print_r(json_encode(Message(null, $Message, 422)));

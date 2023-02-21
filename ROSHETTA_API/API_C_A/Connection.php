@@ -10,7 +10,7 @@ $options  = array(
 try { //try && catch
   $database = new PDO($dsn, $user, $password, $options); //Start A New Connection With PDO Class
   $database->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-  // echo 'you are connected';     //Message Succses Connection
+  // echo 'you are connected';     //Message Success Connection
 
 } catch (PDOException $e) {
   echo 'Failed' . $e->getMessage(); //Message Failed Connection

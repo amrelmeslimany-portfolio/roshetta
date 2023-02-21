@@ -71,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                 //Add To Table Patients
 
-                                $addData = $database->prepare("INSERT INTO patient(patient_name,ssd,email,phone_number,gender,birth_date,weight,height,governorate,password,security_code,email_isactive,role)
+                                $addData = $database->prepare("INSERT INTO patient(name,ssd,email,phone_number,gender,birth_date,weight,height,governorate,password,security_code,email_isactive,role)
                                                                             VALUES(:patient_name,:ssd,:email,:phone_number,:gender,:birth_date,:weight,:height,:governorate,:password,:security_code,0,'PATIENT')");
 
                                 $addData->bindparam("patient_name", $patient_name);
@@ -209,7 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                     //Add To Table Doctors
 
-                                    $addData = $database->prepare("INSERT INTO doctor(doctor_name,gender,ssd,email,phone_number,birth_date,password,security_code,specialist,governorate,email_isactive,role)
+                                    $addData = $database->prepare("INSERT INTO doctor(name,gender,ssd,email,phone_number,birth_date,password,security_code,specialist,governorate,email_isactive,role)
                                                                                     VALUES(:doctor_name,:gender,:ssd,:email,:phone_number,:birth_date,:password,:security_code,:specialist,:governorate,0,'DOCTOR')");
 
                                     $addData->bindparam("doctor_name", $doctor_name);
@@ -348,7 +348,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                     //Add To Pharmacists Table
 
-                                    $addData = $database->prepare("INSERT INTO pharmacist(pharmacist_name,gender,ssd,email,phone_number,birth_date,password,security_code,governorate,email_isactive,role)
+                                    $addData = $database->prepare("INSERT INTO pharmacist(name,gender,ssd,email,phone_number,birth_date,password,security_code,governorate,email_isactive,role)
                                                                                 VALUES(:pharmacist_name,:gender,:ssd,:email,:phone_number,:birth_date,:password,:security_code,:governorate,0,'PHARMACIST')");
 
                                     $addData->bindparam("pharmacist_name", $pharmacist_name);
@@ -484,7 +484,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                                     //Add To Assistants Table
 
-                                    $addData = $database->prepare("INSERT INTO assistant(assistant_name,gender,ssd,email,phone_number,birth_date,password,security_code,governorate,email_isactive,role)
+                                    $addData = $database->prepare("INSERT INTO assistant(name,gender,ssd,email,phone_number,birth_date,password,security_code,governorate,email_isactive,role)
                                                                                     VALUES(:assistant_name,:gender,:ssd,:email,:phone_number,:birth_date,:password,:security_code,:governorate,0,'ASSISTANT')");
 
                                     $addData->bindparam("assistant_name", $assistant_name);
@@ -565,3 +565,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
     $Message = "غير مسموح بالدخول عبر هذة الطريقة";
     print_r(json_encode(Message(null,$Message,405)));
 }
+?>

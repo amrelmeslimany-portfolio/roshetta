@@ -5,9 +5,6 @@ session_regenerate_id();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-
-    date_default_timezone_set('Africa/Cairo'); //Set To Cairo TimeZone
-
     //I Expect To Receive This Data
 
     if (
@@ -22,105 +19,96 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             $patient_id     = filter_var($_POST['patient_id'], FILTER_SANITIZE_NUMBER_INT);
             $disease_place  = filter_var($_POST['disease_place'], FILTER_SANITIZE_STRING);
             $disease_date   = date('Y-m-d');
-            $doctor_id      = $_SESSION['doctor']->id;
-            $clinic_id      = $_SESSION['clinic']->id;
+            $doctor_id      = $_SESSION['doctor'];
+            $clinic_id      = $_SESSION['clinic'];
 
-            if ($_SESSION['doctor']->role === "DOCTOR") {
+            //Check Activation
 
-                $d_id = $_SESSION['doctor']->id;
+            $checkActivation = $database->prepare("SELECT * FROM activation_person,doctor WHERE  activation_person.doctor_id = doctor.id  AND doctor.id = :id ");
+            $checkActivation->bindparam("id", $doctor_id);
+            $checkActivation->execute();
 
-                //Check Activation
+            if ($checkActivation->rowCount() > 0) {
 
-                $checkActivation = $database->prepare("SELECT * FROM activation_person,doctor WHERE  activation_person.doctor_id = doctor.id  AND doctor.id = :id ");
-                $checkActivation->bindparam("id", $d_id);
-                $checkActivation->execute();
+                $Activation = $checkActivation->fetchObject();
 
-                if ($checkActivation->rowCount() > 0) {
+                if ($Activation->isactive == 1) {
 
-                    $Activation = $checkActivation->fetchObject();
+                    //Filter Data 'String'
 
-                    if ($Activation->isactive == 1) {
+                    if (filter_var($patient_id, FILTER_VALIDATE_INT) !== FALSE) {
 
-                        //Filter Data 'String'
+                        $checkpatient = $database->prepare("SELECT * FROM patient WHERE patient.id = :id ");
+                        $checkpatient->bindparam("id", $patient_id);
+                        $checkpatient->execute();
 
-                        if (filter_var($patient_id, FILTER_VALIDATE_INT) !== FALSE) {
+                        if ($checkpatient->rowCount() > 0) {
 
-                            $checkpatient = $database->prepare("SELECT * FROM patient WHERE patient.id = :id ");
-                            $checkpatient->bindparam("id", $patient_id);
-                            $checkpatient->execute();
+                            //Add TO Disease Table
 
-                            if ($checkpatient->rowCount() > 0) {
-
-                                //Add TO Disease Table
-
-                                $addDisease = $database->prepare("INSERT INTO disease(disease_name,patient_id,disease_place,disease_date,doctor_id,clinic_id)
+                            $addDisease = $database->prepare("INSERT INTO disease(name,patient_id,disease_place,disease_date,doctor_id,clinic_id)
                                                                 VALUES(:disease_name,:patient_id,:disease_place,:disease_date,:doctor_id,:clinic_id)");
 
-                                $addDisease->bindparam("disease_name", $disease_name);
-                                $addDisease->bindparam("patient_id", $patient_id);
-                                $addDisease->bindparam("disease_place", $disease_place);
-                                $addDisease->bindparam("disease_date", $disease_date);
-                                $addDisease->bindparam("doctor_id", $doctor_id);
-                                $addDisease->bindparam("clinic_id", $clinic_id);
+                            $addDisease->bindparam("disease_name", $disease_name);
+                            $addDisease->bindparam("patient_id", $patient_id);
+                            $addDisease->bindparam("disease_place", $disease_place);
+                            $addDisease->bindparam("disease_date", $disease_date);
+                            $addDisease->bindparam("doctor_id", $doctor_id);
+                            $addDisease->bindparam("clinic_id", $clinic_id);
+                            $addDisease->execute();
 
-                                if ($addDisease->execute()) {
+                            if ($addDisease->rowCount() > 0) {
 
-                                    if($addDisease->rowCount() > 0 ) {
+                                $get_disease = $database->prepare("SELECT id , patient_id FROM  disease WHERE  disease.patient_id = :pat_id AND disease.doctor_id = :doc_id AND disease.clinic_id = :cli_id AND disease.disease_date = :disease_date ");
+                                $get_disease->bindparam("doc_id", $doctor_id);
+                                $get_disease->bindparam("disease_date", $disease_date);
+                                $get_disease->bindparam("pat_id", $patient_id);
+                                $get_disease->bindparam("cli_id", $clinic_id);
+                                $get_disease->execute();
 
-                                        $get_disease = $database->prepare("SELECT * FROM  disease WHERE  disease.patient_id = :pat_id AND disease.doctor_id = :doc_id AND disease.clinic_id = :cli_id AND disease.disease_date = :disease_date ");
-                                        $get_disease->bindparam("doc_id", $doctor_id);
-                                        $get_disease->bindparam("disease_date", $disease_date);
-                                        $get_disease->bindparam("pat_id", $patient_id);
-                                        $get_disease->bindparam("cli_id", $clinic_id);
+                                if ($get_disease->rowCount() > 0) {
 
-                                        if ($get_disease->execute()) {
+                                    $disease = $get_disease->fetchObject();
 
-                                            if ($get_disease->rowCount() > 0) {
+                                    $_SESSION['disease'] = $disease;
 
-                                                $disease = $get_disease->fetchObject();
-
-                                                $_SESSION['disease'] = $disease;
-
-                                                print_r(json_encode(["Message" => "تم اضافة مرض"]));
-
-                                            } else {
-                                                print_r(json_encode(["Error" => "فشل جلب المرض"]));
-                                            }
-                                        } else {
-                                            print_r(json_encode(["Error" => "فشل جلب المرض"]));
-                                        }
-
-                                    } else {
-                                        print_r(json_encode(["Error" => "فشل اضافة مرض"]));
-                                    }
+                                    $Message = "تم اضافة مرض";
+                                    print_r(json_encode(Message(null, $Message, 201)));
 
                                 } else {
-                                    print_r(json_encode(["Error" => "فشل اضافة مرض"]));
+                                    $Message = "فشل جلب المرض";
+                                    print_r(json_encode(Message(null, $Message, 204)));
                                 }
-
                             } else {
-                                print_r(json_encode(["Error" => "رقم المريض غير صحيح"]));
+                                $Message = "فشل اضافة مرض";
+                                print_r(json_encode(Message(null, $Message, 422)));
                             }
                         } else {
-                            print_r(json_encode(["Error" => "يجب ادخال بيانات من نوع الارقام"]));
+                            $Message = "رقم المريض غير صحيح";
+                            print_r(json_encode(Message(null, $Message, 400)));
                         }
-
                     } else {
-                        print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم المراجعة من قبل الادمن"]));
+                        $Message = "يجب ادخال بيانات من نوع الارقام";
+                        print_r(json_encode(Message(null, $Message, 400)));
                     }
                 } else {
-                    print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
+                    $Message = "الرجاء الانتظار حتى يتم تنشيط حسابك من قبل المشرف";
+                    print_r(json_encode(Message(null, $Message, 202)));
                 }
             } else {
-                print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+                $Message = "يجب تفعيل الحساب";
+                print_r(json_encode(Message(null, $Message, 202)));
             }
         } else {
-            print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+            $Message = "فشل العثور على مستخدم";
+            print_r(json_encode(Message(null, $Message, 401)));
         }
     } else {
-        print_r(json_encode(["Error" => "يجب عليك اكمال جميع البيانات"]));
+        $Message = "يجب اكمال البيانات";
+        print_r(json_encode(Message(null, $Message, 400)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

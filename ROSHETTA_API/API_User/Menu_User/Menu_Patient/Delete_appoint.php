@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
         if (isset($_POST['appointment_id']) && !empty($_POST['appointment_id'])) {
 
             $appointment_id = filter_var($_POST['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
-            $patient_id     = $_SESSION['patient']->id;
+            $patient_id     = $_SESSION['patient'];
 
             // Delete From Appointment Table
 

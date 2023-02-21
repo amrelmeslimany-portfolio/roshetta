@@ -9,38 +9,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
         if (isset($_SESSION['clinic'])) {
 
-            //Print Clinic Data From Session
+            $id = $_SESSION['clinic'];
 
-            $logo               = $_SESSION['clinic']->logo;
-            $clinic_name        = $_SESSION['clinic']->clinic_name;
-            $clinic_specialist  = $_SESSION['clinic']->clinic_specialist;
-            $phone_number       = $_SESSION['clinic']->phone_number;
-            $owner              = $_SESSION['clinic']->owner;
-            $clinic_price       = $_SESSION['clinic']->clinic_price;
-            $start_working      = $_SESSION['clinic']->start_working;
-            $end_working        = $_SESSION['clinic']->end_working;
-            $governorate        = $_SESSION['clinic']->governorate;
-            $address            = $_SESSION['clinic']->address;
+            $get_data = $database->prepare("SELECT * FROM clinic WHERE id = :id");
+            $get_data->bindparam("id", $id);
+            $get_data->execute();
 
+            if ($get_data->rowCount() > 0) {
 
-            $clinic_data = [
+                $data_place = $get_data->fetchObject();
 
-                "logo"              => $logo,
-                "clinic_name"       => $clinic_name,
-                "clinic_specialist" => $clinic_specialist,
-                "phone_number"      => $phone_number,
-                "owner"             => $owner,
-                "clinic_price"      => $clinic_price,
-                "start_working"     => $start_working,
-                "end_working"       => $end_working,
-                "governorate"       => $governorate,
-                "address"           => $address
+                //Get Patient Number
 
-            ];
+                $get_patient = $database->prepare("SELECT patient.id FROM patient,clinic,appointment WHERE clinic.id = :clinic_id AND patient.id = appointment.patient_id AND clinic.id = appointment.clinic_id");
+                $get_patient->bindParam("clinic_id", $id);
+                $get_patient->execute();
 
-            $Message = "تم جلب البيانات";
-            print_r(json_encode(Message($clinic_data,$Message,200)));
+                if($get_patient->rowCount() >= 0 ){
+                    $data_patient = $get_patient->rowCount();
+                } //*** */
 
+                //Get Prescript Number
+
+                $get_prescript = $database->prepare("SELECT prescript.id FROM prescript,clinic WHERE prescript.clinic_id = clinic.id AND clinic.id = :clinic_id");
+                $get_prescript->bindParam("clinic_id", $id);
+                $get_prescript->execute();
+
+                if($get_prescript->rowCount() >= 0 ){
+                    $data_prescript = $get_prescript->rowCount();
+                } //**** */
+
+                $clinic_data = [
+
+                    "id"                    => $data_place->id,
+                    "logo"                  => $data_place->logo,
+                    "name"                  => $data_place->name,
+                    "specialist"            => $data_place->clinic_specialist,
+                    "phone_number"          => $data_place->phone_number,
+                    "owner"                 => $data_place->owner,
+                    "price"                 => $data_place->clinic_price,
+                    "start_working"         => $data_place->start_working,
+                    "end_working"           => $data_place->end_working,
+                    "governorate"           => $data_place->governorate,
+                    "address"               => $data_place->address,
+                    "number_of_patient"     => $data_patient,
+                    "number_of_prescript"   => $data_prescript,
+
+                ];
+    
+                $Message = "تم جلب البيانات";
+                print_r(json_encode(Message($clinic_data,$Message,200)));
+
+            } else {
+                $Message = "لم يتم العثور عللى بيانات";
+                print_r(json_encode(Message(null,$Message,204)));
+            } 
         } else {
             $Message = "فشل العثور على مستخدم";
             print_r(json_encode(Message(null,$Message,401)));

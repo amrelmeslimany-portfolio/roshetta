@@ -12,6 +12,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
     if (isset($_SESSION['clinic'])) { //If Find clinic Session
 
+        $id = $_SESSION['clinic'];
+
         //I Expect To Receive This Data
 
         $img_name   = $_FILES["logo"]["name"];
@@ -34,7 +36,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             } else {
 
-                $folder_name    = $_SESSION['clinic']->ser_id;
+                $get_clinic = $database->prepare("SELECT * FROM clinic WHERE id = :id");
+                $get_clinic->bindparam("id", $id);
+                $get_clinic->execute();
+
+                if ($get_clinic->rowCount() > 0 ) {
+                    $data_clinic    = $get_clinic->fetchObject();
+                    $ser_id         = $data_clinic->ser_id;
+                } else {
+                    $ser_id = 'UNKNOWN';
+                }
+
+                $folder_name    = $ser_id;
                 $img_new_name   = bin2hex(random_bytes(10)) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
                 $link           = 'Logo_Img/Clinic/' . $folder_name . '/' . ''; //File Link
 
@@ -52,8 +65,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                             $logo_img       = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_C_P/API_IMG/" . $link . $img_new_name; //The Path WithIn The DataBase
 
-                            $id = $_SESSION['clinic']->id;
-
                             //UpDate Clinic Table
 
                             $uploadImg = $database->prepare("UPDATE clinic SET logo = :logo WHERE id = :id ");
@@ -64,29 +75,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             if ($uploadImg->rowCount() > 0 ) {
 
-                                //Get Logo From Clinic
+                                $Message = "تم تعديل الشعار بنجاح";
+                                print_r(json_encode(Message(null,$Message,201)));
 
-                                $getImg = $database->prepare("SELECT * FROM clinic WHERE id = :id ");
-
-                                $getImg->bindparam("id", $id);
-                                $getImg->execute();
-
-                                if ($getImg->rowCount() > 0 ) {
-
-                                    $getImg = $getImg->fetchObject();
-                                    $_SESSION['clinic'] = $getImg;
-
-                                    $data = [
-                                        "URL"  => $getImg->logo
-                                    ];
-
-                                    $Message = "تم تعديل الشعار بنجاح";
-                                    print_r(json_encode(Message($data,$Message,201)));
-
-                                } else {
-                                    $Message = "فشل جلب الشعار";
-                                    print_r(json_encode(Message(null,$Message,422)));
-                                }
                             } else {
                                 $Message = "فشل تعديل الشعار";
                                 print_r(json_encode(Message(null,$Message,422)));
@@ -103,8 +94,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                     $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
                     $logo_img       = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_C_P/API_IMG/" . $link . $img_new_name; //The Path WithIn The DataBase
 
-                    $id = $_SESSION['clinic']->id;
-
                     //UpDate Clinic Table
 
                     $uploadImg = $database->prepare("UPDATE clinic SET logo = :logo WHERE id = :id ");
@@ -115,29 +104,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                     if ($uploadImg->rowCount() > 0 ) {
 
-                        //Get Logo From Clinic
+                        $Message = "تم تعديل الشعار بنجاح";
+                        print_r(json_encode(Message(null,$Message,201)));
 
-                        $getImg = $database->prepare("SELECT * FROM clinic WHERE id = :id ");
-
-                        $getImg->bindparam("id", $id);
-                        $getImg->execute();
-
-                        if ($getImg->rowCount() > 0 ) {
-
-                            $getImg = $getImg->fetchObject();
-                            $_SESSION['clinic'] = $getImg;
-
-                            $data = [
-                                "URL"  => $getImg->logo
-                            ];
-
-                            $Message = "تم تعديل الشعار بنجاح";
-                            print_r(json_encode(Message($data,$Message,201)));
-
-                        } else {
-                            $Message = "فشل جلب الشعار";
-                            print_r(json_encode(Message(null,$Message,422)));
-                        }
                     } else {
                         $Message = "فشل تعديل الشعار";
                         print_r(json_encode(Message(null,$Message,422)));

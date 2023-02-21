@@ -24,6 +24,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             $table_name = 'pharmacist';
         } elseif ($role == "assistant") {
             $table_name = 'assistant';
+        } elseif ($role == "admin") {
+            $table_name = 'admin';
         } else {
             $table_name = '';
         }
@@ -46,23 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         $data_user = $check_user->fetchObject();
 
-                        if ($table_name == "patient") {
-                            $name = $data_user->patient_name;
-                            $Hi   = 'مـــــرحبــــــا بــــك';
-                        } elseif ($table_name == "doctor") {
-                            $name = $data_user->doctor_name;
-                            $Hi   = 'مـــــرحبـــــا بــــك دكتــــور';
-                        } elseif ($table_name == "pharmacist") {
-                            $name = $data_user->pharmacist_name;
-                            $Hi   = 'مـــــرحبـــــا بــــك دكتــــور';
-                        } elseif ($table_name == "assistant") {
-                            $name = $data_user->assistant_name;
-                            $Hi   = 'مـــــرحبــــــا بــــك';
+                        if ($table_name == "patient" || $table_name == "assistant" || $table_name == "admin") {
+                            $Hi = 'مـــــرحبــــــا بــــك';
                         } else {
-                            $name = '';
-                            $Hi = '';
+                            $Hi = 'مـــــرحبـــــا بــــك دكتــــور';
                         }
 
+                        $name           = $data_user->name;
                         $email          = $data_user->email;
                         $security_code  = $data_user->security_code;
                         $role           = $data_user->role;

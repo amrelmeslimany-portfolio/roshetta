@@ -11,11 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
     if (isset($_SESSION['patient'])) {
 
-        $id = $_SESSION['patient']->id;
+        $id = $_SESSION['patient'];
 
         // Get From Clinic And Appointment Table
 
-        $get_reservation = $database->prepare("SELECT appointment.id as appointment_id,logo as clinic_logo,clinic_name,phone_number as clinic_phone_number,start_working,end_working,clinic_specialist,address as clinic_address,appoint_date  FROM  clinic,appointment  
+        $get_reservation = $database->prepare("SELECT appointment.id as appointment_id,logo as clinic_logo,clinic.name as clinic_name,clinic.phone_number as clinic_phone_number,start_working,end_working,clinic_specialist,address as clinic_address,appoint_date  FROM  clinic,appointment  
                                                     WHERE clinic.id = appointment.clinic_id AND appointment.patient_id = :id  ORDER BY appointment.id DESC ");
 
         $get_reservation->bindparam("id", $id);

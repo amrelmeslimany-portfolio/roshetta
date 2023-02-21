@@ -11,14 +11,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
     if (isset($_SESSION['patient'])) {
 
-        $id = $_SESSION['patient']->id;
+        $id = $_SESSION['patient'];
 
         if (isset($_POST['clinic_id']) && !empty($_POST['clinic_id'])) {
 
             $clinic_id = filter_var($_POST['clinic_id'], FILTER_SANITIZE_NUMBER_INT);
 
             //Get From Clinic Table
-            $get_clinic = $database->prepare("SELECT id as clinic_id,logo as clinic_logo,clinic_name,phone_number as clinic_phone_number,clinic_specialist,clinic_price,start_working,end_working,governorate,address as clinic_address FROM clinic WHERE clinic.id = :clinic_id");
+            $get_clinic = $database->prepare("SELECT clinic.id as clinic_id,logo as clinic_logo,clinic.name as clinic_name,phone_number as clinic_phone_number,clinic_specialist,clinic_price,start_working,end_working,governorate,address as clinic_address FROM clinic,activation_place WHERE clinic.id = :clinic_id AND activation_place.isactive = 1 AND activation_place.clinic_id = clinic.id");
             $get_clinic->bindparam("clinic_id", $clinic_id);
             $get_clinic->execute();
 
@@ -30,20 +30,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                 $get_reservation->bindparam("clinic_id", $clinic_id);
                 $get_reservation->execute();
 
-                if ($get_reservation->rowCount() > 0) {
+                if ($get_reservation->rowCount() >= 0) {
                     $get_reservation = $get_reservation->rowCount();
                 } else {
-                    $get_reservation = 0;
+                    //***** */
                 }
 
-                $get_reservation_patient = $database->prepare("SELECT * FROM appointment WHERE appointment.patient_id = :id");
+                $get_reservation_patient = $database->prepare("SELECT * FROM appointment WHERE appointment.patient_id = :id AND appointment.clinic_id = :clinic_id");
                 $get_reservation_patient->bindparam("id", $id);
+                $get_reservation_patient->bindparam("clinic_id", $clinic_id);
                 $get_reservation_patient->execute();
 
-                if ($get_reservation_patient->rowCount() > 0) {
+                if ($get_reservation_patient->rowCount() >= 0) {
                     $get_reservation_patient = $get_reservation_patient->rowCount();
                 } else {
-                    $get_reservation_patient = 0;
+                    //**** */
                 }
 
                 $data_clinic = [

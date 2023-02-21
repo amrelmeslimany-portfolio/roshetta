@@ -7,121 +7,117 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
     //I Expect To Receive This Data
 
-    if (isset($_POST['rediscovery_date'])   && !empty($_POST['rediscovery_date'])
+    if (
+        isset($_POST['rediscovery_date'])   && !empty($_POST['rediscovery_date'])
         && isset($_POST['patient_id'])      && !empty($_POST['patient_id'])
         && isset($_POST['disease_id'])      && !empty($_POST['disease_id'])
-       ) {
+    ) {
 
         if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
 
-            if ($_SESSION['doctor']->role === "DOCTOR") {
+            $doctor_id = $_SESSION['doctor'];
 
-                $d_id = $_SESSION['doctor']->id;
+            //Check Activation
 
-                //Check Activation
+            $checkActivation = $database->prepare("SELECT * FROM activation_person,doctor WHERE  activation_person.doctor_id = doctor.id  AND doctor.id = :id ");
+            $checkActivation->bindparam("id", $doctor_id);
+            $checkActivation->execute();
 
-                $checkActivation = $database->prepare("SELECT * FROM activation_person,doctor WHERE  activation_person.doctor_id = doctor.id  AND doctor.id = :id ");
-                $checkActivation->bindparam("id", $d_id);
-                $checkActivation->execute();
+            if ($checkActivation->rowCount() > 0) {
 
-                if ($checkActivation->rowCount() > 0) {
+                $Activation = $checkActivation->fetchObject();
 
-                    $Activation = $checkActivation->fetchObject();
+                if ($Activation->isactive == 1) {
 
-                    if ($Activation->isactive == 1) {
+                    $rediscovery_date   = $_POST['rediscovery_date'];
+                    $patient_id         = filter_var($_POST['patient_id'], FILTER_SANITIZE_NUMBER_INT);
+                    $clinic_id          = $_SESSION['clinic'];
+                    $disease_id         = filter_var($_POST['disease_id'], FILTER_SANITIZE_NUMBER_INT);
+                    $ser_id             = rand(100000, 999999) . $patient_id;
 
-                        $rediscovery_date    = $_POST['rediscovery_date'];
-                        $patient_id          = $_POST['patient_id'];
-                        $doctor_id           = $_SESSION['doctor']->id;
-                        $clinic_id           = $_SESSION['clinic']->id;
-                        $disease_id          = $_POST['disease_id'];
-                        $ser_id              = rand(0, 1000000) . $patient_id;
+                    if (filter_var($patient_id, FILTER_VALIDATE_INT) !== FALSE && filter_var($disease_id, FILTER_VALIDATE_INT) !== FALSE) {
 
-                        if (filter_var($patient_id, FILTER_VALIDATE_INT) !== FALSE) {
+                        $checkpatient = $database->prepare("SELECT * FROM patient WHERE patient.id = :id ");
+                        $checkpatient->bindparam("id", $patient_id);
+                        $checkpatient->execute();
 
-                            $checkpatient = $database->prepare("SELECT * FROM patient WHERE patient.id = :id ");
-                            $checkpatient->bindparam("id", $patient_id);
-                            $checkpatient->execute();
+                        if ($checkpatient->rowCount() > 0) {
 
-                            if ($checkpatient->rowCount() > 0) {
+                            $checkdisease = $database->prepare("SELECT * FROM disease WHERE disease.id = :id ");
+                            $checkdisease->bindparam("id", $disease_id);
+                            $checkdisease->execute();
 
-                                $checkdisease = $database->prepare("SELECT * FROM disease WHERE disease.id = :id ");
-                                $checkdisease->bindparam("id", $disease_id);
-                                $checkdisease->execute();
+                            if ($checkdisease->rowCount() > 0) {
 
-                                if ($checkdisease->rowCount() > 0) {
+                                //Add To Prescript Table
 
-                                    //Add To Prescript Table
-
-                                    $addPrescript = $database->prepare("INSERT INTO prescript(rediscovery_date,patient_id,doctor_id,disease_id,clinic_id,ser_id)
+                                $addPrescript = $database->prepare("INSERT INTO prescript(rediscovery_date,patient_id,doctor_id,disease_id,clinic_id,ser_id)
                                                                         VALUES(:rediscovery_date,:patient_id,:doctor_id,:disease_id,:clinic_id,:ser_id)");
 
-                                    $addPrescript->bindparam("rediscovery_date", $rediscovery_date);
-                                    $addPrescript->bindparam("patient_id", $patient_id);
-                                    $addPrescript->bindparam("doctor_id", $doctor_id);
-                                    $addPrescript->bindparam("disease_id", $disease_id);
-                                    $addPrescript->bindparam("clinic_id", $clinic_id);
-                                    $addPrescript->bindparam("ser_id", $ser_id);
+                                $addPrescript->bindparam("rediscovery_date", $rediscovery_date);
+                                $addPrescript->bindparam("patient_id", $patient_id);
+                                $addPrescript->bindparam("doctor_id", $doctor_id);
+                                $addPrescript->bindparam("disease_id", $disease_id);
+                                $addPrescript->bindparam("clinic_id", $clinic_id);
+                                $addPrescript->bindparam("ser_id", $ser_id);
+                                $addPrescript->execute();
 
-                                    if ($addPrescript->execute()) {
+                                if ($addPrescript->rowCount() > 0) {
 
-                                        if ($addPrescript->rowCount() > 0) {
+                                    $get_Prescript = $database->prepare("SELECT id FROM  prescript WHERE prescript.doctor_id = :doc_id AND prescript.disease_id = :dis_id AND prescript.patient_id = :pat_id AND prescript.clinic_id = :cli_id ");
+                                    $get_Prescript->bindparam("doc_id", $doctor_id);
+                                    $get_Prescript->bindparam("dis_id", $disease_id);
+                                    $get_Prescript->bindparam("pat_id", $patient_id);
+                                    $get_Prescript->bindparam("cli_id", $clinic_id);
+                                    $get_Prescript->execute();
 
-                                        $get_Prescript = $database->prepare("SELECT * FROM  prescript WHERE prescript.doctor_id = :doc_id AND prescript.disease_id = :dis_id AND prescript.patient_id = :pat_id AND prescript.clinic_id = :cli_id ");
-                                        $get_Prescript->bindparam("doc_id", $doctor_id);
-                                        $get_Prescript->bindparam("dis_id", $disease_id);
-                                        $get_Prescript->bindparam("pat_id", $patient_id);
-                                        $get_Prescript->bindparam("cli_id", $clinic_id);
+                                    if ($get_Prescript->rowCount() > 0) {
 
-                                            if ($get_Prescript->execute()) {
+                                        $prescript = $get_Prescript->fetchObject();
 
-                                                if ($get_Prescript->rowCount() > 0) {
+                                        $_SESSION['prescript'] = $prescript;
 
-                                                    $prescript = $get_Prescript->fetchObject();
+                                        $Message = "تم وضع الروشتة بنجاح جارى التجهيز لاضافة الادوية";
+                                        print_r(json_encode(Message(null, $Message, 201)));
 
-                                                    $_SESSION['prescript'] = $prescript;
-                                                    
-                                                    print_r(json_encode(["Message" => "تم وضع الروشتة بنجاح جارى التجهيز لاضافة الادوية"]));
-
-                                                } else {
-                                                    print_r(json_encode(["Error" => "فشل جلب الروشتة"]));
-                                                }
-                                            } else {
-                                                print_r(json_encode(["Error" => "فشل جلب الروشتة"]));
-                                            }
-                                        } else {
-                                            print_r(json_encode(["Error" => "فشل وضع الروشتة"]));
-                                        }   
                                     } else {
-                                        print_r(json_encode(["Error" => "فشل وضع الروشتة"]));
+                                        $Message = "فشل جلب الروشتة";
+                                        print_r(json_encode(Message(null, $Message, 204)));
                                     }
                                 } else {
-                                    print_r(json_encode(["Error" => "رقم المرض غير صحيح"]));
+                                    $Message = "فشل وضع الروشتة";
+                                    print_r(json_encode(Message(null, $Message, 422)));
                                 }
                             } else {
-                                print_r(json_encode(["Error" => "رقم المريض غير صحيح"]));
+                                $Message = "رقم المرض غير صحيح";
+                                print_r(json_encode(Message(null, $Message, 400)));
                             }
                         } else {
-                            print_r(json_encode(["Error" => "يجب ادخال بيانات من نوع الارقام"]));
+                            $Message = "رقم المريض غير صحيح";
+                            print_r(json_encode(Message(null, $Message, 400)));
                         }
                     } else {
-                        print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم المراجعة من قبل الادمن"]));
+                        $Message = "يجب ادخال بيانات من نوع الارقام";
+                        print_r(json_encode(Message(null, $Message, 400)));
                     }
-
                 } else {
-                    print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
+                    $Message = "الرجاء الانتظار حتى يتم تنشيط حسابك من قبل المشرف";
+                    print_r(json_encode(Message(null, $Message, 202)));
                 }
             } else {
-                print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+                $Message = "يجب تفعيل الحساب";
+                print_r(json_encode(Message(null, $Message, 202)));
             }
-
         } else {
-            print_r(json_encode(["Error" => "فشل العثور على مستخدم"]));
+            $Message = "فشل العثور على مستخدم";
+            print_r(json_encode(Message(null, $Message, 401)));
         }
     } else {
-        print_r(json_encode(["Error" => "يجب عليك اكمال جميع البيانات"]));
+        $Message = "يجب اكمال البيانات";
+        print_r(json_encode(Message(null, $Message, 400)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

@@ -20,29 +20,35 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
         if (isset($_SESSION['patient'])) {
             $type           = 'Profile_patient_img/';
-            $folder_user    = $_SESSION['patient']->ssd;
             $table_name     = 'patient';
-            $id             = $_SESSION['patient']->id;
+            $id             = $_SESSION['patient'];
         } elseif (isset($_SESSION['doctor'])) {
             $type           = 'Profile_doctor_img/';
-            $folder_user    = $_SESSION['doctor']->ssd;
             $table_name     = 'doctor';
-            $id             = $_SESSION['doctor']->id;
+            $id             = $_SESSION['doctor'];
         } elseif (isset($_SESSION['pharmacist'])) {
             $type           = 'Profile_pharmacist_img/';
-            $folder_user    = $_SESSION['pharmacist']->ssd;
             $table_name     = 'pharmacist';
-            $id             = $_SESSION['pharmacist']->id;
+            $id             = $_SESSION['pharmacist'];
         } elseif (isset($_SESSION['assistant'])) {
             $type           = 'Profile_assistant_img/';
-            $folder_user    = $_SESSION['assistant']->ssd;
             $table_name     = 'assistant';
-            $id             = $_SESSION['assistant']->id;
+            $id             = $_SESSION['assistant'];
         } else {
             $type = '';
-            $folder_user = '';
             $table_name = '';
             $id = '';
+        }
+
+        $get_data = $database->prepare("SELECT * FROM $table_name WHERE id = :id");
+        $get_data->bindparam("id", $id);
+        $get_data->execute();
+
+        if ($get_data->rowCount() > 0 ) {
+            $data_user      = $get_data->fetchObject();
+            $folder_user    = $data_user->ssd;
+        } else {
+            $folder_user = 'UNKNOWN';
         }
 
         $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
@@ -58,10 +64,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
         //To Get The Image Formul
 
-        $check_formul = explode(".", $img_name);
-        $formul = end($check_formul);
+        $check_formul   = explode(".", $img_name);
+        $formul         = end($check_formul);
 
-        if (in_array($formul, $allowed_formulas)) {
+        if (in_array($formul, $allowed_formulas)) { 
 
             if ($img_size > 1000000) { //To Specify The Image Size  < 1M
                 $Message = "(1M)يجب أن يكون حجم الصورة أقل من";

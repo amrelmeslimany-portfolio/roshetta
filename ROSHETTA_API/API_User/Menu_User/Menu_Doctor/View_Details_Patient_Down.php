@@ -15,13 +15,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             $patient_id = filter_var($_POST['patient_id'], FILTER_SANITIZE_NUMBER_INT);
 
-            $check_patient = $database->prepare("SELECT patient.id as patient_id , patient.profile_img , patient.patient_name FROM  patient WHERE patient.id = :patient_id ");
+            $check_patient = $database->prepare("SELECT patient.id as patient_id , patient.profile_img , patient.name as patient_name FROM  patient WHERE patient.id = :patient_id ");
             $check_patient->bindparam("patient_id", $patient_id);
             $check_patient->execute();
 
             if ($check_patient->rowCount() > 0) {
 
-                $check_disease = $database->prepare("SELECT disease.id as disease_id , disease.disease_name FROM disease , patient WHERE disease.patient_id = patient.id AND patient.id = :patient_id ");
+                $check_disease = $database->prepare("SELECT disease.id as disease_id , disease.name as disease_name FROM disease , patient WHERE disease.patient_id = patient.id AND patient.id = :patient_id ");
                 $check_disease->bindparam("patient_id", $patient_id);
                 $check_disease->execute();
 

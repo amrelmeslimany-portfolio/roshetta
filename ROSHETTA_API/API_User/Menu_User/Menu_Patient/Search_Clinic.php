@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             $search_data = $_GET['search'];
 
             //Get From Clinic Table
-            $get_clinic = $database->prepare("SELECT id as clinic_id,logo as clinic_logo,clinic_name,phone_number as clinic_phone_number,clinic_specialist,clinic_price,start_working,end_working,governorate,address as cilinic_address FROM clinic WHERE clinic_specialist = :clinic_specialist ");
+            $get_clinic = $database->prepare("SELECT id as clinic_id,logo as clinic_logo,clinic.name as clinic_name,phone_number as clinic_phone_number,clinic_specialist,clinic_price,start_working,end_working,governorate,address as clinic_address FROM clinic WHERE clinic_specialist = :clinic_specialist ");
             $get_clinic->bindparam("clinic_specialist", $search_data);
             $get_clinic->execute();
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 06, 2023 at 06:13 PM
+-- Generation Time: Feb 21, 2023 at 11:49 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -43,7 +43,7 @@ CREATE TABLE `activation_person` (
 --
 
 INSERT INTO `activation_person` (`id`, `front_nationtional_card`, `back_nationtional_card`, `graduation_cer`, `card_id_img`, `isactive`, `doctor_id`, `pharmacist_id`) VALUES
-(4, 'http://localhost:3000/ROSHETTA_API/API_Activation/IMG/Person_Img/Pharmacists/99999999999999/9593668fb1bf3e0a24fb.png', 'http://localhost:3000/ROSHETTA_API/API_Activation/IMG/Person_Img/Pharmacists/99999999999999/42e207264d886ac1c349.jpg', 'http://localhost:3000/ROSHETTA_API/API_Activation/IMG/Person_Img/Pharmacists/99999999999999/4e4858f479dd3f46a395.jpg', 'http://localhost:3000/ROSHETTA_API/API_Activation/IMG/Person_Img/Pharmacists/99999999999999/43ab59e6d7e112cc382f.jpg', 1, NULL, 1);
+(4, 'http://localhost:3000/ROSHETTA_API/API_Activation/IMG/Person_Img/Pharmacists/99999999999999/9593668fb1bf3e0a24fb.png', 'http://localhost:3000/ROSHETTA_API/API_Activation/IMG/Person_Img/Pharmacists/99999999999999/42e207264d886ac1c349.jpg', 'http://localhost:3000/ROSHETTA_API/API_Activation/IMG/Person_Img/Pharmacists/99999999999999/4e4858f479dd3f46a395.jpg', 'http://localhost:3000/ROSHETTA_API/API_Activation/IMG/Person_Img/Pharmacists/99999999999999/43ab59e6d7e112cc382f.jpg', 1, 13, NULL);
 
 -- --------------------------------------------------------
 
@@ -75,7 +75,7 @@ INSERT INTO `activation_place` (`id`, `license_img`, `isactive`, `clinic_id`, `p
 
 CREATE TABLE `admin` (
   `id` tinyint(4) NOT NULL,
-  `admin_name` varchar(50) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `ssd` bigint(14) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phone_number` text NOT NULL,
@@ -92,8 +92,8 @@ CREATE TABLE `admin` (
 -- Dumping data for table `admin`
 --
 
-INSERT INTO `admin` (`id`, `admin_name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
-(1, 'samy mohamed', 2222, 'sam@gmail.com', '01010205040', 'ذكر', '2023-01-12', '$2y$10$kkFMOz4K0IL32AFbeHj75ezc7ezEVs9yDNXtDd9HGjLPARJxjEgZ6', '', 1, 'http://localhost:3000/ROSHETTA_API/API_Admin/API_IMG/Profile_Img_Admin/2222/a22cf7a70bf640d892db2222.jpg', 'ADMIN'),
+INSERT INTO `admin` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
+(1, 'samy mohamed', 2222, 'sam@gmail.com', '01010205040', 'ذكر', '2000-01-12', '$2y$10$kkFMOz4K0IL32AFbeHj75ezc7ezEVs9yDNXtDd9HGjLPARJxjEgZ6', '', 1, 'http://localhost:3000/ROSHETTA_API/API_Admin/API_IMG/Profile_Img_Admin/2222/a22cf7a70bf640d892db2222.jpg', 'ADMIN'),
 (3, 'hamdy ahmed', 33333333333333, 'ha@gmail.com', '01010101010', 'ذكر', '2023-01-18', '$2y$10$IuvMcAe49/0Top/QpZZfouVH7ec8ZY.vGxrDhwckrMqc5x82uwDNa', '', 0, NULL, 'ADMIN'),
 (4, 'ali ahmed', 12345678912345, 'ali@gmail.com', '01020231410', 'ذكر', '2023-01-05', '$2y$10$ah/NCnRsFJBmVjfCRZbGo.xgA8FPar4IdfUOro/b3Q9VMNli3WnLG', '', 0, NULL, 'ADMIN'),
 (5, 'ahmed mohamed', 11111111111111, 'ah@gmail.com', '01010101011', 'male', '2000-10-12', '$2y$10$dxxRGwYI.QcoW5N.16WyoeN4VhfI7pcXzXcwXeVQ7cI2treOZ3NqW', '3aec9dc5cc33ecb878953000fa9d210e', 0, NULL, 'ADMIN');
@@ -130,7 +130,7 @@ INSERT INTO `appointment` (`id`, `appoint_date`, `appoint_case`, `patient_id`, `
 
 CREATE TABLE `assistant` (
   `id` smallint(6) NOT NULL,
-  `assistant_name` varchar(50) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `ssd` bigint(14) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phone_number` text NOT NULL,
@@ -148,7 +148,7 @@ CREATE TABLE `assistant` (
 -- Dumping data for table `assistant`
 --
 
-INSERT INTO `assistant` (`id`, `assistant_name`, `ssd`, `email`, `phone_number`, `gender`, `governorate`, `birth_date`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
+INSERT INTO `assistant` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `governorate`, `birth_date`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
 (1, 'ahmed ali', 99999999999999, 'mohamedsaeed00451@gmail.com', '36985214789', 'ذكر', 'البحيرة', '2023-01-12', '$2y$10$yZqkRs7N8bwd14G3rZ9jmuoeDYB1zQ0H6YygwGWNwbRvwVDA1jXDi', '9a00a6a54ac912bf27a0d0f2b5e45001', 1, 'http://localhost:3000/ROSHETTA_API/API_User/API_IMG/Profile_Img/Profile_assistant_img/99999999999999/93163599999999999999.png', 'ASSISTANT');
 
 -- --------------------------------------------------------
@@ -184,7 +184,7 @@ INSERT INTO `chat` (`id`, `name`, `time`, `message`, `profile_img`) VALUES
 
 CREATE TABLE `clinic` (
   `id` mediumint(9) NOT NULL,
-  `clinic_name` varchar(50) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `owner` varchar(255) NOT NULL,
   `clinic_specialist` varchar(255) NOT NULL,
   `phone_number` text NOT NULL,
@@ -203,8 +203,8 @@ CREATE TABLE `clinic` (
 -- Dumping data for table `clinic`
 --
 
-INSERT INTO `clinic` (`id`, `clinic_name`, `owner`, `clinic_specialist`, `phone_number`, `clinic_price`, `start_working`, `end_working`, `governorate`, `address`, `logo`, `ser_id`, `doctor_id`, `assistant_id`) VALUES
-(10, 'Dr mohamed saeed', 'mohamed saeed', 'dentist', '01000000000', 50, '01:00:00', '08:00:00', 'aswan', 'aswan', 'http://localhost:3000/ROSHETTA_API/API_C_P/API_IMG/Logo_Img/Clinic/145238/1e499858fd3bd3494c04145238.png', '145238', 13, 1);
+INSERT INTO `clinic` (`id`, `name`, `owner`, `clinic_specialist`, `phone_number`, `clinic_price`, `start_working`, `end_working`, `governorate`, `address`, `logo`, `ser_id`, `doctor_id`, `assistant_id`) VALUES
+(10, 'Dr mohamed saeed', 'mohamed ', 'dentist', '01000000000', 50, '01:00:00', '08:00:00', 'aswan', 'aswan', 'http://localhost:3000/ROSHETTA_API/API_C_P/API_IMG/Logo_Img/Clinic/145238/1e499858fd3bd3494c04145238.png', '145238', 13, 1);
 
 -- --------------------------------------------------------
 
@@ -214,7 +214,7 @@ INSERT INTO `clinic` (`id`, `clinic_name`, `owner`, `clinic_specialist`, `phone_
 
 CREATE TABLE `disease` (
   `id` smallint(6) NOT NULL,
-  `disease_name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `disease_place` varchar(255) NOT NULL,
   `disease_date` date NOT NULL,
   `patient_id` mediumint(9) NOT NULL,
@@ -226,7 +226,7 @@ CREATE TABLE `disease` (
 -- Dumping data for table `disease`
 --
 
-INSERT INTO `disease` (`id`, `disease_name`, `disease_place`, `disease_date`, `patient_id`, `doctor_id`, `clinic_id`) VALUES
+INSERT INTO `disease` (`id`, `name`, `disease_place`, `disease_date`, `patient_id`, `doctor_id`, `clinic_id`) VALUES
 (8, 'headache', 'head', '2023-02-02', 58, 13, 10),
 (10, 'mmm', 'nnnnnn', '2023-02-05', 58, 13, 10);
 
@@ -238,7 +238,7 @@ INSERT INTO `disease` (`id`, `disease_name`, `disease_place`, `disease_date`, `p
 
 CREATE TABLE `doctor` (
   `id` smallint(6) NOT NULL,
-  `doctor_name` varchar(50) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `ssd` bigint(14) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phone_number` text NOT NULL,
@@ -257,8 +257,8 @@ CREATE TABLE `doctor` (
 -- Dumping data for table `doctor`
 --
 
-INSERT INTO `doctor` (`id`, `doctor_name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `specialist`, `governorate`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
-(13, 'mohamed saeed gomaa', 11111111111115, 'mohamedsaeed00451@gmail.com', '01000000001', 'ذكر', '2023-01-12', 'dentist', 'البحيرة', '$2y$10$IYm3fOKcoceVXMNGH.uKMu05auB2UT7iLtgNXdn/X7YhHKRIvdo/W', 'e184be411ff02df2e47efeb47ef52541', 1, NULL, 'DOCTOR'),
+INSERT INTO `doctor` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `specialist`, `governorate`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
+(13, 'mohamed saeed ', 11111111111115, 'mohamedsaeed00451@gmail.com', '01000000001', 'ذكر', '2001-01-12', 'dentist', 'البحيرة', '$2y$10$IYm3fOKcoceVXMNGH.uKMu05auB2UT7iLtgNXdn/X7YhHKRIvdo/W', 'e184be411ff02df2e47efeb47ef52541', 1, NULL, 'DOCTOR'),
 (14, 'محمد سعيد', 41052063096325, 'mo@gmail.com', '01020305040', 'ذكر', '2023-01-04', 'ggggggg', 'البحيرة', '$2y$10$1/H4rcTWBe0v42Updbfy4eabwv.qZS6ABZ8v1jqauCd4BNr1OY5Xq', 'bcd0783a21e5220cc3375e09f59d3a0a', 1, NULL, 'DOCTOR');
 
 -- --------------------------------------------------------
@@ -316,7 +316,7 @@ INSERT INTO `message` (`id`, `name`, `ssd`, `email`, `message`, `time`, `m_case`
 
 CREATE TABLE `patient` (
   `id` mediumint(9) NOT NULL,
-  `patient_name` varchar(50) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `ssd` bigint(14) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phone_number` text NOT NULL,
@@ -336,10 +336,11 @@ CREATE TABLE `patient` (
 -- Dumping data for table `patient`
 --
 
-INSERT INTO `patient` (`id`, `patient_name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `weight`, `height`, `governorate`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
+INSERT INTO `patient` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `weight`, `height`, `governorate`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
 (54, 'محمود', 11111111, 'mohamedsaeed33451@gmail.com', '011122', 'mm', '2023-01-12', 4, 55, 'fffffff', '11', 'jjjjjjjjj', 1, 'llllllllll', 'hhh'),
 (55, 'احمد ', 8888, 'mohamedsaeed44451@gmail.com', '111', 'ت', '2023-01-12', 441, 4, 'ت', '44', '44', 1, 'ح', 'تت'),
-(58, 'mohamed', 36985214789652, 'mohamed@gmail.com', '01022223335', 'male', '1999-10-04', 90, 140, 'aswan', '$2y$10$s6n1BuAevOQjadD48QS8ru4KdyM6zTZwo2yCmJBXtHdEGMw3/xDey', '0757a7705087c1eee179f53383232c47', 1, NULL, 'PATIENT');
+(58, 'mohamed', 36985214789652, 'mohamed@gmail.com', '01022223335', 'male', '1999-10-04', 90, 140, 'aswan', '$2y$10$s6n1BuAevOQjadD48QS8ru4KdyM6zTZwo2yCmJBXtHdEGMw3/xDey', '0757a7705087c1eee179f53383232c47', 0, NULL, 'PATIENT'),
+(63, 'mohamed saeed', 12345678912344, 'mohamedsaeed00451@gmail.com', '01092338086', 'male', '2003-02-08', 60, 173, 'beheira', '$2y$10$t0YqxwKKzfOPOeDDOYOmSuZtvJCCGYbg72ukPiLb2KIGjInMp1vaK', '1b746924a73a1158aa11990c3b93d9ec', 1, NULL, 'PATIENT');
 
 -- --------------------------------------------------------
 
@@ -349,7 +350,7 @@ INSERT INTO `patient` (`id`, `patient_name`, `ssd`, `email`, `phone_number`, `ge
 
 CREATE TABLE `pharmacist` (
   `id` smallint(6) NOT NULL,
-  `pharmacist_name` varchar(50) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `ssd` bigint(14) NOT NULL,
   `email` varchar(255) NOT NULL,
   `phone_number` text NOT NULL,
@@ -367,7 +368,7 @@ CREATE TABLE `pharmacist` (
 -- Dumping data for table `pharmacist`
 --
 
-INSERT INTO `pharmacist` (`id`, `pharmacist_name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `governorate`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
+INSERT INTO `pharmacist` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `governorate`, `password`, `security_code`, `email_isactive`, `profile_img`, `role`) VALUES
 (1, 'عمرو المسلمانى', 99999999999999, 'ammghdefe45353@gmail.com', '36985214789', 'ذكر', '2023-01-12', 'البحيرة', '$2y$10$53zyweTCQd/SOiu7fjS71eawHwd/z1yDjPH9AEZfbYmsfU6lO6vI.', '589cb4b906218c4209c1bbbafada8845', 1, 'http://localhost:3000/ROSHETTA_API/API_User/API_IMG/Profile_Img/Profile_pharmacist_img/99999999999999/51849799999999999999.jpg', 'PHARMACIST');
 
 -- --------------------------------------------------------
@@ -378,7 +379,7 @@ INSERT INTO `pharmacist` (`id`, `pharmacist_name`, `ssd`, `email`, `phone_number
 
 CREATE TABLE `pharmacy` (
   `id` mediumint(9) NOT NULL,
-  `pharmacy_name` varchar(255) NOT NULL,
+  `name` varchar(255) NOT NULL,
   `owner` varchar(50) NOT NULL,
   `phone_number` text NOT NULL,
   `start_working` time NOT NULL,
@@ -394,7 +395,7 @@ CREATE TABLE `pharmacy` (
 -- Dumping data for table `pharmacy`
 --
 
-INSERT INTO `pharmacy` (`id`, `pharmacy_name`, `owner`, `phone_number`, `start_working`, `end_working`, `governorate`, `address`, `logo`, `ser_id`, `pharmacist_id`) VALUES
+INSERT INTO `pharmacy` (`id`, `name`, `owner`, `phone_number`, `start_working`, `end_working`, `governorate`, `address`, `logo`, `ser_id`, `pharmacist_id`) VALUES
 (1, 'Dr ali mohamed', 'ali mohamed', '01222222222', '06:00:00', '12:00:00', 'behira', 'aswan', 'http://localhost:3000/ROSHETTA_API/API_C_P/API_IMG/Logo_Img/Pharmacy/8211895764/e0d420c038561baf61b28211895764.jpg', '8211895764', 1);
 
 -- --------------------------------------------------------
@@ -416,9 +417,9 @@ CREATE TABLE `pharmacy_order` (
 --
 
 INSERT INTO `pharmacy_order` (`id`, `time`, `patient_id`, `prescript_id`, `pharmacy_id`) VALUES
-(1, '04:58:23', 58, 14, 1),
-(2, '04:58:23', 54, 16, 1),
-(3, '05:01:01', 55, 15, 1);
+(1, '04:58:00', 58, 14, 1),
+(2, '04:58:00', 54, 16, 1),
+(16, '23:51:00', 55, 15, 1);
 
 -- --------------------------------------------------------
 
@@ -666,7 +667,7 @@ ALTER TABLE `assistant`
 -- AUTO_INCREMENT for table `clinic`
 --
 ALTER TABLE `clinic`
-  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT for table `disease`
@@ -696,7 +697,7 @@ ALTER TABLE `message`
 -- AUTO_INCREMENT for table `patient`
 --
 ALTER TABLE `patient`
-  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
+  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- AUTO_INCREMENT for table `pharmacist`
@@ -714,7 +715,7 @@ ALTER TABLE `pharmacy`
 -- AUTO_INCREMENT for table `pharmacy_order`
 --
 ALTER TABLE `pharmacy_order`
-  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `pharmacy_prescript`

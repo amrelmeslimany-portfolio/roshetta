@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             if ($check_disease->rowCount() > 0) {
 
-                $check_prescript = $database->prepare("SELECT prescript.id as prescript_id , prescript.ser_id as prescript_ser_id , disease.disease_name FROM prescript , disease WHERE prescript.disease_id = disease.id AND disease.id = :disease_id ");
+                $check_prescript = $database->prepare("SELECT prescript.id as prescript_id , prescript.ser_id as prescript_ser_id , disease.name as disease_name FROM prescript , disease WHERE prescript.disease_id = disease.id AND disease.id = :disease_id ");
                 $check_prescript->bindparam("disease_id", $disease_id);
                 $check_prescript->execute();
 

@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
     if (isset($_SESSION['doctor'])) {
 
-        $doctor_id = $_SESSION['doctor']->id;
+        $doctor_id = $_SESSION['doctor'];
 
         //Check Activation Doctor
 
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
             if ($Activation->isactive == 1) {
 
                 //Get From Clinic Table
-                $get_clinic = $database->prepare("SELECT id as clinic_id,logo as clinic_logo,clinic_name,start_working,end_working FROM clinic WHERE doctor_id = :doctor_id ORDER BY start_working ");
+                $get_clinic = $database->prepare("SELECT id as clinic_id,logo as clinic_logo,clinic.name as clinic_name,start_working,end_working FROM clinic WHERE doctor_id = :doctor_id ORDER BY start_working ");
                 $get_clinic->bindparam("doctor_id", $doctor_id);
                 $get_clinic->execute();
 

@@ -21,15 +21,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             //I Expect To Receive This Data
 
             if (
-                isset($_POST['phone_number'])   && !empty($_POST['phone_number'])
-                && isset($_POST['weight'])      && !empty($_POST['weight'])
-                && isset($_POST['height'])      && !empty($_POST['height'])
+                isset($_POST['phone_number']) && !empty($_POST['phone_number'])
+                && isset($_POST['weight']) && !empty($_POST['weight'])
+                && isset($_POST['height']) && !empty($_POST['height'])
                 && isset($_POST['governorate']) && !empty($_POST['governorate'])
             ) {
 
                 //Filter Data 'Number_Int' And 'String'
 
-                $id             = $_SESSION['patient']->id;
+                $id             = $_SESSION['patient'];
                 $phone_number   = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT);
                 $weight         = filter_var($_POST['weight'], FILTER_SANITIZE_NUMBER_INT);
                 $height         = filter_var($_POST['height'], FILTER_SANITIZE_NUMBER_INT);
@@ -48,69 +48,64 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                     $Update->bindparam("governorate", $governorate);
                     $Update->execute();
 
-                    if ($Update->rowCount() > 0 ) {
+                    if ($Update->rowCount() > 0) {
 
-                        //Get New Data From Patient Table
+                        $Message = "تم تعديل البيانات بنجاح";
+                        print_r(json_encode(Message(null, $Message, 201)));
+                        header("refresh:2;");
 
-                        $get_data = $database->prepare("SELECT * FROM patient WHERE id = :id ");
-
-                        $get_data->bindparam("id", $id);
-                        $get_data->execute();
-
-                        if ($get_data->rowCount() > 0 ) {
-
-                            $patient_up = $get_data->fetchObject();
-                            $_SESSION['patient'] = $patient_up; //UpDate SESSION Patient
-
-                            $Message = "تم تعديل البيانات بنجاح";
-                            print_r(json_encode(Message(null,$Message,201)));
-                            header("refresh:2;");
-
-                        } else {
-                            $Message = "فشل جلب البيانات";
-                            print_r(json_encode(Message(null,$Message,422)));
-                        }
                     } else {
                         $Message = "فشل تعديل البيانات";
-                        print_r(json_encode(Message(null,$Message,422)));
+                        print_r(json_encode(Message(null, $Message, 422)));
                     }
                 } else {
                     $Message = "رقم الهاتف غير صالح";
-                    print_r(json_encode(Message(null,$Message,400)));
+                    print_r(json_encode(Message(null, $Message, 400)));
                 }
             } else {
                 $Message = "يجب اكمال البيانات";
-                print_r(json_encode(Message(null,$Message,400)));
+                print_r(json_encode(Message(null, $Message, 400)));
             }
 
-        } elseif (isset($_SESSION['doctor'])) {
+        } else {
+
+            if (isset($_SESSION['doctor'])) {
+                $id         = $_SESSION['doctor'];
+                $table_name = 'doctor';
+            } elseif (isset($_SESSION['pharmacist'])) {
+                $id         = $_SESSION['pharmacist'];
+                $table_name = 'pharmacist';
+            } elseif (isset($_SESSION['assistant'])) {
+                $id         = $_SESSION['assistant'];
+                $table_name = 'assistant';
+            } else {
+                $id = '';
+                $table_name = '';
+            }
 
             //I Expect To Receive This Data
 
             if (
-                isset($_POST['phone_number'])   && !empty($_POST['phone_number'])
+                isset($_POST['phone_number']) && !empty($_POST['phone_number'])
                 && isset($_POST['governorate']) && !empty($_POST['governorate'])
             ) {
 
                 //Filter Data 'Number_Int' And 'String'
 
-                $id             = $_SESSION['doctor']->id;
-                $phone_number   = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT);
-                $governorate    = filter_var($_POST['governorate'], FILTER_SANITIZE_STRING);
+                $phone_number = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT);
+                $governorate = filter_var($_POST['governorate'], FILTER_SANITIZE_STRING);
 
-                if (strlen($phone_number) == 11 ) {
+                if (strlen($phone_number) == 11) {
 
                     //Verify That It Has Not Been Present Before
 
-                    $check_phone = $database->prepare("SELECT * FROM doctor WHERE phone_number = :phone_number");
-
+                    $check_phone = $database->prepare("SELECT * FROM $table_name WHERE phone_number = :phone_number");
                     $check_phone->bindparam("phone_number", $phone_number);
                     $check_phone->execute();
 
                     if ($check_phone->rowCount() > 0) {
 
-                        $check_phone = $database->prepare("SELECT * FROM doctor WHERE phone_number = :phone_number AND id = :id");
-
+                        $check_phone = $database->prepare("SELECT * FROM $table_name WHERE phone_number = :phone_number AND id = :id");
                         $check_phone->bindparam("phone_number", $phone_number);
                         $check_phone->bindparam("id", $id);
                         $check_phone->execute();
@@ -119,339 +114,61 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             //UpDate Doctor Table
 
-                            $Update = $database->prepare("UPDATE doctor SET phone_number = :phone_number , governorate = :governorate  WHERE id = :id");
-
+                            $Update = $database->prepare("UPDATE $table_name SET phone_number = :phone_number , governorate = :governorate  WHERE id = :id");
                             $Update->bindparam("id", $id);
                             $Update->bindparam("phone_number", $phone_number);
                             $Update->bindparam("governorate", $governorate);
                             $Update->execute();
 
-                            if ($Update->rowCount() > 0 ) {
+                            if ($Update->rowCount() > 0) {
 
-                                //Get New Data From Doctor Table
+                                $Message = "تم تعديل البيانات بنجاح";
+                                print_r(json_encode(Message(null, $Message, 201)));
+                                header("refresh:2;");
 
-                                $get_data = $database->prepare("SELECT * FROM doctor WHERE id = :id ");
-
-                                $get_data->bindparam("id", $id);
-                                $get_data->execute();
-
-                                if ($get_data->rowCount() > 0 ) {
-
-                                    $doctor_up = $get_data->fetchObject();
-                                    $_SESSION['doctor'] = $doctor_up; //UpDate SESSION Doctor
-
-                                    $Message = "تم تعديل البيانات بنجاح";
-                                    print_r(json_encode(Message(null,$Message,201)));
-                                    header("refresh:2;");
-
-                                } else {
-                                    $Message = "فشل جلب البيانات";
-                                    print_r(json_encode(Message(null,$Message,422)));
-                                }
                             } else {
                                 $Message = "فشل تعديل البيانات";
-                                print_r(json_encode(Message(null,$Message,422)));
+                                print_r(json_encode(Message(null, $Message, 422)));
                             }
 
                         } else {
                             $Message = "رقم الهاتف موجود من قبل";
-                            print_r(json_encode(Message(null,$Message,400)));
+                            print_r(json_encode(Message(null, $Message, 400)));
                         }
 
                     } else {
 
                         //UpDate Doctor Table
 
-                        $Update = $database->prepare("UPDATE doctor SET phone_number = :phone_number , governorate = :governorate  WHERE id = :id");
-
+                        $Update = $database->prepare("UPDATE $table_name SET phone_number = :phone_number , governorate = :governorate  WHERE id = :id");
                         $Update->bindparam("id", $id);
                         $Update->bindparam("phone_number", $phone_number);
                         $Update->bindparam("governorate", $governorate);
                         $Update->execute();
 
-                        if ($Update->rowCount() > 0 ) {
+                        if ($Update->rowCount() > 0) {
 
-                            //Get New Data From Doctor Table
+                            $Message = "تم تعديل البيانات بنجاح";
+                            print_r(json_encode(Message(null, $Message, 201)));
+                            header("refresh:2;");
 
-                            $get_data = $database->prepare("SELECT * FROM doctor WHERE id = :id ");
-
-                            $get_data->bindparam("id", $id);
-                            $get_data->execute();
-
-                            if ($get_data->rowCount() > 0 ) {
-
-                                $doctor_up = $get_data->fetchObject();
-                                $_SESSION['doctor'] = $doctor_up; //UpDate SESSION Doctor
-
-                                $Message = "تم تعديل البيانات بنجاح";
-                                print_r(json_encode(Message(null,$Message,201)));
-                                header("refresh:2;");
-                            } else {
-                                $Message = "فشل جلب البيانات";
-                                print_r(json_encode(Message(null,$Message,422)));
-                            }
                         } else {
                             $Message = "فشل تعديل البيانات";
-                            print_r(json_encode(Message(null,$Message,422)));
+                            print_r(json_encode(Message(null, $Message, 422)));
                         }
                     }
                 } else {
                     $Message = "رقم الهاتف غير صالح";
-                    print_r(json_encode(Message(null,$Message,400)));
+                    print_r(json_encode(Message(null, $Message, 400)));
                 }
             } else {
                 $Message = "يجب اكمال البيانات";
-                print_r(json_encode(Message(null,$Message,400)));
+                print_r(json_encode(Message(null, $Message, 400)));
             }
-
-        } elseif (isset($_SESSION['pharmacist'])) {
-
-            //I Expect To Receive This Data
-
-            if (
-                isset($_POST['phone_number'])   && !empty($_POST['phone_number'])
-                && isset($_POST['governorate']) && !empty($_POST['governorate'])
-            ) {
-
-                //Filter Data 'Number_Int' And 'String'
-
-                $id             = $_SESSION['pharmacist']->id;
-                $phone_number   = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT);
-                $governorate    = filter_var($_POST['governorate'], FILTER_SANITIZE_STRING);
-
-                if (strlen($phone_number) == 11 ) {
-
-                    //Verify That It Has Not Been Present Before
-
-                    $check_phone = $database->prepare("SELECT * FROM pharmacist WHERE phone_number = :phone_number");
-
-                    $check_phone->bindparam("phone_number", $phone_number);
-                    $check_phone->execute();
-
-                    if ($check_phone->rowCount() > 0) {
-
-                        $check_phone = $database->prepare("SELECT * FROM pharmacist WHERE phone_number = :phone_number AND id = :id");
-
-                        $check_phone->bindparam("phone_number", $phone_number);
-                        $check_phone->bindparam("id", $id);
-                        $check_phone->execute();
-
-                        if ($check_phone->rowCount() > 0) {
-
-                            //UpDate Pharmacist Table
-
-                            $Update = $database->prepare("UPDATE pharmacist SET phone_number = :phone_number , governorate = :governorate  WHERE id = :id");
-
-                            $Update->bindparam("id", $id);
-                            $Update->bindparam("phone_number", $phone_number);
-                            $Update->bindparam("governorate", $governorate);
-                            $Update->execute();
-
-                            if ($Update->rowCount() > 0 ) {
-
-                                //Get New Data From Pharmacist Table
-
-                                $get_data = $database->prepare("SELECT * FROM pharmacist WHERE id = :id ");
-
-                                $get_data->bindparam("id", $id);
-                                $get_data->execute();
-
-                                if ($get_data->rowCount() > 0 ) {
-
-                                    $pharmacist_up = $get_data->fetchObject();
-                                    $_SESSION['pharmacist'] = $pharmacist_up; //UpDate SESSION Pharmacist
-
-                                    $Message = "تم تعديل البيانات بنجاح";
-                                    print_r(json_encode(Message(null,$Message,201)));
-                                    header("refresh:2;");
-
-                                } else {
-                                    $Message = "فشل جلب البيانات";
-                                    print_r(json_encode(Message(null,$Message,422)));
-                                }
-                            } else {
-                                $Message = "فشل تعديل البيانات";
-                                print_r(json_encode(Message(null,$Message,422)));
-                            }
-                        } else {
-                            $Message = "رقم الهاتف موجود من قبل";
-                            print_r(json_encode(Message(null,$Message,400)));
-                        }
-
-                    } else {
-
-                        //UpDate Pharmacist Table
-
-                        $Update = $database->prepare("UPDATE pharmacist SET phone_number = :phone_number , governorate = :governorate  WHERE id = :id");
-
-                        $Update->bindparam("id", $id);
-                        $Update->bindparam("phone_number", $phone_number);
-                        $Update->bindparam("governorate", $governorate);
-                        $Update->execute();
-
-                        if ($Update->rowCount() > 0 ) {
-
-                            //Get New Data From Pharmacist Table
-
-                            $get_data = $database->prepare("SELECT * FROM pharmacist WHERE id = :id ");
-
-                            $get_data->bindparam("id", $id);
-                            $get_data->execute();
-
-                            if ($get_data->rowCount() > 0 ) {
-
-                                $pharmacist_up = $get_data->fetchObject();
-                                $_SESSION['pharmacist'] = $pharmacist_up; //UpDate SESSION Pharmacist
-
-                                $Message = "تم تعديل البيانات بنجاح";
-                                print_r(json_encode(Message(null,$Message,201)));
-                                header("refresh:2;");
-
-                            } else {
-                                $Message = "فشل جلب البيانات";
-                                print_r(json_encode(Message(null,$Message,422)));
-                            }
-                        } else {
-                            $Message = "فشل تعديل البيانات";
-                            print_r(json_encode(Message(null,$Message,422)));
-                        }
-                    }
-                } else {
-                    $Message = "رقم الهاتف غير صالح";
-                    print_r(json_encode(Message(null,$Message,400)));
-                }
-            } else {
-                $Message = "يجب اكمال البيانات";
-                print_r(json_encode(Message(null,$Message,400)));
-            }
-
-        } elseif (isset($_SESSION['assistant'])) {
-
-            //I Expect To Receive This Data
-
-            if (
-                isset($_POST['phone_number'])   && !empty($_POST['phone_number'])
-                && isset($_POST['governorate']) && !empty($_POST['governorate'])
-            ) {
-
-                //Filter Data 'Number_Int' And 'String'
-
-                $id             = $_SESSION['assistant']->id;
-                $phone_number   = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT);
-                $governorate    = filter_var($_POST['governorate'], FILTER_SANITIZE_STRING);
-
-                if (strlen($phone_number) == 11 ) {
-
-                    //Verify That It Has Not Been Present Before
-
-                    $check_phone = $database->prepare("SELECT * FROM assistant WHERE phone_number = :phone_number");
-
-                    $check_phone->bindparam("phone_number", $phone_number);
-                    $check_phone->execute();
-
-                    if ($check_phone->rowCount() > 0 ) {
-
-                        $check_phone = $database->prepare("SELECT * FROM assistant WHERE phone_number = :phone_number AND id = :id ");
-
-                        $check_phone->bindparam("phone_number", $phone_number);
-                        $check_phone->bindparam("id", $id);
-                        $check_phone->execute();
-
-                        if ($check_phone->rowCount() > 0 ) {
-
-                            //UpDate Assistant Table
-
-                            $Update = $database->prepare("UPDATE assistant SET phone_number = :phone_number , governorate = :governorate  WHERE id = :id ");
-
-                            $Update->bindparam("id", $id);
-                            $Update->bindparam("phone_number", $phone_number);
-                            $Update->bindparam("governorate", $governorate);
-                            $Update->execute();
-
-                            if ($Update->rowCount() > 0 ) {
-
-                                //Get New Data From Assistant Table
-
-                                $get_data = $database->prepare("SELECT * FROM assistant WHERE id = :id ");
-
-                                $get_data->bindparam("id", $id);
-                                $get_data->execute();
-
-                                if ($get_data->rowCount() > 0 ) {
-
-                                    $assistant_up = $get_data->fetchObject();
-                                    $_SESSION['assistant'] = $assistant_up; //UpDate SESSION Assistant
-
-                                    $Message = "تم تعديل البيانات بنجاح";
-                                    print_r(json_encode(Message(null,$Message,201)));
-                                    header("refresh:2;");
-
-                                } else {
-                                    $Message = "فشل جلب البيانات";
-                                    print_r(json_encode(Message(null,$Message,422)));
-                                }
-                            } else {
-                                $Message = "فشل تعديل البيانات";
-                                print_r(json_encode(Message(null,$Message,422)));
-                            }
-                        } else {
-                            $Message = "رقم الهاتف موجود من قبل";
-                            print_r(json_encode(Message(null,$Message,400)));
-                        }
-
-                    } else {
-
-                        //UpDate Assistant Table
-
-                        $Update = $database->prepare("UPDATE assistant SET phone_number = :phone_number , governorate = :governorate  WHERE id = :id");
-
-                        $Update->bindparam("id", $id);
-                        $Update->bindparam("phone_number", $phone_number);
-                        $Update->bindparam("governorate", $governorate);
-                        $Update->execute();
-
-                        if ($Update->rowCount() > 0 ) {
-
-                            //Get New Data From Assistant Table
-
-                            $get_data = $database->prepare("SELECT * FROM assistant WHERE id = :id ");
-
-                            $get_data->bindparam("id", $id);
-                            $get_data->execute();
-
-                            if ($get_data->rowCount() > 0 ) {
-
-                                $assistant_up = $get_data->fetchObject();
-                                $_SESSION['assistant'] = $assistant_up; //UpDate SESSION Assistant
-
-                                $Message = "تم تعديل البيانات بنجاح";
-                                print_r(json_encode(Message(null,$Message,201)));
-                                header("refresh:2;");
-
-                            } else {
-                                $Message = "فشل جلب البيانات";
-                                print_r(json_encode(Message(null,$Message,422)));
-                            }
-                        } else {
-                            $Message = "فشل تعديل البيانات";
-                            print_r(json_encode(Message(null,$Message,422)));
-                        }
-                    }
-                } else {
-                    $Message = "رقم الهاتف غير صالح";
-                    print_r(json_encode(Message(null,$Message,400)));
-                }
-            } else {
-                $Message = "يجب اكمال البيانات";
-                print_r(json_encode(Message(null,$Message,400)));
-            }
-        } else {
-            $Message = "فشل العثور على مستخدم";
-            print_r(json_encode(Message(null,$Message,401)));
         }
     } else {
         $Message = "فشل العثور على مستخدم";
-        print_r(json_encode(Message(null,$Message,401)));
+        print_r(json_encode(Message(null, $Message, 401)));
     }
 } else { //If The Entry Method Is Not 'POST'
     $Message = "غير مسموح بالدخول عبر هذة الطريقة";

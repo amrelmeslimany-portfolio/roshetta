@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
         if (isset($_POST['appointment_id']) && !empty($_POST['appointment_id'])) {
 
             $appointment_id = filter_var($_POST['appointment_id'], FILTER_SANITIZE_NUMBER_INT);
-            $clinic_id      = $_SESSION['clinic']->id;
+            $clinic_id      = $_SESSION['clinic'];
 
             $check_appointment = $database->prepare("SELECT * FROM  appointment WHERE appointment.id = :appointment_id ");
             $check_appointment->bindparam("appointment_id", $appointment_id);

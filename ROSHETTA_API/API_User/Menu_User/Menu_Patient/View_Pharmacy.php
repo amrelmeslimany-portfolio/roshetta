@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
         // Get From Pharmacy Table
 
-        $get_pharmacy = $database->prepare("SELECT id as pharmacy_id,logo as pharmacy_logo,pharmacy_name,phone_number as pharmacy_phone_number,governorate FROM pharmacy ");
+        $get_pharmacy = $database->prepare("SELECT pharmacy.id as pharmacy_id,logo as pharmacy_logo,pharmacy.name as pharmacy_name,pharmacy.phone_number as pharmacy_phone_number,governorate FROM  pharmacy,activation_place WHERE  activation_place.pharmacy_id = pharmacy.id AND activation_place.isactive = 1");
         $get_pharmacy->execute();
 
         if ($get_pharmacy->rowCount() > 0) {

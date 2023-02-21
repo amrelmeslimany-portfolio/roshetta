@@ -11,12 +11,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
     if (isset($_SESSION['doctor']) && isset($_SESSION['clinic'])) {
 
-        $doctor_id = $_SESSION['doctor']->id;
-        $clinic_id = $_SESSION['clinic']->id;
+        $doctor_id = $_SESSION['doctor'];
+        $clinic_id = $_SESSION['clinic'];
 
         //Get From Assistant Table
 
-        $get_assistant = $database->prepare("SELECT profile_img,assistant_name,assistant.phone_number FROM assistant,clinic WHERE assistant.id = clinic.assistant_id AND clinic.doctor_id = :doctor_id AND clinic.id = :clinic_id ");
+        $get_assistant = $database->prepare("SELECT profile_img,assistant.name as assistant_name,assistant.phone_number FROM assistant,clinic WHERE assistant.id = clinic.assistant_id AND clinic.doctor_id = :doctor_id AND clinic.id = :clinic_id ");
         $get_assistant->bindparam("clinic_id", $clinic_id);
         $get_assistant->bindparam("doctor_id", $doctor_id);
 

@@ -11,11 +11,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
     if (isset($_SESSION['patient'])) {
 
-        $id = $_SESSION['patient']->id;
+        $id = $_SESSION['patient'];
 
         // Get From Disease And Prescript Table
 
-        $get_prescript = $database->prepare("SELECT prescript.id as prescript_id,ser_id as prescript_ser_id,creaded_date,disease_name  FROM  disease,prescript  
+        $get_prescript = $database->prepare("SELECT prescript.id as prescript_id,ser_id as prescript_ser_id,creaded_date,disease.name as disease_name  FROM  disease,prescript  
                                                     WHERE disease.id = prescript.disease_id AND prescript.patient_id = :id  ORDER BY creaded_date DESC ");
 
         $get_prescript->bindparam("id", $id);

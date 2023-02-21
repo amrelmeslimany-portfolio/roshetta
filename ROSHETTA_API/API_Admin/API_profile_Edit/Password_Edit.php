@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
             if ($_POST['password'] == $_POST['confirm_password']) { //Verify password = confirm_password
 
                 $password_hash  = password_hash($_POST['password'], PASSWORD_DEFAULT); //password_hash
-                $id             = $_SESSION['admin']->id;
+                $id             = $_SESSION['admin'];
 
                 //UpDate Admin Table
 
@@ -33,26 +33,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 if ($Update->rowCount() > 0) {
 
-                    //Get New Data From Admin Table
+                    $Message = "تم تعديل كلمة المرور بنجاح";
+                    print_r(json_encode(Message(null,$Message,201)));
+                    header("refresh:2;");
 
-                    $get_data = $database->prepare("SELECT * FROM admin WHERE id = :id ");
-
-                    $get_data->bindparam("id", $id);
-                    $get_data->execute();
-
-                    if ($get_data->rowCount() > 0) {
-
-                        $admin_up = $get_data->fetchObject();
-                        $_SESSION['admin'] = $admin_up; //UpDate SESSION Admin
-
-                        $Message = "تم تعديل كلمة المرور بنجاح";
-                        print_r(json_encode(Message(null,$Message,201)));
-                        header("refresh:2;");
-
-                    } else {
-                        $Message = "فشل جلب البيانات";
-                        print_r(json_encode(Message(null,$Message,422)));
-                    }
                 } else {
                     $Message = "فشل تعديل كلمة المرور";
                     print_r(json_encode(Message(null,$Message,422)));

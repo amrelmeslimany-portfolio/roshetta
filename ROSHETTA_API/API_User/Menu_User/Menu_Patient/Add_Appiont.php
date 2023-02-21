@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             $appoint_date   = $_POST['appoint_date'];
             $clinic_id      = filter_var($_POST['clinic_id'], FILTER_SANITIZE_NUMBER_INT); //Filter 'Int'
-            $patient_id     = $_SESSION['patient']->id;
+            $patient_id     = $_SESSION['patient'];
 
             //Add To Appointment Table
 

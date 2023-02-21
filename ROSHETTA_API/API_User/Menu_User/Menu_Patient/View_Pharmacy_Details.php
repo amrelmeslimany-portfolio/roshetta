@@ -11,7 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
     if (isset($_SESSION['patient'])) {
 
-        $id = $_SESSION['patient']->id;
+        $id = $_SESSION['patient'];
 
         if (isset($_POST['pharmacy_id']) && !empty($_POST['pharmacy_id'])) {
 
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             // Get From Pharmacy Table
 
-            $get_pharmacy = $database->prepare("SELECT id as pharmacy_id,logo as pharmacy_logo,pharmacy_name,phone_number as pharmacy_phone_number,start_working,end_working,governorate,address as pharmacy_address FROM pharmacy WHERE pharmacy.id = :pharmacy_id");
+            $get_pharmacy = $database->prepare("SELECT pharmacy.id as pharmacy_id,logo as pharmacy_logo,pharmacy.name as pharmacy_name,pharmacy.phone_number as pharmacy_phone_number,start_working,end_working,governorate,address as pharmacy_address FROM pharmacy,activation_place WHERE pharmacy.id = :pharmacy_id AND activation_place.pharmacy_id = pharmacy.id AND activation_place.isactive = 1");
             $get_pharmacy->bindparam("pharmacy_id", $pharmacy_id);
             $get_pharmacy->execute();
 
@@ -31,10 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                 $get_prescript->bindparam("pharmacy_id", $pharmacy_id);
                 $get_prescript->execute();
 
-                if ($get_prescript->rowCount() > 0) {
+                if ($get_prescript->rowCount() >= 0) {
                     $get_prescript = $get_prescript->rowCount();
                 } else {
-                    $get_prescript = 0;
+                    //***** */
                 }
 
                 $get_prescript_patient = $database->prepare("SELECT * FROM pharmacy_prescript,prescript WHERE pharmacy_prescript.pharmacy_id = :pharmacy_id AND pharmacy_prescript.prescript_id = prescript.id AND prescript.patient_id = :id");
@@ -42,10 +42,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                 $get_prescript_patient->bindparam("id", $id);
                 $get_prescript_patient->execute();
 
-                if ($get_prescript_patient->rowCount() > 0) {
+                if ($get_prescript_patient->rowCount() >= 0) {
                     $get_prescript_patient = $get_prescript_patient->rowCount();
                 } else {
-                    $get_prescript_patient = 0;
+                    //******* */
                 }
 
                 $data_pharmacy = [

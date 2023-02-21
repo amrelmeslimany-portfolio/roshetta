@@ -12,42 +12,42 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
     if (isset($_SESSION['admin'])) {
             //Get From Patient Table
 
-            $get_patient = $database->prepare("SELECT id as patient_id , patient_name , ssd as patient_ssd , profile_img  FROM patient");
+            $get_patient = $database->prepare("SELECT id,name,ssd,profile_img,role  FROM patient");
             $get_patient->execute();
             if ($get_patient->rowCount() > 0) {
                 $data_patient = $get_patient->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_patient = ["Message" => "لا يوجد مريض"];
+                $data_patient = null;
             }
 
             //Get From Doctor Table
 
-            $get_doctor = $database->prepare("SELECT id as doctor_id , doctor_name , ssd as doctor_ssd , profile_img FROM doctor");
+            $get_doctor = $database->prepare("SELECT id,name,ssd,profile_img,role FROM doctor");
             $get_doctor->execute();
             if ($get_doctor->rowCount() > 0) {
                 $data_doctor = $get_doctor->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_doctor = ["Message" => "لا يوجد دكتور"];
+                $data_doctor = null;
             }
 
             //Get From Pharmacist Table
 
-            $get_pharmacist = $database->prepare("SELECT id as pharmacist_id , pharmacist_name , ssd as pharmacist_ssd , profile_img FROM pharmacist");
+            $get_pharmacist = $database->prepare("SELECT id,name,ssd,profile_img,role FROM pharmacist");
             $get_pharmacist->execute();
             if ($get_pharmacist->rowCount() > 0) {
                 $data_pharmacist = $get_pharmacist->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_pharmacist = ["Message" => "لا يوجد صيدلى"];
+                $data_pharmacist = null;
             }
 
             //Get From Assistant Table
 
-            $get_assistant = $database->prepare("SELECT id as assistant_id , assistant_name , ssd as assistant_ssd , profile_img FROM assistant");
+            $get_assistant = $database->prepare("SELECT id,name,ssd,profile_img,role FROM assistant");
             $get_assistant->execute();
             if ($get_assistant->rowCount() > 0) {
                 $data_assistant = $get_assistant->fetchAll(PDO::FETCH_ASSOC);
             } else {
-                $data_assistant = ["Message" => "لا يوجد مساعد"];
+                $data_assistant = null;
             }
 
             $data_all = [

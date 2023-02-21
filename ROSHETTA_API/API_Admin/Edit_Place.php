@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             //UpDate Clinic Table
 
-                            $Update = $database->prepare("UPDATE clinic SET clinic_name = :clinic_name , owner = :owner , clinic_specialist = :clinic_specialist , phone_number = :phone_number , address = :address , clinic_price = :clinic_price , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
+                            $Update = $database->prepare("UPDATE clinic SET name = :clinic_name , owner = :owner , clinic_specialist = :clinic_specialist , phone_number = :phone_number , address = :address , clinic_price = :clinic_price , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
 
                             $Update->bindparam("id", $id);
                             $Update->bindparam("clinic_name", $clinic_name);
@@ -91,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         //UpDate Clinic Table
 
-                        $Update = $database->prepare("UPDATE clinic SET clinic_name = :clinic_name , owner = :owner , clinic_specialist = :clinic_specialist , phone_number = :phone_number , address = :address , clinic_price = :clinic_price , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
+                        $Update = $database->prepare("UPDATE clinic SET name = :clinic_name , owner = :owner , clinic_specialist = :clinic_specialist , phone_number = :phone_number , address = :address , clinic_price = :clinic_price , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
 
                         $Update->bindparam("id", $id);
                         $Update->bindparam("clinic_name", $clinic_name);
@@ -147,7 +147,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                 $phone_number       = filter_var($_POST['phone_number'], FILTER_SANITIZE_NUMBER_INT);
                 $address            = filter_var($_POST['address'], FILTER_SANITIZE_STRING);
                 $governorate        = filter_var($_POST['governorate'], FILTER_SANITIZE_STRING);
-                $clinic_name        = filter_var($_POST['pharmacy_name'], FILTER_SANITIZE_STRING);
+                $pharmacy_name      = filter_var($_POST['pharmacy_name'], FILTER_SANITIZE_STRING);
                 $owner              = filter_var($_POST['owner'], FILTER_SANITIZE_STRING);
 
                 if (strlen($phone_number) == 11) {
@@ -167,7 +167,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                             //UpDate Pharmacy Table
 
-                            $Update = $database->prepare("UPDATE pharmacy SET pharmacy_name = :pharmacy_name , owner = :owner , phone_number = :phone_number , address = :address , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
+                            $Update = $database->prepare("UPDATE pharmacy SET name = :pharmacy_name , owner = :owner , phone_number = :phone_number , address = :address , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
 
                             $Update->bindparam("id", $id);
                             $Update->bindparam("pharmacy_name", $pharmacy_name);
@@ -199,7 +199,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         //UpDate Pharmacy Table
 
-                        $Update = $database->prepare("UPDATE pharmacy SET pharmacy_name = :pharmacy_name , owner = :owner , phone_number = :phone_number , address = :address , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
+                        $Update = $database->prepare("UPDATE pharmacy SET name = :pharmacy_name , owner = :owner , phone_number = :phone_number , address = :address , governorate = :governorate , start_working = :start_working , end_working = :end_working  WHERE id = :id");
 
                         $Update->bindparam("id", $id);
                         $Update->bindparam("pharmacy_name", $pharmacy_name);

@@ -11,68 +11,65 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
         if (isset($_SESSION['prescript']) && isset($_SESSION['doctor'])) {
 
-            if ($_SESSION['doctor']->role === "DOCTOR") {
+            $d_id = $_SESSION['doctor'];
 
-                $d_id = $_SESSION['doctor']->id;
+            //Check Activation
 
-                //Check Activation
+            $checkActivation = $database->prepare("SELECT * FROM activation_person,doctor  WHERE  activation_person.doctor_id = doctor.id  AND doctor.id = :id ");
+            $checkActivation->bindparam("id", $d_id);
+            $checkActivation->execute();
 
-                $checkActivation = $database->prepare("SELECT * FROM activation_person,doctor  WHERE  activation_person.doctor_id = doctor.id  AND doctor.id = :id ");
-                    $checkActivation->bindparam("id", $d_id);
-                    $checkActivation->execute();
+            if ($checkActivation->rowCount() > 0) {
 
-                if ($checkActivation->rowCount() > 0) {
+                $Activation = $checkActivation->fetchObject();
 
-                    $Activation = $checkActivation->fetchObject();
+                if ($Activation->isactive == 1) {
 
-                    if ($Activation->isactive == 1) {
+                    //Filter Data 'String'
 
-                        //Filter Data 'String'
+                    $medicine_data  = $_POST['medicine'];
+                    $prescript_id   = $_SESSION['prescript'];
 
-                        $medicine_data = $_POST['medicine'];
-                        $prescript_id = $_SESSION['prescript']->id;
+                    // Hash Data With Base64
 
-                        // Hash Data With Base64
+                    $data_hash = base64_encode(serialize($medicine_data));
 
-                        $data_hash = base64_encode(serialize($medicine_data));
+                    //Add To Medicine Table
 
-                        //Add To Medicine Table
+                    $addMedicine = $database->prepare("INSERT INTO medicine(medicine_data,prescript_id)VALUES(:medicine_data,:prescript_id)");
+                    $addMedicine->bindparam("medicine_data", $data_hash);
+                    $addMedicine->bindparam("prescript_id", $prescript_id);
+                    $addMedicine->execute();
 
-                        $addMedicine = $database->prepare("INSERT INTO medicine(medicine_data,prescript_id)VALUES(:medicine_data,:prescript_id)");
+                    if ($addMedicine->rowCount() > 0) {
 
-                        $addMedicine->bindparam("medicine_data", $data_hash);
-                        $addMedicine->bindparam("prescript_id", $prescript_id);
-                        $addMedicine->execute();
+                        $Message = "تم اضافة الدواء بنجاح";
+                        print_r(json_encode(Message(null, $Message, 201)));
 
-                        if ($addMedicine->rowCount() > 0 ) {
+                        unset($_SESSION['prescript']);
 
-                            print_r(json_encode(["Message" => "تم اضافة الدواء بنجاح"]));
-
-                            unset($_SESSION['disease']);
-                            unset($_SESSION['prescript']);
-
-                        } else {
-                            print_r(json_encode(["Error" => "فشل اضافة الدواء"]));
-                        }
                     } else {
-                        print_r(json_encode(["Error" => "الرجاء الانتظار حتى يتم المراجعة من قبل الادمن"]));
+                        $Message = "فشل اضافة الدواء";
+                        print_r(json_encode(Message(null, $Message, 422)));
                     }
-
                 } else {
-                    print_r(json_encode(["Error" => "يجب تفعيل الحساب"]));
+                    $Message = "الرجاء الانتظار حتى يتم تنشيط حسابك من قبل المشرف";
+                    print_r(json_encode(Message(null, $Message, 202)));
                 }
             } else {
-                print_r(json_encode(["Error" => "ليس لديك الصلاحية"]));
+                $Message = "يجب تفعيل الحساب";
+                print_r(json_encode(Message(null, $Message, 202)));
             }
-
         } else {
-            print_r(json_encode(["Error" => "فشل العثور على الشيشن"]));
+            $Message = "فشل العثور على مستخدم";
+            print_r(json_encode(Message(null, $Message, 401)));
         }
-
     } else {
-        print_r(json_encode(["Error" => "يجب عليك اكمال جميع البيانات"]));
+        $Message = "يجب اكمال البيانات";
+        print_r(json_encode(Message(null, $Message, 400)));
     }
 } else { //If The Entry Method Is Not 'POST'
-    print_r(json_encode(["Error" => "غير مسرح بالدخول عبر هذة الطريقة"]));
+    $Message = "غير مسموح بالدخول عبر هذة الطريقة";
+    print_r(json_encode(Message(null, $Message, 405)));
 }
 ?>

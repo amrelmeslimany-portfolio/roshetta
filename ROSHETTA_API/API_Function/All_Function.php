@@ -26,9 +26,9 @@ function get_user_ip()
 function Message($data = null,$message = null , $status = null)
 {
     $array = [
-        "Data"    => $data,
+        "Status"  => $status,
         "Message" => $message ,
-        "Status"  => $status
+        "Data"    => $data
     ];
     return $array;
 }

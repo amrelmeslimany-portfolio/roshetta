@@ -12,9 +12,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
     if (isset($_SESSION['doctor'])) {  //If Doctor
 
-        $name           = $_SESSION['doctor']->doctor_name;     // Name Doctor
-        $profile_img    = $_SESSION['doctor']->profile_img;     // Profile Image
-        $time           = date("h:i");                          //Time Chat
+        $id = $_SESSION['doctor'];
+
+        $get_data = $database->prepare("SELECT name , profile_img FROM doctor WHERE id = :id");
+        $get_data->bindparam("id", $id);
+        $get_data->execute();
+
+        if ($get_data->rowCount() > 0 ) {
+
+            $data_user = $get_data->fetchObject();
+
+            $name           = $data_user->name;            // Name Doctor
+            $profile_img    = $data_user->profile_img;     // Profile Image
+
+        } else {
+            $name           = 'UNKNOWN';           
+            $profile_img    = 'UNKNOWN'; 
+        }
+
+        
+        $time           = date("h:i");                                  //Time Chat
         $time_delete    = date("h:i", (time() - (1 * 5 * 60 * 60 )));   //Time Delete Message  (5) Hours
 
         if (isset($_POST['message']) && !empty($_POST['message'])) {

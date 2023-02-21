@@ -11,10 +11,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
     if (isset($_SESSION['assistant'])) {
 
-        $assistant_id = $_SESSION['assistant']->id;
+        $assistant_id = $_SESSION['assistant'];
 
         //Get From Clinic Table
-        $get_clinic = $database->prepare("SELECT id as clinic_id,logo as clinic_logo,clinic_name,start_working,end_working FROM clinic WHERE assistant_id = :assistant_id ORDER BY start_working ");
+        $get_clinic = $database->prepare("SELECT id as clinic_id,logo as clinic_logo,clinic.name as clinic_name,start_working,end_working FROM clinic WHERE assistant_id = :assistant_id ORDER BY start_working ");
         $get_clinic->bindparam("assistant_id", $assistant_id);
 
         if ($get_clinic->execute()) {

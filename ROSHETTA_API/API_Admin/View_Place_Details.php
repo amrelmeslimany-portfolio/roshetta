@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             // Get From Clinic Table
 
-            $get_clinic = $database->prepare("SELECT clinic.id as clinic_id , clinic_name , clinic_specialist , owner , clinic.phone_number as clinic_phone_number , clinic_price , start_working , end_working , clinic.governorate as clinic_governorate , clinic.address as clinic_address , logo , ser_id FROM clinic WHERE clinic.id = :clinic_id");
+            $get_clinic = $database->prepare("SELECT id,name,clinic_specialist,owner,phone_number,clinic_price,start_working,end_working,governorate,address,logo,ser_id FROM clinic WHERE clinic.id = :clinic_id");
             $get_clinic->bindParam("clinic_id", $clinic_id);
             $get_clinic->execute();
 
@@ -31,26 +31,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 //Get Doctor
 
-                $get_doctor = $database->prepare("SELECT doctor.id as doctor_id , doctor_name , doctor.profile_img as doctor_profile_img FROM doctor,clinic WHERE clinic.id = :clinic_id AND doctor.id = clinic.doctor_id");
+                $get_doctor = $database->prepare("SELECT doctor.id,doctor.name,profile_img FROM doctor,clinic WHERE clinic.id = :clinic_id AND doctor.id = clinic.doctor_id");
                 $get_doctor->bindParam("clinic_id", $clinic_id);
                 $get_doctor->execute();
 
                 if($get_doctor->rowCount() > 0 ){
                     $data_doctor = $get_doctor->fetchAll(PDO::FETCH_ASSOC);
                 } else {
-                    $data_doctor = ["Message" => "لا يوجد دكتور"];
+                    $data_doctor = null;
                 }
 
                 //Get Assistant
 
-                $get_assistant = $database->prepare("SELECT  assistant.id as assistant_id , assistant_name , assistant.profile_img as assistant_profile_img FROM assistant,clinic WHERE clinic.id = :clinic_id AND assistant.id = clinic.assistant_id");
+                $get_assistant = $database->prepare("SELECT  assistant.id,assistant.name,profile_img FROM assistant,clinic WHERE clinic.id = :clinic_id AND assistant.id = clinic.assistant_id");
                 $get_assistant->bindParam("clinic_id", $clinic_id);
                 $get_assistant->execute();
 
                 if($get_assistant->rowCount() > 0 ){
                     $data_assistant = $get_assistant->fetchAll(PDO::FETCH_ASSOC);
                 } else {
-                    $data_assistant = ["Message" => "لا يوجد مساعد"];
+                    $data_assistant = null;
                 }
 
                 //Get Patient Number
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             // Get From Pharmacy Table
 
-            $get_pharmacy = $database->prepare("SELECT pharmacy.id as pharmacy_id , pharmacy_name , owner , pharmacy.phone_number as pharmacy_phone_number , start_working , end_working , pharmacy.governorate as pharmacy_governorate , pharmacy.address as pharmacy_address , logo , ser_id FROM pharmacy WHERE pharmacy.id = :pharmacy_id");
+            $get_pharmacy = $database->prepare("SELECT id,name,owner,phone_number,start_working,end_working,governorate,address,logo,ser_id FROM pharmacy WHERE pharmacy.id = :pharmacy_id");
             $get_pharmacy->bindParam("pharmacy_id", $pharmacy_id);
             $get_pharmacy->execute();
 
@@ -111,14 +111,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 //Get Pharmacist
 
-                $get_pharmacist = $database->prepare("SELECT pharmacist.id as pharmacist_id , pharmacist_name , pharmacist.profile_img as pharmacist_profile_img FROM pharmacist,pharmacy WHERE pharmacy.id = :pharmacy_id AND pharmacist.id = pharmacy.pharmacist_id");
+                $get_pharmacist = $database->prepare("SELECT pharmacist.id,pharmacist.name,profile_img FROM pharmacist,pharmacy WHERE pharmacy.id = :pharmacy_id AND pharmacist.id = pharmacy.pharmacist_id");
                 $get_pharmacist->bindParam("pharmacy_id", $pharmacy_id);
                 $get_pharmacist->execute();
 
                 if($get_pharmacist->rowCount() > 0 ){
                     $data_pharmacist = $get_pharmacist->fetchAll(PDO::FETCH_ASSOC);
                 } else {
-                    $data_pharmacist = ["Message" => "لا يوجد صيدلى"];
+                    $data_pharmacist = null;
                 }
 
                 //Get Prescript Number

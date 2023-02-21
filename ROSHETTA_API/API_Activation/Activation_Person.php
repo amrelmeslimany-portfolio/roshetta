@@ -9,7 +9,15 @@ session_regenerate_id();
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow Access Via 'POST' Method Or Admin
 
-    if (isset($_SESSION['pharmacist']) || isset($_SESSION['doctor'])) { //If Find Pharmacist Or Doctor Session  
+    if (isset($_SESSION['pharmacist']) || isset($_SESSION['doctor'])) { //If Find Pharmacist Or Doctor Session 
+        
+        if (isset($_SESSION['doctor'])) {
+            $table_name = 'doctor'; 
+            $id         = $_SESSION['doctor'];
+        } else {
+            $table_name = 'pharmacist';
+            $id         = $_SESSION['pharmacist'];
+        }
 
         //I Expect To Receive This Data
 
@@ -71,9 +79,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                 $graduation_new_name    = bin2hex(random_bytes(10)) . '.' . $formul_graduation;
                 $card_new_name          = bin2hex(random_bytes(10)) . '.' . $formul_card;
 
+                $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
+                $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
+
+                $get_data = $database->prepare("SELECT * FROM $table_name WHERE id = :id");
+                $get_data->bindparam("id", $id);
+                $get_data->execute();
+
+                if ($get_data->rowCount() > 0 ) {
+                    $data_user      = $get_data->fetchObject();
+                    $folder_user    = $data_user->ssd;
+                } else {
+                    $folder_user = 'UNKNOWN';
+                }
+
                 if (isset($_SESSION['pharmacist'])) { //If Find Pharmacist Session
 
-                    $pharmacist_folder_name = $_SESSION['pharmacist']->ssd;
+                    $pharmacist_id = $_SESSION['pharmacist'];
+
+                    $pharmacist_folder_name = $folder_user;
                     $pharmacist_folder_link = 'IMG/Person_Img/Pharmacists/' . $pharmacist_folder_name . '/' . ''; //File Link
 
                     if (is_dir($pharmacist_folder_link)) { //If The File Exists
@@ -90,15 +114,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 move_uploaded_file($graduation_tmp, $pharmacist_folder_link . $graduation_new_name);
                                 move_uploaded_file($card_tmp, $pharmacist_folder_link . $card_new_name);
 
-                                $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
-                                $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
-
                                 $front_nationtional_card    = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $front_new_name; //The Path WithIn The DataBase
                                 $back_nationtional_card     = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $back_new_name;
                                 $graduation_cer             = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $graduation_new_name;
                                 $card_id_img                = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $card_new_name;
-
-                                $pharmacist_id = $_SESSION['pharmacist']->id;
 
                                 $check_pharmacist = $database->prepare("SELECT * FROM activation_person,pharmacist  WHERE  activation_person.pharmacist_id = pharmacist.id  AND pharmacist.id = :id ");
                                 $check_pharmacist->bindparam("id", $pharmacist_id);
@@ -173,16 +192,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         move_uploaded_file($graduation_tmp, $pharmacist_folder_link . $graduation_new_name);
                         move_uploaded_file($card_tmp, $pharmacist_folder_link . $card_new_name);
 
-                        $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
-                        $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
-
                         $front_nationtional_card    = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $front_new_name; //The Path WithIn The DataBase
                         $back_nationtional_card     = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $back_new_name;
                         $graduation_cer             = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $graduation_new_name;
                         $card_id_img                = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $pharmacist_folder_link . $card_new_name;
-
-
-                        $pharmacist_id = $_SESSION['pharmacist']->id;
 
                         $check_pharmacist = $database->prepare("SELECT * FROM activation_person,pharmacist  WHERE  activation_person.pharmacist_id = pharmacist.id  AND pharmacist.id = :id ");
                         $check_pharmacist->bindparam("id", $pharmacist_id);
@@ -250,7 +263,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                 } elseif (isset($_SESSION['doctor'])) {
 
-                    $doctor_folder_name = $_SESSION['doctor']->ssd;
+                    $doctor_id = $_SESSION['doctor'];
+
+                    $doctor_folder_name = $folder_user;
                     $doctor_folder_link = 'IMG/Person_Img/Doctors/' . $doctor_folder_name . '/' . ''; //File Link
 
                     if (is_dir($doctor_folder_link)) { //If The File Exists
@@ -267,15 +282,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                 move_uploaded_file($graduation_tmp, $doctor_folder_link . $graduation_new_name);
                                 move_uploaded_file($card_tmp, $doctor_folder_link . $card_new_name);
 
-                                $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
-                                $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
-
                                 $front_nationtional_card    = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $front_new_name; //The Path WithIn The DataBase
                                 $back_nationtional_card     = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $back_new_name;
                                 $graduation_cer             = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $graduation_new_name;
                                 $card_id_img                = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $card_new_name;
-
-                                $doctor_id = $_SESSION['doctor']->id;
 
                                 $check_doctor = $database->prepare("SELECT * FROM activation_person,doctor  WHERE  activation_person.doctor_id = doctor.id  AND doctor.id = :id ");
                                 $check_doctor->bindparam("id", $doctor_id);
@@ -350,15 +360,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         move_uploaded_file($graduation_tmp, $doctor_folder_link . $graduation_new_name);
                         move_uploaded_file($card_tmp, $doctor_folder_link . $card_new_name);
 
-                        $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
-                        $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
-
                         $front_nationtional_card    = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $front_new_name; //The Path WithIn The DataBase
                         $back_nationtional_card     = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $back_new_name;
                         $graduation_cer             = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $graduation_new_name;
                         $card_id_img                = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Activation/" . $doctor_folder_link . $card_new_name;
-
-                        $doctor_id = $_SESSION['doctor']->id;
 
                         $check_doctor = $database->prepare("SELECT * FROM activation_person,doctor  WHERE  activation_person.doctor_id = doctor.id  AND doctor.id = :id ");
                         $check_doctor->bindparam("id", $doctor_id);

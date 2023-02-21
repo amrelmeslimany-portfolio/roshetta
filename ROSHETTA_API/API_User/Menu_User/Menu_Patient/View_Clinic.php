@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
     if (isset($_SESSION['patient'])) {
 
         //Get From Clinic Table
-        $get_clinic = $database->prepare("SELECT id as clinic_id,logo as clinic_logo,clinic_name,clinic_specialist,governorate FROM clinic ");
+        $get_clinic = $database->prepare("SELECT clinic.id as clinic_id,logo as clinic_logo,clinic.name as clinic_name,clinic_specialist,governorate FROM clinic,activation_place WHERE activation_place.isactive = 1 AND activation_place.clinic_id = clinic.id");
         $get_clinic->execute();
 
         if ($get_clinic->rowCount() > 0) {

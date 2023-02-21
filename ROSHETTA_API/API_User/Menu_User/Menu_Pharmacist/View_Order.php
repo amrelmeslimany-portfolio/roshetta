@@ -12,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
     if (isset($_SESSION['pharmacist']) && isset($_SESSION['pharmacy'])) {
 
-        $pharmacy_id    = $_SESSION['pharmacy']->id;
+        $pharmacy_id    = $_SESSION['pharmacy'];
         $time           = date("h:i", (time() - 1 * 24 * 60 * 60));
 
         //Delete Order From Pharmacy_Order Table
@@ -29,7 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
         // Get From Pharmacy_Order  Table
 
-        $get_order = $database->prepare("SELECT pharmacy_order.prescript_id , prescript.ser_id , patient.patient_name , patient.phone_number FROM pharmacy_order , patient , prescript , pharmacy WHERE pharmacy.id = :pharmacy_id AND pharmacy_order.pharmacy_id = pharmacy.id AND pharmacy_order.prescript_id = prescript.id AND prescript.patient_id = patient.id ORDER BY pharmacy_order.time DESC");
+        $get_order = $database->prepare("SELECT pharmacy_order.prescript_id , prescript.ser_id , patient.name as patient_name , patient.phone_number as patient_phone_number FROM pharmacy_order , patient , prescript , pharmacy WHERE pharmacy.id = :pharmacy_id AND pharmacy_order.pharmacy_id = pharmacy.id AND pharmacy_order.prescript_id = prescript.id AND prescript.patient_id = patient.id ORDER BY pharmacy_order.time DESC");
 
         $get_order->bindparam("pharmacy_id", $pharmacy_id);
         $get_order->execute();

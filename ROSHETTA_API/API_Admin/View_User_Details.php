@@ -11,101 +11,76 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
     if (isset($_SESSION['admin'])) {
 
-        //If Patient Account
+        if (
+            isset($_POST['type']) && !empty($_POST['type'])
+            && isset($_POST['id']) && !empty($_POST['id'])
+        ) {
 
-        if (isset($_POST['patient_id']) && !empty($_POST['patient_id'])) {
+            $type = $_POST['type'];
+            $id   = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
 
-            // Filter Data INT
-
-            $patient_id = filter_var($_POST['patient_id'], FILTER_SANITIZE_NUMBER_INT);
-
-            // Get From Patient Table
-
-            $get_patient = $database->prepare("SELECT id , patient_name , ssd , email , phone_number , gender , birth_date , weight , height , governorate , profile_img FROM patient WHERE id = :id");
-            $get_patient->bindParam("id", $patient_id);
-            $get_patient->execute();
-
-            if ($get_patient->rowCount() > 0) {
-                $data_patient = $get_patient->fetchAll(PDO::FETCH_ASSOC);
-                $message = 'تم جلب البيانات بنجاح';
-                print_r(json_encode(Message($data_patient , $message , 200)));
-
+            if ($type == 'PATIENT') {
+                $table_name = 'patient';
+            } elseif ($type == 'DOCTOR') {
+                $table_name = 'doctor';
+            } elseif ($type == 'PHARMACIST') {
+                $table_name = 'pharmacist';
+            } elseif ($type == 'ASSISTANT') {
+                $table_name = 'assistant';
             } else {
-                $Message = "معرف المستخدم غير صحيح";
-                print_r(json_encode(Message(null,$Message,400)));
+                $table_name = '';
             }
 
-            //If Doctor Account
+            $get_user = $database->prepare("SELECT * FROM $table_name WHERE id = :id");
+            $get_user->bindParam("id", $id);
+            $get_user->execute();
 
-        } elseif (isset($_POST['doctor_id']) && !empty($_POST['doctor_id'])) {
+            if ($get_user->rowCount() > 0) {
+                $data_user = $get_user->fetchObject();
 
-             // Filter Data INT
+                $role = $data_user->role;
 
-            $doctor_id = filter_var($_POST['doctor_id'], FILTER_SANITIZE_NUMBER_INT);
+                if ($role == 'PATIENT') {
+                    $weight     = $data_user->weight;
+                    $height     = $data_user->height;
+                    $specialist = null;
+                } elseif ($role == 'DOCTOR') {
+                    $weight     = null;
+                    $height     = null;
+                    $specialist = $data_user->specialist;
+                } else {
+                    $weight     = null;
+                    $height     = null;
+                    $specialist = null;
+                }
 
-            // Get From Doctor Table
+                $data_message = [
 
-            $get_doctor = $database->prepare("SELECT id , doctor_name , ssd , email , phone_number , gender , birth_date , specialist , governorate , profile_img FROM doctor WHERE id = :id");
-            $get_doctor->bindParam("id", $doctor_id);
-            $get_doctor->execute();
+                    "id"            => $data_user->id,
+                    "name"          => $data_user->name,
+                    "ssd"           => $data_user->ssd,
+                    "email"         => $data_user->email,
+                    "phone_number"  => $data_user->phone_number,
+                    "gender"        => $data_user->gender,
+                    "birth_date"    => $data_user->birth_date,
+                    "governorate"   => $data_user->governorate,
+                    "weight"        => $weight,
+                    "height"        => $height,
+                    "specialist"    => $specialist,
+                    "profile_img"   => $data_user->profile_img,
+                    "role"          => $role
+                ];
 
-            if ($get_doctor->rowCount() > 0) {
-                $data_doctor = $get_doctor->fetchAll(PDO::FETCH_ASSOC);
                 $message = 'تم جلب البيانات بنجاح';
-                print_r(json_encode(Message($data_doctor , $message , 200)));
+                print_r(json_encode(Message($data_message, $message, 200)));
+
             } else {
                 $Message = "معرف المستخدم غير صحيح";
-                print_r(json_encode(Message(null,$Message,400)));
-            }
-
-            // If Pharmacist Account
-
-        } elseif (isset($_POST['pharmacist_id']) && !empty($_POST['pharmacist_id'])) {
-
-            // Filter Data INT
-
-            $pharmacist_id = filter_var($_POST['pharmacist_id'], FILTER_SANITIZE_NUMBER_INT);
-
-            // Get From Pharmacist Table
-
-            $get_pharmacist = $database->prepare("SELECT id , pharmacist_name , ssd , email , phone_number , gender , birth_date , governorate , profile_img FROM pharmacist WHERE id = :id");
-            $get_pharmacist->bindParam("id", $pharmacist_id);
-            $get_pharmacist->execute();
-
-            if ($get_pharmacist->rowCount() > 0) {
-                $data_pharmacist = $get_pharmacist->fetchAll(PDO::FETCH_ASSOC);
-                $message = 'تم جلب البيانات بنجاح';
-                print_r(json_encode(Message($data_pharmacist , $message , 200)));
-            } else {
-                $Message = "معرف المستخدم غير صحيح";
-                print_r(json_encode(Message(null,$Message,400)));
-            }
-
-            // If Assistant Account 
-
-        } elseif (isset($_POST['assistant_id']) && !empty($_POST['assistant_id'])) {
-
-            // Filter Data INT
-
-            $assistant_id = filter_var($_POST['assistant_id'], FILTER_SANITIZE_NUMBER_INT);
-
-            // Get From Assistant Table
-
-            $get_assistant = $database->prepare("SELECT id , assistant_name , ssd , email , phone_number , gender , birth_date , governorate , profile_img FROM assistant WHERE id = :id");
-            $get_assistant->bindParam("id", $assistant_id);
-            $get_assistant->execute();
-
-            if ($get_assistant->rowCount() > 0) {
-                $data_assistant = $get_assistant->fetchAll(PDO::FETCH_ASSOC);
-                $message = 'تم جلب البيانات بنجاح';
-                print_r(json_encode(Message($data_assistant , $message , 200)));
-            } else {
-                $Message = "معرف المستخدم غير صحيح";
-                print_r(json_encode(Message(null,$Message,400)));
+                print_r(json_encode(Message(null, $Message, 400)));
             }
         } else {
             $Message = "يجب اكمال البيانات";
-            print_r(json_encode(Message(null,$Message,400)));
+            print_r(json_encode(Message(null, $Message, 400)));
         }
     } else {
         $message = "ليس لديك الصلاحية";

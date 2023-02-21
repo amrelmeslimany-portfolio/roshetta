@@ -12,26 +12,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
     if (isset($_SESSION['admin'])) {
 
         if (
-            (isset($_POST['patient_id'])        && !empty($_POST['patient_id']))
-            || (isset($_POST['doctor_id'])      && !empty($_POST['doctor_id']))
-            || (isset($_POST['pharmacist_id'])  && !empty($_POST['pharmacist_id']))
-            || (isset($_POST['assistant_id'])   && !empty($_POST['assistant_id']))
+            (isset($_POST['type'])   && !empty($_POST['type']))
+            || (isset($_POST['id'])  && !empty($_POST['id']))
+
         ) {
 
-            if (isset($_POST['patient_id'])) {
-                $id         = filter_var($_POST['patient_id'], FILTER_SANITIZE_NUMBER_INT);
+            $type = $_POST['type'];
+            $id   = filter_var($_POST['id'], FILTER_SANITIZE_NUMBER_INT);
+
+            if ($type == 'PATIENT') {
                 $table_name = 'patient';
-            } elseif (isset($_POST['doctor_id'])) {
-                $id         = filter_var($_POST['doctor_id'], FILTER_SANITIZE_NUMBER_INT);
+            } elseif ($type == 'DOCTOR') {
                 $table_name = 'doctor';
-            } elseif (isset($_POST['pharmacist_id'])) {
-                $id         = filter_var($_POST['pharmacist_id'], FILTER_SANITIZE_NUMBER_INT);
+            } elseif ($type == 'PHARMACIST') {
                 $table_name = 'pharmacist';
-            } elseif (isset($_POST['assistant_id'])) {
-                $id         = filter_var($_POST['assistant_id'], FILTER_SANITIZE_NUMBER_INT);
+            } elseif ($type == 'ASSISTANT') {
                 $table_name = 'assistant';
             } else {
-                $id = '';
                 $table_name = '';
             }
 

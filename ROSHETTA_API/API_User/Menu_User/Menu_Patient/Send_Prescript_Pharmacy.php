@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
         ) {
             $time           = date("h:i");
             $pharmacy_id    = filter_var($_POST['pharmacy_id'], FILTER_SANITIZE_NUMBER_INT); //Filter 'Int'
-            $patient_id     = $_SESSION['patient']->id;
+            $patient_id     = $_SESSION['patient'];
             $prescript_id   = $_POST['prescript_id'];
 
             $check_pharmacy = $database->prepare("SELECT * FROM pharmacy WHERE pharmacy.id = :pharmacy_id");

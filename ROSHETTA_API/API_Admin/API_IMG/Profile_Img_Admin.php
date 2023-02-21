@@ -33,9 +33,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
             } else {
 
-                $folder_name = $_SESSION['admin']->ssd;
+                $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
+                $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
+
+                $id = $_SESSION['admin'];
+
+                $get_data = $database->prepare("SELECT * FROM admin WHERE id = :id");
+                $get_data->bindparam("id", $id);
+                $get_data->execute();
+
+                if ($get_data->rowCount() > 0 ) {
+                    $data_user      = $get_data->fetchObject();
+                    $folder_user    = $data_user->ssd;
+                } else {
+                    $folder_user = 'UNKNOWN';
+                }
+
+                $folder_name = $folder_user;
                 $img_new_name = bin2hex(random_bytes(10)) . $folder_name . '.' . $formul; //To Input A Random Name For The Image 
                 $link = 'Profile_Img_Admin/' . $folder_name . '/' . ''; //File Link
+
+                $profile_img = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Admin/API_IMG/" . $link . $img_new_name; //The Path WithIn The DataBase
 
                 if (is_dir($link)) { //If The File Exists
 
@@ -47,41 +65,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                             unlink($link . $folder_content); //To Delete File Data
                             move_uploaded_file($img_tmp, $link . $img_new_name); //To Transfer The New Image To The File
 
-                            $HTTP_HOST = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
-                            $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
-                            $profile_img = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Admin/API_IMG/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                            $id = $_SESSION['admin']->id;
-
                             //UpDate Admin Table
 
                             $uploadImg = $database->prepare("UPDATE admin SET profile_img = :profile_img WHERE id = :id ");
-
                             $uploadImg->bindparam("profile_img", $profile_img);
                             $uploadImg->bindparam("id", $id);
                             $uploadImg->execute();
 
                             if ($uploadImg->rowCount() > 0) {
 
-                                //Get Pro_Img From Admin
+                                $Message = "تم تعديل صورة الملف الشخصى بنجاح";
+                                print_r(json_encode(Message(null,$Message,201)));
 
-                                $getImg = $database->prepare("SELECT * FROM admin WHERE id = :id ");
-
-                                $getImg->bindparam("id", $id);
-                                $getImg->execute();
-
-                                if ($getImg->rowCount() > 0) {
-
-                                    $new_session = $getImg->fetchObject();
-                                    $_SESSION['admin'] = $new_session;
-
-                                    $Message = "تم تعديل صورة الملف الشخصى بنجاح";
-                                    print_r(json_encode(Message(null,$Message,201)));
-
-                                } else {
-                                    $Message = "فشل تعديل الصورة";
-                                    print_r(json_encode(Message(null,$Message,422)));
-                                }
                             } else {
                                 $Message = "فشل تعديل الصورة";
                                 print_r(json_encode(Message(null,$Message,422)));
@@ -94,41 +89,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                     move_uploaded_file($img_tmp, $link . $img_new_name); //To Transfer The New Image To The File
 
-                    $HTTP_HOST = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
-                    $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
-                    $profile_img = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Admin/API_IMG/" . $link . $img_new_name; //The Path WithIn The DataBase
-
-                    $id = $_SESSION['admin']->id;
-
                     //UpDate Admin Table
 
                     $uploadImg = $database->prepare("UPDATE admin SET profile_img = :profile_img WHERE id = :id ");
-
                     $uploadImg->bindparam("profile_img", $profile_img);
                     $uploadImg->bindparam("id", $id);
                     $uploadImg->execute();
 
                     if ($uploadImg->rowCount() > 0) {
 
-                        //Get Pro_Img From Admin
+                        $Message = "تم تعديل صورة الملف الشخصى بنجاح";
+                        print_r(json_encode(Message(null,$Message,201)));
 
-                        $getImg = $database->prepare("SELECT * FROM admin WHERE id = :id ");
-
-                        $getImg->bindparam("id", $id);
-                        $getImg->execute();
-
-                        if ($getImg->rowCount() > 0) {
-
-                            $new_session = $getImg->fetchObject();
-                            $_SESSION['admin'] = $new_session;
-
-                            $Message = "تم تعديل صورة الملف الشخصى بنجاح";
-                            print_r(json_encode(Message(null,$Message,201)));
-
-                        } else {
-                            $Message = "فشل تعديل الصورة";
-                            print_r(json_encode(Message(null,$Message,422)));
-                        }
                     } else {
                         $Message = "فشل تعديل الصورة";
                         print_r(json_encode(Message(null,$Message,422)));

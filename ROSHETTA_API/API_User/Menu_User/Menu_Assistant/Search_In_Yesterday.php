@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
         $time = time() - (1 * 24 * 60 * 60);
         $date = date('Y-m-d', $time);
 
-        $clinic_id = $_SESSION['clinic']->id;
+        $clinic_id = $_SESSION['clinic'];
 
         if (isset($_GET['search']) && !empty($_GET['search'])) {
 
@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
 
             // Get From Patient And Appointment Table
 
-            $get_reservation = $database->prepare("SELECT patient.id as patient_id , patient.patient_name , patient.phone_number FROM  patient,appointment,clinic WHERE   appoint_date = :appoint_date AND appointment.clinic_id = :clinic_id AND appointment.patient_id = patient.id  AND patient.patient_name = :search ");
+            $get_reservation = $database->prepare("SELECT patient.id as patient_id , patient.name as patient_name , patient.phone_number FROM  patient,appointment,clinic WHERE   appoint_date = :appoint_date AND appointment.clinic_id = :clinic_id AND appointment.patient_id = patient.id  AND patient.name = :search ");
 
             $get_reservation->bindparam("clinic_id", $clinic_id);
             $get_reservation->bindparam("appoint_date", $date);

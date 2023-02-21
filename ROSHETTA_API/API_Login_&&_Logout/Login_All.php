@@ -64,46 +64,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                         if ($data_user->email_isactive == 1 ) {
 
                             if ($table_name == "patient") {
-                                $_SESSION['patient'] = $data_user;
-                                $name   = $data_user->patient_name;
-                                $Hi     = 'مـــــرحبــــــا بــــك';
+                                $_SESSION['patient'] = $data_user->id;
+                                $Hi                  = 'مـــــرحبــــــا بــــك';
                             } elseif ($table_name == "doctor") {
-                                $_SESSION['doctor'] = $data_user;
-                                $name   = $data_user->doctor_name;
-                                $Hi     = 'مـــــرحبـــــا بــــك دكتــــور';
+                                $_SESSION['doctor'] = $data_user->id;
+                                $Hi                 = 'مـــــرحبـــــا بــــك دكتــــور';
                             } elseif ($table_name == "pharmacist") {
-                                $_SESSION['pharmacist'] = $data_user;
-                                $name   = $data_user->pharmacist_name;
-                                $Hi     = 'مـــــرحبـــــا بــــك دكتــــور';
+                                $_SESSION['pharmacist'] = $data_user->id;
+                                $Hi                     = 'مـــــرحبـــــا بــــك دكتــــور';
                             } elseif ($table_name == "assistant") {
-                                $_SESSION['assistant'] = $data_user;
-                                $name   = $data_user->assistant_name;
-                                $Hi     = 'مـــــرحبــــــا بــــك';
+                                $_SESSION['assistant'] = $data_user->id;
+                                $Hi                    = 'مـــــرحبــــــا بــــك';
                             } elseif ($table_name == "admin") {
-                                $_SESSION['admin'] = $data_user;
-                                $name   = $data_user->admin_name;
-                                $Hi     = 'مـــــرحبـــــا بــــك مـــديـــر';
+                                $_SESSION['admin'] = $data_user->id;
+                                $Hi                = 'مـــــرحبـــــا بــــك مـــديـــر';
                             } else {
                                 $name = '';
                                 $Hi = '';
                             }
 
-
                             $Data = [
-                                "user_id"       => $data_user->id,
-                                "name"          => $name,
-                                "id_national"   => $data_user->ssd,
-                                "role"          => $data_user->role,
-                                "image"         => $data_user->profile_img
+                                "id"       => $data_user->id,
+                                "name"     => $data_user->name,
+                                "ssd"      => $data_user->ssd,
+                                "type"     => $data_user->role,
+                                "image"    => $data_user->profile_img
                             ];
 
                             $Message    = "تم تسجيل الدخول بنجاح";
-                            
                             print_r(json_encode(Message($Data,$Message,200)));
 
                             $email          = $data_user->email;
                             $security_code  = $data_user->security_code;
                             $role           = $data_user->role;
+                            $name           = $data_user->name;
 
                             $message_url = $URL_Verify . "?email=" . $email . "&role=" . $role . "&code=" . $security_code;
 

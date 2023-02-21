@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                     // Get From Patient And Prescript Table
 
-                    $get_prescript = $database->prepare("SELECT prescript.id as prescript_id,ser_id as prescript_ser_id,creaded_date,patient_name  FROM prescript,patient  
+                    $get_prescript = $database->prepare("SELECT prescript.id as prescript_id,ser_id as prescript_ser_id,creaded_date,patient.name as patient_name FROM prescript,patient  
                                                         WHERE prescript.patient_id = patient.id AND patient.ssd = :ssd  ORDER BY creaded_date DESC ");
 
                     $get_prescript->bindparam("ssd", $number);
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                         // Get From Disease , Prescript , Doctor , Clinic Table
 
-                        $get_prescript = $database->prepare("SELECT  prescript.ser_id as prescript_ser_id,creaded_date,patient.patient_name,disease_name,rediscovery_date,doctor_name,doctor.specialist as doctor_specialist,logo as clinic_logo,clinic_name,clinic.phone_number as clinic_phone_number,address as clinic_address,start_working,end_working  
+                        $get_prescript = $database->prepare("SELECT  prescript.ser_id as prescript_ser_id,creaded_date,patient.name as patient_name,disease.name as disease_name,rediscovery_date,doctor.name as doctor_name,doctor.specialist as doctor_specialist,logo as clinic_logo,clinic.name as clinic_name,clinic.phone_number as clinic_phone_number,address as clinic_address,start_working,end_working  
                                                                 FROM   disease,prescript,doctor,clinic,patient 
                                                                 WHERE  disease.id = prescript.disease_id AND prescript.patient_id = patient.id AND prescript.doctor_id = doctor.id AND prescript.clinic_id = clinic.id  AND prescript.ser_id = :ser_id ");
 
@@ -89,7 +89,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
                                     }
 
                                     $data = [
-
                                         // All Data In Array For Print 
 
                                         "prescript_data"    => $get_prescript,
