@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET' || isset($_SESSION['admin'])) { //Allow 
         if ($get_video->rowCount() > 0) {
 
             $data_video = $get_video->fetchAll(PDO::FETCH_ASSOC);
-
             $message = "تم جلب البيانات";
             print_r(json_encode(Message($data_video , $message , 200)));
 

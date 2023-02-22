@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
         if (
             isset($_POST['activation_id']) && !empty($_POST['activation_id'])
-            && isset($_POST['type']) && !empty($_POST['type'])
+            && isset($_POST['type'])        && !empty($_POST['type'])
         ) {
 
             $type = $_POST['type'];

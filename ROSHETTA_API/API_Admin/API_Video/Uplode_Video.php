@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' || isset($_SESSION['admin'])) { //Allow
 
                     $HTTP_HOST      = $_SERVER['HTTP_HOST']; //To Find Out The Server Name And Port
                     $REQUEST_SCHEME = $_SERVER['REQUEST_SCHEME']; //To Find The Type Of Connection [HTTP , HTTPS]
-                    $video          = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Admin/" . $link . $video_new_name; //The Path WithIn The DataBase
+                    $video          = $REQUEST_SCHEME . "://" . $HTTP_HOST . "/ROSHETTA_API/API_Admin/API_Video/" . $link . $video_new_name; //The Path WithIn The DataBase
 
                     if (is_dir($link)) { //If The File Exists
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 21, 2023 at 11:49 PM
+-- Generation Time: Feb 22, 2023 at 03:37 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.1.12
 
@@ -470,6 +470,80 @@ INSERT INTO `prescript` (`id`, `creaded_date`, `rediscovery_date`, `ser_id`, `pa
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `specialist`
+--
+
+CREATE TABLE `specialist` (
+  `id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `ar_name` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `specialist`
+--
+
+INSERT INTO `specialist` (`id`, `name`, `ar_name`) VALUES
+(1, 'Accident and emergency medicine', 'طب الطوارئ والحوادث'),
+(2, 'Allergology', 'علم الحساسية'),
+(3, 'Anaesthetics', 'التخدير'),
+(4, 'Biological hematology', 'الأمراض الدموية الحيوية'),
+(5, 'Cardiology', 'أمراض القلب'),
+(6, 'Child psychiatry', 'طب الأطفال النفسي'),
+(7, 'Clinical biology', 'الأحياء السريرية'),
+(8, 'Clinical chemistry', 'الكيمياء السريرية'),
+(9, 'Clinical neurophysiology', 'العلم العصبي الفيزيولوجي السريري'),
+(10, 'Clinical radiology', 'التصوير الطبي السريري'),
+(11, 'Dental, oral and maxillo-facial surgery', 'جراحة الأسنان والفم والوجه'),
+(12, 'Dermato-venerology', 'أمراض الجلد والأمراض الجنسية'),
+(13, 'Dermatology', 'أمراض الجلدية'),
+(14, 'Endocrinology', 'علم الغدد الصماء'),
+(15, 'Gastro-enterologic surgery', 'جراحة الجهاز الهضمي'),
+(16, 'Gastroenterology', 'أمراض المعدة والأمعاء'),
+(17, 'General hematology', 'الأمراض الدموية العامة'),
+(18, 'General Practice', 'الطب العام'),
+(19, 'General surgery', 'جراحة عامة'),
+(20, 'Geriatrics', 'طب المسنين'),
+(21, 'Immunology', 'مناعة'),
+(22, 'Infectious diseases', 'الأمراض المعدية'),
+(23, 'Internal medicine', 'الطب الباطني'),
+(24, 'Laboratory medicine', 'طب المختبرات'),
+(25, 'Maxillo-facial surgery', 'جراحة الفك والوجه'),
+(26, 'Microbiology', 'علم الأحياء الدقيقة'),
+(27, 'Nephrology', 'أمراض الكلى'),
+(28, 'Neuro-psychiatry', 'أمراض الأعصاب والطب النفسي'),
+(29, 'Neurology', 'أمراض الأعصاب'),
+(30, 'Neurosurgery', 'جراحة الأعصاب'),
+(31, 'Nuclear medicine', 'الطب النووي'),
+(32, 'Obstetrics and gynecology', 'النسا والتوليد'),
+(33, 'Occupational medicine', 'طب العمل'),
+(34, 'Ophthalmology', 'طب العيون'),
+(35, 'Orthopaedics', 'جراحة العظام'),
+(36, 'Otorhinolaryngology', 'أمراض الأنف والأذن والحنجرة'),
+(37, 'Paediatric surgery', 'جراحة الأطفال'),
+(38, 'Paediatrics', 'طب الأطفال'),
+(39, 'Pathology', 'علم المرض'),
+(40, 'Pharmacology', 'علم الأدوية'),
+(41, 'Physical medicine and rehabilitation', 'الطب الطبيعي وإعادة التأهيل'),
+(42, 'Plastic surgery', 'جراحة التجميل'),
+(43, 'Podiatric Medicine', 'طب القدمين'),
+(44, 'Podiatric Surgery', 'جراحة القدمين'),
+(45, 'Psychiatry', 'طب النفس'),
+(46, 'Public health and Preventive Medicine', 'الصحة العامة والوقاية'),
+(47, 'Radiology', 'التصوير الطبي'),
+(48, 'Radiotherapy', 'العلاج الإشعاعي'),
+(49, 'Respiratory medicine', 'أمراض الجهاز التنفسي'),
+(50, 'Rheumatology', 'الروماتيزم'),
+(51, 'Stomatology', 'طب الفم والأسنان'),
+(52, 'Thoracic surgery', 'جراحة الصدر'),
+(53, 'Tropical medicine', 'طب الأمراض الاستوائية'),
+(54, 'Urology', 'جراحة المسالك البولية'),
+(55, 'Vascular surgery', 'جراحة الأوعية الدموية'),
+(56, 'Venereology', 'أمراض الجنس');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `video`
 --
 
@@ -484,10 +558,7 @@ CREATE TABLE `video` (
 --
 
 INSERT INTO `video` (`id`, `video`, `type`) VALUES
-(2, 'http://localhost:3000/ROSHETTA_API/API_Admin/Video/doctor/24144213.mp4', 'doctor'),
-(3, 'http://localhost:3000/ROSHETTA_API/API_Admin/Video/assistant/57122609.mp4', 'assistant'),
-(4, 'http://localhost:3000/ROSHETTA_API/API_Admin/Video/pharmacist/57876410.mp4', 'pharmacist'),
-(5, 'http://localhost:3000/ROSHETTA_API/API_Admin/Video/patient/64707331.mp4', 'patient');
+(1, 'http://localhost:3000/ROSHETTA_API/API_Admin/API_Video/Video/patient/30b1d6c53fcb88abca19.mp4', 'patient');
 
 --
 -- Indexes for dumped tables
@@ -624,6 +695,12 @@ ALTER TABLE `prescript`
   ADD KEY `prescript_clinic` (`clinic_id`);
 
 --
+-- Indexes for table `specialist`
+--
+ALTER TABLE `specialist`
+  ADD PRIMARY KEY (`id`);
+
+--
 -- Indexes for table `video`
 --
 ALTER TABLE `video`
@@ -730,10 +807,16 @@ ALTER TABLE `prescript`
   MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
+-- AUTO_INCREMENT for table `specialist`
+--
+ALTER TABLE `specialist`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
+
+--
 -- AUTO_INCREMENT for table `video`
 --
 ALTER TABLE `video`
-  MODIFY `id` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Constraints for dumped tables
