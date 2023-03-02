@@ -20,7 +20,11 @@ function TokenEncode($data)
         ];
 
         @$token = JWT::encode($payload, $key, 'HS256');
-        return $token;
+        $data = [
+            "token" => $token,
+            "exp" => $expiration_time
+        ];
+        return $data;
 
     } catch (Exception) {
         return null;

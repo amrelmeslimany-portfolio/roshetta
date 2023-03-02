@@ -2,7 +2,7 @@
 
 include_once("configs/config.php");
 
-include_once("helpers/message.json.php");
+include_once("helpers/help.function.php");
 
 
 include_once("helpers/email/email.function.php");
