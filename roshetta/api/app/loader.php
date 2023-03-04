@@ -3,6 +3,7 @@
 include_once("configs/config.php");
 
 include_once("helpers/help.function.php");
+include_once("helpers/mobiledetect.class.php");
 
 
 include_once("helpers/email/email.function.php");

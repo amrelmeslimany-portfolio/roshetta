@@ -351,4 +351,17 @@ class User
                 false;
         }
     }
+
+    public function getVideo($type)
+    {
+        $this->db->query("SELECT video FROM video WHERE  type = :TYPE");
+        $this->db->bind(":TYPE", $type);
+        $this->db->execute();
+        if ($this->db->rowCount()) {
+            $data = $this->db->fetchObject();
+            return $data;
+        } else {
+            false;
+        }
+    }
 }

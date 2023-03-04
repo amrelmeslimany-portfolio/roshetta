@@ -6,7 +6,7 @@
 class Core
 {
     private $controller = 'pages';
-    private $method = 'index';
+    private $method = 'document';
     private $param = [];
 
     public function __construct()

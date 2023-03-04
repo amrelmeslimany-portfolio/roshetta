@@ -9,7 +9,10 @@ header("Access-Control-Allow-Methods:*"); //Determine The access Method (GET,POS
 header("Access-Control-Max-Age:3600"); //The time Period For Data Recovery.
 header("Access-Control-Allow-Headers:*"); //Give Permissions To The browser To Exchange Data.
 
-function userMessage($Status = null, $Message = null, $data = null) // Design All Message
+date_default_timezone_set('Africa/Cairo'); //Set To Cairo TimeZone
+
+//****************************************************** Function Design All Message ********************************************************//
+function userMessage($Status = null, $Message = null, $data = null) 
 {
     $array = [
         "Status"    => $Status,
@@ -19,6 +22,7 @@ function userMessage($Status = null, $Message = null, $data = null) // Design Al
     return print_r(json_encode($array));
 }
 
+//************************************************************* Function User Age ********************************************************//
 function userAge($age)
 {
     $explode    = explode("-", $age);
@@ -49,23 +53,36 @@ function userAge($age)
     return $age;
 }
 
-function get_image($mo, $url)
+//************************************************************* Function Get Url Image ********************************************************//
+function getImage($mo, $url)
 {
-    $mm = $url . $mo . '\\';
-    if (is_dir($mm)) { //If The File Exists
-        $scandir = scandir($mm); //To Displays File Data In Array
+    $url_image = $url . $mo . '\\';
+    if (is_dir($url_image)) { //If The File Exists
+        $scandir = scandir($url_image); //To Displays File Data In Array
         foreach ($scandir as $folder_content) {
-            if (is_file($mm . $folder_content)) {
-                return $mm . $folder_content;
+            if (is_file($url_image . $folder_content)) {
+                return $url_image . $folder_content;
             }
         }
     }
     return null;
 }
+
+//************************************************************* Function Get Url Video ********************************************************//
+function getVideo($data = [])
+{
+    $video = $data['url'] . $data['name'];
+    if (is_file($video)) {
+        return $video;
+    }
+    return null;
+}
+
+//************************************************************* Function Design Message View Profile ********************************************************//
 function messageProfile($data_user, $url)
 {
     $age = userAge($data_user->birth_date);
-    $image = get_image($data_user->profile_img, $url);
+    $image = getImage($data_user->profile_img, $url);
     switch ($data_user->role) {
         case 'patient':
             $data_message = [
@@ -116,6 +133,7 @@ function messageProfile($data_user, $url)
     return $data_message;
 }
 
+//************************************************************* Function Add Image Profile ********************************************************//
 function addImageProfile($data = [])
 {
 
@@ -154,6 +172,8 @@ function addImageProfile($data = [])
         return false;
     }
 }
+
+//************************************************************* Function Delete Image Profile ********************************************************//
 function removeImage($data = [])
 {
     $folder_name    = str_split($data['type'], 2)[0] . '-' . $data['ssd'];
@@ -173,6 +193,7 @@ function removeImage($data = [])
     }
 }
 
+//************************************************************* Function Add Activation Person Image ********************************************************//
 function addImageActivePerson($data = [])
 {
     $front_name  = $data["front_name"];
@@ -239,4 +260,15 @@ function addImageActivePerson($data = [])
     }
 }
 
+//************************************************************* Function Decode Hash Medicine ********************************************************//
+function decodeMedicine($data)
+{
+    foreach ($data as $key => $value) { //Foreach Data As Key , Value
 
+        $array_value = $value["medicine_data"]; //Determine Medicine Data
+        $data_decode = unserialize(base64_decode($array_value)); // Decode Medicine Data
+        $medicine_data_array = array($data_decode); //Medicine Data In Array For Print
+    }
+
+    return $medicine_data_array;
+}

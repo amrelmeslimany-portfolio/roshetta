@@ -1,16 +1,17 @@
 <?php
-//***************************************** TOKEN **************************/
+
+//**************************************************** TOKEN *****************************************************//
 
 require_once('../app/helpers/token/vendor/autoload.php');
 
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
 
-// Token Encode
+//************************************************************* Function Encode Token ********************************************************//
 function TokenEncode($data)
 {
     try {
-        $expiration_time = time() + (60 * 60); // Expires in 1 hour
+        $expiration_time = time() + (8 * 60 * 60); // Expires in 8 hour
         $key             = "my_secret_key";
 
         $payload = [
@@ -31,7 +32,7 @@ function TokenEncode($data)
     }
 }
 
-// Token Decode 
+//************************************************************* Function Decode Token ********************************************************// 
 function TokenDecode($Auth)
 {
     try {
@@ -52,4 +53,3 @@ function TokenDecode($Auth)
         return false;
     }
 }
-//****************************************** END TOKEN ***************************************/

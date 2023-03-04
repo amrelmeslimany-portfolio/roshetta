@@ -8,12 +8,17 @@ class Users extends Controller
         $this->userModel = $this->model('User');
     }
 
-    public function index()
+    public function document()
     {
-        echo 'Users';
+        $Message = '(API_Users)برجاء الإطلاع على شرح';
+        $Status = 400;
+        $url = 'https://documenter.getpostman.com/view/25605546/2s93CRMCfA#2f22abfd-6fd8-4413-a924-9ef15a1227b0';
+        userMessage($Status, $Message , $url);
+        die();
     }
 
-    public function tokenVerify($Auth)
+    //*************************************************** Token Verify **************************************************************//
+    private function tokenVerify($Auth)
     {
         @$Auth = explode(" ", $Auth)[1]; // Get Token From Auth
         @$token_out = TokenDecode($Auth);
@@ -380,14 +385,15 @@ class Users extends Controller
                                     "id" => $result->id,
                                     "type" => $result->role
                                 ];
-
+                                $url = __DIR__ . "\images\profile_image\\";
                                 $data_message = [
                                     "token" => $token['token'],
                                     "expiredToken" => $token['exp'],
                                     "name" => $name,
                                     "ssd" => $result->ssd,
                                     "type" => $result->role,
-                                    "image" => $result->profile_img
+                                    "isActive" => $result->email_isActive,
+                                    "image" => getImage($result->profile_img, $url)
                                 ];
 
                                 //************************************* Send Email Alert ***********************************//
@@ -418,10 +424,42 @@ class Users extends Controller
                                 die();
                             }
                         } else {
-                            $Message = 'يجب تفعيل البريد الإلكترونى';
-                            $Status = 202;
-                            userMessage($Status, $Message);
-                            die();
+                            @$new_code = random_int(100000, 999999);
+                            $data_active = [
+                                "type" => $data['type'],
+                                "id" => $result->id,
+                                "code" => $new_code
+                            ];
+                            if (!$this->userModel->resetCode($data_active)) {
+                                $Message = 'الرجاء المحاولة فى وقت لأحق';
+                                $Status = 422;
+                                userMessage($Status, $Message);
+                                die();
+                            }
+                            $data_email = [
+                                "type" => $result->role,
+                                "user_name" => $result->name,
+                                "email" => $result->email,
+                                "number" => $new_code
+                            ];
+                            $mail_data = registerEmailBody($data_email);  //Function To Get Email Data
+                            @require_once('../app/helpers/email/mail.php');
+                            $mail->setFrom('roshettateam@gmail.com', $mail_data['name']);
+                            $mail->addAddress($mail_data['email']);
+                            $mail->Subject = $mail_data['subject'];
+                            $mail->Body = emailBody($mail_data['icon'], $mail_data['body']);
+
+                            if ($mail->send()) {
+                                $Message = 'يجب تفعيل البريد الإلكترونى';
+                                $Status = 202;
+                                userMessage($Status, $Message , ["isActive" => $result->email_isActive]);
+                                die();
+                            } else {
+                                $Message = 'الرجاء المحاولة فى وقت لأحق';
+                                $Status = 422;
+                                userMessage($Status, $Message);
+                                die();
+                            }
                         }
                     } else {
                         $data_err['password_err'] = 'كلمة المرور غير صحيحة';
@@ -1232,7 +1270,7 @@ class Users extends Controller
                 if (!(filter_var($data['code'], 257) && strlen($data['code']) == 6)) $data_err['code_err'] = 'الكود غير صالح'; // FILTER_VALIDATE_INT 
             }
 
-            if (empty($data_err['type']) && empty($data_err['user_id']) && empty($data_err['code_err'])) {
+            if (empty($data_err['type_err']) && empty($data_err['user_id_err']) && empty($data_err['code_err'])) {
                 $get_code = [
                     "type" => $data['type'],
                     "user_id" => $data['user_id'],
@@ -1373,6 +1411,8 @@ class Users extends Controller
         }
     }
 
+    //*************************************************** Active Image Person **************************************************************//
+
     public function active_image_person()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -1512,6 +1552,8 @@ class Users extends Controller
         }
     }
 
+    //*************************************************** Active Image Place **************************************************************//
+
     public function active_image_place()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -1613,6 +1655,153 @@ class Users extends Controller
                     die();
                 } else {
                     $Message = 'الرجاء المحاولة فى وق لأحق';
+                    $Status = 422;
+                    userMessage($Status, $Message);
+                    die();
+                }
+            } else {
+                $Message = $data_err;
+                $Status = 400;
+                userMessage($Status, $Message);
+                die();
+            }
+        } else {
+            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status = 405;
+            userMessage($Status, $Message);
+            die();
+        }
+    }
+
+    //*************************************************** View Video **************************************************************//
+    public function view_video()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+
+            $_GET = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
+
+            if (empty($_GET['Auth'])) {
+                $Message = 'الرجاء تسجيل الدخول';
+                $Status = 400;
+                userMessage($Status, $Message);
+                die();
+            }
+            @$check_token = $this->tokenVerify($_GET['Auth']);
+            if (!$check_token) {
+                $Message = 'الرجاء تسجيل الدخول';
+                $Status = 400;
+                userMessage($Status, $Message);
+                die();
+            }
+            @$result = $this->userModel->getVideo($check_token['type']);
+            if (!$result) {
+                $Message = 'لم يتم العثور على بيانات';
+                $Status = 204;
+                userMessage($Status, $Message);
+                die();
+            }
+
+            $data_video = [
+                "name" => $result->video,
+                "url" => __DIR__ . '\videos\\'
+            ];
+
+            @$url_video = getVideo($data_video);
+            if (!$url_video) {
+                $Message = 'الرجاء المحاولة فى وقت لأحق';
+                $Status = 422;
+                userMessage($Status, $Message);
+                die();
+            }
+
+            $Message = 'تم جلب البيانات بنجاح';
+            $Status = 200;
+            userMessage($Status, $Message, $url_video);
+            die();
+        } else {
+            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status = 405;
+            userMessage($Status, $Message);
+            die();
+        }
+    }
+
+    //********************************************** Resend Code Activation Email **************************************************************//
+
+    public function resend_active_code()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+
+            $data = [ //Array Data
+                "type" => @$_POST['role'],
+                "user_id" => @$_POST['user_id'],
+            ];
+            $data_err = [  //Array Error Data 
+                "type_err" => '',
+                "user_id_err" => '',
+            ];
+
+            if (empty($data['type'])) {  //Check Type
+                $data_err['type_err'] = 'برجاء إدخال نوع الحساب';
+            } else {
+                $typeAccount = ['patient', 'doctor', 'assistant', 'pharmacist', 'admin'];
+                if (!in_array($data['type'], $typeAccount))
+                    $data_err['type_err'] = 'نوع الحساب غير صحيح';
+            }
+            if (empty($data['user_id'])) {  //Check SSD OR Email
+                $data_err['user_id_err'] = 'برجاء إدخال الرقم القومى أو البريد الإلكترونى';
+            } else {
+                if (!filter_var($data['user_id'], 274)) {
+                    if (!(filter_var($data['user_id'], 257) && strlen($data['user_id']) == 14)) $data_err['user_id_err'] =  'الرقم القومى أو البريد الإلكترونى غير صالح'; // FILTER_VALIDATE_INT OR // FILTER_VALIDATE_EMAIL
+                }
+            }
+
+            if (empty($data_err['type_err']) && empty($data_err['user_id_err'])) {
+                $get_code = [
+                    "type" => $data['type'],
+                    "user_id" => $data['user_id'],
+                ];
+                @$result = $this->userModel->login($get_code);
+                if (!$result) {
+                    $Message = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status = 422;
+                    userMessage($Status, $Message);
+                    die();
+                }
+                @$new_code = random_int(100000, 999999);
+                $data_active = [
+                    "type" => $result->role,
+                    "id" => $result->id,
+                    "code" => $new_code
+                ];
+                if (!$this->userModel->resetCode($data_active)) {
+                    $Message = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status = 422;
+                    userMessage($Status, $Message);
+                    die();
+                }
+                $data_email = [
+                    "type" => $result->role,
+                    "user_name" => $result->name,
+                    "email" => $result->email,
+                    "number" => $new_code
+                ];
+                $mail_data = registerEmailBody($data_email);  //Function To Get Email Data
+                @require_once('../app/helpers/email/mail.php');
+                $mail->setFrom('roshettateam@gmail.com', $mail_data['name']);
+                $mail->addAddress($mail_data['email']);
+                $mail->Subject = $mail_data['subject'];
+                $mail->Body = emailBody($mail_data['icon'], $mail_data['body']);
+
+                if ($mail->send()) {
+                    $Message = 'تم إرسال كود التفعيل';
+                    $Status = 201;
+                    userMessage($Status, $Message);
+                    die();
+                } else {
+                    $Message = 'الرجاء المحاولة فى وقت لأحق';
                     $Status = 422;
                     userMessage($Status, $Message);
                     die();
