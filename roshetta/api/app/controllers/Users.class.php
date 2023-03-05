@@ -394,7 +394,7 @@ class Users extends Controller
                                     "id" => $result->id,
                                     "type" => $result->role
                                 ];
-                                $url = __DIR__ . "\images\profile_image\\";
+                                $url = "images/profile_image/";
                                 $data_message = [
                                     "token" => $token['token'],
                                     "expiredToken" => $token['exp'],
@@ -673,7 +673,7 @@ class Users extends Controller
             ];
             @$profile = $this->userModel->viewProfile($data);
             if ($profile) {
-                $url = __DIR__ . "\images\profile_image\\";
+                $url = "images/profile_image/";
                 $data_new = messageProfile($profile, $url); // Determind Data User
                 $Message = 'تم جلب البيانات بنجاح';
                 $Status = 200;
@@ -943,7 +943,7 @@ class Users extends Controller
                     "ssd" => $result->ssd,
                     "name" => $data['image_name'],
                     "tmp" => $data['tmp_name'],
-                    "url" => __DIR__ . '\images\profile_image\\'
+                    "url" => 'images/profile_image/'
                 ];
 
                 @$url_img = addImageProfile($data_image);
@@ -1021,7 +1021,7 @@ class Users extends Controller
             $data_image = [
                 "type" => $check_token['type'],
                 "ssd" => $result->ssd,
-                "url" => __DIR__ . '\images\profile_image\\'
+                "url" => 'images/profile_image/'
             ];
 
             if ($user->gender == 'ذكر' || $user->gender == 'male'){
@@ -1532,7 +1532,7 @@ class Users extends Controller
                     "back_tmp" => $data['back_tmp'],
                     "grad_tmp" => $data['grad_tmp'],
                     "card_tmp" => $data['card_tmp'],
-                    "url" => __DIR__ . '\images\activation_image_person\\'
+                    "url" => 'images/activation_image_person/'
                 ];
 
                 @$url_img = addImageActivePerson($data_image);
@@ -1653,7 +1653,7 @@ class Users extends Controller
                     "ssd" => $result->ser_id,
                     "name" => $data['image_name'],
                     "tmp" => $data['tmp_name'],
-                    "url" => __DIR__ . '\images\activation_image_place\\'
+                    "url" => 'images/activation_image_place/'
                 ];
 
                 @$url_img = addImageProfile($data_image);
@@ -1724,7 +1724,7 @@ class Users extends Controller
 
             $data_video = [
                 "name" => $result->video,
-                "url" => __DIR__ . '\videos\\'
+                "url" => 'videos/'
             ];
 
             @$url_video = getVideo($data_video);

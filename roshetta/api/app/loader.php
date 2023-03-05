@@ -12,7 +12,5 @@ include_once("helpers/token/token.function.php");
 include_once("libraries/Controllers.class.php");
 include_once("libraries/Core.class.php");
 include_once("libraries/Database.class.php");
+include_once("../../uploads/url.php");
 
-// spl_autoload_register(function($inc){
-//     require_once('libraries/'.$inc.'.class.php');
-// });

@@ -399,8 +399,8 @@ class Doctors extends Controller
 
                 $num = $this->doctorModel->numberAppointPres($data['clinic_id']);
                 $url = [
-                    "place" => __DIR__ . "\images\place_image\\",
-                    "person" => __DIR__ . "\images\profile_image\\"
+                    "place" => "images/place_image/",
+                    "person" => "images/profile_image/"
                 ];
 
                 $data_login = $this->doctorModel->loginClinic($data['clinic_id'], $data['id']);
@@ -498,7 +498,7 @@ class Doctors extends Controller
                     "ssd" => $result->ser_id,
                     "name" => $data['image_name'],
                     "tmp" => $data['tmp_name'],
-                    "url" => __DIR__ . '\images\place_image\\'
+                    "url" => '/images/place_image/'
                 ];
 
                 @$url_img = addImageProfile($data_image);
@@ -594,7 +594,7 @@ class Doctors extends Controller
                 $data_image = [
                     "type" => 'clinic',
                     "ssd" => $result->ser_id,
-                    "url" => __DIR__ . '\images\place_image\\'
+                    "url" => 'images/place_image/'
                 ];
 
                 if ($result->logo !== 'df-clinic') {

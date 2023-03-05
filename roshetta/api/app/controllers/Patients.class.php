@@ -399,7 +399,7 @@ class Patients extends Controller   // Extends The Controller
                 }
             }
 
-            $url = __DIR__ . "\images\place_image\\";
+            $url = "images/place_image/";
             $data_message = clinicMessage($result, $url);
             $Message = 'تم جلب البيانات بنجاح';
             $Status = 200;
@@ -471,7 +471,7 @@ class Patients extends Controller   // Extends The Controller
                     die();
                 }
 
-                $url = __DIR__ . "\images\place_image\\";
+                $url = "/images/place_image/";
                 $data_message = clinicMessageDetails($result, $url);
                 $Message = 'تم جلب البيانات بنجاح';
                 $Status = 200;
@@ -588,7 +588,7 @@ class Patients extends Controller   // Extends The Controller
             }
 
 
-            $url = __DIR__ . "\images\place_image\\";
+            $url = "images/place_image/";
             $data_message = pharmacyMessage($result, $url);
             $Message = 'تم جلب البيانات بنجاح';
             $Status = 200;
@@ -660,7 +660,7 @@ class Patients extends Controller   // Extends The Controller
                     die();
                 }
 
-                $url = __DIR__ . "\images\place_image\\";
+                $url = "images/place_image/";
                 $data_message = pharmacyMessageDetails($result, $url);
                 $Message = 'تم جلب البيانات بنجاح';
                 $Status = 200;

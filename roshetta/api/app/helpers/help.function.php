@@ -56,12 +56,13 @@ function userAge($age)
 //************************************************************* Function Get Url Image ********************************************************//
 function getImage($mo, $url)
 {
-    $url_image = $url . $mo . '\\';
+    $url_all = urlLocal();
+    $url_image = $url_all ."\\". $url . $mo . '\\';
     if (is_dir($url_image)) { //If The File Exists
         $scandir = scandir($url_image); //To Displays File Data In Array
         foreach ($scandir as $folder_content) {
             if (is_file($url_image . $folder_content)) {
-                return $url_image . $folder_content;
+                return URL_PUBLIC.$url.$mo."/".$folder_content;
             }
         }
     }
@@ -71,9 +72,10 @@ function getImage($mo, $url)
 //************************************************************* Function Get Url Video ********************************************************//
 function getVideo($data = [])
 {
-    $video = $data['url'] . $data['name'];
+    $url_all = urlLocal();
+    $video = $url_all."\\".$data['url'] . $data['name'];
     if (is_file($video)) {
-        return $video;
+        return URL_PUBLIC.$data['url'].$data['name'];
     }
     return null;
 }
@@ -148,10 +150,10 @@ function addImageProfile($data = [])
     $formula         = end($check_formula);
 
     if (in_array($formula, $allowed_formulas)) {
-
+        $url_all = urlLocal();
         $folder_name    = str_split($data['type'], 2)[0] . '-' . $data['ssd'];
         $img_new_name   = bin2hex(random_bytes(10)) . '.' . $formula; //To Input A Random Name For The Image 
-        $link           = $data['url'] . $folder_name . '\\'; //File Link
+        $link           =  $url_all."\\".$data['url'] . $folder_name . '\\'; //File Link
 
         if (is_dir($link)) { //If The File Exists
             $scandir = scandir($link); //To Displays File Data In Array
@@ -176,8 +178,9 @@ function addImageProfile($data = [])
 //************************************************************* Function Delete Image Profile ********************************************************//
 function removeImage($data = [])
 {
+    $url_all = urlLocal();
     $folder_name    = str_split($data['type'], 2)[0] . '-' . $data['ssd'];
-    $link           = $data['url'] . $folder_name . '\\'; //File Link
+    $link           = $url_all."\\".$data['url'] . $folder_name . '\\'; //File Link
 
     if (is_dir($link)) { //If The File Exists
         $scandir = scandir($link); //To Displays File Data In Array
@@ -232,9 +235,9 @@ function addImageActivePerson($data = [])
         $back_new_name   = bin2hex(random_bytes(10)) . '.' . $get_back_formula; //To Input A Random Name For The Image
         $grad_new_name   = bin2hex(random_bytes(10)) . '.' . $get_grad_formula; //To Input A Random Name For The Image
         $card_new_name   = bin2hex(random_bytes(10)) . '.' . $get_card_formula; //To Input A Random Name For The Image
-
+        $url_all = urlLocal();
         $folder_name    = str_split($data['type'], 2)[0] . '-' . $data['ssd'];
-        $link           = $data['url'] . $folder_name . '\\'; //File Link
+        $link           = $url_all."\\".$data['url'] . $folder_name . '\\'; //File Link
 
         if (is_dir($link)) { //If The File Exists
             $scandir = scandir($link); //To Displays File Data In Array
