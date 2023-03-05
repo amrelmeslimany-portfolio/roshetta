@@ -12,7 +12,7 @@ header("Access-Control-Allow-Headers:*"); //Give Permissions To The browser To E
 date_default_timezone_set('Africa/Cairo'); //Set To Cairo TimeZone
 
 //****************************************************** Function Design All Message ********************************************************//
-function userMessage($Status = null, $Message = null, $data = null) 
+function userMessage($Status = null, $Message = null, $data = null)
 {
     $array = [
         "Status"    => $Status,
@@ -271,4 +271,98 @@ function decodeMedicine($data)
     }
 
     return $medicine_data_array;
+}
+
+//***************************************************** View Clinic **************************************************//
+function viewClinic($data, $num, $url)
+{
+
+    $clinic_data = [
+        "id"                    => $data->id,
+        "ser_id"                => $data->ser_id,
+        "type"                  => "clinic",
+        "logo"                  => getImage($data->logo, $url['place']),
+        "name"                  => $data->name,
+        "specialist"            => $data->specialist,
+        "phone_number"          => $data->phone_number,
+        "owner"                 => $data->owner,
+        "price"                 => $data->price,
+        "start_working"         => $data->start_working,
+        "end_working"           => $data->end_working,
+        "governorate"           => $data->governorate,
+        "address"               => $data->address,
+        "appoint_all"           => $num['num_appoint'],
+        "appoint_day"           => $num['num_ap_day'],
+        "number_of_prescript"   => $num['num_pres'],
+        "stuff"                 => [
+            "doctor_name"           => $num['data_doctor']->name,
+            "doctor_age"            => userAge($num['data_doctor']->birth_date),
+            "doctor_image"          => getImage($num['data_doctor']->profile_img, $url['person']),
+            "assistant_name"        => $num['data_assistant']->name,
+            "assistant_age"         => userAge($num['data_assistant']->birth_date),
+            "assistant_image"       => getImage($num['data_assistant']->profile_img, $url['person'])
+        ]
+
+    ];
+    return $clinic_data;
+}
+
+//***************************************************************** Clinic Design Message ***********************************************************//
+function clinicMessage($data, $url)
+{
+    $data_clinic = [
+        "clinic_id"     => $data->id,
+        "logo"          => getImage($data->logo,$url),
+        "name"          => $data->name,
+        "specialist"    => $data->specialist,
+        "governorate"   => $data->governorate
+    ];
+    return $data_clinic;
+}
+function clinicMessageDetails($data, $url)
+{
+    $data_clinic = [
+        "clinic_id"     => $data['data_clinic']->id,
+        "logo"          => getImage($data['data_clinic']->logo,$url),
+        "name"          => $data['data_clinic']->name,
+        "specialist"    => $data['data_clinic']->specialist,
+        "governorate"   => $data['data_clinic']->governorate,
+        "phone_number"  => $data['data_clinic']->phone_number,
+        "price"         => $data['data_clinic']->price,
+        "start_working" => $data['data_clinic']->start_working,
+        "end_working"   => $data['data_clinic']->phone_number,
+        "address"       => $data['data_clinic']->address,
+        "number_appoint_clinic"   => $data['number_appoint_clinic'],
+        "number_appoint_patient"  => $data['number_appoint_patient']
+    ];
+    return $data_clinic;
+}
+
+//***************************************************************** Pharmacy Design Message ***********************************************************//
+function pharmacyMessage($data, $url)
+{
+    $data_clinic = [
+        "pharmacy_id"   => $data->id,
+        "logo"          => getImage($data->logo,$url),
+        "name"          => $data->name,
+        "phone_number"  => $data->phone_number,
+        "governorate"   => $data->governorate
+    ];
+    return $data_clinic;
+}
+function pharmacyMessageDetails($data, $url)
+{
+    $data_pharmacy = [
+        "pharmacy_id"   => $data['data_pharmacy']->id,
+        "logo"          => getImage($data['data_pharmacy']->logo,$url),
+        "name"          => $data['data_pharmacy']->name,
+        "governorate"   => $data['data_pharmacy']->governorate,
+        "phone_number"  => $data['data_pharmacy']->phone_number,
+        "start_working" => $data['data_pharmacy']->start_working,
+        "end_working"   => $data['data_pharmacy']->phone_number,
+        "address"       => $data['data_pharmacy']->address,
+        "number_prescript_pharmacy"   => $data['number_prescript_pharmacy'],
+        "number_prescript_patient"    => $data['number_prescript_patient']
+    ];
+    return $data_pharmacy;
 }

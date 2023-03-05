@@ -134,9 +134,9 @@ $device_name = gethostbyaddr($_SERVER['REMOTE_ADDR']);   // Function Get The Cli
     $html_body = '<h3 style="text-align: center;font-family: cursive;padding: 0px ;font-style: italic;">' . $hi . '</h3>
     <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">' .  $data_email['user_name'] . '</h3>
     <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">هل قمت بتسجيل الدخول من جهاز جديد أو موقع جديد ؟</p></br>         
-    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">( '.$type.' ) : لأحظنا أن حسابك تم الوصول إلية من جهاذ </p></br>
-    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">( '.$device_name.' ) : إسم الجهاذ </p></br>
-    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">( '.$operating_system.' ) : يعمل بنظام</p></br>
+    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">( '.$type.' ) : لأحظنا أن حسابك تم الوصول إلية من جهاز </p></br>
+    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">( '.$device_name.' ) : إسم الجهاز </p></br>
+    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">( '.$operating_system.' ) : يعمل بنظام </p></br>
     <p style="text-align: center;font-family: cursive;">' . $ip . ' :(ip) عنوان</p>
     <p style="text-align: center;font-family: cursive;"> ' . $date_time . ' : (بتوقيت القاهرة) التوقيت</p>
     <h5 style="text-align: center;font-family: cursive;">هل ليس أنت ؟ <a href="' . $data_email['password_edit'] . '">إعادة تعيين كلمة المرور</a></h5>

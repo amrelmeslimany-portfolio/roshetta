@@ -13,7 +13,7 @@ class Users extends Controller
         $Message = '(API_Users)برجاء الإطلاع على شرح';
         $Status = 400;
         $url = 'https://documenter.getpostman.com/view/25605546/2s93CRMCfA#2f22abfd-6fd8-4413-a924-9ef15a1227b0';
-        userMessage($Status, $Message , $url);
+        userMessage($Status, $Message, $url);
         die();
     }
 
@@ -179,6 +179,12 @@ class Users extends Controller
                         @$password = password_hash($data['password'], "2y"); //PASSWORD_DEFAULT Hash
                         @$security_code = random_int(100000, 999999);  // Create Random Number
 
+                        if ($data['gender'] == 'ذكر' || $data['gender'] == 'male'){
+                            $image = 'df_male';
+                        } else {
+                            $image = 'df_female';
+                        }
+
                         switch ($data['type']) {
                             case 'patient':
                                 $data = [
@@ -193,7 +199,8 @@ class Users extends Controller
                                     "weight" => $data_other['weight'],
                                     "height" => $data_other['height'],
                                     "password" => $password,
-                                    "security_code" => $security_code
+                                    "security_code" => $security_code,
+                                    "image" => $image
                                 ];
                                 if (@$this->userModel->registerPatient($data)) {
                                     $Message = 'تم التسجيل بنجاح';
@@ -217,7 +224,8 @@ class Users extends Controller
                                     "governorate" => $data['governorate'],
                                     "specialist" => $data_other['specialist'],
                                     "password" => $password,
-                                    "security_code" => $security_code
+                                    "security_code" => $security_code,
+                                    "image" => $image
                                 ];
                                 if (@$this->userModel->registerDoctor($data)) {
                                     $Message = 'تم التسجيل بنجاح';
@@ -240,7 +248,8 @@ class Users extends Controller
                                     "gender" => $data['gender'],
                                     "governorate" => $data['governorate'],
                                     "password" => $password,
-                                    "security_code" => $security_code
+                                    "security_code" => $security_code,
+                                    "image" => $image
                                 ];
                                 if ($data['type'] == 'admin') {
                                     if (isset($_SESSION['user'])) {
@@ -452,7 +461,7 @@ class Users extends Controller
                             if ($mail->send()) {
                                 $Message = 'يجب تفعيل البريد الإلكترونى';
                                 $Status = 202;
-                                userMessage($Status, $Message , ["isActive" => $result->email_isActive]);
+                                userMessage($Status, $Message, ["isActive" => $result->email_isActive]);
                                 die();
                             } else {
                                 $Message = 'الرجاء المحاولة فى وقت لأحق';
@@ -1001,8 +1010,9 @@ class Users extends Controller
             ];
 
             @$result = $this->userModel->getSSD($data['type'], $data['id']);
+            @$user = $this->userModel->getPlace($data['type'], $data['id']);
 
-            if (!$result) {
+            if (!($result || $user)) {
                 $Message = 'الرجاء المحاولة فى وق لأحق';
                 $Status = 422;
                 userMessage($Status, $Message);
@@ -1013,18 +1023,29 @@ class Users extends Controller
                 "ssd" => $result->ssd,
                 "url" => __DIR__ . '\images\profile_image\\'
             ];
-            @$url_img = removeImage($data_image);
-            if (!$url_img) {
-                $Message = 'الرجاء المحاولة فى وق لأحق';
-                $Status = 422;
-                userMessage($Status, $Message);
-                die();
+
+            if ($user->gender == 'ذكر' || $user->gender == 'male'){
+                $image = 'df_male';
+            } else {
+                $image = 'df_female';
             }
+
+            if ($user->profile_img !== $image){
+                @$url_img = removeImage($data_image);
+                if (!$url_img) {
+                    $Message = 'الرجاء المحاولة فى وق لأحق';
+                    $Status = 422;
+                    userMessage($Status, $Message);
+                    die();
+                }
+            }
+            
             $data_url = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "image" => null
+                "image" => $image
             ];
+
             if ($this->userModel->editImage($data_url)) {
                 $Message = 'تم حذف صورة الملف الشخصى';
                 $Status = 201;
@@ -1818,5 +1839,22 @@ class Users extends Controller
             userMessage($Status, $Message);
             die();
         }
+    }
+
+    //***************************************************** Doctor Specialist ****************************************************//
+    public function doctor_specialist()
+    {
+        @$result = $this->userModel->getSpecialist();
+        if (!$result) {
+            $Message = 'لم يتم العثور على بيانات';
+            $Status = 204;
+            userMessage($Status, $Message);
+            die();
+        }
+
+        $Message = 'تم جلب البيانات بنجاح';
+        $Status = 200;
+        userMessage($Status, $Message , $result);
+        die();
     }
 }

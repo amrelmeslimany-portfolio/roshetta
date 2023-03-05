@@ -14,7 +14,7 @@ class Patients extends Controller   // Extends The Controller
         $Message = '(API_Patients)برجاء الإطلاع على شرح';
         $Status = 400;
         $url = 'https://documenter.getpostman.com/view/25605546/2s93CRMCfA#2e23d72c-423b-406b-91e1-e277e25ba2e0';
-        userMessage($Status, $Message , $url);
+        userMessage($Status, $Message, $url);
         die();
     }
 
@@ -385,7 +385,7 @@ class Patients extends Controller   // Extends The Controller
                 @$result = $this->patientModel->filterClinic($data['filter']);
                 if (!$result) {
                     $Message = 'لم يتم العثور على بيانات';
-                    $Status = 422;
+                    $Status = 204;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -399,9 +399,11 @@ class Patients extends Controller   // Extends The Controller
                 }
             }
 
+            $url = __DIR__ . "\images\place_image\\";
+            $data_message = clinicMessage($result, $url);
             $Message = 'تم جلب البيانات بنجاح';
             $Status = 200;
-            userMessage($Status, $Message, $result);
+            userMessage($Status, $Message, $data_message);
             die();
         } else {
             $Message = 'غير مصرح الدخول عبر هذة الطريقة';
@@ -469,9 +471,11 @@ class Patients extends Controller   // Extends The Controller
                     die();
                 }
 
+                $url = __DIR__ . "\images\place_image\\";
+                $data_message = clinicMessageDetails($result, $url);
                 $Message = 'تم جلب البيانات بنجاح';
                 $Status = 200;
-                userMessage($Status, $Message, $result);
+                userMessage($Status, $Message, $data_message);
                 die();
             } else {
                 $Message = $data_err;
@@ -583,9 +587,12 @@ class Patients extends Controller   // Extends The Controller
                 die();
             }
 
+
+            $url = __DIR__ . "\images\place_image\\";
+            $data_message = pharmacyMessage($result, $url);
             $Message = 'تم جلب البيانات بنجاح';
             $Status = 200;
-            userMessage($Status, $Message, $result);
+            userMessage($Status, $Message, $data_message);
             die();
         } else {
             $Message = 'غير مصرح الدخول عبر هذة الطريقة';
@@ -653,10 +660,13 @@ class Patients extends Controller   // Extends The Controller
                     die();
                 }
 
+                $url = __DIR__ . "\images\place_image\\";
+                $data_message = pharmacyMessageDetails($result, $url);
                 $Message = 'تم جلب البيانات بنجاح';
                 $Status = 200;
-                userMessage($Status, $Message, $result);
+                userMessage($Status, $Message, $data_message);
                 die();
+                
             } else {
                 $Message = $data_err;
                 $Status = 400;
@@ -900,9 +910,8 @@ class Patients extends Controller   // Extends The Controller
 
                 $Message = 'تم جلب البيانات بنجاح';
                 $Status = 200;
-                userMessage($Status, $Message , $data_message);
+                userMessage($Status, $Message, $data_message);
                 die();
-
             } else {
                 $Message = $data_err;
                 $Status = 400;

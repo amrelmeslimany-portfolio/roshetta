@@ -82,10 +82,10 @@ class Patient
 
     public function getDataClinic()
     {
-        $this->db->query("SELECT clinic.id AS clinic_id,logo,name,specialist,governorate FROM clinic,activation_place WHERE activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
+        $this->db->query("SELECT * FROM activation_place,clinic WHERE activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
         $this->db->execute();
         if ($this->db->rowCount() > 0 ) {
-            $data = $this->db->fetchAll();
+            $data = $this->db->fetchObject();
             return $data;
         } else {
             false;
@@ -94,26 +94,25 @@ class Patient
 
     public function filterClinic($filter)
     {
-        $this->db->query("SELECT clinic.id AS clinic_id,logo,name,specialist,governorate FROM clinic,activation_place WHERE clinic.specialist = :FILTER AND activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
+        $this->db->query("SELECT * FROM activation_place,clinic WHERE clinic.specialist = :FILTER AND activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
         $this->db->bind(":FILTER", $filter);
         $this->db->execute();
         if ($this->db->rowCount() > 0 ) {
-            $data = $this->db->fetchAll();
+            $data = $this->db->fetchObject();
             return $data;
         } else {
             false;
         }
     }
 
-
     public function viewClinicDetails($clinic_id,$patient_id)
     {
-        $this->db->query("SELECT clinic.id AS clinic_id,logo,name,phone_number,price,start_working,end_working,specialist,governorate,address FROM clinic,activation_place WHERE clinic.id = :ID AND activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
+        $this->db->query("SELECT * FROM activation_place,clinic WHERE clinic.id = :ID AND activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
         $this->db->bind(":ID", $clinic_id);
         $this->db->execute();
         if ($this->db->rowCount() > 0 ) {
 
-            $data = $this->db->fetchAll();
+            $data = $this->db->fetchObject();
 
             $this->db->query("SELECT * FROM appointment WHERE clinic_id = :ID");
             $this->db->bind(":ID", $clinic_id);
@@ -157,10 +156,10 @@ class Patient
 
     public function getDataPharmacy()
     {
-        $this->db->query("SELECT pharmacy.id AS pharmacy_id,logo,name,phone_number,governorate FROM pharmacy,activation_place WHERE activation_place.isActive = 1 AND activation_place.place_id = pharmacy.id AND activation_place.role = 'pharmacy'");
+        $this->db->query("SELECT * FROM activation_place,pharmacy WHERE activation_place.isActive = 1 AND activation_place.place_id = pharmacy.id AND activation_place.role = 'pharmacy'");
         $this->db->execute();
         if ($this->db->rowCount() > 0 ) {
-            $data = $this->db->fetchAll();
+            $data = $this->db->fetchObject();
             return $data;
         } else {
             false;
@@ -169,12 +168,12 @@ class Patient
 
     public function viewPharmacyDetails($pharmacy_id,$patient_id)
     {
-        $this->db->query("SELECT pharmacy.id AS pharmacy_id,logo,name,phone_number,start_working,end_working,governorate,address FROM pharmacy,activation_place WHERE pharmacy.id = :ID AND activation_place.isActive = 1 AND activation_place.place_id = pharmacy.id AND activation_place.role = 'pharmacy'");
+        $this->db->query("SELECT * FROM activation_place,pharmacy WHERE pharmacy.id = :ID AND activation_place.isActive = 1 AND activation_place.place_id = pharmacy.id AND activation_place.role = 'pharmacy'");
         $this->db->bind(":ID", $pharmacy_id);
         $this->db->execute();
         if ($this->db->rowCount() > 0 ) {
 
-            $data = $this->db->fetchAll();
+            $data = $this->db->fetchObject();
 
             $this->db->query("SELECT * FROM pharmacy_prescript WHERE pharmacy_id = :ID");
             $this->db->bind(":ID", $pharmacy_id);
