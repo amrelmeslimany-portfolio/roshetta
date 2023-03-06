@@ -1,6 +1,6 @@
 
 #pip install SpeechRecognition pyaudio
-#install library first
+#install the library first
 import speech_recognition as sr
 
 r = sr.Recognizer()
