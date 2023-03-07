@@ -8,7 +8,6 @@ class User
     {
         $this->db = new Database;
     }
-
     public function getUserEmail($email, $table_name)  // Check User Email
     {
         $this->db->query("SELECT * FROM $table_name WHERE email = :EMAIL");
@@ -41,7 +40,6 @@ class User
             false;
         }
     }
-
     public function registerPatient($data = [])
     {
         $table_name = $data['type'];
@@ -66,7 +64,6 @@ class User
         else
             false;
     }
-
     public function registerDoctor($data = [])
     {
         $table_name = $data['type'];
@@ -137,7 +134,6 @@ class User
         else
             false;
     }
-
     public function getToken($data = [])
     {
         $table_name = $data['type'];
@@ -151,7 +147,6 @@ class User
             false;
         }
     }
-
     public function activeEmail($data = [])
     {
         $table_name = $data['type'];
@@ -164,7 +159,6 @@ class User
         else
             false;
     }
-
     public function viewProfile($data = [])
     {
         $table_name = $data['type'];
@@ -178,7 +172,6 @@ class User
             false;
         }
     }
-
     public function editPassword($data = [])
     {
         $table_name = $data['type'];
@@ -191,7 +184,6 @@ class User
         else
             false;
     }
-
     public function editPatient($data = [])
     {
         $this->db->query("UPDATE patient SET phone_number = :PHONE_NUMBER , weight = :WEIGHT , height = :HEIGHT , governorate = :GOVERNORATE  WHERE id = :ID");
@@ -206,7 +198,6 @@ class User
         else
             false;
     }
-
     public function editOther($data = [])
     {
         $table_name = $data['type'];
@@ -220,7 +211,6 @@ class User
         else
             false;
     }
-
     public function getSSD($table_name, $id)  // Check User SSD
     {
         $this->db->query("SELECT ssd FROM $table_name WHERE id = :ID");
@@ -233,7 +223,6 @@ class User
             false;
         }
     }
-
     public function editImage($data = [])
     {
         $table_name = $data['type'];
@@ -246,7 +235,6 @@ class User
         else
             false;
     }
-
     public function addMessageUser($data = [])
     {
         $this->db->query("INSERT INTO message(name,email,ssd,role,message) VALUES(:NAME,:EMAIL,:SSD,:ROLE,:MESSAGE)");
@@ -261,7 +249,6 @@ class User
         else
             false;
     }
-
     public function resetCode($data = [])
     {
         $table_name = $data['type'];
@@ -274,7 +261,6 @@ class User
         else
             false;
     }
-
     public function editImageActivationPerson($data)
     {
         $this->db->query("SELECT * FROM activation_person WHERE user_id = :ID AND role = :ROLE");
@@ -306,7 +292,6 @@ class User
                 false;
         }
     }
-
     public function getPlace($table_name, $id)  // Check User SSD
     {
         $this->db->query("SELECT * FROM $table_name WHERE id = :ID");
@@ -319,7 +304,6 @@ class User
             false;
         }
     }
-
     public function editImageActivationPlace($data)
     {
         $this->db->query("SELECT * FROM activation_place WHERE place_id = :ID AND role = :ROLE");
@@ -351,7 +335,6 @@ class User
                 false;
         }
     }
-
     public function getVideo($type)
     {
         $this->db->query("SELECT video FROM video WHERE  type = :TYPE");
@@ -364,7 +347,6 @@ class User
             false;
         }
     }
-
     public function getSpecialist()
     {
         $this->db->query("SELECT name,ar_name FROM Specialist");

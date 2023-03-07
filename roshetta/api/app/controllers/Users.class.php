@@ -18,21 +18,26 @@ class Users extends Controller
     }
 
     //*************************************************** Token Verify **************************************************************//
-    private function tokenVerify($Auth)
+    public function tokenVerify()
     {
-        @$Auth = explode(" ", $Auth)[1]; // Get Token From Auth
-        @$token_out = TokenDecode($Auth);
-        if (!$token_out) {
-            return false;
-        }
-        @$token_in = $this->userModel->getToken($token_out);
-        if (!$token_in) {
-            return false;
-        }
-        if ($token_in->token !== $Auth) {
-            return false;
+        $headers = apache_request_headers();
+        if (isset($headers['Authorization'])) {
+            @$Auth = explode(" ", $headers['Authorization'])[1]; // Get Token From Auth
+            @$token_out = TokenDecode($Auth);
+            if (!$token_out) {
+                return false;
+            }
+            @$token_in = $this->userModel->getToken($token_out);
+            if (!$token_in) {
+                return false;
+            }
+            if ($token_in->token !== $Auth) {
+                return false;
+            } else {
+                return $token_out;
+            }
         } else {
-            return $token_out;
+            return false;
         }
     }
 
@@ -179,7 +184,7 @@ class Users extends Controller
                         @$password = password_hash($data['password'], "2y"); //PASSWORD_DEFAULT Hash
                         @$security_code = random_int(100000, 999999);  // Create Random Number
 
-                        if ($data['gender'] == 'ذكر' || $data['gender'] == 'male'){
+                        if ($data['gender'] == 'ذكر' || $data['gender'] == 'male') {
                             $image = 'df_male';
                         } else {
                             $image = 'df_female';
@@ -503,21 +508,14 @@ class Users extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            $_Get = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
-
-            if (empty($_Get['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_Get['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
@@ -652,21 +650,14 @@ class Users extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            $_Get = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
-
-            if (empty($_Get['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_Get['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type']
@@ -698,20 +689,16 @@ class Users extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
@@ -776,21 +763,15 @@ class Users extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
-
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
@@ -897,21 +878,16 @@ class Users extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
-
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
@@ -989,21 +965,14 @@ class Users extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            $_GET = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
-
-            if (empty($_GET['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_GET['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
@@ -1024,13 +993,13 @@ class Users extends Controller
                 "url" => 'images/profile_image/'
             ];
 
-            if ($user->gender == 'ذكر' || $user->gender == 'male'){
+            if ($user->gender == 'ذكر' || $user->gender == 'male') {
                 $image = 'df_male';
             } else {
                 $image = 'df_female';
             }
 
-            if ($user->profile_img !== $image){
+            if ($user->profile_img !== $image) {
                 @$url_img = removeImage($data_image);
                 if (!$url_img) {
                     $Message = 'الرجاء المحاولة فى وق لأحق';
@@ -1039,7 +1008,7 @@ class Users extends Controller
                     die();
                 }
             }
-            
+
             $data_url = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
@@ -1071,21 +1040,16 @@ class Users extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
-
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
@@ -1438,21 +1402,14 @@ class Users extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
-
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
@@ -1579,21 +1536,16 @@ class Users extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
-
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+
             $data = [
                 "id" => $check_token['id'],
                 "place_id" => $_POST['place_id'],
@@ -1699,21 +1651,14 @@ class Users extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            $_GET = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
-
-            if (empty($_GET['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_GET['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
             @$result = $this->userModel->getVideo($check_token['type']);
             if (!$result) {
                 $Message = 'لم يتم العثور على بيانات';
@@ -1854,7 +1799,7 @@ class Users extends Controller
 
         $Message = 'تم جلب البيانات بنجاح';
         $Status = 200;
-        userMessage($Status, $Message , $result);
+        userMessage($Status, $Message, $result);
         die();
     }
 }

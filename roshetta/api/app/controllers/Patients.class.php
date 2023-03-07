@@ -1,6 +1,6 @@
 <?php
 
-class Patients extends Controller   // Extends The Controller
+class Patients extends Controller  // Extends The Controller
 {
     private $patientModel;
     private $userModel;
@@ -19,22 +19,26 @@ class Patients extends Controller   // Extends The Controller
     }
 
     //*************************************************** Token Verify **************************************************************//
-
-    private function tokenVerify($Auth)
+    public function tokenVerify()
     {
-        @$Auth = explode(" ", $Auth)[1]; // Get Token From Auth
-        @$token_out = TokenDecode($Auth);
-        if (!$token_out) {
-            return false;
-        }
-        @$token_in = $this->userModel->getToken($token_out);
-        if (!$token_in) {
-            return false;
-        }
-        if ($token_in->token !== $Auth) {
-            return false;
+        $headers = apache_request_headers();
+        if (isset($headers['Authorization'])) {
+            @$Auth = explode(" ", $headers['Authorization'])[1]; // Get Token From Auth
+            @$token_out = TokenDecode($Auth);
+            if (!$token_out) {
+                return false;
+            }
+            @$token_in = $this->userModel->getToken($token_out);
+            if (!$token_in) {
+                return false;
+            }
+            if ($token_in->token !== $Auth) {
+                return false;
+            } else {
+                return $token_out;
+            }
         } else {
-            return $token_out;
+            return false;
         }
     }
 
@@ -44,21 +48,15 @@ class Patients extends Controller   // Extends The Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
-
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
@@ -129,21 +127,14 @@ class Patients extends Controller   // Extends The Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            $_GET = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
-
-            if (empty($_GET['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_GET['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
@@ -164,10 +155,16 @@ class Patients extends Controller   // Extends The Controller
                 userMessage($Status, $Message);
                 die();
             }
+            $url = "images/place_image/";
+            $new_result = [];
+            foreach ($result as $element) {
+                $element['logo'] = getImage($element['logo'], $url);
+                $new_result[] = $element;
+            }
 
             $Message = 'تم جلب البيانات بنجاح';
             $Status = 200;
-            userMessage($Status, $Message, $result);
+            userMessage($Status, $Message, $new_result);
             die();
         } else {
             $Message = 'غير مصرح الدخول عبر هذة الطريقة';
@@ -183,21 +180,15 @@ class Patients extends Controller   // Extends The Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
-
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
@@ -278,21 +269,16 @@ class Patients extends Controller   // Extends The Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
-
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
@@ -353,21 +339,16 @@ class Patients extends Controller   // Extends The Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            $_Get = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
-
-            if (empty($_Get['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_Get['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_Get = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
@@ -400,10 +381,14 @@ class Patients extends Controller   // Extends The Controller
             }
 
             $url = "images/place_image/";
-            $data_message = clinicMessage($result, $url);
+            $new_data = [];
+            foreach ($result as $element) {
+                $element['logo'] = getImage($element['logo'], $url);
+                $new_data[] = $element;
+            }
             $Message = 'تم جلب البيانات بنجاح';
             $Status = 200;
-            userMessage($Status, $Message, $data_message);
+            userMessage($Status, $Message, $new_data);
             die();
         } else {
             $Message = 'غير مصرح الدخول عبر هذة الطريقة';
@@ -419,21 +404,15 @@ class Patients extends Controller   // Extends The Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
-
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
@@ -497,21 +476,14 @@ class Patients extends Controller   // Extends The Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            $_Get = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
-
-            if (empty($_Get['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_Get['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type']
@@ -551,21 +523,14 @@ class Patients extends Controller   // Extends The Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            $_Get = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
-
-            if (empty($_Get['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_Get['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type']
@@ -589,10 +554,14 @@ class Patients extends Controller   // Extends The Controller
 
 
             $url = "images/place_image/";
-            $data_message = pharmacyMessage($result, $url);
+            $new_data = [];
+            foreach ($result as $element) {
+                $element['logo'] = getImage($element['logo'], $url);
+                $new_data[] = $element;
+            }
             $Message = 'تم جلب البيانات بنجاح';
             $Status = 200;
-            userMessage($Status, $Message, $data_message);
+            userMessage($Status, $Message, $new_data);
             die();
         } else {
             $Message = 'غير مصرح الدخول عبر هذة الطريقة';
@@ -608,21 +577,15 @@ class Patients extends Controller   // Extends The Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
-
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
@@ -666,7 +629,6 @@ class Patients extends Controller   // Extends The Controller
                 $Status = 200;
                 userMessage($Status, $Message, $data_message);
                 die();
-                
             } else {
                 $Message = $data_err;
                 $Status = 400;
@@ -687,21 +649,14 @@ class Patients extends Controller   // Extends The Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            $_Get = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
-
-            if (empty($_Get['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_Get['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
@@ -742,21 +697,15 @@ class Patients extends Controller   // Extends The Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
-
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
@@ -835,21 +784,16 @@ class Patients extends Controller   // Extends The Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
-
-            if (empty($_POST['Auth'])) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
-                die();
-            }
-            @$check_token = $this->tokenVerify($_POST['Auth']);
+            @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
-                $Status = 400;
-                userMessage($Status, $Message);
+                $Status = 401;
+                userMessage($Status,$Message);
                 die();
             }
+
+            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
@@ -887,7 +831,7 @@ class Patients extends Controller   // Extends The Controller
                     die();
                 }
 
-                @$result_medicine = $this->patientModel->getPrescriptMedicine($data['prescript_id'], $data['id']);
+                @$result_medicine = $this->patientModel->getPrescriptMedicine($data['prescript_id']);
                 if (!$result_medicine) {
                     $Message = 'الرجاء المحاولة فى وقت لأحق';
                     $Status = 422;
@@ -903,9 +847,21 @@ class Patients extends Controller   // Extends The Controller
                     die();
                 }
 
+                $url = "images/place_image/";
+                $new_result_prescript = [];
+                foreach ($result_prescript as $element) {
+                    $element['clinic_logo'] = getImage($element['clinic_logo'], $url);
+                    $new_result_prescript[] = $element;
+                }
+
+                $new_decode_medicine = [];
+                foreach ($decode_medicine as $element) {
+                    $new_decode_medicine[] = $element;
+                }
+
                 $data_message = [
-                    "data_prescript" => $result_prescript,
-                    "data_medicine" => $decode_medicine
+                    "prescript_data" => $new_result_prescript,
+                    "medicine_data" => $new_decode_medicine
                 ];
 
                 $Message = 'تم جلب البيانات بنجاح';

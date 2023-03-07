@@ -57,12 +57,12 @@ function userAge($age)
 function getImage($mo, $url)
 {
     $url_all = urlLocal();
-    $url_image = $url_all ."\\". $url . $mo . '\\';
+    $url_image = $url_all . "\\" . $url . $mo . '\\';
     if (is_dir($url_image)) { //If The File Exists
         $scandir = scandir($url_image); //To Displays File Data In Array
         foreach ($scandir as $folder_content) {
             if (is_file($url_image . $folder_content)) {
-                return URL_PUBLIC.$url.$mo."/".$folder_content;
+                return URL_PUBLIC . $url . $mo . "/" . $folder_content;
             }
         }
     }
@@ -73,9 +73,9 @@ function getImage($mo, $url)
 function getVideo($data = [])
 {
     $url_all = urlLocal();
-    $video = $url_all."\\".$data['url'] . $data['name'];
+    $video = $url_all . "\\" . $data['url'] . $data['name'];
     if (is_file($video)) {
-        return URL_PUBLIC.$data['url'].$data['name'];
+        return URL_PUBLIC . $data['url'] . $data['name'];
     }
     return null;
 }
@@ -153,7 +153,7 @@ function addImageProfile($data = [])
         $url_all = urlLocal();
         $folder_name    = str_split($data['type'], 2)[0] . '-' . $data['ssd'];
         $img_new_name   = bin2hex(random_bytes(10)) . '.' . $formula; //To Input A Random Name For The Image 
-        $link           =  $url_all."\\".$data['url'] . $folder_name . '\\'; //File Link
+        $link           =  $url_all . "\\" . $data['url'] . $folder_name . '\\'; //File Link
 
         if (is_dir($link)) { //If The File Exists
             $scandir = scandir($link); //To Displays File Data In Array
@@ -180,7 +180,7 @@ function removeImage($data = [])
 {
     $url_all = urlLocal();
     $folder_name    = str_split($data['type'], 2)[0] . '-' . $data['ssd'];
-    $link           = $url_all."\\".$data['url'] . $folder_name . '\\'; //File Link
+    $link           = $url_all . "\\" . $data['url'] . $folder_name . '\\'; //File Link
 
     if (is_dir($link)) { //If The File Exists
         $scandir = scandir($link); //To Displays File Data In Array
@@ -237,7 +237,7 @@ function addImageActivePerson($data = [])
         $card_new_name   = bin2hex(random_bytes(10)) . '.' . $get_card_formula; //To Input A Random Name For The Image
         $url_all = urlLocal();
         $folder_name    = str_split($data['type'], 2)[0] . '-' . $data['ssd'];
-        $link           = $url_all."\\".$data['url'] . $folder_name . '\\'; //File Link
+        $link           = $url_all . "\\" . $data['url'] . $folder_name . '\\'; //File Link
 
         if (is_dir($link)) { //If The File Exists
             $scandir = scandir($link); //To Displays File Data In Array
@@ -270,16 +270,23 @@ function decodeMedicine($data)
 
         $array_value = $value["medicine_data"]; //Determine Medicine Data
         $data_decode = unserialize(base64_decode($array_value)); // Decode Medicine Data
-        $medicine_data_array = array($data_decode); //Medicine Data In Array For Print
+        // $medicine_data_array = array($data_decode); //Medicine Data In Array For Print
     }
-
-    return $medicine_data_array;
+    return $data_decode;
 }
 
-//***************************************************** View Clinic **************************************************//
+//***************************************************** View Clinic Details **************************************************//
 function viewClinic($data, $num, $url)
 {
-
+    if (!empty($num['data_assistant'])) {
+        $assistant_name = $num['data_assistant']->name;
+        $assistant_age = userAge($num['data_assistant']->birth_date);
+        $assistant_image = getImage($num['data_assistant']->profile_img, $url['person']);
+    } else {
+        $assistant_name = null;
+        $assistant_age = null;
+        $assistant_image = null;
+    }
     $clinic_data = [
         "id"                    => $data->id,
         "ser_id"                => $data->ser_id,
@@ -294,6 +301,7 @@ function viewClinic($data, $num, $url)
         "end_working"           => $data->end_working,
         "governorate"           => $data->governorate,
         "address"               => $data->address,
+        "status"                => $data->status,
         "appoint_all"           => $num['num_appoint'],
         "appoint_day"           => $num['num_ap_day'],
         "number_of_prescript"   => $num['num_pres'],
@@ -301,9 +309,9 @@ function viewClinic($data, $num, $url)
             "doctor_name"           => $num['data_doctor']->name,
             "doctor_age"            => userAge($num['data_doctor']->birth_date),
             "doctor_image"          => getImage($num['data_doctor']->profile_img, $url['person']),
-            "assistant_name"        => $num['data_assistant']->name,
-            "assistant_age"         => userAge($num['data_assistant']->birth_date),
-            "assistant_image"       => getImage($num['data_assistant']->profile_img, $url['person'])
+            "assistant_name"        => $assistant_name,
+            "assistant_age"         => $assistant_age,
+            "assistant_image"       => $assistant_image
         ]
 
     ];
@@ -311,22 +319,11 @@ function viewClinic($data, $num, $url)
 }
 
 //***************************************************************** Clinic Design Message ***********************************************************//
-function clinicMessage($data, $url)
-{
-    $data_clinic = [
-        "clinic_id"     => $data->id,
-        "logo"          => getImage($data->logo,$url),
-        "name"          => $data->name,
-        "specialist"    => $data->specialist,
-        "governorate"   => $data->governorate
-    ];
-    return $data_clinic;
-}
 function clinicMessageDetails($data, $url)
 {
     $data_clinic = [
         "clinic_id"     => $data['data_clinic']->id,
-        "logo"          => getImage($data['data_clinic']->logo,$url),
+        "logo"          => getImage($data['data_clinic']->logo, $url),
         "name"          => $data['data_clinic']->name,
         "specialist"    => $data['data_clinic']->specialist,
         "governorate"   => $data['data_clinic']->governorate,
@@ -335,6 +332,7 @@ function clinicMessageDetails($data, $url)
         "start_working" => $data['data_clinic']->start_working,
         "end_working"   => $data['data_clinic']->phone_number,
         "address"       => $data['data_clinic']->address,
+        "status"        => $data['data_clinic']->status,
         "number_appoint_clinic"   => $data['number_appoint_clinic'],
         "number_appoint_patient"  => $data['number_appoint_patient']
     ];
@@ -342,30 +340,21 @@ function clinicMessageDetails($data, $url)
 }
 
 //***************************************************************** Pharmacy Design Message ***********************************************************//
-function pharmacyMessage($data, $url)
-{
-    $data_clinic = [
-        "pharmacy_id"   => $data->id,
-        "logo"          => getImage($data->logo,$url),
-        "name"          => $data->name,
-        "phone_number"  => $data->phone_number,
-        "governorate"   => $data->governorate
-    ];
-    return $data_clinic;
-}
 function pharmacyMessageDetails($data, $url)
 {
     $data_pharmacy = [
         "pharmacy_id"   => $data['data_pharmacy']->id,
-        "logo"          => getImage($data['data_pharmacy']->logo,$url),
+        "logo"          => getImage($data['data_pharmacy']->logo, $url),
         "name"          => $data['data_pharmacy']->name,
         "governorate"   => $data['data_pharmacy']->governorate,
         "phone_number"  => $data['data_pharmacy']->phone_number,
         "start_working" => $data['data_pharmacy']->start_working,
         "end_working"   => $data['data_pharmacy']->phone_number,
         "address"       => $data['data_pharmacy']->address,
+        "status"        => $data['data_pharmacy']->status,
         "number_prescript_pharmacy"   => $data['number_prescript_pharmacy'],
         "number_prescript_patient"    => $data['number_prescript_patient']
     ];
     return $data_pharmacy;
 }
+
