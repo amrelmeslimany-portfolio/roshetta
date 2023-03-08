@@ -21,8 +21,9 @@ class Users extends Controller
     public function tokenVerify()
     {
         $headers = apache_request_headers();
-        if (isset($headers['Authorization'])) {
-            @$Auth = explode(" ", $headers['Authorization'])[1]; // Get Token From Auth
+
+        if (isset($headers['authorization']) || isset($headers['Authorization'])) {
+            @$Auth = explode(" ", $headers['authorization'] ? $headers['authorization'] : $headers['Authorization'])[1]; // Get Token From Auth
             @$token_out = TokenDecode($Auth);
             if (!$token_out) {
                 return false;
@@ -512,7 +513,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -654,7 +655,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -693,7 +694,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -767,7 +768,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -882,7 +883,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -969,7 +970,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -1044,7 +1045,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -1406,7 +1407,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -1540,7 +1541,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -1655,7 +1656,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
