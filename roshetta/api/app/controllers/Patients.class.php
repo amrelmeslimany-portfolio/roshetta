@@ -22,8 +22,8 @@ class Patients extends Controller  // Extends The Controller
     public function tokenVerify()
     {
         $headers = apache_request_headers();
-        if (isset($headers['Authorization'])) {
-            @$Auth = explode(" ", $headers['Authorization'])[1]; // Get Token From Auth
+        if (isset($headers['authorization']) || isset($headers['Authorization'])) {
+            @$Auth = explode(" ", $headers['authorization'] ? $headers['authorization'] : $headers['Authorization'])[1]; // Get Token From Auth
             @$token_out = TokenDecode($Auth);
             if (!$token_out) {
                 return false;
@@ -44,7 +44,7 @@ class Patients extends Controller  // Extends The Controller
 
     //*************************************************** Add Appointment **************************************************************//
 
-    public function add_appointment()
+    public function add_appointment($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -52,7 +52,7 @@ class Patients extends Controller  // Extends The Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -62,7 +62,7 @@ class Patients extends Controller  // Extends The Controller
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
                 "appoint_date" => @$_POST['appoint_date'],
-                "clinic_id" => @$_POST['clinic_id']
+                "clinic_id" => @$id
             ];
 
             $data_err = [
@@ -131,7 +131,7 @@ class Patients extends Controller  // Extends The Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -176,7 +176,7 @@ class Patients extends Controller  // Extends The Controller
 
     //*************************************************** Edit Appointment **************************************************************//
 
-    public function edit_appointment()
+    public function edit_appointment($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -184,18 +184,19 @@ class Patients extends Controller  // Extends The Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
             $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 513); // INPUT_GET //FILTER_SANITIZE_NUMBER_INT
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "appoint_id" => @$_POST['appoint_id'],
+                "appoint_id" => @$_GET['appoint_id'],
                 "appoint_date" => @$_POST['appoint_date'],
-                "clinic_id" => @$_POST['clinic_id']
+                "clinic_id" => @$id
             ];
 
             $data_err = [
@@ -273,16 +274,16 @@ class Patients extends Controller  // Extends The Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "appoint_id" => @$_POST['appoint_id']
+                "appoint_id" => @$_GET['appoint_id']
             ];
 
             $data_err = [
@@ -343,7 +344,7 @@ class Patients extends Controller  // Extends The Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -400,24 +401,22 @@ class Patients extends Controller  // Extends The Controller
 
     //*************************************************** View Clinic Details **************************************************************//
 
-    public function view_clinic_details()
+    public function view_clinic_details($id = [])
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
-
-            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "clinic_id" => @$_POST['clinic_id']
+                "clinic_id" => @$id
             ];
 
             $data_err = [
@@ -480,7 +479,7 @@ class Patients extends Controller  // Extends The Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -527,7 +526,7 @@ class Patients extends Controller  // Extends The Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -573,24 +572,22 @@ class Patients extends Controller  // Extends The Controller
 
     //*************************************************** View Pharmacy Details **************************************************************//
 
-    public function view_pharmacy_details()
+    public function view_pharmacy_details($id = [])
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
-
-            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "pharmacy_id" => @$_POST['pharmacy_id']
+                "pharmacy_id" => @$id
             ];
 
             $data_err = [
@@ -653,7 +650,7 @@ class Patients extends Controller  // Extends The Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -701,17 +698,17 @@ class Patients extends Controller  // Extends The Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 519); // INPUT_GET //FILTER_SANITIZE_NUMBER_INT
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "prescript_id" => @$_POST['prescript_id'],
-                "pharmacy_id" => @$_POST['pharmacy_id']
+                "prescript_id" => @$_GET['prescript_id'],
+                "pharmacy_id" => @$_GET['pharmacy_id']
             ];
 
             $data_err = [
@@ -782,22 +779,22 @@ class Patients extends Controller  // Extends The Controller
 
     public function view_prescript_details()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
-
+            $_GET = filter_input_array(1, 519); // INPUT_GET //FILTER_SANITIZE_NUMBER_INT
+            
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "prescript_id" => @$_POST['prescript_id']
+                "prescript_id" => @$_GET['prescript_id']
             ];
 
             $data_err = [

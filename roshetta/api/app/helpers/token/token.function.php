@@ -11,8 +11,8 @@ use Firebase\JWT\Key;
 function TokenEncode($data)
 {
     try {
-        $expiration_time = time() + (1 * 60 * 60); // Expires in 8 hour
-        $key             = "FC+ckek@r9jSr9*G6IUzbBwB+uZ#SjW@CL73@c(NRn*gnQhIvVWJ2zKLmFe$53T&";
+        $expiration_time = time() + (8 * 60 * 60); // Expires in 8 hour
+        $key             = "my_secret_key";
 
         $payload = [
             "id"     => $data->id,
@@ -26,6 +26,7 @@ function TokenEncode($data)
             "exp" => $expiration_time
         ];
         return $data;
+
     } catch (Exception) {
         return null;
     }
@@ -37,7 +38,7 @@ function TokenDecode($Auth)
     try {
         if ($Auth) {
             // Decode Token
-            $key = "FC+ckek@r9jSr9*G6IUzbBwB+uZ#SjW@CL73@c(NRn*gnQhIvVWJ2zKLmFe$53T&";
+            $key = "my_secret_key";
             @$token_decode = JWT::decode($Auth, new Key($key, 'HS256'));
             $decode_array = (array) $token_decode;
             $data = [

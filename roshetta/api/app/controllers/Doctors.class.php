@@ -24,8 +24,8 @@ class Doctors extends Controller
     public function tokenVerify()
     {
         $headers = apache_request_headers();
-        if (isset($headers['Authorization'])) {
-            @$Auth = explode(" ", $headers['Authorization'])[1]; // Get Token From Auth
+        if (isset($headers['authorization']) || isset($headers['Authorization'])) {
+            @$Auth = explode(" ", $headers['authorization'] ? $headers['authorization'] : $headers['Authorization'])[1]; // Get Token From Auth
             @$token_out = TokenDecode($Auth);
             if (!$token_out) {
                 return false;
@@ -193,7 +193,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Edit Clinic ***********************************************************//
-    public function edit_clinic()
+    public function edit_clinic($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -209,7 +209,7 @@ class Doctors extends Controller
 
             @$phone_number  = filter_var($_POST['phone_number'], 519);  //FILTER_SANITIZE_INT
             @$price         = filter_var($_POST['price'], 519);  //FILTER_SANITIZE_INT
-            @$clinic_id     = filter_var($_POST['clinic_id'], 519);  //FILTER_SANITIZE_INT
+            @$clinic_id     = filter_var($id, 519);  //FILTER_SANITIZE_INT
 
             $data = [  //Array Data
                 "id" => @$check_token['id'],
@@ -232,7 +232,7 @@ class Doctors extends Controller
                 "clinic_id_err" => ''
             ];
 
-            if ($data['type'] !== 'doctor' && $data['type'] !== 'assistant') {
+            if ($data['type'] !== 'doctor') {
                 $Message = 'غير مصرح لك القيام بالتعديل';
                 $Status = 403;
                 userMessage($Status, $Message);
@@ -341,7 +341,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Login Clinic ***********************************************************//
-    public function login_clinic()
+    public function login_clinic($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -353,12 +353,10 @@ class Doctors extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
-
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "clinic_id" => @$_POST['clinic_id']
+                "clinic_id" => @$id
             ];
 
             $data_err = [
@@ -448,9 +446,9 @@ class Doctors extends Controller
                 } else {
                     $time = time() - (2 * 24 * 60 * 60);
                     $date = date('Y-m-d', $time);
-                    foreach ($appoint as $elment) {
-                        if ($elment['appoint_date'] <= $date) {
-                            if (!$this->doctorModel->deleteAppointOld($data['clinic_id'], $elment['id'])) {
+                    foreach ($appoint as $element) {
+                        if ($element['appoint_date'] <= $date) {
+                            if (!$this->doctorModel->deleteAppointOld($data['clinic_id'], $element['id'])) {
                                 //********** */
                             }
                         }
@@ -478,7 +476,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Add Clinic Image ***********************************************************//
-    public function add_clinic_image()
+    public function add_clinic_image($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -490,12 +488,10 @@ class Doctors extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
-
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "clinic_id" => @$_POST['clinic_id'],
+                "clinic_id" => @$id,
                 "image_name" => @$_FILES['image']["name"],
                 "image_size" => @$_FILES['image']["size"],
                 "tmp_name" => @$_FILES['image']["tmp_name"],
@@ -594,7 +590,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Delete Clinic Image ***********************************************************//
-    public function remove_clinic_image()
+    public function remove_clinic_image($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -606,12 +602,10 @@ class Doctors extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST  //FILTER_SANITIZE_STRING
-
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "clinic_id" => @$_POST['clinic_id']
+                "clinic_id" => @$id
             ];
 
             $data_err = [
@@ -703,9 +697,9 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Logout Clinic ***********************************************************//
-    public function logout_clinic()
+    public function logout_clinic($id = [])
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             @$check_token = $this->tokenVerify();
             if (!$check_token) {
@@ -715,12 +709,10 @@ class Doctors extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
-
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "clinic_id" => @$_POST['clinic_id']
+                "clinic_id" => @$id
             ];
 
             $data_err = [
@@ -775,7 +767,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Add Patient Disease ***********************************************************//
-    public function add_patient_disease()
+    public function add_patient_disease($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -788,12 +780,13 @@ class Doctors extends Controller
             }
 
             $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 519); //INPUT_GET   //FILTER_SANITIZE_NUMBER_INT
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "patient_id" => @$_POST['patient_id'],
-                "clinic_id" => @$_POST['clinic_id'],
+                "patient_id" => @$_GET['patient_id'],
+                "clinic_id" => @$id,
                 "name" => @$_POST['name'],
                 "place" => @$_POST['place'],
             ];
@@ -924,7 +917,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Add Prescript ***********************************************************//
-    public function add_prescript()
+    public function add_prescript($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -942,7 +935,7 @@ class Doctors extends Controller
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
                 "rediscovery_date" => @$_POST['rediscovery_date'],
-                "clinic_id" => @$_POST['clinic_id'],
+                "clinic_id" => @$id
             ];
 
             $data_err = [
@@ -1077,7 +1070,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Add Prescript Medicine ***********************************************************//
-    public function add_prescript_medicine()
+    public function add_prescript_medicine($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -1095,12 +1088,12 @@ class Doctors extends Controller
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
                 "medicine" => @$_POST['medicine'],
-                "clinic_id" => @$_POST['clinic_id'],
+                "clinic_id" => @$id
             ];
 
             $data_err = [
                 "clinic_id_err" => '',
-                "medicine_err" => '',
+                "medicine_err" => ''
             ];
 
             if ($data['type'] !== 'doctor') {
@@ -1206,7 +1199,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Add Rediscovery Prescript ***********************************************************//
-    public function add_rediscovery_prescript()
+    public function add_rediscovery_prescript($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -1219,14 +1212,15 @@ class Doctors extends Controller
             }
 
             $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 519); //INPUT_GET   //FILTER_SANITIZE_NUMBER_INT
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
                 "rediscovery_date" => @$_POST['rediscovery_date'],
-                "clinic_id" => @$_POST['clinic_id'],
-                "disease_id" => @$_POST['disease_id'],
-                "patient_id" => @$_POST['patient_id']
+                "clinic_id" => @$id,
+                "disease_id" => @$_GET['disease_id'],
+                "patient_id" => @$_GET['patient_id']
             ];
 
             $data_err = [
@@ -1414,9 +1408,9 @@ class Doctors extends Controller
     }
 
     //***************************************************************** View Assistant Clinic ***********************************************************//
-    public function view_assistant()
+    public function view_assistant($id = [])
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             @$check_token = $this->tokenVerify();
             if (!$check_token) {
@@ -1426,12 +1420,10 @@ class Doctors extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
-
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "clinic_id" => @$_POST['clinic_id'],
+                "clinic_id" => @$id
             ];
 
             $data_err = [
@@ -1528,7 +1520,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Add Assistant Clinic ***********************************************************//
-    public function add_assistant()
+    public function add_assistant($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -1540,13 +1532,13 @@ class Doctors extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 519); //INPUT_GET   //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "clinic_id" => @$_POST['clinic_id'],
-                "assistant_id" => @$_POST['assistant_id'],
+                "clinic_id" => @$id,
+                "assistant_id" => @$_GET['assistant_id'],
             ];
 
             $data_err = [
@@ -1644,7 +1636,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Delete Assistant Clinic ***********************************************************//
-    public function delete_assistant()
+    public function delete_assistant($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -1656,12 +1648,10 @@ class Doctors extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
-
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "clinic_id" => @$_POST['clinic_id'],
+                "clinic_id" => @$id
             ];
 
             $data_err = [
@@ -1752,7 +1742,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Modify Appoint Status ***********************************************************//
-    public function modify_appoint_status()
+    public function modify_appoint_status($id = [])
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -1764,13 +1754,13 @@ class Doctors extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 513); //INPUT_GET   //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "clinic_id" => @$_POST['clinic_id'],
-                "appointment_id" => @$_POST['appointment_id'],
+                "clinic_id" => @$id,
+                "appointment_id" => @$_GET['appointment_id'],
             ];
 
             $data_err = [
@@ -1779,7 +1769,7 @@ class Doctors extends Controller
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك التعديل على المساعد';
+                $Message = 'غير مصرح لك التعديل على الموعد';
                 $Status = 403;
                 userMessage($Status, $Message);
                 die();
@@ -1842,7 +1832,7 @@ class Doctors extends Controller
 
             if (empty($data_err['clinic_id_err']) && empty($data_err['appointment_id_err'])) {
 
-                if (!$this->doctorModel->editAppointStatus($data['clinic_id'], $data['appointment_id'])) {
+                if (!$this->doctorModel->editAppointStatus($data['clinic_id'], $data['appointment_id'],2)) {
                     $Message = 'الرجاء المحاولة فى وقت لأحق';
                     $Status = 422;
                     userMessage($Status, $Message);
@@ -1869,9 +1859,9 @@ class Doctors extends Controller
 
     //***************************************************************** View Appointment ***********************************************************//
 
-    public function view_appoint()
+    public function view_appoint($id = [])
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             @$check_token = $this->tokenVerify();
             if (!$check_token) {
@@ -1881,15 +1871,15 @@ class Doctors extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "filter" => @$_POST['filter'],
-                "clinic_id" => @$_POST['clinic_id'],
-                "date" => @$_POST['date'],
-                "status" => @$_POST['status']
+                "filter" => @$_GET['filter'],
+                "clinic_id" => @$id,
+                "date" => @$_GET['date'],
+                "status" => @$_GET['status']
             ];
 
             $data_err = [
@@ -2001,9 +1991,9 @@ class Doctors extends Controller
     }
 
     //***************************************************************** View Patient Details ***********************************************************//
-    public function view_patient_details()
+    public function view_patient_details($id = [])
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             @$check_token = $this->tokenVerify();
             if (!$check_token) {
@@ -2013,13 +2003,13 @@ class Doctors extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 519); //INPUT_GET   //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "clinic_id" => @$_POST['clinic_id'],
-                "patient_id" => @$_POST['patient_id'],
+                "clinic_id" => @$id,
+                "patient_id" => @$_GET['patient_id'],
             ];
 
             $data_err = [
@@ -2126,9 +2116,9 @@ class Doctors extends Controller
     }
 
     //***************************************************************** View Disease Prescript ***********************************************************//
-    public function view_disease_prescript()
+    public function view_disease_prescript($id = [])
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             @$check_token = $this->tokenVerify();
             if (!$check_token) {
@@ -2138,13 +2128,13 @@ class Doctors extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 519); //INPUT_GET   //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "clinic_id" => @$_POST['clinic_id'],
-                "disease_id" => @$_POST['disease_id'],
+                "clinic_id" => @$id,
+                "disease_id" => @$_GET['disease_id'],
             ];
 
             $data_err = [
@@ -2245,9 +2235,9 @@ class Doctors extends Controller
     }
 
     //***************************************************************** View Disease Prescript Details ***********************************************************//
-    public function view_disease_prescript_details()
+    public function view_disease_prescript_details($id = [])
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
             @$check_token = $this->tokenVerify();
             if (!$check_token) {
@@ -2257,13 +2247,13 @@ class Doctors extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 519); // INPUT_GET    //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
-                "clinic_id" => @$_POST['clinic_id'],
-                "prescript_id" => @$_POST['prescript_id']
+                "clinic_id" => @$id,
+                "prescript_id" => @$_GET['prescript_id']
             ];
 
             $data_err = [
@@ -2397,11 +2387,13 @@ class Doctors extends Controller
             }
 
             $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 519); // INPUT_GET    //FILTER_SANITIZE_STRING
+
             $data = [
                 "id" => $check_token['id'],
                 "type" => $check_token['type'],
                 "message" => @$_POST['message'],
-                "chat_id" => @$_POST['chat_id'],
+                "chat_id" => @$_GET['chat_id'],
             ];
 
             if ($data['type'] !== 'doctor') {

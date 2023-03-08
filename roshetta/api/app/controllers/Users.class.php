@@ -21,7 +21,6 @@ class Users extends Controller
     public function tokenVerify()
     {
         $headers = apache_request_headers();
-
         if (isset($headers['authorization']) || isset($headers['Authorization'])) {
             @$Auth = explode(" ", $headers['authorization'] ? $headers['authorization'] : $headers['Authorization'])[1]; // Get Token From Auth
             @$token_out = TokenDecode($Auth);
@@ -96,7 +95,7 @@ class Users extends Controller
                     userMessage($Status, $Message);
                     die();
                 } else {
-                    if (empty($data['name'])) $data_err['name_err'] = 'برجاء إدخال الإسم';  //Check Name
+                    if (empty($_POST['first_name'])) $data_err['name_err'] = 'برجاء إدخال الإسم';  //Check Name
 
                     if (empty($data['email'])) {
                         $data_err['email_err'] = 'برجاء إدخال البريد الإلكترونى';
@@ -513,7 +512,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status, $Message);
+                userMessage($Status,$Message);
                 die();
             }
 
@@ -655,7 +654,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status, $Message);
+                userMessage($Status,$Message);
                 die();
             }
 
@@ -694,7 +693,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status, $Message);
+                userMessage($Status,$Message);
                 die();
             }
 
@@ -768,7 +767,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status, $Message);
+                userMessage($Status,$Message);
                 die();
             }
 
@@ -883,7 +882,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status, $Message);
+                userMessage($Status,$Message);
                 die();
             }
 
@@ -964,13 +963,13 @@ class Users extends Controller
     //***************************************************************** Delete Image ***********************************************************//
     public function remove_image()
     {
-        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
             @$check_token = $this->tokenVerify();
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status, $Message);
+                userMessage($Status,$Message);
                 die();
             }
 
@@ -1045,7 +1044,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status, $Message);
+                userMessage($Status,$Message);
                 die();
             }
 
@@ -1407,7 +1406,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status, $Message);
+                userMessage($Status,$Message);
                 die();
             }
 
@@ -1541,7 +1540,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status, $Message);
+                userMessage($Status,$Message);
                 die();
             }
 
@@ -1656,7 +1655,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status, $Message);
+                userMessage($Status,$Message);
                 die();
             }
 

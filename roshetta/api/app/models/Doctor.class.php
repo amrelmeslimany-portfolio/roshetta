@@ -270,11 +270,12 @@ class Doctor
         else
             false;
     }
-    public function editAppointStatus($clinic_id, $appoint_id)
+    public function editAppointStatus($clinic_id, $appoint_id,$status)
     {
-        $this->db->query("UPDATE appointment SET appoint_case = 2 WHERE id = :ID AND clinic_id = :CL_ID");
+        $this->db->query("UPDATE appointment SET appoint_case = :STATUS WHERE id = :ID AND clinic_id = :CL_ID");
         $this->db->bind(":CL_ID", $clinic_id);
         $this->db->bind(":ID", $appoint_id);
+        $this->db->bind(":STATUS", $status);
         $this->db->execute();
         if ($this->db->rowCount())
             return true;
