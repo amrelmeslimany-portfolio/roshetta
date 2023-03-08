@@ -45,7 +45,7 @@ class Assistants extends Controller
     }
 
     //***************************************************************** Login Clinic ***********************************************************//
-    public function login_clinic($id = [])
+    public function login_clinic($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -165,7 +165,7 @@ class Assistants extends Controller
     }
 
     //***************************************************************** Edit Clinic ***********************************************************//
-    public function edit_clinic($id = [])
+    public function edit_clinic($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -313,7 +313,7 @@ class Assistants extends Controller
     }
 
     //***************************************************************** Logout Clinic ***********************************************************//
-    public function logout_clinic($id = [])
+    public function logout_clinic($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -383,7 +383,7 @@ class Assistants extends Controller
     }
 
     //***************************************************************** Modify Appoint Status ***********************************************************//
-    public function modify_appoint_status($id = [])
+    public function modify_appoint_status($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -533,7 +533,7 @@ class Assistants extends Controller
     }
 
     //***************************************************************** View Appointment ***********************************************************//
-    public function view_appoint($id = [])
+    public function view_appoint($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 

@@ -193,7 +193,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Edit Clinic ***********************************************************//
-    public function edit_clinic($id = [])
+    public function edit_clinic($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -341,7 +341,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Login Clinic ***********************************************************//
-    public function login_clinic($id = [])
+    public function login_clinic($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -476,7 +476,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Add Clinic Image ***********************************************************//
-    public function add_clinic_image($id = [])
+    public function add_clinic_image($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -590,7 +590,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Delete Clinic Image ***********************************************************//
-    public function remove_clinic_image($id = [])
+    public function remove_clinic_image($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -697,7 +697,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Logout Clinic ***********************************************************//
-    public function logout_clinic($id = [])
+    public function logout_clinic($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -767,7 +767,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Add Patient Disease ***********************************************************//
-    public function add_patient_disease($id = [])
+    public function add_patient_disease($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -917,7 +917,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Add Prescript ***********************************************************//
-    public function add_prescript($id = [])
+    public function add_prescript($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -1070,7 +1070,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Add Prescript Medicine ***********************************************************//
-    public function add_prescript_medicine($id = [])
+    public function add_prescript_medicine($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -1199,7 +1199,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Add Rediscovery Prescript ***********************************************************//
-    public function add_rediscovery_prescript($id = [])
+    public function add_rediscovery_prescript($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -1408,7 +1408,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** View Assistant Clinic ***********************************************************//
-    public function view_assistant($id = [])
+    public function view_assistant($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -1520,7 +1520,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Add Assistant Clinic ***********************************************************//
-    public function add_assistant($id = [])
+    public function add_assistant($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -1636,7 +1636,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Delete Assistant Clinic ***********************************************************//
-    public function delete_assistant($id = [])
+    public function delete_assistant($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -1742,7 +1742,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** Modify Appoint Status ***********************************************************//
-    public function modify_appoint_status($id = [])
+    public function modify_appoint_status($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -1859,7 +1859,7 @@ class Doctors extends Controller
 
     //***************************************************************** View Appointment ***********************************************************//
 
-    public function view_appoint($id = [])
+    public function view_appoint($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -1991,7 +1991,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** View Patient Details ***********************************************************//
-    public function view_patient_details($id = [])
+    public function view_patient_details($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -2116,7 +2116,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** View Disease Prescript ***********************************************************//
-    public function view_disease_prescript($id = [])
+    public function view_disease_prescript($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -2235,7 +2235,7 @@ class Doctors extends Controller
     }
 
     //***************************************************************** View Disease Prescript Details ***********************************************************//
-    public function view_disease_prescript_details($id = [])
+    public function view_disease_prescript_details($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 

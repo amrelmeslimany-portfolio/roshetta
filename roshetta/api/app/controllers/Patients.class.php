@@ -44,7 +44,7 @@ class Patients extends Controller  // Extends The Controller
 
     //*************************************************** Add Appointment **************************************************************//
 
-    public function add_appointment($id = [])
+    public function add_appointment($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -176,7 +176,7 @@ class Patients extends Controller  // Extends The Controller
 
     //*************************************************** Edit Appointment **************************************************************//
 
-    public function edit_appointment($id = [])
+    public function edit_appointment($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -401,7 +401,7 @@ class Patients extends Controller  // Extends The Controller
 
     //*************************************************** View Clinic Details **************************************************************//
 
-    public function view_clinic_details($id = [])
+    public function view_clinic_details($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -572,7 +572,7 @@ class Patients extends Controller  // Extends The Controller
 
     //*************************************************** View Pharmacy Details **************************************************************//
 
-    public function view_pharmacy_details($id = [])
+    public function view_pharmacy_details($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
