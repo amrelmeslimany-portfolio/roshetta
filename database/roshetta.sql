@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 07, 2023 at 08:42 PM
+-- Generation Time: Mar 09, 2023 at 06:03 PM
 -- Server version: 10.4.27-MariaDB
--- PHP Version: 8.1.12
+-- PHP Version: 8.2.0
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -40,7 +40,8 @@ CREATE TABLE `activation_person` (
 --
 
 INSERT INTO `activation_person` (`id`, `images`, `isActive`, `user_id`, `role`) VALUES
-(1, 'ph-99999999999999', 1, 1, 'doctor');
+(1, 'ph-99999999999999', 1, 1, 'doctor'),
+(2, NULL, 1, 1, 'pharmacist');
 
 -- --------------------------------------------------------
 
@@ -61,7 +62,7 @@ CREATE TABLE `activation_place` (
 --
 
 INSERT INTO `activation_place` (`id`, `license_img`, `isActive`, `place_id`, `role`) VALUES
-(2, 'ph-8211895764', 1, 1, 'pharmacy'),
+(2, 'ph-5407031', 1, 6, 'pharmacy'),
 (3, 'vvvvv', 1, 12, 'clinic');
 
 -- --------------------------------------------------------
@@ -116,9 +117,11 @@ CREATE TABLE `appointment` (
 --
 
 INSERT INTO `appointment` (`id`, `appoint_date`, `appoint_case`, `patient_id`, `clinic_id`) VALUES
-(37, '2023-06-22', 0, 72, 16),
-(38, '2023-03-07', 0, 70, 12),
-(40, '2023-03-16', 0, 63, 12);
+(38, '2023-03-08', 1, 70, 12),
+(40, '2023-03-08', 1, 63, 12),
+(41, '2023-03-08', 1, 70, 12),
+(42, '2023-04-22', 0, 72, 12),
+(43, '2023-10-08', 0, 72, 12);
 
 -- --------------------------------------------------------
 
@@ -148,7 +151,7 @@ CREATE TABLE `assistant` (
 --
 
 INSERT INTO `assistant` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `governorate`, `birth_date`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
-(1, 'ahmed ali', 99999999999999, 'mohamedsaeed00451@gmail.com', '36985214789', 'ذكر', 'البحيرة', '2023-01-12', '$2y$10$yZqkRs7N8bwd14G3rZ9jmuoeDYB1zQ0H6YygwGWNwbRvwVDA1jXDi', '9a00a6a54ac912bf27a0d0f2b5e45001', NULL, 1, 'df_male', 'assistant'),
+(1, 'ahmed ali', 99999999999999, 'mohamedsaeed00451@gmail.com', '36985214789', 'ذكر', 'البحيرة', '2023-01-12', '$2y$10$yZqkRs7N8bwd14G3rZ9jmuoeDYB1zQ0H6YygwGWNwbRvwVDA1jXDi', '220013', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImFzc2lzdGFudCIsImV4cCI6MTY3ODMwODYwM30.0rj-SchRqobWQD-3DRAT0CAzsYS9m_kaPuDSPbw06H8', 1, 'df_male', 'assistant'),
 (2, 'mmss', 99999999999995, 'mohamedsaeed0451@gmail.com', '36985214788', 'ddd', 'dd', '0000-00-00', '$2y$10$qnYXOkpifziawKARcoWacOtfIdPq5WjJYpJ17MXuPn9Qtr/D7vK2u', '696129', NULL, 0, NULL, 'assistant'),
 (3, 'hh hh', 12345678912385, 'm@gmail.com', '01032568974', 'd', 'd', '0000-00-00', '$2y$10$8VoDn0oIAM.iUO2QQLOKIePkTjfJmNOOSFZrtZTARCIWEum/Y/ubu', '843957', NULL, 0, NULL, 'assistant');
 
@@ -177,8 +180,8 @@ INSERT INTO `chat` (`id`, `name`, `time`, `message`, `image`, `doctor_id`) VALUE
 (9, 'mohamed saeed', '07:19', 'كيف حالك', 'df_male', 1),
 (10, 'mohamed saeed', '07:21', 'بخير الحمد لله', 'df_male', 2),
 (11, 'mohamed saeed', '08:49', 'بخير الحمد لله', 'df_male', 1),
-(12, 'mohamed saeed', '08:50', 'بخير الحمد لله', 'df_male', 1),
-(13, 'mohamed saeed', '08:50', 'بخير الحمد لله', 'df_male', 1);
+(13, 'mohamed saeed', '08:50', 'بخير الحمد لله', 'df_male', 1),
+(14, 'mohamed saeed', '06:40', 'mm', 'df_male', 1);
 
 -- --------------------------------------------------------
 
@@ -209,7 +212,7 @@ CREATE TABLE `clinic` (
 --
 
 INSERT INTO `clinic` (`id`, `name`, `owner`, `specialist`, `phone_number`, `price`, `start_working`, `end_working`, `governorate`, `address`, `logo`, `ser_id`, `status`, `doctor_id`, `assistant_id`) VALUES
-(12, 'dr mohamed', 'mohamed saeed', 'بطنة', '01039258800', 100, '02:00:00', '05:00:00', 'البحيرة', 'اسون البلد جنب بتاع الخوخ ', 'pa-12345678912345', '1234561', 1, 1, NULL),
+(12, 'dr mohamed', 'mohamed saeed', 'بطنة', '01033505620', 200, '02:33:00', '05:20:30', 'البحيرة', 'اسوان', 'df-clinic', '1234561', 0, 1, NULL),
 (16, 'f', 'mohamed saeed', 'f', '01092338540', 14, '02:02:00', '01:00:00', 'g', 'gg', 'df-clinic', '4236741', 1, 1, 1);
 
 -- --------------------------------------------------------
@@ -235,7 +238,9 @@ CREATE TABLE `disease` (
 INSERT INTO `disease` (`id`, `name`, `place`, `date`, `patient_id`, `doctor_id`, `clinic_id`) VALUES
 (11, 'صداع', 'الرأس', '2023-03-04', 70, 1, 12),
 (12, 'كحة', 'الزور', '2023-03-02', 72, 1, 12),
-(13, 'قرحة معدة', 'الم فى المعدة', '2023-03-06', 72, 1, 12);
+(13, 'قرحة معدة', 'الم فى المعدة', '2023-03-06', 72, 1, 12),
+(14, 'mmm', 'nnnn', '2023-03-08', 72, 1, 12),
+(15, 'كحة', 'الزور', '2023-03-08', 72, 1, 12);
 
 -- --------------------------------------------------------
 
@@ -266,7 +271,7 @@ CREATE TABLE `doctor` (
 --
 
 INSERT INTO `doctor` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `specialist`, `governorate`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
-(1, 'mohamed saeed', 12345678912345, 'mo@gmail.com', '01092338585', 'male', '2000-10-22', 'بطنه', 'aswan', '$2y$10$nhFyxDMDBtsW.HXz9vEeL.77kGYEZmWbdJQtVINCnDSWqx0bnkXCi', '969539', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRvY3RvciIsImV4cCI6MTY3ODIyMjg5NX0.r0sghr1fbqmzfmXLznhxQ6b0rWjfRYIYyIiNHQIzA18', 1, 'df_male', 'doctor'),
+(1, 'mohamed saeed', 12345678912345, 'mo@gmail.com', '01092338585', 'male', '2000-10-22', 'بطنه', 'aswan', '$2y$10$nhFyxDMDBtsW.HXz9vEeL.77kGYEZmWbdJQtVINCnDSWqx0bnkXCi', '969539', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRvY3RvciIsImV4cCI6MTY3ODMxODU4M30.FsqHgTYVQtO5tT_PH57rDVLWgYYUtRnUAzTyqVH_BOM', 1, 'df_male', 'doctor'),
 (3, 'nn', 44, 'oio', '555', 'j', '2023-03-01', 'kk', 'kkk', 'kk', 'kkk', 'kk', 1, 'k', 'g');
 
 -- --------------------------------------------------------
@@ -288,7 +293,8 @@ CREATE TABLE `medicine` (
 INSERT INTO `medicine` (`id`, `medicine_data`, `prescript_id`) VALUES
 (10, 'YTozOntpOjE7YTozOntzOjQ6Im5hbWUiO3M6NzoiYnJvZmluZSI7czo0OiJzaXplIjtzOjM6IjIwMCI7czoxMToiZGVzY3JpcHRpb24iO3M6MjE6ItmF2LHYqtmK2YYg2YrZiNmF2YrYpyI7fWk6MjthOjM6e3M6NDoibmFtZSI7czo0OiJvZ21hIjtzOjQ6InNpemUiO3M6MzoiNTAwIjtzOjExOiJkZXNjcmlwdGlvbiI7czoyNjoi2YXYsdipINmC2KjZhCDYp9mE2YHYqtin2LEiO31pOjM7YTozOntzOjQ6Im5hbWUiO3M6NjoiZmF5emVyIjtzOjQ6InNpemUiO3M6MzoiMjUwIjtzOjExOiJkZXNjcmlwdGlvbiI7czozOToi2YXYsdipINio2LnYryDYp9mE2LrYr9ijINmI2KfZhNi52LTYp9ihIjt9fQ==', 18),
 (11, 'YTozOntpOjE7YTozOntzOjQ6Im5hbWUiO3M6NzoiYnJvZmluZSI7czo0OiJzaXplIjtzOjM6IjIwMCI7czoxMToiZGVzY3JpcHRpb24iO3M6MjE6ItmF2LHYqtmK2YYg2YrZiNmF2YrYpyI7fWk6MjthOjM6e3M6NDoibmFtZSI7czo0OiJvZ21hIjtzOjQ6InNpemUiO3M6MzoiNTAwIjtzOjExOiJkZXNjcmlwdGlvbiI7czoyNjoi2YXYsdipINmC2KjZhCDYp9mE2YHYqtin2LEiO31pOjM7YTozOntzOjQ6Im5hbWUiO3M6NjoiZmF5emVyIjtzOjQ6InNpemUiO3M6MzoiMjUwIjtzOjExOiJkZXNjcmlwdGlvbiI7czozOToi2YXYsdipINio2LnYryDYp9mE2LrYr9ijINmI2KfZhNi52LTYp9ihIjt9fQ==', 20),
-(12, 'YTozOntpOjE7YTozOntzOjQ6Im5hbWUiO3M6NzoiYnJvZmluZSI7czo0OiJzaXplIjtzOjM6IjIwMCI7czoxMToiZGVzY3JpcHRpb24iO3M6MjE6ItmF2LHYqtmK2YYg2YrZiNmF2YrYpyI7fWk6MjthOjM6e3M6NDoibmFtZSI7czo0OiJvZ21hIjtzOjQ6InNpemUiO3M6MzoiNTAwIjtzOjExOiJkZXNjcmlwdGlvbiI7czoyNjoi2YXYsdipINmC2KjZhCDYp9mE2YHYqtin2LEiO31pOjM7YTozOntzOjQ6Im5hbWUiO3M6NjoiZmF5emVyIjtzOjQ6InNpemUiO3M6MzoiMjUwIjtzOjExOiJkZXNjcmlwdGlvbiI7czozOToi2YXYsdipINio2LnYryDYp9mE2LrYr9ijINmI2KfZhNi52LTYp9ihIjt9fQ==', 21);
+(12, 'YTozOntpOjE7YTozOntzOjQ6Im5hbWUiO3M6NzoiYnJvZmluZSI7czo0OiJzaXplIjtzOjM6IjIwMCI7czoxMToiZGVzY3JpcHRpb24iO3M6MjE6ItmF2LHYqtmK2YYg2YrZiNmF2YrYpyI7fWk6MjthOjM6e3M6NDoibmFtZSI7czo0OiJvZ21hIjtzOjQ6InNpemUiO3M6MzoiNTAwIjtzOjExOiJkZXNjcmlwdGlvbiI7czoyNjoi2YXYsdipINmC2KjZhCDYp9mE2YHYqtin2LEiO31pOjM7YTozOntzOjQ6Im5hbWUiO3M6NjoiZmF5emVyIjtzOjQ6InNpemUiO3M6MzoiMjUwIjtzOjExOiJkZXNjcmlwdGlvbiI7czozOToi2YXYsdipINio2LnYryDYp9mE2LrYr9ijINmI2KfZhNi52LTYp9ihIjt9fQ==', 21),
+(17, 'YToxOntpOjE7YTozOntzOjQ6Im5hbWUiO3M6MDoiIjtzOjQ6InNpemUiO3M6MDoiIjtzOjExOiJkZXNjcmlwdGlvbiI7czowOiIiO319', 26);
 
 -- --------------------------------------------------------
 
@@ -354,8 +360,8 @@ INSERT INTO `patient` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `
 (58, 'mohamed', 36985214789652, 'mohamed@gmail.com', '01022223335', 'male', '1999-10-04', 90, 140, 'aswan', '$2y$10$s6n1BuAevOQjadD48QS8ru4KdyM6zTZwo2yCmJBXtHdEGMw3/xDey', '0757a7705087c1eee179f53383232c47', NULL, 0, NULL, 'patient'),
 (63, 'mohamed saeed', 12345678912344, 'mohamedsaeed00451@gmail.com', '01092338086', 'male', '2000-03-24', 60, 173, 'beheira', '$2y$10$9y7h1e3CTMGXuakdX2mHc.KSI0NdZmcQ2XKZn8NGqEwpUt7oqI7A6', '244353', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NjMsInR5cGUiOiJQQVRJRU5UIiwiZXhwIjoxNjc3MTc3OTg5fQ.E5bjGueiHIZypWCucfURWwHVMDBJBKynnC2Uy87hodA', 1, NULL, 'patient'),
 (64, 'mmss', 99999999999998, 'mohamedsaeed0451@gmail.com', '36985214787', 'ddd', '0000-00-00', 22, 22, 'dd', '$2y$10$DOUaal1OscFvIngjQ7xvu..5YFQLThuQcwp909OQxMUKHMj0lYrYi', '815493', NULL, 0, NULL, 'patient'),
-(70, 'mohamed saeed', 12345678912345, 'mo@gmail.com', '01092338588', 'male', '2000-10-22', 100, 200, 'البحيرة', '$2y$10$jvxW4dTBwjftDbKK1rGr0uUjDysspZwFS7ZH3/HgeihbjfC1uFxw.', '968617', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NzAsInR5cGUiOiJwYXRpZW50IiwiZXhwIjoxNjc4MDcxODMyfQ.0k9TklU5QMBpfcIOCEpzzntg6uaAJoE28oGSRUbk20I', 1, 'pa-12345678912345', 'patient'),
-(72, 'mohamed saeed', 12345678912352, 'mnn@gmail.com', '01092338585', 'ذكر', '2001-02-06', 58, 173, 'aswan', '$2y$10$ze9If9dFN6IVjWrJsaP/w.c18iZSeEJ0s9qcsAD8uBdDrLgwBaXKK', '510129', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NzIsInR5cGUiOiJwYXRpZW50IiwiZXhwIjoxNjc4MjMyMTA1fQ.hdQz3FofXIpjy7QODDes8c6zQFwwQzXsOx5rIXOB8A0', 1, 'df_male', 'patient');
+(70, 'ahmed', 12345678912345, 'mo@gmail.com', '01092338588', 'male', '2000-10-22', 100, 200, 'البحيرة', '$2y$10$jvxW4dTBwjftDbKK1rGr0uUjDysspZwFS7ZH3/HgeihbjfC1uFxw.', '968617', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NzAsInR5cGUiOiJwYXRpZW50IiwiZXhwIjoxNjc4MDcxODMyfQ.0k9TklU5QMBpfcIOCEpzzntg6uaAJoE28oGSRUbk20I', 1, 'pa-12345678912345', 'patient'),
+(72, 'mohamed saeed', 12345678912352, 'mnn@gmail.com', '01092338585', 'ذكر', '2001-02-06', 58, 173, 'aswan', '$2y$10$ze9If9dFN6IVjWrJsaP/w.c18iZSeEJ0s9qcsAD8uBdDrLgwBaXKK', '510129', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NzIsInR5cGUiOiJwYXRpZW50IiwiZXhwIjoxNjc4NDAxODg5fQ.fYy_Ow3EYb2vl58Z_VajHtkG8EFC_izEYhvjyFrWkXg', 1, 'df_male', 'patient');
 
 -- --------------------------------------------------------
 
@@ -385,7 +391,7 @@ CREATE TABLE `pharmacist` (
 --
 
 INSERT INTO `pharmacist` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `governorate`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
-(1, 'عمرو المسلمانى', 99999999999999, 'ammghdefe45353@gmail.com', '36985214789', 'ذكر', '2023-01-12', 'البحيرة', '$2y$10$53zyweTCQd/SOiu7fjS71eawHwd/z1yDjPH9AEZfbYmsfU6lO6vI.', '589cb4b906218c4209c1bbbafada8845', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6InBoYXJtYWNpc3QiLCJleHAiOjE2Nzc3ODg3OTV9.XDJ1GVwHyR9ZA9xDnJx90n9RvEtMG7_3XbKV-0mi36k', 1, NULL, 'pharmacist'),
+(1, 'عمرو المسلمانى', 99999999999999, 'ammghdefe45353@gmail.com', '36985214789', 'ذكر', '2023-01-12', 'البحيرة', '$2y$10$53zyweTCQd/SOiu7fjS71eawHwd/z1yDjPH9AEZfbYmsfU6lO6vI.', '589cb4b906218c4209c1bbbafada8845', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6InBoYXJtYWNpc3QiLCJleHAiOjE2Nzg0MDIyMzl9.vjCsPHU1XiHzZJW1J-45vQ4nYMPM9pOIliZUD-TD5iw', 1, 'df_male', 'pharmacist'),
 (2, 'mmss', 99999999999995, 'mohamedsaeed0451@gmail.com', '36985214787', 'ddd', '0000-00-00', 'dd', '$2y$10$CmuxHEC4fezP.WmGYQ3PZ.eeHWfGHNhyCl9LLj.IE04FtrkEqd/M6', '855027', NULL, 0, NULL, 'pharmacist'),
 (3, 'mmss', 99999994999995, 'mohamedsaeed451@gmail.com', '36985714787', 'ddd', '0000-00-00', 'dd', '$2y$10$QeqkbsLz/et5FePZoGwe2O.wiEdJSa3iKFvoyRTkaSZflbYxQnXOe', '524222', NULL, 0, NULL, 'pharmacist');
 
@@ -415,7 +421,8 @@ CREATE TABLE `pharmacy` (
 --
 
 INSERT INTO `pharmacy` (`id`, `name`, `owner`, `phone_number`, `start_working`, `end_working`, `governorate`, `address`, `logo`, `ser_id`, `status`, `pharmacist_id`) VALUES
-(1, 'Dr ali mohamed', 'ali mohamed', '01222222222', '06:00:00', '12:00:00', 'behira', 'aswan', 'pa-12345678912345', '8211895764', 0, 1);
+(1, 'Dr ali mohamed', 'ali mohamed', '01222222222', '06:00:00', '12:00:00', 'behira', 'aswan', 'pa-12345678912345', '8211895764', 0, 1),
+(6, 'صيدلية الهنا', 'عمرو المسلمانى', '01222222221', '08:00:00', '12:00:00', 'البحيرة', 'دمنهور', 'df-pharmacy', '5407031', 0, 1);
 
 -- --------------------------------------------------------
 
@@ -426,6 +433,7 @@ INSERT INTO `pharmacy` (`id`, `name`, `owner`, `phone_number`, `start_working`, 
 CREATE TABLE `pharmacy_order` (
   `id` smallint(6) NOT NULL,
   `time` datetime NOT NULL DEFAULT current_timestamp(),
+  `status` tinyint(1) NOT NULL,
   `patient_id` mediumint(9) NOT NULL,
   `prescript_id` bigint(20) NOT NULL,
   `pharmacy_id` mediumint(9) NOT NULL
@@ -435,8 +443,9 @@ CREATE TABLE `pharmacy_order` (
 -- Dumping data for table `pharmacy_order`
 --
 
-INSERT INTO `pharmacy_order` (`id`, `time`, `patient_id`, `prescript_id`, `pharmacy_id`) VALUES
-(22, '2023-03-06 15:39:34', 72, 18, 1);
+INSERT INTO `pharmacy_order` (`id`, `time`, `status`, `patient_id`, `prescript_id`, `pharmacy_id`) VALUES
+(22, '2023-03-06 15:39:34', 1, 72, 18, 6),
+(23, '2023-03-08 18:22:33', 0, 70, 20, 6);
 
 -- --------------------------------------------------------
 
@@ -450,6 +459,17 @@ CREATE TABLE `pharmacy_prescript` (
   `pharmacy_id` mediumint(9) NOT NULL,
   `date_pay` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+--
+-- Dumping data for table `pharmacy_prescript`
+--
+
+INSERT INTO `pharmacy_prescript` (`id`, `prescript_id`, `pharmacy_id`, `date_pay`) VALUES
+(10, 20, 6, '2023-03-09 15:35:19'),
+(11, 21, 6, '2023-03-09 15:35:27'),
+(12, 28, 6, '2023-03-09 15:35:36'),
+(21, 20, 6, '2023-03-09 15:44:28'),
+(22, 18, 6, '2023-03-09 16:18:09');
 
 -- --------------------------------------------------------
 
@@ -475,8 +495,11 @@ CREATE TABLE `prescript` (
 INSERT INTO `prescript` (`id`, `created_date`, `rediscovery_date`, `ser_id`, `patient_id`, `disease_id`, `doctor_id`, `clinic_id`) VALUES
 (18, '2023-03-06', '2023-06-22', '20133713', 72, 13, 1, 12),
 (19, '2023-03-06', '2023-10-26', '11772072', 72, 13, 1, 12),
-(20, '2023-03-06', '2023-10-26', '29087172', 72, 13, 1, 12),
-(21, '2023-03-06', '2023-10-26', '39922872', 72, 13, 1, 12);
+(20, '2023-03-06', '2023-10-26', '29087172', 70, 13, 1, 12),
+(21, '2023-03-06', '2023-10-26', '39922872', 72, 13, 1, 12),
+(26, '2023-03-08', '2023-10-12', '51561314', 72, 14, 1, 12),
+(27, '2023-03-08', '2023-10-20', '50795772', 72, 14, 1, 12),
+(28, '2023-03-08', '2023-09-02', '45062172', 72, 15, 1, 12);
 
 -- --------------------------------------------------------
 
@@ -728,7 +751,7 @@ ALTER TABLE `video`
 -- AUTO_INCREMENT for table `activation_person`
 --
 ALTER TABLE `activation_person`
-  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `activation_place`
@@ -746,7 +769,7 @@ ALTER TABLE `admin`
 -- AUTO_INCREMENT for table `appointment`
 --
 ALTER TABLE `appointment`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=41;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=44;
 
 --
 -- AUTO_INCREMENT for table `assistant`
@@ -758,7 +781,7 @@ ALTER TABLE `assistant`
 -- AUTO_INCREMENT for table `chat`
 --
 ALTER TABLE `chat`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT for table `clinic`
@@ -770,7 +793,7 @@ ALTER TABLE `clinic`
 -- AUTO_INCREMENT for table `disease`
 --
 ALTER TABLE `disease`
-  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `doctor`
@@ -782,7 +805,7 @@ ALTER TABLE `doctor`
 -- AUTO_INCREMENT for table `medicine`
 --
 ALTER TABLE `medicine`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `message`
@@ -806,25 +829,25 @@ ALTER TABLE `pharmacist`
 -- AUTO_INCREMENT for table `pharmacy`
 --
 ALTER TABLE `pharmacy`
-  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `pharmacy_order`
 --
 ALTER TABLE `pharmacy_order`
-  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT for table `pharmacy_prescript`
 --
 ALTER TABLE `pharmacy_prescript`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `prescript`
 --
 ALTER TABLE `prescript`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `specialist`
