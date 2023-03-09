@@ -203,7 +203,7 @@ class Patient
     }
     public function addOrderPatient($data = [])
     {
-        $this->db->query("INSERT INTO pharmacy_order(patient_id,prescript_id,pharmacy_id) VALUES (:PA_ID,:PR_ID,:PH_ID)");
+        $this->db->query("INSERT INTO pharmacy_order(status,patient_id,prescript_id,pharmacy_id) VALUES (0,:PA_ID,:PR_ID,:PH_ID)");
         $this->db->bind(":PA_ID", $data['patient_id']);
         $this->db->bind(":PR_ID", $data['prescript_id']);
         $this->db->bind(":PH_ID", $data['pharmacy_id']);

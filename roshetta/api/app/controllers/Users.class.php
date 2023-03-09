@@ -662,10 +662,11 @@ class Users extends Controller
                 "id" => $check_token['id'],
                 "type" => $check_token['type']
             ];
-            @$profile = $this->userModel->viewProfile($data);
+            @$profile   = $this->userModel->viewProfile($data);
+            @$number    = $this->userModel->numberPatient($data['id']);
             if ($profile) {
                 $url = "images/profile_image/";
-                $data_new = messageProfile($profile, $url); // Determind Data User
+                $data_new = messageProfile($profile,$url,$number); // Determind Data User
                 $Message = 'تم جلب البيانات بنجاح';
                 $Status = 200;
                 userMessage($Status, $Message, $data_new);
@@ -1532,7 +1533,7 @@ class Users extends Controller
 
     //*************************************************** Active Image Place **************************************************************//
 
-    public function active_image_place()
+    public function active_image_place($id = null)
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -1544,12 +1545,12 @@ class Users extends Controller
                 die();
             }
 
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+            $_GET = filter_input_array(1, 513); // INPUT_GET //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
-                "place_id" => $_POST['place_id'],
-                "place_type" => $_POST['place_role'],
+                "place_id" => @$id,
+                "place_type" => $_GET['place_role'],
                 "type" => $check_token['type'],
                 "image_name" => $_FILES['license_img']["name"],
                 "image_size" => $_FILES['license_img']["size"],
@@ -1578,9 +1579,11 @@ class Users extends Controller
                 }
             }
             $place_type = ['clinic', 'pharmacy'];
-
-            if (!in_array($data['place_type'], $place_type)) $data_err['place_role_err'] = 'نوع المكان غير مدعوم';
-
+            if (empty($data['place_type'])) {
+                $data_err['place_role_err'] = 'برجاء إدخال نوع المكان';
+            } else {
+                if (!in_array($data['place_type'], $place_type)) $data_err['place_role_err'] = 'نوع المكان غير مدعوم';
+            }
             if (empty($data['image_name'])) {
                 $data_err['image_err'] = 'برجاء تحميل صورة';
             } else {

@@ -81,57 +81,36 @@ function getVideo($data = [])
 }
 
 //************************************************************* Function Design Message View Profile ********************************************************//
-function messageProfile($data_user, $url)
+function messageProfile($data_user, $url,$number)
 {
     $age = userAge($data_user->birth_date);
     $image = getImage($data_user->profile_img, $url);
+    $data_message = [
+        "name"          => $data_user->name,
+        "age"           => $age,
+        "ssd"           => $data_user->ssd,
+        "email"         => $data_user->email,
+        "phone_number"  => $data_user->phone_number,
+        "gender"        => $data_user->gender,
+        "birth_date"    => $data_user->birth_date,
+        "governorate"   => $data_user->governorate,
+        "image"         => $image,
+        "type"          => $data_user->role
+    ];
     switch ($data_user->role) {
         case 'patient':
-            $data_message = [
-                "name"          => $data_user->name,
-                "age"           => $age,
-                "ssd"           => $data_user->ssd,
-                "email"         => $data_user->email,
-                "phone_number"  => $data_user->phone_number,
-                "gender"        => $data_user->gender,
-                "birth_date"    => $data_user->birth_date,
-                "governorate"   => $data_user->governorate,
-                "weight"        => $data_user->weight,
-                "height"        => $data_user->height,
-                "image"         => $image,
-                "type"          => $data_user->role
-            ];
+            $data_message['weight'] = $data_user->weight;
+            $data_message['height'] = $data_user->height;
+            $data_message['number_prescript'] = $number['pre'];
+            $data_message['number_disease'] = $number['dis'];
+            $data_message['number_appoint'] = $number['app'];
             break;
         case 'doctor':
-            $data_message = [
-                "name"          => $data_user->name,
-                "age"           => $age,
-                "ssd"           => $data_user->ssd,
-                "email"         => $data_user->email,
-                "phone_number"  => $data_user->phone_number,
-                "gender"        => $data_user->gender,
-                "birth_date"    => $data_user->birth_date,
-                "governorate"   => $data_user->governorate,
-                "specialist"    => $data_user->specialist,
-                "image"         => $image,
-                "type"          => $data_user->role
-            ];
+            $data_message['specialist'] = $data_user->specialist;
             break;
         default:
-            $data_message = [
-                "name"          => $data_user->name,
-                "age"           => $age,
-                "ssd"           => $data_user->ssd,
-                "email"         => $data_user->email,
-                "phone_number"  => $data_user->phone_number,
-                "gender"        => $data_user->gender,
-                "birth_date"    => $data_user->birth_date,
-                "governorate"   => $data_user->governorate,
-                "image"         => $image,
-                "type"          => $data_user->role
-            ];
+            $data_message;
     }
-
     return $data_message;
 }
 
@@ -166,7 +145,7 @@ function addImageProfile($data = [])
             mkdir($link); //To Create A New File
         }
 
-        move_uploaded_file($img_tmp, $link . $img_new_name); //To Transfer The New Image To The File
+        move_uploaded_file($img_tmp,$link.$img_new_name); //To Transfer The New Image To The File
         $image = $folder_name; //The Path WithIn The DataBase
 
         return $image;
@@ -356,5 +335,31 @@ function pharmacyMessageDetails($data, $url)
         "number_prescript_patient"    => $data['number_prescript_patient']
     ];
     return $data_pharmacy;
+}
+
+//***************************************************** View Pharmacy Details **************************************************//
+function viewPharmacy($data, $num, $url)
+{
+    $pharmacy_data = [
+        "id"                    => $data->id,
+        "ser_id"                => $data->ser_id,
+        "type"                  => "pharmacy",
+        "logo"                  => getImage($data->logo, $url['place']),
+        "name"                  => $data->name,
+        "phone_number"          => $data->phone_number,
+        "owner"                 => $data->owner,
+        "start_working"         => $data->start_working,
+        "end_working"           => $data->end_working,
+        "governorate"           => $data->governorate,
+        "address"               => $data->address,
+        "status"                => $data->status,
+        "number_of_prescript"   => $num['num_pres'],
+        "stuff"                 => [
+            "name"           => $num['data_pharmacist']->name,
+            "age"            => userAge($num['data_pharmacist']->birth_date),
+            "image"          => getImage($num['data_pharmacist']->profile_img, $url['person']),
+        ]
+    ];
+    return $pharmacy_data;
 }
 

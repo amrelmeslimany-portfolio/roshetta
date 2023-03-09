@@ -270,7 +270,7 @@ class User
 
         if ($this->db->rowCount() > 0) {
 
-            $this->db->query("UPDATE activation_person SET images = :IMAGES WHERE user_id = :ID AND role = :ROLE");
+            $this->db->query("UPDATE activation_person SET images = :IMAGES , isActive = 0 WHERE user_id = :ID AND role = :ROLE");
             $this->db->bind(":IMAGES", $data['image']);
             $this->db->bind(":ROLE", $data['type']);
             $this->db->bind(":ID", $data['id']);
@@ -281,7 +281,7 @@ class User
                 false;
         } else {
 
-            $this->db->query("INSERT INTO activation_person(images,user_id,role) values(:IMAGES,:ID,:ROLE)");
+            $this->db->query("INSERT INTO activation_person(images,user_id,role,isActive) values(:IMAGES,:ID,:ROLE,0)");
             $this->db->bind(":IMAGES", $data['image']);
             $this->db->bind(":ROLE", $data['type']);
             $this->db->bind(":ID", $data['id']);
@@ -313,7 +313,7 @@ class User
 
         if ($this->db->rowCount() > 0) {
 
-            $this->db->query("UPDATE activation_place SET license_img = :IMAGE WHERE place_id = :ID AND role = :ROLE");
+            $this->db->query("UPDATE activation_place SET license_img = :IMAGE , isActive = 0 WHERE place_id = :ID AND role = :ROLE");
             $this->db->bind(":IMAGE", $data['image']);
             $this->db->bind(":ROLE", $data['type']);
             $this->db->bind(":ID", $data['id']);
@@ -324,7 +324,7 @@ class User
                 false;
         } else {
 
-            $this->db->query("INSERT INTO activation_place(license_img,place_id,role) values(:IMAGE,:ID,:ROLE)");
+            $this->db->query("INSERT INTO activation_place(license_img,place_id,role,isActive) values(:IMAGE,:ID,:ROLE,0)");
             $this->db->bind(":IMAGE", $data['image']);
             $this->db->bind(":ROLE", $data['type']);
             $this->db->bind(":ID", $data['id']);
@@ -357,5 +357,36 @@ class User
         } else {
             false;
         }
+    }
+    public function numberPatient($id)
+    {
+        $this->db->query("SELECT prescript.id FROM prescript,patient WHERE patient.id = :ID AND prescript.patient_id = patient.id");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0 ) {
+            $data_pre = $this->db->rowCount();
+        } 
+
+        $this->db->query("SELECT disease.id FROM disease,patient WHERE patient.id = :ID AND disease.patient_id = patient.id");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0 ) {
+            $data_dis = $this->db->rowCount();
+        } 
+
+        $this->db->query("SELECT appointment.id FROM appointment,patient WHERE patient.id = :ID AND appointment.patient_id = patient.id");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0 ) {
+            $data_app = $this->db->rowCount();
+        } 
+
+        $data = [
+            "pre" => $data_pre,
+            "dis" => $data_dis,
+            "app" => $data_app
+        ];
+
+        return $data;
     }
 }
