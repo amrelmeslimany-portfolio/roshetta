@@ -1,0 +1,282 @@
+[
+  {
+    "id": 1,
+    "name": "Accident and emergency medicine",
+    "ar_name": "طب الطوارئ والحوادث"
+  },
+  {
+    "id": 2,
+    "name": "Allergology",
+    "ar_name": "علم الحساسية"
+  },
+  {
+    "id": 3,
+    "name": "Anaesthetics",
+    "ar_name": "التخدير"
+  },
+  {
+    "id": 4,
+    "name": "Biological hematology",
+    "ar_name": "الأمراض الدموية الحيوية"
+  },
+  {
+    "id": 5,
+    "name": "Cardiology",
+    "ar_name": "أمراض القلب"
+  },
+  {
+    "id": 6,
+    "name": "Child psychiatry",
+    "ar_name": "طب الأطفال النفسي"
+  },
+  {
+    "id": 7,
+    "name": "Clinical biology",
+    "ar_name": "الأحياء السريرية"
+  },
+  {
+    "id": 8,
+    "name": "Clinical chemistry",
+    "ar_name": "الكيمياء السريرية"
+  },
+  {
+    "id": 9,
+    "name": "Clinical neurophysiology",
+    "ar_name": "العلم العصبي الفيزيولوجي السريري"
+  },
+  {
+    "id": 10,
+    "name": "Clinical radiology",
+    "ar_name": "التصوير الطبي السريري"
+  },
+  {
+    "id": 11,
+    "name": "Dental, oral and maxillo-facial surgery",
+    "ar_name": "جراحة الأسنان والفم والوجه"
+  },
+  {
+    "id": 12,
+    "name": "Dermato-venerology",
+    "ar_name": "أمراض الجلد والأمراض الجنسية"
+  },
+  {
+    "id": 13,
+    "name": "Dermatology",
+    "ar_name": "أمراض الجلدية"
+  },
+  {
+    "id": 14,
+    "name": "Endocrinology",
+    "ar_name": "علم الغدد الصماء"
+  },
+  {
+    "id": 15,
+    "name": "Gastro-enterologic surgery",
+    "ar_name": "جراحة الجهاز الهضمي"
+  },
+  {
+    "id": 16,
+    "name": "Gastroenterology",
+    "ar_name": "أمراض المعدة والأمعاء"
+  },
+  {
+    "id": 17,
+    "name": "General hematology",
+    "ar_name": "الأمراض الدموية العامة"
+  },
+  {
+    "id": 18,
+    "name": "General Practice",
+    "ar_name": "الطب العام"
+  },
+  {
+    "id": 19,
+    "name": "General surgery",
+    "ar_name": "جراحة عامة"
+  },
+  {
+    "id": 20,
+    "name": "Geriatrics",
+    "ar_name": "طب المسنين"
+  },
+  {
+    "id": 21,
+    "name": "Immunology",
+    "ar_name": "مناعة"
+  },
+  {
+    "id": 22,
+    "name": "Infectious diseases",
+    "ar_name": "الأمراض المعدية"
+  },
+  {
+    "id": 23,
+    "name": "Internal medicine",
+    "ar_name": "الطب الباطني"
+  },
+  {
+    "id": 24,
+    "name": "Laboratory medicine",
+    "ar_name": "طب المختبرات"
+  },
+  {
+    "id": 25,
+    "name": "Maxillo-facial surgery",
+    "ar_name": "جراحة الفك والوجه"
+  },
+  {
+    "id": 26,
+    "name": "Microbiology",
+    "ar_name": "علم الأحياء الدقيقة"
+  },
+  {
+    "id": 27,
+    "name": "Nephrology",
+    "ar_name": "أمراض الكلى"
+  },
+  {
+    "id": 28,
+    "name": "Neuro-psychiatry",
+    "ar_name": "أمراض الأعصاب والطب النفسي"
+  },
+  {
+    "id": 29,
+    "name": "Neurology",
+    "ar_name": "أمراض الأعصاب"
+  },
+  {
+    "id": 30,
+    "name": "Neurosurgery",
+    "ar_name": "جراحة الأعصاب"
+  },
+  {
+    "id": 31,
+    "name": "Nuclear medicine",
+    "ar_name": "الطب النووي"
+  },
+  {
+    "id": 32,
+    "name": "Obstetrics and gynecology",
+    "ar_name": "النسا والتوليد"
+  },
+  {
+    "id": 33,
+    "name": "Occupational medicine",
+    "ar_name": "طب العمل"
+  },
+  {
+    "id": 34,
+    "name": "Ophthalmology",
+    "ar_name": "طب العيون"
+  },
+  {
+    "id": 35,
+    "name": "Orthopaedics",
+    "ar_name": "جراحة العظام"
+  },
+  {
+    "id": 36,
+    "name": "Otorhinolaryngology",
+    "ar_name": "أمراض الأنف والأذن والحنجرة"
+  },
+  {
+    "id": 37,
+    "name": "Paediatric surgery",
+    "ar_name": "جراحة الأطفال"
+  },
+  {
+    "id": 38,
+    "name": "Paediatrics",
+    "ar_name": "طب الأطفال"
+  },
+  {
+    "id": 39,
+    "name": "Pathology",
+    "ar_name": "علم المرض"
+  },
+  {
+    "id": 40,
+    "name": "Pharmacology",
+    "ar_name": "علم الأدوية"
+  },
+  {
+    "id": 41,
+    "name": "Physical medicine and rehabilitation",
+    "ar_name": "الطب الطبيعي وإعادة التأهيل"
+  },
+  {
+    "id": 42,
+    "name": "Plastic surgery",
+    "ar_name": "جراحة التجميل"
+  },
+  {
+    "id": 43,
+    "name": "Podiatric Medicine",
+    "ar_name": "طب القدمين"
+  },
+  {
+    "id": 44,
+    "name": "Podiatric Surgery",
+    "ar_name": "جراحة القدمين"
+  },
+  {
+    "id": 45,
+    "name": "Psychiatry",
+    "ar_name": "طب النفس"
+  },
+  {
+    "id": 46,
+    "name": "Public health and Preventive Medicine",
+    "ar_name": "الصحة العامة والوقاية"
+  },
+  {
+    "id": 47,
+    "name": "Radiology",
+    "ar_name": "التصوير الطبي"
+  },
+  {
+    "id": 48,
+    "name": "Radiotherapy",
+    "ar_name": "العلاج الإشعاعي"
+  },
+  {
+    "id": 49,
+    "name": "Respiratory medicine",
+    "ar_name": "أمراض الجهاز التنفسي"
+  },
+  {
+    "id": 50,
+    "name": "Rheumatology",
+    "ar_name": "الروماتيزم"
+  },
+  {
+    "id": 51,
+    "name": "Stomatology",
+    "ar_name": "طب الفم والأسنان"
+  },
+  {
+    "id": 52,
+    "name": "Thoracic surgery",
+    "ar_name": "جراحة الصدر"
+  },
+  {
+    "id": 53,
+    "name": "Tropical medicine",
+    "ar_name": "طب الأمراض الاستوائية"
+  },
+  {
+    "id": 54,
+    "name": "Urology",
+    "ar_name": "جراحة المسالك البولية"
+  },
+  {
+    "id": 55,
+    "name": "Vascular surgery",
+    "ar_name": "جراحة الأوعية الدموية"
+  },
+  {
+    "id": 56,
+    "name": "Venereology",
+    "ar_name": "أمراض الجنس"
+  }
+]
