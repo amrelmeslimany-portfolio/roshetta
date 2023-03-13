@@ -69,6 +69,23 @@ function getImage($mo, $url)
     return null;
 }
 
+function getImageActive($mo, $url)
+{
+    $url_all = urlLocal();
+    $url_image = $url_all . "\\" . $url . $mo . '\\';
+    if (is_dir($url_image)) { //If The File Exists
+        $scandir = scandir($url_image); //To Displays File Data In Array
+        unset($scandir[0]);
+        unset($scandir[1]);
+        if (count($scandir) == 4) {
+            $url_public = URL_PUBLIC . $url . $mo . "/";
+            $data = [$url_public . $scandir[2], $url_public . $scandir[3], $url_public . $scandir[4], $url_public . $scandir[5]];
+            return $data;
+        }
+    }
+    return null;
+}
+
 //************************************************************* Function Get Url Video ********************************************************//
 function getVideo($data = [])
 {
@@ -80,8 +97,54 @@ function getVideo($data = [])
     return null;
 }
 
+//************************************************************* Function Add Video ********************************************************//
+function addVideo($data = [])
+{
+
+    $video_name   = $data["name"];
+    $video_tmp    = $data["tmp"];
+
+    $allowed_formulas = ['mp4']; //Allowed Formulas For The Video
+
+    //To Get The Video Formula
+
+    $check_formula   = explode(".", $video_name);
+    $formula         = end($check_formula);
+
+    if (in_array($formula, $allowed_formulas)) {
+        $url_all = urlLocal();
+        $video_new_name     = str_split($data['type'], 2)[0] . '-' . bin2hex(random_bytes(10)) . '.' . $formula; //To Input A Random Name For The Image 
+        $link               = $url_all . "\\videos\\"; //File Link
+
+        $types = ['df_doctor', 'df_patient', 'df_pharmacist', 'df_assistant'];
+        if (is_file($link . $data['db_name'])) {
+            if (!in_array(explode(".", $data['db_name'])[0], $types)) {
+                unlink($link . $data['db_name']); //To Delete File Data
+            }
+        }
+
+        move_uploaded_file($video_tmp, $link . $video_new_name); //To Transfer The New Image To The File
+        $video = $video_new_name; //The Path WithIn The DataBase
+
+        return $video;
+    } else {
+        return false;
+    }
+}
+
+//************************************************************* Function Delete Video ********************************************************//
+function removeVideo($name)
+{
+    $url_all = urlLocal();
+    $link    = $url_all . "\\videos\\"; //File Link
+    if (is_file($link . $name)) {
+        unlink($link  . $name); //To Delete File Data;
+        return true;
+    }
+    return false;
+}
 //************************************************************* Function Design Message View Profile ********************************************************//
-function messageProfile($data_user, $url,$number)
+function messageProfile($data_user, $url, $number = null)
 {
     $age = userAge($data_user->birth_date);
     $image = getImage($data_user->profile_img, $url);
@@ -101,9 +164,11 @@ function messageProfile($data_user, $url,$number)
         case 'patient':
             $data_message['weight'] = $data_user->weight;
             $data_message['height'] = $data_user->height;
-            $data_message['number_prescript'] = $number['pre'];
-            $data_message['number_disease'] = $number['dis'];
-            $data_message['number_appoint'] = $number['app'];
+            if (!empty($number)) {
+                $data_message['number_prescript'] = $number['pre'];
+                $data_message['number_disease'] = $number['dis'];
+                $data_message['number_appoint'] = $number['app'];
+            }
             break;
         case 'doctor':
             $data_message['specialist'] = $data_user->specialist;
@@ -121,7 +186,7 @@ function addImageProfile($data = [])
     $img_name   = $data["name"];
     $img_tmp    = $data["tmp"];
 
-    $allowed_formulas = array("jpg", "jpeg", "png"); //Allowed Formulas For The Image
+    $allowed_formulas = ["jpg", "jpeg", "png"]; //Allowed Formulas For The Image
 
     //To Get The Image Formula
 
@@ -145,7 +210,7 @@ function addImageProfile($data = [])
             mkdir($link); //To Create A New File
         }
 
-        move_uploaded_file($img_tmp,$link.$img_new_name); //To Transfer The New Image To The File
+        move_uploaded_file($img_tmp, $link . $img_new_name); //To Transfer The New Image To The File
         $image = $folder_name; //The Path WithIn The DataBase
 
         return $image;
@@ -188,7 +253,7 @@ function addImageActivePerson($data = [])
     $grad_tmp    = $data["grad_tmp"];
     $card_tmp    = $data["card_tmp"];
 
-    $allowed_formulas = array("jpg", "jpeg", "png"); //Allowed Formulas For The Image
+    $allowed_formulas = ["jpg", "jpeg", "png"]; //Allowed Formulas For The Image
 
     //To Get The Image Formula
 
@@ -362,4 +427,3 @@ function viewPharmacy($data, $num, $url)
     ];
     return $pharmacy_data;
 }
-

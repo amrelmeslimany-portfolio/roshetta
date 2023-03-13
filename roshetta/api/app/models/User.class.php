@@ -8,6 +8,20 @@ class User
     {
         $this->db = new Database;
     }
+
+    public function getActivation($id, $type)
+    {
+        $this->db->query("SELECT isActive FROM activation_person WHERE user_id = :ID AND role = :TYPE");
+        $this->db->bind(":TYPE", $type);
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount()) {
+            $data = $this->db->fetchObject();
+            return $data;
+        } else {
+            false;
+        }
+    }
     public function getUserEmail($email, $table_name)  // Check User Email
     {
         $this->db->query("SELECT * FROM $table_name WHERE email = :EMAIL");
@@ -351,7 +365,7 @@ class User
     {
         $this->db->query("SELECT name,ar_name FROM Specialist");
         $this->db->execute();
-        if ($this->db->rowCount() > 0 ) {
+        if ($this->db->rowCount() > 0) {
             $data = $this->db->fetchAll();
             return $data;
         } else {
@@ -363,23 +377,23 @@ class User
         $this->db->query("SELECT prescript.id FROM prescript,patient WHERE patient.id = :ID AND prescript.patient_id = patient.id");
         $this->db->bind(":ID", $id);
         $this->db->execute();
-        if ($this->db->rowCount() >= 0 ) {
+        if ($this->db->rowCount() >= 0) {
             $data_pre = $this->db->rowCount();
-        } 
+        }
 
         $this->db->query("SELECT disease.id FROM disease,patient WHERE patient.id = :ID AND disease.patient_id = patient.id");
         $this->db->bind(":ID", $id);
         $this->db->execute();
-        if ($this->db->rowCount() >= 0 ) {
+        if ($this->db->rowCount() >= 0) {
             $data_dis = $this->db->rowCount();
-        } 
+        }
 
         $this->db->query("SELECT appointment.id FROM appointment,patient WHERE patient.id = :ID AND appointment.patient_id = patient.id");
         $this->db->bind(":ID", $id);
         $this->db->execute();
-        if ($this->db->rowCount() >= 0 ) {
+        if ($this->db->rowCount() >= 0) {
             $data_app = $this->db->rowCount();
-        } 
+        }
 
         $data = [
             "pre" => $data_pre,

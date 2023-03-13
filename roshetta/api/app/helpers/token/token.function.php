@@ -11,7 +11,7 @@ use Firebase\JWT\Key;
 function TokenEncode($data)
 {
     try {
-        $expiration_time = time() + (1 * 60 * 60); // Expires in 1 hour
+        $expiration_time = time() + (8 * 60 * 60); // Expires in 1 hour
         $key             = "%ExU+d!Sd4AZBHsfyLse77YX)B^eAN(rd!*+FdM6r@f#yGwwJNSA4gqaCbTX2@h4";
 
         $payload = [

@@ -419,6 +419,10 @@ class Pharmacists extends Controller
                     die();
                 }
 
+                if (!$this->pharmacistModel->deleteOrder($data['pharmacy_id'])){
+                    /********** */
+                }
+
                 @$data_login = $this->pharmacistModel->loginPharmacy($data['pharmacy_id'], $data['id']);
 
                 $data_pharmacy = viewPharmacy($data_login, $num, $url);

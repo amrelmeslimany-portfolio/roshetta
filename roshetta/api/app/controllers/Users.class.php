@@ -410,6 +410,17 @@ class Users extends Controller
                                     "image" => getImage($result->profile_img, $url)
                                 ];
 
+                                if ($result->role == 'doctor' || $result->role == 'pharmacist') {
+                                    @$isVerify = $this->userModel->getActivation($result->id, $result->role);
+                                    if ($isVerify) {
+                                        array_push($data_message, $data_message['isVerify'] = $isVerify->isActive);
+                                        unset($data_message['0']);
+                                    } else {
+                                        array_push($data_message, $data_message['isVerify'] = 0);
+                                        unset($data_message['0']);
+                                    }
+                                }
+
                                 //************************************* Send Email Alert ***********************************//
                                 $data_mail = [  // Data Email
                                     "type" => $result->role,
@@ -512,7 +523,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -654,7 +665,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -666,7 +677,7 @@ class Users extends Controller
             @$number    = $this->userModel->numberPatient($data['id']);
             if ($profile) {
                 $url = "images/profile_image/";
-                $data_new = messageProfile($profile,$url,$number); // Determind Data User
+                $data_new = messageProfile($profile, $url, $number); // Determind Data User
                 $Message = 'تم جلب البيانات بنجاح';
                 $Status = 200;
                 userMessage($Status, $Message, $data_new);
@@ -694,7 +705,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -768,7 +779,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -798,7 +809,7 @@ class Users extends Controller
                 } else {
                     $result = $this->userModel->getUserPhone($data['phone_number'], $data['type']);
                     if ($result) {
-                        if ($data['id'] !== $result->id) $data_err['phone_number_err'] = 'رقم الهاتف موجود من قبل';
+                        if ($data['id'] != $result->id) $data_err['phone_number_err'] = 'رقم الهاتف موجود من قبل';
                     }
                 }
             }
@@ -883,11 +894,9 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
-
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
 
             $data = [
                 "id" => $check_token['id'],
@@ -903,7 +912,7 @@ class Users extends Controller
             if (empty($data['image_name'])) {
                 $data_err['image_err'] = 'برجاء تحميل صورة';
             } else {
-                if ($data['image_size'] > 2000000) $data_err['image_err'] = '(2M)يجب أن يكون حجم الصورة أقل من';  //To Specify The Image Size  < 2M
+                if ($data['image_size'] > 4000000) $data_err['image_err'] = '(4M)يجب أن يكون حجم الصورة أقل من';  //To Specify The Image Size  < 2M
             }
             if (empty($data_err['image_err'])) {
 
@@ -937,9 +946,15 @@ class Users extends Controller
                     "image" => $url_img
                 ];
                 if ($this->userModel->editImage($data_url)) {
+                    @$new_image = $this->userModel->getPlace($data['type'], $data['id']);
+                    if ($new_image) {
+                        $url_img = getImage($new_image->profile_img, $data_image['url']);
+                    } else {
+                        $url_img = null;
+                    }
                     $Message = 'تم تحديث صورة الملف الشخصى';
                     $Status = 201;
-                    userMessage($Status, $Message);
+                    userMessage($Status, $Message, $url_img);
                     die();
                 } else {
                     $Message = 'الرجاء المحاولة فى وق لأحق';
@@ -970,7 +985,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -1017,9 +1032,15 @@ class Users extends Controller
             ];
 
             if ($this->userModel->editImage($data_url)) {
+                @$new_image = $this->userModel->getPlace($data['type'], $data['id']);
+                if ($new_image) {
+                    $url_img = getImage($new_image->profile_img, $data_image['url']);
+                } else {
+                    $url_img = null;
+                }
                 $Message = 'تم حذف صورة الملف الشخصى';
                 $Status = 201;
-                userMessage($Status, $Message);
+                userMessage($Status, $Message, $url_img);
                 die();
             } else {
                 $Message = 'الرجاء المحاولة فى وق لأحق';
@@ -1035,7 +1056,6 @@ class Users extends Controller
         }
     }
 
-
     //************************************************************* Send Message ***********************************************************//
     public function message()
     {
@@ -1045,7 +1065,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -1407,7 +1427,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -1541,7 +1561,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 
@@ -1658,7 +1678,7 @@ class Users extends Controller
             if (!$check_token) {
                 $Message = 'الرجاء تسجيل الدخول';
                 $Status = 401;
-                userMessage($Status,$Message);
+                userMessage($Status, $Message);
                 die();
             }
 

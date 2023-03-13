@@ -19,6 +19,17 @@ class Pharmacist
             false;
         }
     }
+    public function deleteOrder($id)
+    {
+        $this->db->query("DELETE FROM pharmacy_order WHERE pharmacy_id = :ID AND status = 1 ");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount())
+            return true;
+        else
+            false;
+    }
+
     public function getPharmacy($id)
     {
         $this->db->query("SELECT * FROM pharmacy WHERE pharmacist_id = :ID");

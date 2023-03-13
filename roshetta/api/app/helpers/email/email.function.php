@@ -79,49 +79,49 @@ function registerEmailBody($data_email = [])
 //************************************************************* Function Alert Login Email Body ********************************************************//
 function loginEmailBody($data_email)
 {
-function getIp()   // Function Get The Client IP Address
-{
-    $ipaddress = '';
-    if (isset($_SERVER['HTTP_CLIENT_IP']))
-        $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
-    else if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
-    else if (isset($_SERVER['HTTP_X_FORWARDED']))
-        $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
-    else if (isset($_SERVER['HTTP_FORWARDED_FOR']))
-        $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
-    else if (isset($_SERVER['HTTP_FORWARDED']))
-        $ipaddress = $_SERVER['HTTP_FORWARDED'];
-    else if (isset($_SERVER['REMOTE_ADDR']))
-        $ipaddress = $_SERVER['REMOTE_ADDR'];
-    else
-        $ipaddress = 'UNKNOWN';
-    return $ipaddress;
-}
+    function getIp()   // Function Get The Client IP Address
+    {
+        $ipaddress = '';
+        if (isset($_SERVER['HTTP_CLIENT_IP']))
+            $ipaddress = $_SERVER['HTTP_CLIENT_IP'];
+        else if (isset($_SERVER['HTTP_X_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED_FOR'];
+        else if (isset($_SERVER['HTTP_X_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_X_FORWARDED'];
+        else if (isset($_SERVER['HTTP_FORWARDED_FOR']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED_FOR'];
+        else if (isset($_SERVER['HTTP_FORWARDED']))
+            $ipaddress = $_SERVER['HTTP_FORWARDED'];
+        else if (isset($_SERVER['REMOTE_ADDR']))
+            $ipaddress = $_SERVER['REMOTE_ADDR'];
+        else
+            $ipaddress = 'UNKNOWN';
+        return $ipaddress;
+    }
 
-// Create an instance of MobileDetect class 
-$mdetect = new MobileDetect();                  // Function Get The Client Type Device And Operating System
+    // Create an instance of MobileDetect class 
+    $mdetect = new MobileDetect();                  // Function Get The Client Type Device And Operating System
 
-if ($mdetect->isMobile()) {
-    // Detect mobile/tablet  
-    if ($mdetect->isTablet()) {
-        $type = 'Tablet';
+    if ($mdetect->isMobile()) {
+        // Detect mobile/tablet  
+        if ($mdetect->isTablet()) {
+            $type = 'Tablet';
+        } else {
+            $type = 'Mobile';
+        }
+        // Detect platform 
+        if ($mdetect->isiOS()) {
+            $operating_system = 'IOS';
+        } elseif ($mdetect->isAndroidOS()) {
+            $operating_system = 'Android';
+        }
     } else {
-        $type = 'Mobile';
+        $type = 'Desktop';
+        $operating_system = 'Windows';
     }
-    // Detect platform 
-    if ($mdetect->isiOS()) {
-        $operating_system = 'IOS';
-    } elseif ($mdetect->isAndroidOS()) {
-        $operating_system = 'Android';
-    }
-} else {
-    $type = 'Desktop';
-    $operating_system = 'Windows';
-}
 
 
-$device_name = gethostbyaddr($_SERVER['REMOTE_ADDR']);   // Function Get The Client Name Device
+    $device_name = gethostbyaddr($_SERVER['REMOTE_ADDR']);   // Function Get The Client Name Device
 
     $hi = hi($data_email['type']);
     $name = 'Roshetta Login';
@@ -134,15 +134,15 @@ $device_name = gethostbyaddr($_SERVER['REMOTE_ADDR']);   // Function Get The Cli
     $html_body = '<h3 style="text-align: center;font-family: cursive;padding: 0px ;font-style: italic;">' . $hi . '</h3>
     <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">' .  $data_email['user_name'] . '</h3>
     <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">هل قمت بتسجيل الدخول من جهاز جديد أو موقع جديد ؟</p></br>         
-    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">( '.$type.' ) : لأحظنا أن حسابك تم الوصول إلية من جهاز </p></br>
-    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">( '.$device_name.' ) : إسم الجهاز </p></br>
-    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">( '.$operating_system.' ) : يعمل بنظام </p></br>
+    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">( ' . $type . ' ) : لأحظنا أن حسابك تم الوصول إلية من جهاز </p></br>
+    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">( ' . $device_name . ' ) : إسم الجهاز </p></br>
+    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">( ' . $operating_system . ' ) : يعمل بنظام </p></br>
     <p style="text-align: center;font-family: cursive;">' . $ip . ' :(ip) عنوان</p>
     <p style="text-align: center;font-family: cursive;"> ' . $date_time . ' : (بتوقيت القاهرة) التوقيت</p>
     <h5 style="text-align: center;font-family: cursive;">هل ليس أنت ؟ <a href="' . $data_email['password_edit'] . '">إعادة تعيين كلمة المرور</a></h5>
     <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذة الرسالة ألية برجاء عدم الرد</p>
     ';
-    
+
     $array = [
         "name" => $name,
         "email" => $email,
@@ -193,6 +193,64 @@ function resetPasswordEmail($data)
     <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">كود إعادة تعيين كلمة المرور</p></br>         
     <h2 style="font-family: cursive;color: red;">' . $data['code'] . '</h2>
     <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذا الكود متاح للاستخدام مرة واحدة فقط</p>
+    ';
+
+    $array = [
+        "name" => $name,
+        "email" => $email,
+        "subject" => $subject,
+        "icon" => $icon_src,
+        "body" => $html_body
+    ];
+
+    return $array;
+}
+
+//************************************************************* Function Activation Account ********************************************************//
+
+function activeEmailBody($data)
+{
+    if ($data['type'] == 'doctor' || $data['type'] == 'pharmacist') {
+        $message = 'لقد تم تنشيط حسابك يمكنك الأن العمل والإستمتاع بكافة المميزات';
+    } elseif ($data['type'] == 'clinic') {
+        $message = 'لقد تم تنشيط العيادة الخاصة بك يمكنك الأن العمل والإستمتاع بكافة المميزات';
+    } else {
+        $message = 'لقد تم تنشيط الصيدلية الخاصة بك يمكنك الأن العمل والإستمتاع بكافة المميزات';
+    }
+
+    $name = 'Roshetta Activation';
+    $email = $data['email'];
+    $subject = 'تهنئة لتفعيل حسابك';
+    $icon_src = "https://img.icons8.com/fluency/300/null/reading-confirmation.png";
+    $html_body = '<h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;"> مـــــرحبـــــا بــــك دكتــــور </h3>
+    <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">' . $data['user_name'] . '</h3>
+    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">' . $message . '</p></br>         
+    <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>هذة الرسالة ألية برجاء عدم الرد</p>
+    ';
+
+    $array = [
+        "name" => $name,
+        "email" => $email,
+        "subject" => $subject,
+        "icon" => $icon_src,
+        "body" => $html_body
+    ];
+
+    return $array;
+}
+
+//************************************************************* Function Reply Message ********************************************************//
+function replyMessage($data)
+{
+    $hi = hi($data['type']);
+    $name = 'Roshetta Support';
+    $email = $data['email'];
+    $subject = 'رد على استفسارك من قبل فريق الدعم';
+    $icon_src = "https://img.icons8.com/fluency/200/null/envelope-number.png";
+    $html_body = '<h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">'.$hi.'</h3>
+    <h3 style="text-align: center;font-family: cursive;padding: 0px;font-style: italic;">'. $data['user_name'] .'</h3>
+    <p style="margin-top: 6px;font-family: cursive;color: #2d2d2d;">'.$data['message'].'</p></br>         
+    <p style="margin-top: 10px;font-family: cursive;color: #2d2d2d;"><b style="color: red;">ملاحظة / </b>إذا كان لديك أى استفسار أخر برجاء التواصل معنا</p>
     ';
 
     $array = [
