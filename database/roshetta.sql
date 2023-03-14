@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 13, 2023 at 06:55 PM
+-- Generation Time: Mar 14, 2023 at 04:50 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -93,7 +93,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `governorate`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
-(1, 'samy mohamed', 22222222222222, 'mohamedsaeed00451@gmail.com', '01010205040', 'ذكر', '2000-01-12', 'اسوان', '$2y$10$kkFMOz4K0IL32AFbeHj75ezc7ezEVs9yDNXtDd9HGjLPARJxjEgZ6', '512720', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImFkbWluIiwiZXhwIjoxNjc4NzQwNjYwLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwLnJvc2hldHRhLmVnIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo4MC5yb3NoZXR0YS5jb20iLCJpYXQiOjEzNTY5OTk1MjQsIm5iZiI6MTM1NzAwMDAwMH0.Kx4tI19yuwKQ1YeMOmYdPd8AWRJgPuGh-ca-R4fCPj0', 1, 'ad-22222222222222', 'admin'),
+(1, 'samy mohamed', 22222222222222, 'mohamedsaeed00451@gmail.com', '01010205040', 'ذكر', '2000-01-12', 'اسوان', '$2y$10$kkFMOz4K0IL32AFbeHj75ezc7ezEVs9yDNXtDd9HGjLPARJxjEgZ6', '512720', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImFkbWluIiwiZXhwIjoxNjc4ODM2NTk0LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwLnJvc2hldHRhLmVnIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo4MC5yb3NoZXR0YS5jb20iLCJpYXQiOjEzNTY5OTk1MjQsIm5iZiI6MTM1NzAwMDAwMH0.4ckwn_eVO1myq338Jw3qjjD-Xz3YyRjpVuBVPc68v-E', 1, 'ad-22222222222222', 'admin'),
 (3, 'hamdy ahmed', 33333333333333, 'ha@gmail.com', '01010101010', 'ذكر', '2023-01-18', '', '$2y$10$IuvMcAe49/0Top/QpZZfouVH7ec8ZY.vGxrDhwckrMqc5x82uwDNa', '', NULL, 0, NULL, 'admin'),
 (4, 'ali ahmed', 12345678912345, 'ali@gmail.com', '01020231410', 'ذكر', '2023-01-05', '', '$2y$10$ah/NCnRsFJBmVjfCRZbGo.xgA8FPar4IdfUOro/b3Q9VMNli3WnLG', '', NULL, 0, NULL, 'admin'),
 (5, 'ahmed mohamed', 11111111111111, 'ah@gmail.com', '01010101011', 'male', '2000-10-12', '', '$2y$10$dxxRGwYI.QcoW5N.16WyoeN4VhfI7pcXzXcwXeVQ7cI2treOZ3NqW', '3aec9dc5cc33ecb878953000fa9d210e', NULL, 0, NULL, 'admin');
@@ -151,7 +151,7 @@ CREATE TABLE `assistant` (
 --
 
 INSERT INTO `assistant` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `governorate`, `birth_date`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
-(1, 'mohamed', 99999999999999, 'mohamedsaeed00451@gmail.com', '01092338084', 'ذكر', 'البحيرة', '2000-10-22', '$2y$10$yZqkRs7N8bwd14G3rZ9jmuoeDYB1zQ0H6YygwGWNwbRvwVDA1jXDi', '220013', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImFzc2lzdGFudCIsImV4cCI6MTY3ODMwODYwM30.0rj-SchRqobWQD-3DRAT0CAzsYS9m_kaPuDSPbw06H8', 1, 'df_male', 'assistant'),
+(1, 'mohamed', 99999999999999, 'mohamedsaeed00451@gmail.com', '01092338084', 'ذكر', 'البحيرة', '2000-10-22', '$2y$10$yZqkRs7N8bwd14G3rZ9jmuoeDYB1zQ0H6YygwGWNwbRvwVDA1jXDi', '220013', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImFzc2lzdGFudCIsImV4cCI6MTY3ODgyMjA5MiwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MC5yb3NoZXR0YS5lZyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAucm9zaGV0dGEuY29tIiwiaWF0IjoxMzU2OTk5NTI0LCJuYmYiOjEzNTcwMDAwMDB9.fz1X9bp5YE0Qge2JNhYwCMtnnkPuw05ZOIonTrHeMUc', 1, 'df_male', 'assistant'),
 (2, 'mmss', 99999999999995, 'mohamedsaeed0451@gmail.com', '36985214788', 'ddd', 'dd', '0000-00-00', '$2y$10$qnYXOkpifziawKARcoWacOtfIdPq5WjJYpJ17MXuPn9Qtr/D7vK2u', '696129', NULL, 0, NULL, 'assistant');
 
 -- --------------------------------------------------------
@@ -211,8 +211,8 @@ CREATE TABLE `clinic` (
 --
 
 INSERT INTO `clinic` (`id`, `name`, `owner`, `specialist`, `phone_number`, `price`, `start_working`, `end_working`, `governorate`, `address`, `logo`, `ser_id`, `status`, `doctor_id`, `assistant_id`) VALUES
-(12, 'dr mohamed', 'mohamed saeed', 'بطنة', '01033505620', 200, '02:33:00', '05:20:30', 'البحيرة', 'اسوان', 'df-clinic', '1234561', 0, 1, 1),
-(16, 'عيادة دكتور ربيع', 'ربيع باشا', 'اسنان', '01092338540', 100, '02:00:00', '08:00:00', 'اسوان', 'اسوان جنب بتاع الخوخ', 'df-clinic', '4236741', 1, 1, 1);
+(12, 'dr mohamed', 'mohamed saeed', 'بطنة', '01039258858', 100, '02:00:00', '05:00:00', 'اسوان', 'اسون البلد جنب بتاع الخوخ ', 'df_clinic', '1234561', 1, 1, 1),
+(16, 'عيادة دكتور ربيع', 'ربيع باشا', 'اسنان', '01092338540', 100, '02:00:00', '08:00:00', 'اسوان', 'اسوان جنب بتاع الخوخ', 'df_clinic', '4236741', 1, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -270,7 +270,7 @@ CREATE TABLE `doctor` (
 --
 
 INSERT INTO `doctor` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `specialist`, `governorate`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
-(1, 'mohamed', 12345678912345, 'mohamedsaeed00451@gmail.com', '01092338084', 'ذكر', '2000-10-22', 'اسنان', 'البحيرة', '$2y$10$nhFyxDMDBtsW.HXz9vEeL.77kGYEZmWbdJQtVINCnDSWqx0bnkXCi', '969539', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRvY3RvciIsImV4cCI6MTY3ODczNTI3MywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MC5yb3NoZXR0YS5lZyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAucm9zaGV0dGEuY29tIiwiaWF0IjoxMzU2OTk5NTI0LCJuYmYiOjEzNTcwMDAwMDB9.yWjhx1TGi7mszJvPRctgU7LMN-NB55gye3ffyCRfF88', 1, 'df_male', 'doctor');
+(1, 'mohamed', 12345678912345, 'mohamedsaeed00451@gmail.com', '01092338087', 'ذكر', '2001-10-22', 'اسنان', 'البحيرة', '$2y$10$nhFyxDMDBtsW.HXz9vEeL.77kGYEZmWbdJQtVINCnDSWqx0bnkXCi', '969539', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRvY3RvciIsImV4cCI6MTY3ODgyMDI0OSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MC5yb3NoZXR0YS5lZyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAucm9zaGV0dGEuY29tIiwiaWF0IjoxMzU2OTk5NTI0LCJuYmYiOjEzNTcwMDAwMDB9.RYtPCQ0cKx4tY-4n-cO0J6wUDtTMjtetndh7pXXw4_8', 1, 'df_male', 'doctor');
 
 -- --------------------------------------------------------
 
@@ -358,7 +358,8 @@ INSERT INTO `patient` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `
 (63, 'mohamed saeed', 12345678912344, 'mohamedsaeed00451@gmail.com', '01092338086', 'male', '2000-03-24', 60, 173, 'beheira', '$2y$10$9y7h1e3CTMGXuakdX2mHc.KSI0NdZmcQ2XKZn8NGqEwpUt7oqI7A6', '244353', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NjMsInR5cGUiOiJQQVRJRU5UIiwiZXhwIjoxNjc3MTc3OTg5fQ.E5bjGueiHIZypWCucfURWwHVMDBJBKynnC2Uy87hodA', 1, NULL, 'patient'),
 (64, 'mmss', 99999999999998, 'mohamedsaeed0451@gmail.com', '36985214787', 'ddd', '0000-00-00', 22, 22, 'dd', '$2y$10$DOUaal1OscFvIngjQ7xvu..5YFQLThuQcwp909OQxMUKHMj0lYrYi', '815493', NULL, 0, NULL, 'patient'),
 (70, 'ahmed', 12345678912345, 'mo@gmail.com', '01092338588', 'male', '2000-10-22', 100, 200, 'البحيرة', '$2y$10$jvxW4dTBwjftDbKK1rGr0uUjDysspZwFS7ZH3/HgeihbjfC1uFxw.', '968617', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NzAsInR5cGUiOiJwYXRpZW50IiwiZXhwIjoxNjc4MDcxODMyfQ.0k9TklU5QMBpfcIOCEpzzntg6uaAJoE28oGSRUbk20I', 1, 'pa-12345678912345', 'patient'),
-(72, 'mohamed saeed', 12345678912352, 'mnn@gmail.com', '01092338585', 'ذكر', '2001-02-06', 58, 173, 'aswan', '$2y$10$KHembPKASW5hHzxLp3raEOZJB11iq/JMqi6uDfH9M82dgVk94tW9.', '510129', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NzIsInR5cGUiOiJwYXRpZW50IiwiZXhwIjoxNjc4NzQ4NTIxLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwLnJvc2hldHRhLmVnIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo4MC5yb3NoZXR0YS5jb20iLCJpYXQiOjEzNTY5OTk1MjQsIm5iZiI6MTM1NzAwMDAwMH0.Yq3kDzGK4aK95Ac1UeSzETln_4jIngsQPfJeMaInECs', 1, 'df_male', 'patient');
+(72, 'mohamed saeed', 12345678912352, 'mnn@gmail.com', '01092338585', 'ذكر', '2001-02-06', 58, 173, 'aswan', '$2y$10$KHembPKASW5hHzxLp3raEOZJB11iq/JMqi6uDfH9M82dgVk94tW9.', '510129', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NzIsInR5cGUiOiJwYXRpZW50IiwiZXhwIjoxNjc4NzQ4NTIxLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwLnJvc2hldHRhLmVnIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo4MC5yb3NoZXR0YS5jb20iLCJpYXQiOjEzNTY5OTk1MjQsIm5iZiI6MTM1NzAwMDAwMH0.Yq3kDzGK4aK95Ac1UeSzETln_4jIngsQPfJeMaInECs', 1, 'df_male', 'patient'),
+(73, 'm m', 11111151111111, 'm@gmail.com', '11111111111', 'y', '0000-00-00', 10, 20, 'u', '$2y$10$UC/96SJ5ymiHijVI5EMEJu9SXqFZu1Nj4AbRmzSZ/LX6G7QdKpWWC', '181644', NULL, 0, 'df_female', 'patient');
 
 -- --------------------------------------------------------
 
@@ -388,7 +389,7 @@ CREATE TABLE `pharmacist` (
 --
 
 INSERT INTO `pharmacist` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `governorate`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
-(1, 'عمرو المسلمانى', 99999999999999, 'ammghdefe45353@gmail.com', '36985214789', 'ذكر', '2023-01-12', 'البحيرة', '$2y$10$53zyweTCQd/SOiu7fjS71eawHwd/z1yDjPH9AEZfbYmsfU6lO6vI.', '589cb4b906218c4209c1bbbafada8845', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6InBoYXJtYWNpc3QiLCJleHAiOjE2Nzg3MzcwMzAsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAucm9zaGV0dGEuZWciLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjgwLnJvc2hldHRhLmNvbSIsImlhdCI6MTM1Njk5OTUyNCwibmJmIjoxMzU3MDAwMDAwfQ.4Dnf4Xaq24X9zauTC-zl9OIgphPRiY1wheP5l9h1ON8', 1, 'df_male', 'pharmacist'),
+(1, 'عمرو المسلمانى', 99999999999999, 'ammghdefe45353@gmail.com', '36985214789', 'ذكر', '2023-01-12', 'البحيرة', '$2y$10$53zyweTCQd/SOiu7fjS71eawHwd/z1yDjPH9AEZfbYmsfU6lO6vI.', '589cb4b906218c4209c1bbbafada8845', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6InBoYXJtYWNpc3QiLCJleHAiOjE2Nzg4MjA2NTYsImlzcyI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAucm9zaGV0dGEuZWciLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjgwLnJvc2hldHRhLmNvbSIsImlhdCI6MTM1Njk5OTUyNCwibmJmIjoxMzU3MDAwMDAwfQ.SiHn7eBazjpb7zpckV9UxHzzYcWjPki92ebzPlnOYSc', 1, 'df_male', 'pharmacist'),
 (2, 'mmss', 12345678912345, 'mo00123@gmail.com', '36985214787', 'ddd', '0000-00-00', 'dd', '$2y$10$CmuxHEC4fezP.WmGYQ3PZ.eeHWfGHNhyCl9LLj.IE04FtrkEqd/M6', '855027', NULL, 0, NULL, 'pharmacist'),
 (3, 'mmss', 99999994999995, 'mohamedsaeed451@gmail.com', '36985714787', 'ddd', '0000-00-00', 'dd', '$2y$10$QeqkbsLz/et5FePZoGwe2O.wiEdJSa3iKFvoyRTkaSZflbYxQnXOe', '524222', NULL, 0, NULL, 'pharmacist');
 
@@ -419,7 +420,7 @@ CREATE TABLE `pharmacy` (
 
 INSERT INTO `pharmacy` (`id`, `name`, `owner`, `phone_number`, `start_working`, `end_working`, `governorate`, `address`, `logo`, `ser_id`, `status`, `pharmacist_id`) VALUES
 (1, 'Dr ali mohamed', 'ali mohamed', '01222222222', '06:00:00', '12:00:00', 'behira', 'aswan', 'pa-12345678912345', '8211895764', 0, 1),
-(6, 'دكتور ربيع', 'ربيع باشا', '01092338540', '02:00:00', '08:00:00', 'اسوان', 'اسوان جنب بتاع الخوخ', 'df-pharmacy', '1234561', 1, 1);
+(6, 'دكتور ربيع', 'ربيع باشا', '01222222221', '08:00:00', '12:00:00', 'البحيرة', 'دمنهور', 'df_pharmacy', '1234561', 1, 1);
 
 -- --------------------------------------------------------
 
@@ -588,10 +589,10 @@ CREATE TABLE `video` (
 --
 
 INSERT INTO `video` (`id`, `video`, `type`) VALUES
-(1, 'df_patient.mp4', 'patient'),
-(2, 'df_doctor.mp4', 'doctor'),
-(3, 'df_pharmacist.mp4', 'pharmacist'),
-(4, 'df_assistant.mp4', 'assistant');
+(1, 'df_video.mp4', 'patient'),
+(2, 'df_video.mp4', 'doctor'),
+(3, 'df_video.mp4', 'pharmacist'),
+(4, 'df_video.mp4', 'assistant');
 
 --
 -- Indexes for dumped tables
@@ -816,7 +817,7 @@ ALTER TABLE `message`
 -- AUTO_INCREMENT for table `patient`
 --
 ALTER TABLE `patient`
-  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=73;
+  MODIFY `id` mediumint(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `pharmacist`
