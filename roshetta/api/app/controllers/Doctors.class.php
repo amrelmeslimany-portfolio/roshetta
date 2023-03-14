@@ -2,30 +2,37 @@
 
 class Doctors extends Controller
 {
-    private $doctorModel;
-    private $userModel;
-    private $patientModel;
+
+    private $doctorModel, $userModel, $patientModel, $CheckToken;
+
     public function __construct()
     {
-        $this->doctorModel = $this->model('doctor');
-        $this->userModel = $this->model('User');
-        $this->patientModel = $this->model('Patient');
+        $this->doctorModel      = $this->model('doctor');
+        $this->userModel        = $this->model('User');
+        $this->patientModel     = $this->model('Patient');
+        $this->CheckToken       = $this->tokenVerify();
+        if (!$this->CheckToken) {
+            $Message    = 'الرجاء تسجيل الدخول';
+            $Status     = 401;
+            userMessage($Status, $Message);
+            die();
+        }
     }
     public function document()
     {
-        $Message = '(API_Doctors)برجاء الإطلاع على شرح';
-        $Status = 400;
-        $url = 'https://documenter.getpostman.com/view/25605546/2s93CRMCfA#8dfbdfbd-2eb1-4bed-be0b-ab0e39dcb8b3';
+        $Message    = '(API_Doctors)برجاء الإطلاع على شرح';
+        $Status     = 400;
+        $url        = 'https://documenter.getpostman.com/view/25605546/2s93CRMCfA#8dfbdfbd-2eb1-4bed-be0b-ab0e39dcb8b3';
         userMessage($Status, $Message, $url);
         die();
     }
 
     //*************************************************** Token Verify **************************************************************//
-    public function tokenVerify()
+    private function tokenVerify()
     {
         $headers = apache_request_headers();
         if (isset($headers['authorization']) || isset($headers['Authorization'])) {
-            @$Auth = explode(" ", $headers['authorization'] ? $headers['authorization'] : $headers['Authorization'])[1]; // Get Token From Auth
+            @$Auth      = explode(" ", $headers['authorization'] ? $headers['authorization'] : $headers['Authorization'])[1]; // Get Token From Auth
             @$token_out = TokenDecode($Auth);
             if (!$token_out) {
                 return false;
@@ -49,75 +56,67 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
 
             @$phone_number  = filter_var($_POST['phone_number'], 519);  //FILTER_SANITIZE_INT
             @$price         = filter_var($_POST['price'], 519);  //FILTER_SANITIZE_INT
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
-                "name" => @$_POST['name'],
-                "specialist" => @$_POST['specialist'],
-                "price" => @$price,
-                "phone_number" => @$phone_number,
-                "governorate" => @$_POST['governorate'],
+                "id"            => @$this->CheckToken['id'],
+                "type"          => @$this->CheckToken['type'],
+                "name"          => @$_POST['name'],
+                "specialist"    => @$_POST['specialist'],
+                "price"         => @$price,
+                "phone_number"  => @$phone_number,
+                "governorate"   => @$_POST['governorate'],
                 "start_working" => @$_POST['start_working'],
-                "end_working" => @$_POST['end_working'],
-                "address" => @$_POST['address'],
+                "end_working"   => @$_POST['end_working'],
+                "address"       => @$_POST['address'],
             ];
             $data_err = [ //Array Error Data
-                "name_err" => '',
-                "specialist_err" => '',
-                "price_err" => '',
-                "phone_number_err" => '',
+                "name_err"          => '',
+                "specialist_err"    => '',
+                "price_err"         => '',
+                "phone_number_err"  => '',
                 "start_working_err" => '',
-                "end_working_err" => '',
-                "governorate_err" => '',
-                "address_err" => '',
+                "end_working_err"   => '',
+                "governorate_err"   => '',
+                "address_err"       => '',
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك القيام بالإضافة';
-                $Status = 403;
+                $Message    = 'غير مصرح لك القيام بالإضافة';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
 
             @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
             if (!$get_doctor) {
-                $Message = 'يجب تنشيط الحساب';
-                $Status = 400;
+                $Message    = 'يجب تنشيط الحساب';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
 
             if ($get_doctor->isActive !== 1) {
-                $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                $Status = 202;
+                $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                $Status     = 202;
                 userMessage($Status, $Message);
                 die();
             }
 
             @$get_clinic = $this->doctorModel->getClinic($data['id']);
             if (!$get_clinic) {
-                $Message = 'الرجاء المحاولة فى وقت لأحق';
-                $Status = 422;
+                $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                $Status     = 422;
                 userMessage($Status, $Message);
                 die();
             }
 
             if ($get_clinic >= 2) {
-                $Message = 'لايمكنك تسجيل أكثر من 2 عيادة';
-                $Status = 202;
+                $Message    = 'لايمكنك تسجيل أكثر من 2 عيادة';
+                $Status     = 202;
                 userMessage($Status, $Message);
                 die();
             }
@@ -153,40 +152,41 @@ class Doctors extends Controller
             ) {
 
                 $data_clinic = [
-                    "id" => $data['id'],
-                    "owner" => $get_doctor->name,
-                    "name" => $data['name'],
-                    "specialist" => $data['specialist'],
-                    "price" => $data['price'],
+                    "id"            => $data['id'],
+                    "owner"         => $get_doctor->name,
+                    "name"          => $data['name'],
+                    "specialist"    => $data['specialist'],
+                    "price"         => $data['price'],
                     "start_working" => $data['start_working'],
-                    "end_working" => $data['end_working'],
-                    "address" => $data['address'],
-                    "governorate" => $data['governorate'],
-                    "phone_number" => $data['phone_number'],
-                    "ser_id" => random_int(100000, 999999) . $data['id'],
-                    "image" => 'df-clinic'
+                    "end_working"   => $data['end_working'],
+                    "address"       => $data['address'],
+                    "governorate"   => $data['governorate'],
+                    "phone_number"  => $data['phone_number'],
+                    "ser_id"        => random_int(100000, 999999) . $data['id'],
+                    "image"         => DF_IMAGE_CLINIC
+
                 ];
 
                 if ($this->doctorModel->addClinic($data_clinic)) {
-                    $Message = 'تم تسجيل العيادة بنجاح';
-                    $Status = 201;
+                    $Message    = 'تم تسجيل العيادة بنجاح';
+                    $Status     = 201;
                     userMessage($Status, $Message);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -197,14 +197,6 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
 
             @$phone_number  = filter_var($_POST['phone_number'], 519);  //FILTER_SANITIZE_INT
@@ -212,36 +204,36 @@ class Doctors extends Controller
             @$clinic_id     = filter_var($id, 519);  //FILTER_SANITIZE_INT
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
-                "clinic_id" => @$clinic_id,
-                "price" => @$price,
-                "phone_number" => @$phone_number,
-                "governorate" => @$_POST['governorate'],
+                "id"            => @$this->CheckToken['id'],
+                "type"          => @$this->CheckToken['type'],
+                "clinic_id"     => @$clinic_id,
+                "price"         => @$price,
+                "phone_number"  => @$phone_number,
+                "governorate"   => @$_POST['governorate'],
                 "start_working" => @$_POST['start_working'],
-                "end_working" => @$_POST['end_working'],
-                "address" => @$_POST['address'],
+                "end_working"   => @$_POST['end_working'],
+                "address"       => @$_POST['address'],
             ];
             $data_err = [ //Array Error Data
-                "price_err" => '',
-                "phone_number_err" => '',
+                "price_err"         => '',
+                "phone_number_err"  => '',
                 "start_working_err" => '',
-                "end_working_err" => '',
-                "governorate_err" => '',
-                "address_err" => '',
-                "clinic_id_err" => ''
+                "end_working_err"   => '',
+                "governorate_err"   => '',
+                "address_err"       => '',
+                "clinic_id_err"     => ''
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك القيام بالتعديل';
-                $Status = 403;
+                $Message    = 'غير مصرح لك القيام بالتعديل';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -258,14 +250,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -305,36 +297,44 @@ class Doctors extends Controller
             ) {
 
                 $data_clinic = [
-                    "doctor_id" => $data['id'],
-                    "clinic_id" => $data['clinic_id'],
-                    "price" => $data['price'],
+                    "doctor_id"     => $data['id'],
+                    "clinic_id"     => $data['clinic_id'],
+                    "price"         => $data['price'],
                     "start_working" => $data['start_working'],
-                    "end_working" => $data['end_working'],
-                    "address" => $data['address'],
-                    "governorate" => $data['governorate'],
-                    "phone_number" => $data['phone_number'],
+                    "end_working"   => $data['end_working'],
+                    "address"       => $data['address'],
+                    "governorate"   => $data['governorate'],
+                    "phone_number"  => $data['phone_number'],
                 ];
 
                 if ($this->doctorModel->editClinic($data_clinic)) {
-                    $Message = 'تم تعديل بيانات العيادة بنجاح';
-                    $Status = 201;
-                    userMessage($Status, $Message);
+                    $new_data   = $this->userModel->getPlace('clinic', $data['clinic_id']);
+                    $num        = $this->doctorModel->numberAppointPres($data['clinic_id']);
+                    $url        = [
+                        "place"     => URL_PLACE,
+                        "person"    => URL_PERSON
+                    ];
+
+                    $data_clinic = viewClinic($new_data, $num, $url);
+                    $Message    = 'تم تعديل بيانات العيادة بنجاح';
+                    $Status     = 201;
+                    userMessage($Status, $Message, $data_clinic);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -345,17 +345,9 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
                 "clinic_id" => @$id
             ];
 
@@ -364,22 +356,22 @@ class Doctors extends Controller
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك تسجيل الدخول';
-                $Status = 403;
+                $Message    = 'غير مصرح لك تسجيل الدخول';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
                 if (!$get_doctor) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_doctor->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -397,14 +389,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -416,22 +408,22 @@ class Doctors extends Controller
 
                 $num = $this->doctorModel->numberAppointPres($data['clinic_id']);
                 $url = [
-                    "place" => "images/place_image/",
-                    "person" => "images/profile_image/"
+                    "place"     => URL_PLACE,
+                    "person"    => URL_PERSON
                 ];
 
                 $data_login = $this->doctorModel->loginClinic($data['clinic_id'], $data['id']);
 
                 if (!$data_login) {
-                    $Message = 'ليس لديك الصلاحية لتسجيل الدخول فى تلك العيادة';
-                    $Status = 400;
+                    $Message    = 'ليس لديك الصلاحية لتسجيل الدخول فى تلك العيادة';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if (!$this->doctorModel->editStatus($data['clinic_id'], 1)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -456,20 +448,20 @@ class Doctors extends Controller
                 }
 
                 $data_clinic = viewClinic($data_login, $num, $url);
-                $Message = 'تم تسجيل الدخول بنجاح';
-                $Status = 200;
+                $Message    = 'تم تسجيل الدخول بنجاح';
+                $Status     = 200;
                 userMessage($Status, $Message, $data_clinic);
                 $_SESSION['clinic'] = $data_login->id;
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -480,30 +472,22 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "clinic_id" => @$id,
-                "image_name" => @$_FILES['image']["name"],
-                "image_size" => @$_FILES['image']["size"],
-                "tmp_name" => @$_FILES['image']["tmp_name"],
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "clinic_id"     => @$id,
+                "image_name"    => @$_FILES['image']["name"],
+                "image_size"    => @$_FILES['image']["size"],
+                "tmp_name"      => @$_FILES['image']["tmp_name"],
             ];
             $data_err = [
-                "image_err" => '',
+                "image_err"     => '',
                 "clinic_id_err" => ''
             ];
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -520,14 +504,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -539,51 +523,54 @@ class Doctors extends Controller
             if (empty($data['image_name'])) {
                 $data_err['image_err'] = 'برجاء تحميل صورة';
             } else {
-                if ($data['image_size'] > 2000000) $data_err['image_err'] = '(2M)يجب أن يكون حجم الصورة أقل من';  //To Specify The Image Size  < 2M
+                if ($data['image_size'] > 4000000) $data_err['image_err'] = '(4M)يجب أن يكون حجم الصورة أقل من';  //To Specify The Image Size  < 4M
             }
             if (empty($data_err['image_err']) && empty($data_err['clinic_id_err'])) {
 
                 $data_image = [
-                    "type" => 'clinic',
-                    "ssd" => $result->ser_id,
-                    "name" => $data['image_name'],
-                    "tmp" => $data['tmp_name'],
-                    "url" => '/images/place_image/'
+                    "type"  => 'clinic',
+                    "ssd"   => $result->ser_id,
+                    "name"  => $data['image_name'],
+                    "tmp"   => $data['tmp_name'],
+                    "url"   => URL_PLACE
                 ];
 
                 @$url_img = addImageProfile($data_image);
 
                 if (!$url_img) {
-                    $Message = 'صيغة الملف غير مدعوم';
-                    $Status = 415;
+                    $Message    = 'صيغة الملف غير مدعوم';
+                    $Status     = 415;
                     userMessage($Status, $Message);
                     die();
                 }
                 $data_url = [
-                    "id" => $data['clinic_id'],
-                    "type" => 'clinic',
+                    "id"    => $data['clinic_id'],
+                    "type"  => 'clinic',
                     "image" => $url_img
                 ];
                 if ($this->doctorModel->editImage($data_url)) {
-                    $Message = 'تم تحديث صورة العيادة بنجاح';
-                    $Status = 201;
-                    userMessage($Status, $Message);
+                    @$new_image = $this->userModel->getPlace('clinic', $data['clinic_id']);
+                    $url        = URL_PLACE;
+                    $new_image  = getImage($new_image->logo, $url);
+                    $Message    = 'تم تحديث صورة العيادة بنجاح';
+                    $Status     = 201;
+                    userMessage($Status, $Message, $new_image);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وق لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وق لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -594,17 +581,9 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
                 "clinic_id" => @$id
             ];
 
@@ -613,8 +592,8 @@ class Doctors extends Controller
             ];
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -631,14 +610,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -650,47 +629,52 @@ class Doctors extends Controller
             if (empty($data_err['clinic_id_err'])) {
 
                 $data_image = [
-                    "type" => 'clinic',
-                    "ssd" => $result->ser_id,
-                    "url" => 'images/place_image/'
+                    "type"  => 'clinic',
+                    "ssd"   => $result->ser_id,
+                    "url"   => URL_PLACE
                 ];
 
-                if ($result->logo !== 'df-clinic') {
+                if ($result->logo !== DF_IMAGE_CLINIC) {
+
                     @$url_img = removeImage($data_image);
                     if (!$url_img) {
-                        $Message = 'الرجاء المحاولة فى وق لأحق';
-                        $Status = 422;
+                        $Message    = 'الرجاء المحاولة فى وق لأحق';
+                        $Status     = 422;
                         userMessage($Status, $Message);
                         die();
                     }
                 }
 
                 $data_url = [
-                    "id" => $data['clinic_id'],
-                    "type" => 'clinic',
-                    "image" => 'df-clinic'
+                    "id"    => $data['clinic_id'],
+                    "type"  => 'clinic',
+                    "image" => DF_IMAGE_CLINIC
+
                 ];
 
                 if ($this->doctorModel->editImage($data_url)) {
-                    $Message = 'تم حذف صورة العيادة بنجاح';
-                    $Status = 201;
-                    userMessage($Status, $Message);
+                    @$new_image = $this->userModel->getPlace('clinic', $data['clinic_id']);
+                    $url        = URL_PLACE;
+                    $new_image  = getImage($new_image->logo, $url);
+                    $Message    = 'تم حذف صورة العيادة بنجاح';
+                    $Status     = 201;
+                    userMessage($Status, $Message, $new_image);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وق لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وق لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -701,17 +685,9 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
                 "clinic_id" => @$id
             ];
 
@@ -720,8 +696,8 @@ class Doctors extends Controller
             ];
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'أنت بافعل خارج العيادة';
-                $Status = 400;
+                $Message    = 'أنت بافعل خارج العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -740,27 +716,27 @@ class Doctors extends Controller
             if (empty($data_err['clinic_id_err'])) {
 
                 if (!$this->doctorModel->editStatus($data['clinic_id'], 0)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 unset($_SESSION['clinic']);
 
-                $Message = 'تم تسجيل الخروج بنجاح';
-                $Status = 201;
+                $Message    = 'تم تسجيل الخروج بنجاح';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -771,58 +747,50 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
-            $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
-            $_GET = filter_input_array(1, 519); //INPUT_GET   //FILTER_SANITIZE_NUMBER_INT
+            $_POST  = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
+            $_GET   = filter_input_array(1, 519); //INPUT_GET   //FILTER_SANITIZE_NUMBER_INT
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "patient_id" => @$_GET['patient_id'],
-                "clinic_id" => @$id,
-                "name" => @$_POST['name'],
-                "place" => @$_POST['place'],
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "patient_id"    => @$_GET['patient_id'],
+                "clinic_id"     => @$id,
+                "name"          => @$_POST['name'],
+                "place"         => @$_POST['place'],
             ];
 
             $data_err = [
-                "clinic_id_err" => '',
-                "patient_id_err" => '',
-                "name_err" => '',
-                "place_err" => ''
+                "clinic_id_err"     => '',
+                "patient_id_err"    => '',
+                "name_err"          => '',
+                "place_err"         => ''
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك إضافة تشخيص';
-                $Status = 403;
+                $Message    = 'غير مصرح لك إضافة تشخيص';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
                 if (!$get_doctor) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_doctor->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -838,14 +806,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -873,44 +841,44 @@ class Doctors extends Controller
             ) {
 
                 $data_disease = [
-                    "name" => $data['name'],
-                    "place" => $data['place'],
-                    "clinic_id" => $data['clinic_id'],
-                    "patient_id" => $data['patient_id'],
-                    "doctor_id" => $data['id'],
-                    "date" => date('Y-m-d')
+                    "name"          => $data['name'],
+                    "place"         => $data['place'],
+                    "clinic_id"     => $data['clinic_id'],
+                    "patient_id"    => $data['patient_id'],
+                    "doctor_id"     => $data['id'],
+                    "date"          => date('Y-m-d')
                 ];
 
                 if (!$this->doctorModel->addDisease($data_disease)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 @$result = $this->doctorModel->getDiseaseNew($data_disease);
                 if (!$result) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 $_SESSION['disease'] = $result;
 
-                $Message = 'تم إضافة التشخيص بنجاح';
-                $Status = 201;
+                $Message    = 'تم إضافة التشخيص بنجاح';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -921,60 +889,52 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "rediscovery_date" => @$_POST['rediscovery_date'],
-                "clinic_id" => @$id
+                "id"                => $this->CheckToken['id'],
+                "type"              => $this->CheckToken['type'],
+                "rediscovery_date"  => @$_POST['rediscovery_date'],
+                "clinic_id"         => @$id
             ];
 
             $data_err = [
-                "clinic_id_err" => '',
-                "rediscovery_date_err" => '',
+                "clinic_id_err"         => '',
+                "rediscovery_date_err"  => ''
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك إضافة روشتة';
-                $Status = 403;
+                $Message    = 'غير مصرح لك إضافة روشتة';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
                 if (!$get_doctor) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_doctor->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
 
             if (!isset($_SESSION['disease'])) {
-                $Message = 'يجب إدخال التشخيص أولا';
-                $Status = 400;
+                $Message    = 'يجب إدخال التشخيص أولا';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -990,14 +950,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -1014,26 +974,26 @@ class Doctors extends Controller
             ) {
 
                 $data_pres = [
-                    "clinic_id" => $data['clinic_id'],
-                    "patient_id" => $_SESSION['disease']->patient_id,
-                    "disease_id" => $_SESSION['disease']->id,
-                    "doctor_id" => $data['id'],
-                    "rediscovery_date" => $data['rediscovery_date'],
-                    "created_date" => date('Y-m-d'),
-                    "ser_id" => random_int(100000, 999999) . $_SESSION['disease']->id
+                    "clinic_id"         => $data['clinic_id'],
+                    "patient_id"        => $_SESSION['disease']->patient_id,
+                    "disease_id"        => $_SESSION['disease']->id,
+                    "doctor_id"         => $data['id'],
+                    "rediscovery_date"  => $data['rediscovery_date'],
+                    "created_date"      => date('Y-m-d'),
+                    "ser_id"            => random_int(100000, 999999) . $_SESSION['disease']->id
                 ];
 
                 if (!$this->doctorModel->addPrescript($data_pres)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 $new_appoint = [
-                    "clinic_id" => $data['clinic_id'],
-                    "patient_id" => $_SESSION['disease']->patient_id,
-                    "appoint_date" => $data['rediscovery_date']
+                    "clinic_id"     => $data['clinic_id'],
+                    "patient_id"    => $_SESSION['disease']->patient_id,
+                    "appoint_date"  => $data['rediscovery_date']
                 ];
 
                 if (@$this->patientModel->addAppointPatient($new_appoint)) {
@@ -1042,8 +1002,8 @@ class Doctors extends Controller
 
                 @$result = $this->doctorModel->getPrescriptNew($data_pres['ser_id']);
                 if (!$result) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -1051,19 +1011,19 @@ class Doctors extends Controller
                 $_SESSION['prescript'] = $result->id;
                 unset($_SESSION['disease']);
 
-                $Message = 'تم إضافة الروشتة جارى التجهيز لوضع الأدوية';
-                $Status = 201;
+                $Message    = 'تم إضافة الروشتة جارى التجهيز لوضع الأدوية';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1074,60 +1034,52 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "medicine" => @$_POST['medicine'],
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
+                "medicine"  => @$_POST['medicine'],
                 "clinic_id" => @$id
             ];
 
             $data_err = [
                 "clinic_id_err" => '',
-                "medicine_err" => ''
+                "medicine_err"  => ''
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك إضافة أدوية';
-                $Status = 403;
+                $Message    = 'غير مصرح لك إضافة أدوية';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
                 if (!$get_doctor) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_doctor->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
 
             if (!isset($_SESSION['prescript'])) {
-                $Message = 'يجب إدخال الروشتة أولا';
-                $Status = 400;
+                $Message    = 'يجب إدخال الروشتة أولا';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1143,14 +1095,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -1167,32 +1119,32 @@ class Doctors extends Controller
             ) {
 
                 $data_med = [
-                    "prescript_id" => $_SESSION['prescript'],
+                    "prescript_id"  => $_SESSION['prescript'],
                     "medicine_data" => base64_encode(serialize($data['medicine']))
                 ];
 
                 if (!$this->doctorModel->addMedicine($data_med)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 unset($_SESSION['prescript']);
 
-                $Message = 'تم إضافة الأدوية بنجاح';
-                $Status = 201;
+                $Message    = 'تم إضافة الأدوية بنجاح';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1203,58 +1155,50 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
-            $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
-            $_GET = filter_input_array(1, 519); //INPUT_GET   //FILTER_SANITIZE_NUMBER_INT
+            $_POST  = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
+            $_GET   = filter_input_array(1, 519); //INPUT_GET   //FILTER_SANITIZE_NUMBER_INT
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "rediscovery_date" => @$_POST['rediscovery_date'],
-                "clinic_id" => @$id,
-                "disease_id" => @$_GET['disease_id'],
-                "patient_id" => @$_GET['patient_id']
+                "id"                => $this->CheckToken['id'],
+                "type"              => $this->CheckToken['type'],
+                "rediscovery_date"  => @$_POST['rediscovery_date'],
+                "clinic_id"         => @$id,
+                "disease_id"        => @$_GET['disease_id'],
+                "patient_id"        => @$_GET['patient_id']
             ];
 
             $data_err = [
-                "clinic_id_err" => '',
-                "disease_id_err" => '',
-                "patient_id_err" => '',
-                "rediscovery_date_err" => ''
+                "clinic_id_err"         => '',
+                "disease_id_err"        => '',
+                "patient_id_err"        => '',
+                "rediscovery_date_err"  => ''
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك وضع الروشتة';
-                $Status = 403;
+                $Message    = 'غير مصرح لك وضع الروشتة';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
                 if (!$get_doctor) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_doctor->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1270,14 +1214,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -1312,45 +1256,45 @@ class Doctors extends Controller
             ) {
 
                 $data_pres = [
-                    "clinic_id" => $data['clinic_id'],
-                    "patient_id" => $data['patient_id'],
-                    "disease_id" => $data['disease_id'],
-                    "doctor_id" => $data['id'],
-                    "rediscovery_date" => $data['rediscovery_date'],
-                    "created_date" => date('Y-m-d'),
-                    "ser_id" => random_int(100000, 999999) . $data['patient_id']
+                    "clinic_id"         => $data['clinic_id'],
+                    "patient_id"        => $data['patient_id'],
+                    "disease_id"        => $data['disease_id'],
+                    "doctor_id"         => $data['id'],
+                    "rediscovery_date"  => $data['rediscovery_date'],
+                    "created_date"      => date('Y-m-d'),
+                    "ser_id"            => random_int(100000, 999999) . $data['patient_id']
                 ];
 
                 if (!$this->doctorModel->addPrescript($data_pres)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 @$result = $this->doctorModel->getPrescriptNew($data_pres['ser_id']);
                 if (!$result) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 $_SESSION['prescript'] = $result->id;
 
-                $Message = 'تم إضافة الروشتة جارى التجهيز لوضع الأدوية';
-                $Status = 201;
+                $Message    = 'تم إضافة الروشتة جارى التجهيز لوضع الأدوية';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1361,47 +1305,39 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
+                "id"    => $this->CheckToken['id'],
+                "type"  => $this->CheckToken['type'],
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك الإطلاع على العيادات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على العيادات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
 
             @$result = $this->doctorModel->getClinicDoc($data['id']);
             if (!$result) {
-                $Message = 'لم يتم العثور على بيانات';
-                $Status = 204;
+                $Message    = 'لم يتم العثور على بيانات';
+                $Status     = 204;
                 userMessage($Status, $Message);
                 die();
             }
 
-            $url = "images/place_image/";
+            $url = URL_PLACE;
             $new_data = [];
             foreach ($result as $element) {
                 $element['logo'] = getImage($element['logo'], $url);
                 $new_data[] = $element;
             }
-            $Message = 'تم جلب البيانات بنجاح';
-            $Status = 200;
+            $Message    = 'تم جلب البيانات بنجاح';
+            $Status     = 200;
             userMessage($Status, $Message, $new_data);
             die();
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1412,17 +1348,9 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
                 "clinic_id" => @$id
             ];
 
@@ -1431,30 +1359,30 @@ class Doctors extends Controller
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك الإطلاع على المساعد';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على المساعد';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
                 if (!$get_doctor) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_doctor->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1470,14 +1398,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -1490,30 +1418,30 @@ class Doctors extends Controller
 
                 @$result = $this->doctorModel->getAssistant($data['clinic_id']);
                 if (!$result) {
-                    $Message = 'لم يتم العثور على بيانات';
-                    $Status = 204;
+                    $Message    = 'لم يتم العثور على بيانات';
+                    $Status     = 204;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $url = "images/profile_image/";
+                $url = URL_PERSON;
                 $new_data = [];
                 foreach ($result as $element) {
                     $element['profile_img'] = getImage($element['profile_img'], $url);
                     $new_data[] = $element;
                 }
-                $Message = 'تم جلب البيانات بنجاح';
-                $Status = 200;
+                $Message    = 'تم جلب البيانات بنجاح';
+                $Status     = 200;
                 userMessage($Status, $Message, $new_data);
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1524,53 +1452,45 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 519); //INPUT_GET   //FILTER_SANITIZE_STRING
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "clinic_id" => @$id,
-                "assistant_id" => @$_GET['assistant_id'],
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "clinic_id"     => @$id,
+                "assistant_id"  => @$_GET['assistant_id'],
             ];
 
             $data_err = [
-                "clinic_id_err" => '',
-                "assistant_id_err" => '',
+                "clinic_id_err"     => '',
+                "assistant_id_err"  => ''
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك التعديل على المساعد';
-                $Status = 403;
+                $Message    = 'غير مصرح لك التعديل على المساعد';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
                 if (!$get_doctor) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_doctor->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1586,14 +1506,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -1611,25 +1531,34 @@ class Doctors extends Controller
             if (empty($data_err['clinic_id_err']) && empty($data_err['assistant_id_err'])) {
 
                 if (!$this->doctorModel->editAssistant($data['clinic_id'], $data['assistant_id'])) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $Message = 'تم إضافة المساعد بنجاح';
-                $Status = 201;
-                userMessage($Status, $Message);
+                @$result = $this->doctorModel->getAssistant($data['clinic_id']);
+
+                $url = URL_PERSON;
+                $new_data = [];
+                foreach ($result as $element) {
+                    $element['profile_img'] = getImage($element['profile_img'], $url);
+                    $new_data[] = $element;
+                }
+
+                $Message    = 'تم إضافة المساعد بنجاح';
+                $Status     = 201;
+                userMessage($Status, $Message, $new_data);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1640,17 +1569,9 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
                 "clinic_id" => @$id
             ];
 
@@ -1659,30 +1580,30 @@ class Doctors extends Controller
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك الإطلاع على المساعد';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على المساعد';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
                 if (!$get_doctor) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_doctor->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1698,14 +1619,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -1717,25 +1638,25 @@ class Doctors extends Controller
             if (empty($data_err['clinic_id_err'])) {
 
                 if (!$this->doctorModel->editAssistant($data['clinic_id'], null)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $Message = 'تم حذف المساعد بنجاح';
-                $Status = 201;
+                $Message    = 'تم حذف المساعد بنجاح';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1746,53 +1667,45 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 513); //INPUT_GET   //FILTER_SANITIZE_STRING
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "clinic_id" => @$id,
-                "appointment_id" => @$_GET['appointment_id'],
+                "id"                => $this->CheckToken['id'],
+                "type"              => $this->CheckToken['type'],
+                "clinic_id"         => @$id,
+                "appointment_id"    => @$_GET['appointment_id'],
             ];
 
             $data_err = [
-                "clinic_id_err" => '',
-                "appointment_id_err" => '',
+                "clinic_id_err"         => '',
+                "appointment_id_err"    => '',
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك التعديل على الموعد';
-                $Status = 403;
+                $Message    = 'غير مصرح لك التعديل على الموعد';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
                 if (!$get_doctor) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_doctor->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1808,14 +1721,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -1832,26 +1745,26 @@ class Doctors extends Controller
 
             if (empty($data_err['clinic_id_err']) && empty($data_err['appointment_id_err'])) {
 
-                if (!$this->doctorModel->editAppointStatus($data['clinic_id'], $data['appointment_id'],2)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                if (!$this->doctorModel->editAppointStatus($data['clinic_id'], $data['appointment_id'], 2)) {
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $Message = 'تم الكشف بنجاح';
-                $Status = 201;
+                $Message    = 'تم الكشف بنجاح';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1863,23 +1776,15 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "filter" => @$_GET['filter'],
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
+                "filter"    => @$_GET['filter'],
                 "clinic_id" => @$id,
-                "date" => @$_GET['date'],
-                "status" => @$_GET['status']
+                "date"      => @$_GET['date'],
+                "status"    => @$_GET['status']
             ];
 
             $data_err = [
@@ -1887,29 +1792,29 @@ class Doctors extends Controller
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك الإطلاع على المواعيد';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على المواعيد';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
                 if (!$get_doctor) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
                 if ($get_doctor->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1925,14 +1830,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -1957,34 +1862,34 @@ class Doctors extends Controller
                 if (!empty($data['filter'])) {
                     @$result = $this->doctorModel->filterAppoint($data['clinic_id'], $date, $case, $data['filter']);
                     if (!$result) {
-                        $Message = 'لم يتم العثور على بيانات';
-                        $Status = 204;
+                        $Message    = 'لم يتم العثور على بيانات';
+                        $Status     = 204;
                         userMessage($Status, $Message);
                         die();
                     }
                 } else {
                     @$result = $this->doctorModel->getAppointClinic($data['clinic_id'], $date, $case);
                     if (!$result) {
-                        $Message = 'لم يتم العثور على بيانات';
-                        $Status = 204;
+                        $Message    = 'لم يتم العثور على بيانات';
+                        $Status     = 204;
                         userMessage($Status, $Message);
                         die();
                     }
                 }
 
-                $Message = 'تم جلب البيانات بنجاح';
-                $Status = 200;
+                $Message    = 'تم جلب البيانات بنجاح';
+                $Status     = 200;
                 userMessage($Status, $Message, $result);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1995,53 +1900,45 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 519); //INPUT_GET   //FILTER_SANITIZE_STRING
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "clinic_id" => @$id,
-                "patient_id" => @$_GET['patient_id'],
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "clinic_id"     => @$id,
+                "patient_id"    => @$_GET['patient_id'],
             ];
 
             $data_err = [
-                "clinic_id_err" => '',
-                "patient_id_err" => '',
+                "clinic_id_err"     => '',
+                "patient_id_err"    => ''
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك الإطلاع على البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
                 if (!$get_doctor) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_doctor->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -2057,14 +1954,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -2083,33 +1980,33 @@ class Doctors extends Controller
             if (empty($data_err['clinic_id_err']) && empty($data_err['patient_id_err'])) {
 
                 $disease = $this->patientModel->getDataDisease($data['patient_id']);
-                $url = "images/profile_image/";
+                $url = URL_PERSON;
                 $data_message = [
                     "patient" => [
-                        "patient_id" => $data_patient->id,
-                        "name" => $data_patient->name,
-                        "weight" => $data_patient->weight,
-                        "height" => $data_patient->height,
-                        "phone_number" => $data_patient->phone_number,
-                        "age" => userAge($data_patient->birth_date),
-                        "image" => getImage($data_patient->profile_img, $url)
+                        "patient_id"    => $data_patient->id,
+                        "name"          => $data_patient->name,
+                        "weight"        => $data_patient->weight,
+                        "height"        => $data_patient->height,
+                        "phone_number"  => $data_patient->phone_number,
+                        "age"           => userAge($data_patient->birth_date),
+                        "image"         => getImage($data_patient->profile_img, $url)
                     ],
                     "disease" => $disease
                 ];
 
-                $Message = 'تم جلب البيانات بنجاح';
-                $Status = 200;
+                $Message    = 'تم جلب البيانات بنجاح';
+                $Status     = 200;
                 userMessage($Status, $Message, $data_message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -2120,53 +2017,45 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 519); //INPUT_GET   //FILTER_SANITIZE_STRING
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "clinic_id" => @$id,
-                "disease_id" => @$_GET['disease_id'],
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "clinic_id"     => @$id,
+                "disease_id"    => @$_GET['disease_id'],
             ];
 
             $data_err = [
-                "clinic_id_err" => '',
-                "disease_id_err" => '',
+                "clinic_id_err"     => '',
+                "disease_id_err"    => ''
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك الإطلاع على البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
                 if (!$get_doctor) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_doctor->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -2182,14 +2071,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -2210,25 +2099,25 @@ class Doctors extends Controller
                 @$data_message = $this->doctorModel->getDiseasePrescript($data['disease_id']);
 
                 if (!$data_message) {
-                    $Message = 'لم يتم العثور على بيانات';
-                    $Status = 204;
+                    $Message    = 'لم يتم العثور على بيانات';
+                    $Status     = 204;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $Message = 'تم جلب البيانات بنجاح';
-                $Status = 200;
+                $Message    = 'تم جلب البيانات بنجاح';
+                $Status     = 200;
                 userMessage($Status, $Message, $data_message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -2239,38 +2128,30 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 519); // INPUT_GET    //FILTER_SANITIZE_STRING
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "clinic_id" => @$id,
-                "prescript_id" => @$_GET['prescript_id']
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "clinic_id"     => @$id,
+                "prescript_id"  => @$_GET['prescript_id']
             ];
 
             $data_err = [
-                "prescript_id_err" => '',
-                "clinic_id_err" => ''
+                "prescript_id_err"  => '',
+                "clinic_id_err"     => ''
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك الإطلاع على التفاصيل';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على التفاصيل';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -2286,14 +2167,14 @@ class Doctors extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -2316,29 +2197,29 @@ class Doctors extends Controller
 
                 @$result_prescript = $this->doctorModel->getDiseasePrescriptDetails($data['prescript_id']);
                 if (!$result_prescript) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 @$result_medicine = $this->patientModel->getPrescriptMedicine($data['prescript_id']);
                 if (!$result_medicine) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 @$decode_medicine = decodeMedicine($result_medicine);
                 if (!$decode_medicine) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $url = "images/place_image/";
+                $url = URL_PLACE;
                 $new_result_prescript = [];
                 foreach ($result_prescript as $element) {
                     $element['clinic_logo'] = getImage($element['clinic_logo'], $url);
@@ -2351,23 +2232,23 @@ class Doctors extends Controller
                 }
 
                 $data_message = [
-                    "prescript_data" => $new_result_prescript,
-                    "medicine_data" => $new_decode_medicine
+                    "prescript_data"    => $new_result_prescript,
+                    "medicine_data"     => $new_decode_medicine
                 ];
 
-                $Message = 'تم جلب البيانات بنجاح';
-                $Status = 200;
+                $Message    = 'تم جلب البيانات بنجاح';
+                $Status     = 200;
                 userMessage($Status, $Message, $data_message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -2378,27 +2259,19 @@ class Doctors extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status,$Message);
-                die();
-            }
-
-            $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
-            $_GET = filter_input_array(1, 519); // INPUT_GET    //FILTER_SANITIZE_STRING
+            $_POST  = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
+            $_GET   = filter_input_array(1, 519); // INPUT_GET    //FILTER_SANITIZE_STRING
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "message" => @$_POST['message'],
-                "chat_id" => @$_GET['chat_id'],
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
+                "message"   => @$_POST['message'],
+                "chat_id"   => @$_GET['chat_id'],
             ];
 
             if ($data['type'] !== 'doctor') {
-                $Message = 'غير مصرح لك الإطلاع على التفاصيل';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على التفاصيل';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -2420,22 +2293,22 @@ class Doctors extends Controller
 
                 @$get_doctor = $this->userModel->getPlace($data['type'], $data['id']);
                 if (!$get_doctor) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
                 $data_chat = [
-                    "name" => $get_doctor->name,
-                    "id" => $data['id'],
-                    "time" => date("h:i"),
-                    "image" => $get_doctor->profile_img,
-                    "message" => $data['message']
+                    "name"      => $get_doctor->name,
+                    "id"        => $data['id'],
+                    "time"      => date("h:i"),
+                    "image"     => $get_doctor->profile_img,
+                    "message"   => $data['message']
                 ];
 
                 if (!$this->doctorModel->addChat($data_chat)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -2452,15 +2325,15 @@ class Doctors extends Controller
             }
 
             if (empty($data_message)) {
-                $Message = 'لم يتم العثور على بيانات';
-                $Status = 204;
+                $Message    = 'لم يتم العثور على بيانات';
+                $Status     = 204;
                 userMessage($Status, $Message);
                 die();
             }
 
             $new_data_message = [];
 
-            $url = "images/profile_image/";
+            $url = URL_PERSON;
             foreach ($data_message as $element) {
                 $element['image'] = getImage($element['image'], $url);
                 if ($element['doctor_id'] == $data['id']) {
@@ -2471,13 +2344,13 @@ class Doctors extends Controller
                 $new_data_message[] = $element;
             }
 
-            $Message = 'تم جلب البيانات بنجاح';
-            $Status = 200;
+            $Message    = 'تم جلب البيانات بنجاح';
+            $Status     = 200;
             userMessage($Status, $Message, $new_data_message);
             die();
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }

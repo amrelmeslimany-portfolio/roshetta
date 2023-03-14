@@ -2,32 +2,37 @@
 
 class Admins extends Controller
 {
-    private $adminModel;
-    private $userModel;
-    private $doctorModel;
-    private $pharmacistModel;
+    private $CheckToken, $pharmacistModel, $doctorModel, $userModel, $adminModel;
     public function __construct()
     {
-        $this->adminModel = $this->model('Admin');
-        $this->userModel = $this->model('User');
-        $this->doctorModel = $this->model('Doctor');
-        $this->pharmacistModel = $this->model('Pharmacist');
+        $this->adminModel       = $this->model('Admin');
+        $this->userModel        = $this->model('User');
+        $this->doctorModel      = $this->model('Doctor');
+        $this->pharmacistModel  = $this->model('Pharmacist');
+        $this->CheckToken       = $this->tokenVerify();
+
+        if (!$this->CheckToken) {
+            $Message    = 'الرجاء تسجيل الدخول';
+            $Status     = 401;
+            userMessage($Status, $Message);
+            die();
+        }
     }
     public function document()
     {
-        $Message = '(API_Admins)برجاء الإطلاع على شرح';
-        $Status = 400;
-        $url = 'https://documenter.getpostman.com/view/25605546/2s93CRMCfA#ac878ddb-58e6-4ba6-82fc-48991a6ca4dd';
+        $Message    = '(API_Admins)برجاء الإطلاع على شرح';
+        $Status     = 400;
+        $url        = 'https://documenter.getpostman.com/view/25605546/2s93CRMCfA#ac878ddb-58e6-4ba6-82fc-48991a6ca4dd';
         userMessage($Status, $Message, $url);
         die();
     }
 
     //*************************************************** Token Verify **************************************************************//
-    public function tokenVerify()
+    private function tokenVerify()
     {
         $headers = apache_request_headers();
         if (isset($headers['authorization']) || isset($headers['Authorization'])) {
-            @$Auth = explode(" ", $headers['authorization'] ? $headers['authorization'] : $headers['Authorization'])[1]; // Get Token From Auth
+            @$Auth      = explode(" ", $headers['authorization'] ? $headers['authorization'] : $headers['Authorization'])[1]; // Get Token From Auth
             @$token_out = TokenDecode($Auth);
             if (!$token_out) {
                 return false;
@@ -51,27 +56,19 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 513);
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
+                "id"        => @$this->CheckToken['id'],
+                "type"      => @$this->CheckToken['type'],
                 "type_user" => @$_GET['type'],
-                "status" => @$_GET['status'],
-                "filter" => @$_GET['filter']
+                "status"    => @$_GET['status'],
+                "filter"    => @$_GET['filter']
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك الإطلاع على البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -79,8 +76,8 @@ class Admins extends Controller
             if (!empty($data['type_user'])) {
                 $types = ['doctor', 'pharmacy', 'pharmacist', 'clinic'];
                 if (!in_array($data['type_user'], $types)) {
-                    $Message = 'النوع غير مدعوم';
-                    $Status = 400;
+                    $Message    = 'النوع غير مدعوم';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -92,20 +89,20 @@ class Admins extends Controller
 
             @$data_active = $this->adminModel->getActivationData($data['type_user'], $data['status'], $data['filter']);
             if (!$data_active) {
-                $Message = 'لم يتم العثور على بيانات';
-                $Status = 204;
+                $Message    = 'لم يتم العثور على بيانات';
+                $Status     = 204;
                 userMessage($Status, $Message);
                 die();
             }
 
-            $url_person = 'images/profile_image/';
-            $url_place = 'images/place_image/';
+            $url_person = URL_PERSON;
+            $url_place  = URL_PLACE;
 
             $new_doctor = [];
             if (!empty($data_active['doctor'])) {
                 foreach ($data_active['doctor'] as $values) {
-                    $values['profile_img'] = getImage($values['profile_img'], $url_person);
-                    $new_doctor[] = $values;
+                    $values['profile_img']  = getImage($values['profile_img'], $url_person);
+                    $new_doctor[]           = $values;
                 }
             }
 
@@ -135,13 +132,13 @@ class Admins extends Controller
 
             $data_message = array_merge($new_doctor, $new_pharmacist, $new_clinic, $new_pharmacy);
 
-            $Message = 'تم جلب البيانات بنجاح';
-            $Status = 200;
+            $Message    = 'تم جلب البيانات بنجاح';
+            $Status     = 200;
             userMessage($Status, $Message, $data_message);
             die();
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -152,33 +149,25 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
-            // $_GET = filter_input_array(1, 513);
+            $_GET = filter_input_array(1, 513);
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
-                "type_user" => @$_GET['type'],
+                "id"            => @$this->CheckToken['id'],
+                "type"          => @$this->CheckToken['type'],
+                "type_user"     => @$_GET['type'],
                 "activation_id" => @$_GET['activation_id'],
-                "status" => @$_GET['status'],
+                "status"        => @$_GET['status'],
             ];
 
             $data_err = [
-                "type_err" => '',
+                "type_err"          => '',
                 "activation_id_err" => '',
-                "status_err" => ''
+                "status_err"        => ''
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك الإطلاع على البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -231,8 +220,8 @@ class Admins extends Controller
             if (empty($data_err['activation_id_err']) && empty($data_err['type_err']) && empty($data_err['status_err'])) {
 
                 if (!$this->adminModel->editStatus($type, $data['type_user'], $data['activation_id'], $data['status'])) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -251,9 +240,9 @@ class Admins extends Controller
                     }
                     //************************************* Send Email Success ***********************************//
                     $data_email = [
-                        "type" => $data['type_user'],
+                        "type"      => $data['type_user'],
                         "user_name" => $data_user->name,
-                        "email" => $data_user->email,
+                        "email"     => $data_user->email,
                     ];
                     $mail_data = activeEmailBody($data_email);  //Function To Get Email Data
                     @require_once('../app/helpers/email/mail.php');
@@ -263,27 +252,27 @@ class Admins extends Controller
                     $mail->Body = emailBody($mail_data['icon'], $mail_data['body']);
                     @$mail->send();
 
-                    $Message = 'تم تنشيط الحساب بنجاح';
-                    $Status = 201;
+                    $Message    = 'تم تنشيط الحساب بنجاح';
+                    $Status     = 201;
                     userMessage($Status, $Message);
                     die();
                     //************************************* End Send Email Success ***********************************//
 
                 } else {
-                    $Message = 'تم إلغاء تنشيط الحساب بنجاح';
-                    $Status = 201;
+                    $Message    = 'تم إلغاء تنشيط الحساب بنجاح';
+                    $Status     = 201;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -294,31 +283,23 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 513);
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
-                "type_user" => @$_GET['type'],
+                "id"            => @$this->CheckToken['id'],
+                "type"          => @$this->CheckToken['type'],
+                "type_user"     => @$_GET['type'],
                 "activation_id" => @$_GET['activation_id']
             ];
 
             $data_err = [
-                "type_err" => '',
+                "type_err"          => '',
                 "activation_id_err" => '',
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك الإطلاع على البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -351,31 +332,31 @@ class Admins extends Controller
 
                 if ($type == 'activation_person') {
 
-                    $url = "images/activation_image_person/";
-                    @$data_image = getImageActive($data_active->images, $url);
+                    $url            = URL_ACTIVATION_PERSON;
+                    @$data_image    = getImageActive($data_active->images, $url);
 
-                    $Message = 'تم جلب البيانات بنجاح';
-                    $Status = 200;
+                    $Message    = 'تم جلب البيانات بنجاح';
+                    $Status     = 200;
                     userMessage($Status, $Message, $data_image);
                     die();
                 } else {
-                    $url = "images/activation_image_place/";
-                    @$data_image = getImage($data_active->license_img, $url);
+                    $url            = URL_ACTIVATION_PLACE;
+                    @$data_image    = getImage($data_active->license_img, $url);
 
-                    $Message = 'تم جلب البيانات بنجاح';
-                    $Status = 200;
+                    $Message    = 'تم جلب البيانات بنجاح';
+                    $Status     = 200;
                     userMessage($Status, $Message, $data_image);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -386,30 +367,22 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "type_user" => @$_GET['type'],
-                "video_name" => @$_FILES['video']["name"],
-                "video_size" => @$_FILES['video']["size"],
-                "tmp_name" => @$_FILES['video']["tmp_name"],
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "type_user"     => @$_GET['type'],
+                "video_name"    => @$_FILES['video']["name"],
+                "video_size"    => @$_FILES['video']["size"],
+                "tmp_name"      => @$_FILES['video']["tmp_name"],
             ];
             $data_err = [
                 "video_err" => '',
-                "type_err" => ''
+                "type_err"  => ''
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك إضافة تلك البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك إضافة تلك البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -426,7 +399,7 @@ class Admins extends Controller
             if (empty($data['video_name'])) {
                 $data_err['video_err'] = 'برجاء تحميل فيديو';
             } else {
-                if ($data['video_size'] > 2000000) $data_err['video_err'] = '(2M)يجب أن يكون حجم الفيديو أقل من';  //To Specify The Image Size  < 2M
+                if ($data['video_size'] > 4000000) $data_err['video_err'] = '(4M)يجب أن يكون حجم الفيديو أقل من';  //To Specify The Image Size  < 4M
             }
             if (empty($data_err['video_err']) && empty($data_err['type_err'])) {
 
@@ -438,45 +411,45 @@ class Admins extends Controller
                 }
 
                 $data_video = [
-                    "type" => $data['type_user'],
-                    "db_name" => $db_name,
-                    "name" => $data['video_name'],
-                    "tmp" => $data['tmp_name'],
+                    "type"      => $data['type_user'],
+                    "db_name"   => $db_name,
+                    "name"      => $data['video_name'],
+                    "tmp"       => $data['tmp_name'],
                 ];
 
                 @$url_video = addVideo($data_video);
 
                 if (!$url_video) {
-                    $Message = 'صيغة الملف غير مدعوم';
-                    $Status = 415;
+                    $Message    = 'صيغة الملف غير مدعوم';
+                    $Status     = 415;
                     userMessage($Status, $Message);
                     die();
                 }
                 $data_url = [
-                    "type" => $data['type_user'],
+                    "type"  => $data['type_user'],
                     "video" => $url_video
                 ];
 
                 if ($this->adminModel->editVideo($data_url)) {
-                    $Message = 'تم إضافة الفيديو بنجاح';
-                    $Status = 201;
+                    $Message    = 'تم إضافة الفيديو بنجاح';
+                    $Status     = 201;
                     userMessage($Status, $Message);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وق لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وق لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -487,47 +460,39 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
+                "id"    => $this->CheckToken['id'],
+                "type"  => $this->CheckToken['type'],
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك الإطلاع على البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
 
             @$result = $this->adminModel->getVideoUser();
             if (!$result) {
-                $Message = 'لم يتم العثور على بيانات';
-                $Status = 204;
+                $Message    = 'لم يتم العثور على بيانات';
+                $Status     = 204;
                 userMessage($Status, $Message);
                 die();
             }
-            $url = "videos/";
+            $url = URL_VIDEO;
             $new_video = [];
             foreach ($result as $element) {
                 $element['video'] = getVideo(["name" => $element['video'], "url" => $url]);
                 $new_video[] = $element;
             }
 
-            $Message = 'تم جلب البيانات بنجاح';
-            $Status = 200;
+            $Message    = 'تم جلب البيانات بنجاح';
+            $Status     = 200;
             userMessage($Status, $Message, $new_video);
             die();
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -538,17 +503,9 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
                 "type_user" => @$_GET['type']
             ];
 
@@ -557,8 +514,8 @@ class Admins extends Controller
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك حذف تلك البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك حذف تلك البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -582,8 +539,8 @@ class Admins extends Controller
                 $types = ['df_doctor', 'df_patient', 'df_pharmacist', 'df_assistant'];
                 if (!in_array(explode(".", $get_video->video)[0], $types)) {
                     if (!removeVideo($get_video->video)) {
-                        $Message = 'الرجاء المحاولة فى وق لأحق';
-                        $Status = 422;
+                        $Message    = 'الرجاء المحاولة فى وق لأحق';
+                        $Status     = 422;
                         userMessage($Status, $Message);
                         die();
                     }
@@ -591,43 +548,43 @@ class Admins extends Controller
 
                 switch ($data['type_user']) {
                     case 'doctor':
-                        $url_video = 'df_doctor.mp4';
+                        $url_video = DF_VIDEO_DO;
                         break;
                     case 'pharmacist':
-                        $url_video = 'df_pharmacist.mp4';
+                        $url_video = DF_VIDEO_PH;
                         break;
                     case 'assistant':
-                        $url_video = 'df_assistant.mp4';
+                        $url_video = DF_VIDEO_AS;
                         break;
                     default:
-                        $url_video = 'df_patient.mp4';
+                        $url_video = DF_VIDEO_PA;
                 }
 
                 $data_url = [
-                    "type" => $data['type_user'],
+                    "type"  => $data['type_user'],
                     "video" => $url_video
                 ];
 
                 if ($this->adminModel->editVideo($data_url)) {
-                    $Message = 'تم حذف الفيديو بنجاح';
-                    $Status = 201;
+                    $Message    = 'تم حذف الفيديو بنجاح';
+                    $Status     = 201;
                     userMessage($Status, $Message);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وق لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وق لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -638,26 +595,18 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 513);
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
+                "id"        => @$this->CheckToken['id'],
+                "type"      => @$this->CheckToken['type'],
                 "type_user" => @$_GET['type'],
-                "filter" => @$_GET['filter']
+                "filter"    => @$_GET['filter']
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك الإطلاع على البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -665,8 +614,8 @@ class Admins extends Controller
             if (!empty($data['type_user'])) {
                 $types = ['doctor', 'pharmacy', 'pharmacist', 'clinic', 'assistant', 'patient'];
                 if (!in_array($data['type_user'], $types)) {
-                    $Message = 'النوع غير مدعوم';
-                    $Status = 400;
+                    $Message    = 'النوع غير مدعوم';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -674,14 +623,14 @@ class Admins extends Controller
 
             @$data_user = $this->adminModel->getDataUser($data['type_user'], $data['filter']);
             if (!$data_user) {
-                $Message = 'لم يتم العثور على بيانات';
-                $Status = 204;
+                $Message    = 'لم يتم العثور على بيانات';
+                $Status     = 204;
                 userMessage($Status, $Message);
                 die();
             }
 
-            $url_person = 'images/profile_image/';
-            $url_place = 'images/place_image/';
+            $url_person = URL_PERSON;
+            $url_place  = URL_PLACE;
 
             $new_doctor = [];
             if (!empty($data_user['doctor'])) {
@@ -737,13 +686,13 @@ class Admins extends Controller
 
             $data_message = array_merge($new_doctor, $new_pharmacist, $new_patient, $new_assistant, $new_clinic, $new_pharmacy);
 
-            $Message = 'تم جلب البيانات بنجاح';
-            $Status = 200;
+            $Message    = 'تم جلب البيانات بنجاح';
+            $Status     = 200;
             userMessage($Status, $Message, $data_message);
             die();
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -754,31 +703,23 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 513);
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
+                "id"        => @$this->CheckToken['id'],
+                "type"      => @$this->CheckToken['type'],
                 "type_user" => @$_GET['type'],
-                "user_id" => @$id
+                "user_id"   => @$id
             ];
 
             $data_err = [
-                "type_err" => '',
-                "user_id_err" => ''
+                "type_err"      => '',
+                "user_id_err"   => ''
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك الإطلاع على البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -801,10 +742,10 @@ class Admins extends Controller
 
             if (empty($data_err['type_err']) && empty($data_err['user_id_err'])) {
 
-                $url_person = 'images/profile_image/';
+                $url_person = URL_PERSON;
                 $url_place = [
-                    "place" => "images/place_image/",
-                    "person" => "images/profile_image/"
+                    "place" => URL_PLACE,
+                    "person" => URL_PERSON
                 ];
                 if ($data['type_user'] == 'clinic' || $data['type_user'] == 'pharmacy') {
                     if ($data['type_user'] == 'clinic') {
@@ -819,25 +760,25 @@ class Admins extends Controller
                 }
 
                 if (!empty($data_user)) {
-                    $Message = 'تم جلب البيانات بنجاح';
-                    $Status = 200;
+                    $Message    = 'تم جلب البيانات بنجاح';
+                    $Status     = 200;
                     userMessage($Status, $Message, $data_user);
                     die();
                 } else {
-                    $Message = 'لم يتم العثور على بيانات';
-                    $Status = 204;
+                    $Message    = 'لم يتم العثور على بيانات';
+                    $Status     = 204;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -848,31 +789,23 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 513);
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
+                "id"        => @$this->CheckToken['id'],
+                "type"      => @$this->CheckToken['type'],
                 "type_user" => @$_GET['type'],
-                "user_id" => @$id
+                "user_id"   => @$id
             ];
 
             $data_err = [
-                "type_err" => '',
-                "user_id_err" => ''
+                "type_err"      => '',
+                "user_id_err"   => ''
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك حذف تلك البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك حذف تلك البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -895,25 +828,25 @@ class Admins extends Controller
             if (empty($data_err['type_err']) && empty($data_err['user_id_err'])) {
 
                 if (!$this->adminModel->deleteUserPlace($data['type_user'], $data['user_id'])) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 400;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $Message = 'تم الحذف بنجاح';
-                $Status = 201;
+                $Message    = 'تم الحذف بنجاح';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -924,31 +857,23 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 513);
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
+                "id"        => @$this->CheckToken['id'],
+                "type"      => @$this->CheckToken['type'],
                 "type_user" => @$_GET['type'],
-                "status" => @$_GET['status']
+                "status"    => @$_GET['status']
             ];
 
             $data_err = [
-                "type_err" => '',
-                "status_err" => ''
+                "type_err"      => '',
+                "status_err"    => ''
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك الإطلاع على البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -970,25 +895,25 @@ class Admins extends Controller
             if (empty($data_err['type_err']) && empty($data_err['status_err'])) {
                 @$data_message = $this->adminModel->getMessageUser($data['type_user'], $data['status']);
                 if (!$data_message) {
-                    $Message = 'لم يتم العثور على بيانات';
-                    $Status = 204;
+                    $Message    = 'لم يتم العثور على بيانات';
+                    $Status     = 204;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $Message = 'تم جلب البيانات بنجاح';
-                $Status = 200;
+                $Message    = 'تم جلب البيانات بنجاح';
+                $Status     = 200;
                 userMessage($Status, $Message, $data_message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -999,31 +924,23 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $_POST = filter_input_array(0, 513);
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
-                "message" => @$_POST['message'],
-                "message_id" => @$id
+                "id"            => @$this->CheckToken['id'],
+                "type"          => @$this->CheckToken['type'],
+                "message"       => @$_POST['message'],
+                "message_id"    => @$id
             ];
 
             $data_err = [
-                "message_err" => '',
-                "message_id_err" => ''
+                "message_err"       => '',
+                "message_id_err"    => ''
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك الرد على الرسائل';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الرد على الرسائل';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1041,10 +958,10 @@ class Admins extends Controller
 
                 //************************************* Send Email Success ***********************************//
                 $data_email = [
-                    "type" => $data_user->role,
+                    "type"      => $data_user->role,
                     "user_name" => $data_user->name,
-                    "email" => $data_user->email,
-                    "message" => $data['message']
+                    "email"     => $data_user->email,
+                    "message"   => $data['message']
                 ];
                 $mail_data = replyMessage($data_email);  //Function To Get Email Data
                 @require_once('../app/helpers/email/mail.php');
@@ -1055,31 +972,31 @@ class Admins extends Controller
 
                 if (@$mail->send()) {
                     if (!$this->adminModel->replyMessageUser($data['message_id'])) {
-                        $Message = '(فشل تعديل الحالة) تم الرد بنجاح';
-                        $Status = 422;
+                        $Message    = '(فشل تعديل الحالة) تم الرد بنجاح';
+                        $Status     = 422;
                         userMessage($Status, $Message);
                         die();
                     }
-                    $Message = 'تم الرد بنجاح';
-                    $Status = 201;
+                    $Message    = 'تم الرد بنجاح';
+                    $Status     = 201;
                     userMessage($Status, $Message);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
                 //************************************* End Send Email Success ***********************************//
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1090,40 +1007,32 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
+                "id"    => @$this->CheckToken['id'],
+                "type"  => @$this->CheckToken['type'],
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك الإطلاع على البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
             @$data_message = $this->adminModel->getNumberAll();
             if (!$data_message) {
-                $Message = 'لم يتم العثور على بيانات';
-                $Status = 400;
+                $Message    = 'لم يتم العثور على بيانات';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
 
-            $Message = 'تم جلب البيانات بنجاح';
-            $Status = 200;
+            $Message    = 'تم جلب البيانات بنجاح';
+            $Status     = 200;
             userMessage($Status, $Message, $data_message);
             die();
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1134,36 +1043,28 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
-            $_POST = filter_input_array(0, 513);
-            $_GET = filter_input_array(1, 513);
+            $_POST  = filter_input_array(0, 513);
+            $_GET   = filter_input_array(1, 513);
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
-                "password" => @$_POST['password'],
-                "confirm_password" => @$_POST['confirm_password'],
-                "type_user" => @$_GET['type'],
-                "user_id" => @$id
+                "id"                => @$this->CheckToken['id'],
+                "type"              => @$this->CheckToken['type'],
+                "password"          => @$_POST['password'],
+                "confirm_password"  => @$_POST['confirm_password'],
+                "type_user"         => @$_GET['type'],
+                "user_id"           => @$id
             ];
 
             $data_err = [
-                "type_err" => '',
-                "user_id_err" => '',
-                "password_err" => '',
-                "confirm_password_err" => ''
+                "type_err"              => '',
+                "user_id_err"           => '',
+                "password_err"          => '',
+                "confirm_password_err"  => ''
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك التعديل';
-                $Status = 403;
+                $Message    = 'غير مصرح لك التعديل';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1202,31 +1103,31 @@ class Admins extends Controller
             ) {
                 @$password = password_hash($data['password'], "2y"); //PASSWORD_DEFAULT Hash
                 $data_password = [
-                    "id" => $data['user_id'],
-                    "type" => $data['type_user'],
-                    "password" => $password
+                    "id"        => $data['user_id'],
+                    "type"      => $data['type_user'],
+                    "password"  => $password
                 ];
 
                 if (!@$this->userModel->editPassword($data_password)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $Message = 'تم التعديل بنجاح';
-                $Status = 201;
+                $Message    = 'تم التعديل بنجاح';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1237,36 +1138,28 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
-            $_POST = filter_input_array(0, 513);
-            $_GET = filter_input_array(1, 513);
+            $_POST  = filter_input_array(0, 513);
+            $_GET   = filter_input_array(1, 513);
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
-                "user_q" => @$_POST['user_q'],
-                "type_user_q" => @$_GET['type_user_q'],
-                "type_user" => @$_GET['type'],
-                "user_id" => @$id
+                "id"            => @$this->CheckToken['id'],
+                "type"          => @$this->CheckToken['type'],
+                "user_q"        => @$_POST['user_q'],
+                "type_user_q"   => @$_GET['type_user_q'],
+                "type_user"     => @$_GET['type'],
+                "user_id"       => @$id
             ];
 
             $data_err = [
-                "type_err" => '',
-                "user_id_err" => '',
-                "user_q_err" => '',
-                "type_user_q_err" => '',
+                "type_err"          => '',
+                "user_id_err"       => '',
+                "user_q_err"        => '',
+                "type_user_q_err"   => '',
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك التعديل';
-                $Status = 403;
+                $Message    = 'غير مصرح لك التعديل';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1325,32 +1218,32 @@ class Admins extends Controller
             ) {
 
                 $data_update = [
-                    "id" => $data['user_id'],
-                    "role" => $data['type_user'],
-                    "type" => $data['type_user_q'],
-                    "data" => $data['user_q']
+                    "id"    => $data['user_id'],
+                    "role"  => $data['type_user'],
+                    "type"  => $data['type_user_q'],
+                    "data"  => $data['user_q']
                 ];
 
                 if (!$this->adminModel->updateEmailSSD($data_update)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $Message = 'تم التعديل بنجاح';
-                $Status = 201;
+                $Message    = 'تم التعديل بنجاح';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1361,48 +1254,40 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
-            $_POST = filter_input_array(0, 513);
-            $_GET = filter_input_array(1, 513);
+            $_POST  = filter_input_array(0, 513);
+            $_GET   = filter_input_array(1, 513);
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "name" => @$_POST['name'],
-                "phone_number" => @$_POST['phone_number'],
-                "governorate" => @$_POST['governorate'],
-                "birth_date" => @$_POST['birth_date'],
-                "gender" => @$_POST['gender'],
-                "weight" => @$_POST['weight'],
-                "height" => @$_POST['height'],
-                "type_user" => @$_GET['type'],
-                "specialist" => @$_POST['specialist'],
-                "user_id" => @$id
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "name"          => @$_POST['name'],
+                "phone_number"  => @$_POST['phone_number'],
+                "governorate"   => @$_POST['governorate'],
+                "birth_date"    => @$_POST['birth_date'],
+                "gender"        => @$_POST['gender'],
+                "weight"        => @$_POST['weight'],
+                "height"        => @$_POST['height'],
+                "type_user"     => @$_GET['type'],
+                "specialist"    => @$_POST['specialist'],
+                "user_id"       => @$id
             ];
 
             $data_err = [
-                "type_err" => '',
-                "user_id_err" => '',
-                "phone_number_err" => '',
-                "governorate_err" => '',
-                "weight_err" => '',
-                "height_err" => '',
-                "name_err" => '',
-                "birth_date_err" => '',
-                "gender_err" => '',
-                "specialist_err" => ''
+                "type_err"          => '',
+                "user_id_err"       => '',
+                "phone_number_err"  => '',
+                "governorate_err"   => '',
+                "weight_err"        => '',
+                "height_err"        => '',
+                "name_err"          => '',
+                "birth_date_err"    => '',
+                "gender_err"        => '',
+                "specialist_err"    => ''
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك التعديل';
-                $Status = 403;
+                $Message    = 'غير مصرح لك التعديل';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1462,61 +1347,61 @@ class Admins extends Controller
                 switch ($data['type_user']) {
                     case 'patient':
                         $data_user = [
-                            "id" => $data['user_id'],
-                            "type" => $data['type_user'],
-                            "phone_number" => $data['phone_number'],
-                            "governorate" => $data['governorate'],
-                            "weight" => $data['weight'],
-                            "height" => $data['height'],
-                            "name" => $data['name'],
-                            "birth_date" => $data['birth_date'],
-                            "gender" => $data['gender'],
+                            "id"            => $data['user_id'],
+                            "type"          => $data['type_user'],
+                            "phone_number"  => $data['phone_number'],
+                            "governorate"   => $data['governorate'],
+                            "weight"        => $data['weight'],
+                            "height"        => $data['height'],
+                            "name"          => $data['name'],
+                            "birth_date"    => $data['birth_date'],
+                            "gender"        => $data['gender'],
                         ];
                         break;
                     case 'doctor':
                         $data_user = [
-                            "id" => $data['user_id'],
-                            "type" => $data['type_user'],
-                            "phone_number" => $data['phone_number'],
-                            "governorate" => $data['governorate'],
-                            "specialist" => $data['specialist'],
-                            "name" => $data['name'],
-                            "birth_date" => $data['birth_date'],
-                            "gender" => $data['gender'],
+                            "id"            => $data['user_id'],
+                            "type"          => $data['type_user'],
+                            "phone_number"  => $data['phone_number'],
+                            "governorate"   => $data['governorate'],
+                            "specialist"    => $data['specialist'],
+                            "name"          => $data['name'],
+                            "birth_date"    => $data['birth_date'],
+                            "gender"        => $data['gender'],
                         ];
                         break;
                     default:
                         $data_user = [
-                            "id" => $data['user_id'],
-                            "type" => $data['type_user'],
-                            "phone_number" => $data['phone_number'],
-                            "governorate" => $data['governorate'],
-                            "name" => $data['name'],
-                            "birth_date" => $data['birth_date'],
-                            "gender" => $data['gender'],
+                            "id"            => $data['user_id'],
+                            "type"          => $data['type_user'],
+                            "phone_number"  => $data['phone_number'],
+                            "governorate"   => $data['governorate'],
+                            "name"          => $data['name'],
+                            "birth_date"    => $data['birth_date'],
+                            "gender"        => $data['gender'],
                         ];
                 }
 
                 if ($this->adminModel->editUserProfile($data_user)) {
-                    $Message = 'تم التعديل بنجاح';
-                    $Status = 201;
+                    $Message    = 'تم التعديل بنجاح';
+                    $Status     = 201;
                     userMessage($Status, $Message);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 400;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1527,50 +1412,42 @@ class Admins extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $_POST = filter_input_array(0, 513);
             $_GET = filter_input_array(1, 513);
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "name" => @$_POST['name'],
-                "phone_number" => @$_POST['phone_number'],
-                "governorate" => @$_POST['governorate'],
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "name"          => @$_POST['name'],
+                "phone_number"  => @$_POST['phone_number'],
+                "governorate"   => @$_POST['governorate'],
                 "start_working" => @$_POST['start_working'],
-                "end_working" => @$_POST['end_working'],
-                "address" => @$_POST['address'],
-                "owner" => @$_POST['owner'],
-                "price" => @$_POST['price'],
-                "type_user" => @$_GET['type'],
-                "specialist" => @$_POST['specialist'],
-                "place_id" => @$id
+                "end_working"   => @$_POST['end_working'],
+                "address"       => @$_POST['address'],
+                "owner"         => @$_POST['owner'],
+                "price"         => @$_POST['price'],
+                "type_user"     => @$_GET['type'],
+                "specialist"    => @$_POST['specialist'],
+                "place_id"      => @$id
             ];
 
             $data_err = [
-                "type_err" => '',
-                "place_id_err" => '',
-                "phone_number_err" => '',
-                "governorate_err" => '',
+                "type_err"          => '',
+                "place_id_err"      => '',
+                "phone_number_err"  => '',
+                "governorate_err"   => '',
                 "start_working_err" => '',
-                "end_working_err" => '',
-                "name_err" => '',
-                "address_err" => '',
-                "price_err" => '',
-                "specialist_err" => '',
-                "owner_err" => ''
+                "end_working_err"   => '',
+                "name_err"          => '',
+                "address_err"       => '',
+                "price_err"         => '',
+                "specialist_err"    => '',
+                "owner_err"         => ''
             ];
 
             if ($data['type'] !== 'admin') {
-                $Message = 'غير مصرح لك التعديل';
-                $Status = 403;
+                $Message    = 'غير مصرح لك التعديل';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1631,53 +1508,53 @@ class Admins extends Controller
                 switch ($data['type_user']) {
                     case 'clinic':
                         $data_place = [
-                            "id" => $data['place_id'],
-                            "type" => $data['type_user'],
-                            "phone_number" => $data['phone_number'],
-                            "governorate" => $data['governorate'],
-                            "specialist" => $data['specialist'],
-                            "price" => $data['price'],
-                            "name" => $data['name'],
-                            "address" => $data['address'],
-                            "owner" => $data['owner'],
+                            "id"            => $data['place_id'],
+                            "type"          => $data['type_user'],
+                            "phone_number"  => $data['phone_number'],
+                            "governorate"   => $data['governorate'],
+                            "specialist"    => $data['specialist'],
+                            "price"         => $data['price'],
+                            "name"          => $data['name'],
+                            "address"       => $data['address'],
+                            "owner"         => $data['owner'],
                             "start_working" => $data['start_working'],
-                            "end_working" => $data['end_working']
+                            "end_working"   => $data['end_working']
                         ];
                         break;
                     default:
                         $data_place = [
-                            "id" => $data['place_id'],
-                            "type" => $data['type_user'],
-                            "phone_number" => $data['phone_number'],
-                            "governorate" => $data['governorate'],
-                            "name" => $data['name'],
-                            "address" => $data['address'],
-                            "owner" => $data['owner'],
+                            "id"            => $data['place_id'],
+                            "type"          => $data['type_user'],
+                            "phone_number"  => $data['phone_number'],
+                            "governorate"   => $data['governorate'],
+                            "name"          => $data['name'],
+                            "address"       => $data['address'],
+                            "owner"         => $data['owner'],
                             "start_working" => $data['start_working'],
-                            "end_working" => $data['end_working'],
+                            "end_working"   => $data['end_working'],
                         ];
                 }
 
                 if ($this->adminModel->editPlaceProfile($data_place)) {
-                    $Message = 'تم التعديل بنجاح';
-                    $Status = 201;
+                    $Message    = 'تم التعديل بنجاح';
+                    $Status     = 201;
                     userMessage($Status, $Message);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 400;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }

@@ -2,30 +2,35 @@
 
 class Pharmacists extends Controller
 {
-    private $pharmacistModel;
-    private $userModel;
-    private $doctorModel;
+    private $CheckToken, $doctorModel, $userModel, $pharmacistModel;
     public function __construct()
     {
-        $this->pharmacistModel = $this->model('pharmacist');
-        $this->userModel = $this->model('User');
-        $this->doctorModel = $this->model('doctor');
+        $this->pharmacistModel  = $this->model('pharmacist');
+        $this->userModel        = $this->model('User');
+        $this->doctorModel      = $this->model('doctor');
+        $this->CheckToken       = $this->tokenVerify();
+        if (!$this->CheckToken) {
+            $Message    = 'الرجاء تسجيل الدخول';
+            $Status     = 401;
+            userMessage($Status, $Message);
+            die();
+        }
     }
     public function document()
     {
-        $Message = '(API_Pharmacists)برجاء الإطلاع على شرح';
-        $Status = 400;
-        $url = 'https://documenter.getpostman.com/view/25605546/2s93CRMCfA#e033cd90-661d-4a54-abe0-c1f2024e5f07';
+        $Message    = '(API_Pharmacists)برجاء الإطلاع على شرح';
+        $Status     = 400;
+        $url        = 'https://documenter.getpostman.com/view/25605546/2s93CRMCfA#e033cd90-661d-4a54-abe0-c1f2024e5f07';
         userMessage($Status, $Message, $url);
         die();
     }
 
     //*************************************************** Token Verify **************************************************************//
-    public function tokenVerify()
+    private function tokenVerify()
     {
         $headers = apache_request_headers();
         if (isset($headers['authorization']) || isset($headers['Authorization'])) {
-            @$Auth = explode(" ", $headers['authorization'] ? $headers['authorization'] : $headers['Authorization'])[1]; // Get Token From Auth
+            @$Auth      = explode(" ", $headers['authorization'] ? $headers['authorization'] : $headers['Authorization'])[1]; // Get Token From Auth
             @$token_out = TokenDecode($Auth);
             if (!$token_out) {
                 return false;
@@ -49,70 +54,62 @@ class Pharmacists extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
 
             @$phone_number  = filter_var($_POST['phone_number'], 519);  //FILTER_SANITIZE_INT
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
-                "name" => @$_POST['name'],
-                "phone_number" => @$phone_number,
-                "governorate" => @$_POST['governorate'],
+                "id"            => @$this->CheckToken['id'],
+                "type"          => @$this->CheckToken['type'],
+                "name"          => @$_POST['name'],
+                "phone_number"  => @$phone_number,
+                "governorate"   => @$_POST['governorate'],
                 "start_working" => @$_POST['start_working'],
-                "end_working" => @$_POST['end_working'],
-                "address" => @$_POST['address'],
+                "end_working"   => @$_POST['end_working'],
+                "address"       => @$_POST['address'],
             ];
             $data_err = [ //Array Error Data
-                "name_err" => '',
-                "phone_number_err" => '',
+                "name_err"          => '',
+                "phone_number_err"  => '',
                 "start_working_err" => '',
-                "end_working_err" => '',
-                "governorate_err" => '',
-                "address_err" => '',
+                "end_working_err"   => '',
+                "governorate_err"   => '',
+                "address_err"       => '',
             ];
 
             if ($data['type'] !== 'pharmacist') {
-                $Message = 'غير مصرح لك القيام بالإضافة';
-                $Status = 403;
+                $Message    = 'غير مصرح لك القيام بالإضافة';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
 
             @$get_pharmacist = $this->pharmacistModel->getPharmacistActivation($data['id']);
             if (!$get_pharmacist) {
-                $Message = 'يجب تنشيط الحساب';
-                $Status = 400;
+                $Message    = 'يجب تنشيط الحساب';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
 
             if ($get_pharmacist->isActive !== 1) {
-                $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                $Status = 202;
+                $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                $Status     = 202;
                 userMessage($Status, $Message);
                 die();
             }
 
             @$get_pharmacy = $this->pharmacistModel->getPharmacy($data['id']);
             if (!$get_pharmacy) {
-                $Message = 'الرجاء المحاولة فى وقت لأحق';
-                $Status = 422;
+                $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                $Status     = 422;
                 userMessage($Status, $Message);
                 die();
             }
 
             if ($get_pharmacy >= 2) {
-                $Message = 'لايمكنك تسجيل أكثر من 2 صيدلية';
-                $Status = 202;
+                $Message    = 'لايمكنك تسجيل أكثر من 2 صيدلية';
+                $Status     = 202;
                 userMessage($Status, $Message);
                 die();
             }
@@ -144,38 +141,39 @@ class Pharmacists extends Controller
             ) {
 
                 $data_pharmacy = [
-                    "id" => $data['id'],
-                    "owner" => $get_pharmacist->name,
-                    "name" => $data['name'],
+                    "id"            => $data['id'],
+                    "owner"         => $get_pharmacist->name,
+                    "name"          => $data['name'],
                     "start_working" => $data['start_working'],
-                    "end_working" => $data['end_working'],
-                    "address" => $data['address'],
-                    "governorate" => $data['governorate'],
-                    "phone_number" => $data['phone_number'],
-                    "ser_id" => random_int(100000, 999999) . $data['id'],
-                    "image" => 'df-pharmacy'
+                    "end_working"   => $data['end_working'],
+                    "address"       => $data['address'],
+                    "governorate"   => $data['governorate'],
+                    "phone_number"  => $data['phone_number'],
+                    "ser_id"        => random_int(100000, 999999) . $data['id'],
+                    "image"         => DF_IMAGE_PHARMACY
+
                 ];
 
                 if ($this->pharmacistModel->addPharmacy($data_pharmacy)) {
-                    $Message = 'تم تسجيل الصيدلية بنجاح';
-                    $Status = 201;
+                    $Message    = 'تم تسجيل الصيدلية بنجاح';
+                    $Status     = 201;
                     userMessage($Status, $Message);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -186,48 +184,40 @@ class Pharmacists extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
 
             @$phone_number  = filter_var($_POST['phone_number'], 519);  //FILTER_SANITIZE_INT
-            @$pharmacy_id     = filter_var($id, 519);  //FILTER_SANITIZE_INT
+            @$pharmacy_id   = filter_var($id, 519);  //FILTER_SANITIZE_INT
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
-                "pharmacy_id" => @$pharmacy_id,
-                "phone_number" => @$phone_number,
-                "governorate" => @$_POST['governorate'],
+                "id"            => @$this->CheckToken['id'],
+                "type"          => @$this->CheckToken['type'],
+                "pharmacy_id"   => @$pharmacy_id,
+                "phone_number"  => @$phone_number,
+                "governorate"   => @$_POST['governorate'],
                 "start_working" => @$_POST['start_working'],
-                "end_working" => @$_POST['end_working'],
-                "address" => @$_POST['address'],
+                "end_working"   => @$_POST['end_working'],
+                "address"       => @$_POST['address'],
             ];
             $data_err = [ //Array Error Data
-                "phone_number_err" => '',
+                "phone_number_err"  => '',
                 "start_working_err" => '',
-                "end_working_err" => '',
-                "governorate_err" => '',
-                "address_err" => '',
-                "pharmacy_id_err" => ''
+                "end_working_err"   => '',
+                "governorate_err"   => '',
+                "address_err"       => '',
+                "pharmacy_id_err"   => ''
             ];
 
             if ($data['type'] !== 'pharmacist') {
-                $Message = 'غير مصرح لك القيام بالتعديل';
-                $Status = 403;
+                $Message    = 'غير مصرح لك القيام بالتعديل';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
 
             if (!isset($_SESSION['pharmacy'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى الصيدلية';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى الصيدلية';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -244,14 +234,14 @@ class Pharmacists extends Controller
                     } else {
                         @$get_pharmacy = $this->pharmacistModel->getPharmacyActivation($data['pharmacy_id']);
                         if (!$get_pharmacy) {
-                            $Message = 'يجب تنشيط الصيدلية';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط الصيدلية';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_pharmacy->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -290,34 +280,41 @@ class Pharmacists extends Controller
 
                 $data_pharmacy = [
                     "pharmacist_id" => $data['id'],
-                    "pharmacy_id" => $data['pharmacy_id'],
+                    "pharmacy_id"   => $data['pharmacy_id'],
                     "start_working" => $data['start_working'],
-                    "end_working" => $data['end_working'],
-                    "address" => $data['address'],
-                    "governorate" => $data['governorate'],
-                    "phone_number" => $data['phone_number'],
+                    "end_working"   => $data['end_working'],
+                    "address"       => $data['address'],
+                    "governorate"   => $data['governorate'],
+                    "phone_number"  => $data['phone_number'],
                 ];
 
                 if ($this->pharmacistModel->editPharmacy($data_pharmacy)) {
-                    $Message = 'تم تعديل بيانات الصيدلية بنجاح';
-                    $Status = 201;
-                    userMessage($Status, $Message);
+                    $new_data   = $this->userModel->getPlace('pharmacy', $data['pharmacy_id']);
+                    $num        = $this->pharmacistModel->numberPrescript($data['pharmacy_id']);
+                    $url        = [
+                        "place"     => URL_PLACE,
+                        "person"    => URL_PERSON
+                    ];
+                    $data_pharmacy = viewPharmacy($new_data, $num, $url);
+                    $Message    = 'تم تعديل بيانات الصيدلية بنجاح';
+                    $Status     = 201;
+                    userMessage($Status, $Message, $data_pharmacy);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -328,18 +325,10 @@ class Pharmacists extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "pharmacy_id" => @$id
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "pharmacy_id"   => @$id
             ];
 
             $data_err = [
@@ -347,22 +336,22 @@ class Pharmacists extends Controller
             ];
 
             if ($data['type'] !== 'pharmacist') {
-                $Message = 'غير مصرح لك تسجيل الدخول';
-                $Status = 403;
+                $Message    = 'غير مصرح لك تسجيل الدخول';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_pharmacist = $this->pharmacistModel->getPharmacistActivation($data['id']);
                 if (!$get_pharmacist) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_pharmacist->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -380,14 +369,14 @@ class Pharmacists extends Controller
                     } else {
                         @$get_pharmacy = $this->pharmacistModel->getPharmacyActivation($data['pharmacy_id']);
                         if (!$get_pharmacy) {
-                            $Message = 'يجب تنشيط الصيدلية';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط الصيدلية';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_pharmacy->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -399,47 +388,47 @@ class Pharmacists extends Controller
 
                 $num = $this->pharmacistModel->numberPrescript($data['pharmacy_id']);
                 $url = [
-                    "place" => "images/place_image/",
-                    "person" => "images/profile_image/"
+                    "place"     => URL_PLACE,
+                    "person"    => URL_PERSON
                 ];
 
                 $data_login = $this->pharmacistModel->loginPharmacy($data['pharmacy_id'], $data['id']);
 
                 if (!$data_login) {
-                    $Message = 'ليس لديك الصلاحية لتسجيل الدخول فى تلك الصيدلية';
-                    $Status = 400;
+                    $Message    = 'ليس لديك الصلاحية لتسجيل الدخول فى تلك الصيدلية';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if (!$this->pharmacistModel->editStatus($data['pharmacy_id'], 1)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                if (!$this->pharmacistModel->deleteOrder($data['pharmacy_id'])){
+                if (!$this->pharmacistModel->deleteOrder($data['pharmacy_id'])) {
                     /********** */
                 }
 
                 @$data_login = $this->pharmacistModel->loginPharmacy($data['pharmacy_id'], $data['id']);
 
                 $data_pharmacy = viewPharmacy($data_login, $num, $url);
-                $Message = 'تم تسجيل الدخول بنجاح';
-                $Status = 200;
+                $Message    = 'تم تسجيل الدخول بنجاح';
+                $Status     = 200;
                 userMessage($Status, $Message, $data_pharmacy);
                 $_SESSION['pharmacy'] = $data_login->id;
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -450,47 +439,39 @@ class Pharmacists extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
+                "id"    => $this->CheckToken['id'],
+                "type"  => $this->CheckToken['type'],
             ];
 
             if ($data['type'] !== 'pharmacist') {
-                $Message = 'غير مصرح لك الإطلاع على الصيداليات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على الصيداليات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
 
             @$result = $this->pharmacistModel->getPharmacistDoc($data['id']);
             if (!$result) {
-                $Message = 'لم يتم العثور على بيانات';
-                $Status = 204;
+                $Message    = 'لم يتم العثور على بيانات';
+                $Status     = 204;
                 userMessage($Status, $Message);
                 die();
             }
 
-            $url = "images/place_image/";
+            $url = URL_PLACE;
             $new_data = [];
             foreach ($result as $element) {
                 $element['logo'] = getImage($element['logo'], $url);
                 $new_data[] = $element;
             }
-            $Message = 'تم جلب البيانات بنجاح';
-            $Status = 200;
+            $Message    = 'تم جلب البيانات بنجاح';
+            $Status     = 200;
             userMessage($Status, $Message, $new_data);
             die();
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -501,45 +482,37 @@ class Pharmacists extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "pharmacy_id" => @$id,
-                "user_id" => @$_GET['user_id'],
-                "type_filter" => @$_GET['type']
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "pharmacy_id"   => @$id,
+                "user_id"       => @$_GET['user_id'],
+                "type_filter"   => @$_GET['type']
             ];
 
             $data_err = [
-                "pharmacy_id_err" => '',
-                "user_id_err" => '',
-                "type_filter_err" => ''
+                "pharmacy_id_err"   => '',
+                "user_id_err"       => '',
+                "type_filter_err"   => ''
             ];
 
             if ($data['type'] !== 'pharmacist') {
-                $Message = 'غير مصرح لك الإطلاع على البيانات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على البيانات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_pharmacist = $this->pharmacistModel->getPharmacistActivation($data['id']);
                 if (!$get_pharmacist) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_pharmacist->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -557,14 +530,14 @@ class Pharmacists extends Controller
                     } else {
                         @$get_pharmacy = $this->pharmacistModel->getPharmacyActivation($data['pharmacy_id']);
                         if (!$get_pharmacy) {
-                            $Message = 'يجب تنشيط الصيدلية';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط الصيدلية';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_pharmacy->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -585,34 +558,34 @@ class Pharmacists extends Controller
                 if ($data['type_filter'] == 'ssd') {
                     $data_message = $this->pharmacistModel->getPrescript($data['user_id']);
                     if (!$data_message) {
-                        $Message = 'لم يتم العثور على بيانات';
-                        $Status = 204;
+                        $Message    = 'لم يتم العثور على بيانات';
+                        $Status     = 204;
                         userMessage($Status, $Message);
                         die();
                     }
                 } else {
                     $data_pre = $this->pharmacistModel->getPrescriptDetails($data['user_id']);
                     if (!$data_pre) {
-                        $Message = 'لم يتم العثور على بيانات';
-                        $Status = 204;
+                        $Message    = 'لم يتم العثور على بيانات';
+                        $Status     = 204;
                         userMessage($Status, $Message);
                         die();
                     }
                     $data_med = $this->pharmacistModel->getPrescriptMedicine($data['user_id']);
                     if (!$data_med) {
-                        $Message = 'لم يتم العثور على بيانات';
-                        $Status = 204;
+                        $Message    = 'لم يتم العثور على بيانات';
+                        $Status     = 204;
                         userMessage($Status, $Message);
                         die();
                     }
                     @$decode_medicine = decodeMedicine($data_med);
                     if (!$decode_medicine) {
-                        $Message = 'الرجاء المحاولة فى وقت لأحق';
-                        $Status = 422;
+                        $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                        $Status     = 422;
                         userMessage($Status, $Message);
                         die();
                     }
-                    $url = "images/place_image/";
+                    $url = URL_PLACE;
                     $new_data_pre = [];
                     foreach ($data_pre as $element) {
                         $element['clinic_logo'] = getImage($element['clinic_logo'], $url);
@@ -623,24 +596,24 @@ class Pharmacists extends Controller
                         $new_decode_medicine[] = $element;
                     }
                     $data_message = [
-                        "prescript_data" => $new_data_pre,
-                        "medicine_data" => $new_decode_medicine
+                        "prescript_data"    => $new_data_pre,
+                        "medicine_data"     => $new_decode_medicine
                     ];
                 }
 
-                $Message = 'تم جلب البيانات بنجاح';
-                $Status = 200;
+                $Message    = 'تم جلب البيانات بنجاح';
+                $Status     = 200;
                 userMessage($Status, $Message, $data_message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -651,20 +624,12 @@ class Pharmacists extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "pharmacy_id" => @$id,
-                "filter" => @$_GET['filter'],
-                "type_pre" => @$_GET['type']
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "pharmacy_id"   => @$id,
+                "filter"        => @$_GET['filter'],
+                "type_pre"      => @$_GET['type']
             ];
 
             $data_err = [
@@ -672,22 +637,22 @@ class Pharmacists extends Controller
             ];
 
             if ($data['type'] !== 'pharmacist') {
-                $Message = 'غير مصرح لك الإطلاع على الطلبات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على الطلبات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_pharmacist = $this->pharmacistModel->getPharmacistActivation($data['id']);
                 if (!$get_pharmacist) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_pharmacist->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -705,14 +670,14 @@ class Pharmacists extends Controller
                     } else {
                         @$get_pharmacy = $this->pharmacistModel->getPharmacyActivation($data['pharmacy_id']);
                         if (!$get_pharmacy) {
-                            $Message = 'يجب تنشيط الصيدلية';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط الصيدلية';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_pharmacy->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -726,16 +691,16 @@ class Pharmacists extends Controller
                     if (empty($data['filter'])) {
                         $data_order = $this->pharmacistModel->getOrder($data['pharmacy_id']);
                         if (!$data_order) {
-                            $Message = 'لم يتم العثور على بيانات';
-                            $Status = 204;
+                            $Message    = 'لم يتم العثور على بيانات';
+                            $Status     = 204;
                             userMessage($Status, $Message);
                             die();
                         }
                     } else {
                         $data_order = $this->pharmacistModel->getOrderFilter($data['pharmacy_id'], $data['filter']);
                         if (!$data_order) {
-                            $Message = 'لم يتم العثور على بيانات';
-                            $Status = 204;
+                            $Message    = 'لم يتم العثور على بيانات';
+                            $Status     = 204;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -744,35 +709,35 @@ class Pharmacists extends Controller
                     if (empty($data['filter'])) {
                         $data_order = $this->pharmacistModel->getOrderPay($data['pharmacy_id']);
                         if (!$data_order) {
-                            $Message = 'لم يتم العثور على بيانات';
-                            $Status = 204;
+                            $Message    = 'لم يتم العثور على بيانات';
+                            $Status     = 204;
                             userMessage($Status, $Message);
                             die();
                         }
                     } else {
                         $data_order = $this->pharmacistModel->getOrderPayFilter($data['pharmacy_id'], $data['filter']);
                         if (!$data_order) {
-                            $Message = 'لم يتم العثور على بيانات';
-                            $Status = 204;
+                            $Message    = 'لم يتم العثور على بيانات';
+                            $Status     = 204;
                             userMessage($Status, $Message);
                             die();
                         }
                     }
                 }
 
-                $Message = 'تم جلب البيانات بنجاح';
-                $Status = 200;
+                $Message    = 'تم جلب البيانات بنجاح';
+                $Status     = 200;
                 userMessage($Status, $Message, $data_order);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -783,43 +748,35 @@ class Pharmacists extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "pharmacy_id" => @$id,
-                "prescript_id" => @$_GET['prescript_id']
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "pharmacy_id"   => @$id,
+                "prescript_id"  => @$_GET['prescript_id']
             ];
 
             $data_err = [
-                "pharmacy_id_err" => '',
-                "prescript_id_err" => ''
+                "pharmacy_id_err"   => '',
+                "prescript_id_err"  => ''
             ];
 
             if ($data['type'] !== 'pharmacist') {
-                $Message = 'غير مصرح لك صرف روشتات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك صرف روشتات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_pharmacist = $this->pharmacistModel->getPharmacistActivation($data['id']);
                 if (!$get_pharmacist) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_pharmacist->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -837,14 +794,14 @@ class Pharmacists extends Controller
                     } else {
                         @$get_pharmacy = $this->pharmacistModel->getPharmacyActivation($data['pharmacy_id']);
                         if (!$get_pharmacy) {
-                            $Message = 'يجب تنشيط الصيدلية';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط الصيدلية';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_pharmacy->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -861,25 +818,25 @@ class Pharmacists extends Controller
             if (empty($data_err['pharmacy_id_err']) && empty($data_err['prescript_id_err'])) {
 
                 if ($this->pharmacistModel->payPrescript($data['pharmacy_id'], $data['prescript_id'])) {
-                    $Message = 'تم الصرف بنجاح';
-                    $Status = 201;
+                    $Message    = 'تم الصرف بنجاح';
+                    $Status     = 201;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $Message = 'الرجاء المحاولة فى وقت لأحق';
-                $Status = 422;
+                $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                $Status     = 422;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -890,43 +847,35 @@ class Pharmacists extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "pharmacy_id" => @$id,
-                "order_id" => @$_GET['order_id']
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "pharmacy_id"   => @$id,
+                "order_id"      => @$_GET['order_id']
             ];
 
             $data_err = [
-                "pharmacy_id_err" => '',
-                "order_id_err" => ''
+                "pharmacy_id_err"   => '',
+                "order_id_err"      => ''
             ];
 
             if ($data['type'] !== 'pharmacist') {
-                $Message = 'غير مصرح لك صرف روشتات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك صرف روشتات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             } else {
                 @$get_pharmacist = $this->pharmacistModel->getPharmacistActivation($data['id']);
                 if (!$get_pharmacist) {
-                    $Message = 'يجب تنشيط الحساب';
-                    $Status = 400;
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if ($get_pharmacist->isActive !== 1) {
-                    $Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status = 202;
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 202;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -944,14 +893,14 @@ class Pharmacists extends Controller
                     } else {
                         @$get_pharmacy = $this->pharmacistModel->getPharmacyActivation($data['pharmacy_id']);
                         if (!$get_pharmacy) {
-                            $Message = 'يجب تنشيط الصيدلية';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط الصيدلية';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_pharmacy->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -969,32 +918,32 @@ class Pharmacists extends Controller
             if (empty($data_err['pharmacy_id_err']) && empty($data_err['order_id_err'])) {
 
                 if (!$this->pharmacistModel->payPrescript($data['pharmacy_id'], $data_order->prescript_id)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if (!$this->pharmacistModel->editStatusPre($data['order_id'])) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $Message = 'تم الصرف بنجاح';
-                $Status = 201;
+                $Message    = 'تم الصرف بنجاح';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1005,30 +954,22 @@ class Pharmacists extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "pharmacy_id" => @$id,
-                "image_name" => @$_FILES['image']["name"],
-                "image_size" => @$_FILES['image']["size"],
-                "tmp_name" => @$_FILES['image']["tmp_name"],
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "pharmacy_id"   => @$id,
+                "image_name"    => @$_FILES['image']["name"],
+                "image_size"    => @$_FILES['image']["size"],
+                "tmp_name"      => @$_FILES['image']["tmp_name"],
             ];
             $data_err = [
-                "image_err" => '',
-                "pharmacy_id_err" => ''
+                "image_err"         => '',
+                "pharmacy_id_err"   => ''
             ];
 
             if (!isset($_SESSION['pharmacy'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى الصيدلية';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى الصيدلية';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1045,14 +986,14 @@ class Pharmacists extends Controller
                     } else {
                         @$get_pharmacy = $this->pharmacistModel->getPharmacyActivation($data['pharmacy_id']);
                         if (!$get_pharmacy) {
-                            $Message = 'يجب تنشيط الصيدلية';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط الصيدلية';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_pharmacy->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -1064,51 +1005,54 @@ class Pharmacists extends Controller
             if (empty($data['image_name'])) {
                 $data_err['image_err'] = 'برجاء تحميل صورة';
             } else {
-                if ($data['image_size'] > 2000000) $data_err['image_err'] = '(2M)يجب أن يكون حجم الصورة أقل من';  //To Specify The Image Size  < 2M
+                if ($data['image_size'] > 4000000) $data_err['image_err'] = '(4M)يجب أن يكون حجم الصورة أقل من';  //To Specify The Image Size  < 4M
             }
             if (empty($data_err['image_err']) && empty($data_err['pharmacy_id_err'])) {
 
                 $data_image = [
-                    "type" => 'pharmacy',
-                    "ssd" => $result->ser_id,
-                    "name" => $data['image_name'],
-                    "tmp" => $data['tmp_name'],
-                    "url" => '/images/place_image/'
+                    "type"  => 'pharmacy',
+                    "ssd"   => $result->ser_id,
+                    "name"  => $data['image_name'],
+                    "tmp"   => $data['tmp_name'],
+                    "url"   => URL_PLACE
                 ];
 
                 @$url_img = addImageProfile($data_image);
 
                 if (!$url_img) {
-                    $Message = 'صيغة الملف غير مدعوم';
-                    $Status = 415;
+                    $Message    = 'صيغة الملف غير مدعوم';
+                    $Status     = 415;
                     userMessage($Status, $Message);
                     die();
                 }
                 $data_url = [
-                    "id" => $data['pharmacy_id'],
-                    "type" => 'pharmacy',
+                    "id"    => $data['pharmacy_id'],
+                    "type"  => 'pharmacy',
                     "image" => $url_img
                 ];
                 if ($this->doctorModel->editImage($data_url)) {
-                    $Message = 'تم تحديث صورة الصيدلية بنجاح';
-                    $Status = 201;
-                    userMessage($Status, $Message);
+                    @$new_image = $this->userModel->getPlace('pharmacy', $data['pharmacy_id']);
+                    $url        = URL_PLACE;
+                    $new_image  = getImage($new_image->logo, $url);
+                    $Message    = 'تم تحديث صورة الصيدلية بنجاح';
+                    $Status     = 201;
+                    userMessage($Status, $Message, $new_image);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وق لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وق لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1119,18 +1063,10 @@ class Pharmacists extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "pharmacy_id" => @$id
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "pharmacy_id"   => @$id
             ];
 
             $data_err = [
@@ -1138,8 +1074,8 @@ class Pharmacists extends Controller
             ];
 
             if (!isset($_SESSION['pharmacy'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى الصيدلية';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى الصيدلية';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1156,14 +1092,14 @@ class Pharmacists extends Controller
                     } else {
                         @$get_pharmacy = $this->pharmacistModel->getPharmacyActivation($data['pharmacy_id']);
                         if (!$get_pharmacy) {
-                            $Message = 'يجب تنشيط الصيدلية';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط الصيدلية';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_pharmacy->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -1177,45 +1113,50 @@ class Pharmacists extends Controller
                 $data_image = [
                     "type" => 'pharmacy',
                     "ssd" => $result->ser_id,
-                    "url" => 'images/place_image/'
+                    "url" => URL_PLACE
                 ];
 
-                if ($result->logo !== 'df-pharmacy') {
+                if ($result->logo !== DF_IMAGE_PHARMACY) {
+
                     @$url_img = removeImage($data_image);
                     if (!$url_img) {
-                        $Message = 'الرجاء المحاولة فى وق لأحق';
-                        $Status = 422;
+                        $Message    = 'الرجاء المحاولة فى وق لأحق';
+                        $Status     = 422;
                         userMessage($Status, $Message);
                         die();
                     }
                 }
 
                 $data_url = [
-                    "id" => $data['pharmacy_id'],
-                    "type" => 'pharmacy',
-                    "image" => 'df-pharmacy'
+                    "id"    => $data['pharmacy_id'],
+                    "type"  => 'pharmacy',
+                    "image" => DF_IMAGE_PHARMACY
+
                 ];
 
                 if ($this->doctorModel->editImage($data_url)) {
-                    $Message = 'تم حذف صورة الصيدلية بنجاح';
-                    $Status = 201;
-                    userMessage($Status, $Message);
+                    @$new_image = $this->userModel->getPlace('pharmacy', $data['pharmacy_id']);
+                    $url        = URL_PLACE;
+                    $new_image  = getImage($new_image->logo, $url);
+                    $Message    = 'تم حذف صورة الصيدلية بنجاح';
+                    $Status     = 201;
+                    userMessage($Status, $Message, $new_image);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وق لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وق لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -1226,18 +1167,10 @@ class Pharmacists extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "pharmacy_id" => @$id
+                "id"            => $this->CheckToken['id'],
+                "type"          => $this->CheckToken['type'],
+                "pharmacy_id"   => @$id
             ];
 
             $data_err = [
@@ -1245,8 +1178,8 @@ class Pharmacists extends Controller
             ];
 
             if (!isset($_SESSION['pharmacy'])) {
-                $Message = 'أنت بافعل خارج الصيدلية';
-                $Status = 400;
+                $Message    = 'أنت بافعل خارج الصيدلية';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -1265,27 +1198,27 @@ class Pharmacists extends Controller
             if (empty($data_err['pharmacy_id_err'])) {
 
                 if (!$this->pharmacistModel->editStatus($data['pharmacy_id'], 0)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 unset($_SESSION['pharmacy']);
 
-                $Message = 'تم تسجيل الخروج بنجاح';
-                $Status = 201;
+                $Message    = 'تم تسجيل الخروج بنجاح';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }

@@ -16,4 +16,4 @@ $mail->Password   = 'lprcobbzrycqpzvu';
 $mail->SMTPSecure = 'ssl';
 $mail->Port       = 465;
 $mail->isHTML(true);
-$mail->CharSet = "UTF-8";
+$mail->CharSet    = "UTF-8";

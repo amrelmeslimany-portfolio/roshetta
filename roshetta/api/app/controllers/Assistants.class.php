@@ -2,30 +2,35 @@
 
 class Assistants extends Controller
 {
-    private $assistantModel;
-    private $userModel;
-    private $doctorModel;
+    private $CheckToken, $doctorModel, $userModel, $assistantModel;
     public function __construct()
     {
-        $this->assistantModel = $this->model('assistant');
-        $this->userModel = $this->model('User');
-        $this->doctorModel = $this->model('Doctor');
+        $this->assistantModel   = $this->model('assistant');
+        $this->userModel        = $this->model('User');
+        $this->doctorModel      = $this->model('Doctor');
+        $this->CheckToken       = $this->tokenVerify();
+        if (!$this->CheckToken) {
+            $Message    = 'الرجاء تسجيل الدخول';
+            $Status     = 401;
+            userMessage($Status, $Message);
+            die();
+        }
     }
     public function document()
     {
-        $Message = '(API_Assistants)برجاء الإطلاع على شرح';
-        $Status = 400;
-        $url = 'https://documenter.getpostman.com/view/25605546/2s93CRMCfA#f5502a92-aae1-4466-8ce1-350b62f12f63';
+        $Message    = '(API_Assistants)برجاء الإطلاع على شرح';
+        $Status     = 400;
+        $url        = 'https://documenter.getpostman.com/view/25605546/2s93CRMCfA#f5502a92-aae1-4466-8ce1-350b62f12f63';
         userMessage($Status, $Message, $url);
         die();
     }
 
     //*************************************************** Token Verify **************************************************************//
-    public function tokenVerify()
+    private function tokenVerify()
     {
         $headers = apache_request_headers();
         if (isset($headers['authorization']) || isset($headers['Authorization'])) {
-            @$Auth = explode(" ", $headers['authorization'] ? $headers['authorization'] : $headers['Authorization'])[1]; // Get Token From Auth
+            @$Auth      = explode(" ", $headers['authorization'] ? $headers['authorization'] : $headers['Authorization'])[1]; // Get Token From Auth
             @$token_out = TokenDecode($Auth);
             if (!$token_out) {
                 return false;
@@ -49,17 +54,9 @@ class Assistants extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
                 "clinic_id" => @$id
             ];
 
@@ -68,8 +65,8 @@ class Assistants extends Controller
             ];
 
             if ($data['type'] !== 'assistant') {
-                $Message = 'غير مصرح لك تسجيل الدخول';
-                $Status = 403;
+                $Message    = 'غير مصرح لك تسجيل الدخول';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
@@ -86,14 +83,14 @@ class Assistants extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -105,22 +102,22 @@ class Assistants extends Controller
 
                 $num = $this->doctorModel->numberAppointPres($data['clinic_id']);
                 $url = [
-                    "place" => "images/place_image/",
-                    "person" => "images/profile_image/"
+                    "place" => URL_PLACE,
+                    "person" => URL_PERSON
                 ];
 
                 $data_login = $this->assistantModel->loginClinic($data['clinic_id'], $data['id']);
 
                 if (!$data_login) {
-                    $Message = 'ليس لديك الصلاحية لتسجيل الدخول فى تلك العيادة';
-                    $Status = 400;
+                    $Message    = 'ليس لديك الصلاحية لتسجيل الدخول فى تلك العيادة';
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 if (!$this->doctorModel->editStatus($data['clinic_id'], 1)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -145,20 +142,20 @@ class Assistants extends Controller
                 }
 
                 $data_clinic = viewClinic($data_login, $num, $url);
-                $Message = 'تم تسجيل الدخول بنجاح';
-                $Status = 200;
+                $Message    = 'تم تسجيل الدخول بنجاح';
+                $Status     = 200;
                 userMessage($Status, $Message, $data_clinic);
                 $_SESSION['clinic'] = $data_login->id;
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -169,14 +166,6 @@ class Assistants extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $_POST = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
 
             @$phone_number  = filter_var($_POST['phone_number'], 519);  //FILTER_SANITIZE_INT
@@ -184,36 +173,36 @@ class Assistants extends Controller
             @$clinic_id     = filter_var($id, 519);  //FILTER_SANITIZE_INT
 
             $data = [  //Array Data
-                "id" => @$check_token['id'],
-                "type" => @$check_token['type'],
-                "clinic_id" => @$clinic_id,
-                "price" => @$price,
-                "phone_number" => @$phone_number,
-                "governorate" => @$_POST['governorate'],
+                "id"            => @$this->CheckToken['id'],
+                "type"          => @$this->CheckToken['type'],
+                "clinic_id"     => @$clinic_id,
+                "price"         => @$price,
+                "phone_number"  => @$phone_number,
+                "governorate"   => @$_POST['governorate'],
                 "start_working" => @$_POST['start_working'],
-                "end_working" => @$_POST['end_working'],
-                "address" => @$_POST['address'],
+                "end_working"   => @$_POST['end_working'],
+                "address"       => @$_POST['address'],
             ];
             $data_err = [ //Array Error Data
-                "price_err" => '',
-                "phone_number_err" => '',
+                "price_err"         => '',
+                "phone_number_err"  => '',
                 "start_working_err" => '',
-                "end_working_err" => '',
-                "governorate_err" => '',
-                "address_err" => '',
-                "clinic_id_err" => ''
+                "end_working_err"   => '',
+                "governorate_err"   => '',
+                "address_err"       => '',
+                "clinic_id_err"     => ''
             ];
 
             if ($data['type'] !== 'assistant') {
-                $Message = 'غير مصرح لك القيام بالتعديل';
-                $Status = 403;
+                $Message    = 'غير مصرح لك القيام بالتعديل';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -230,14 +219,14 @@ class Assistants extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -277,36 +266,44 @@ class Assistants extends Controller
             ) {
 
                 $data_clinic = [
-                    "assistant_id" => $data['id'],
-                    "clinic_id" => $data['clinic_id'],
-                    "price" => $data['price'],
+                    "assistant_id"  => $data['id'],
+                    "clinic_id"     => $data['clinic_id'],
+                    "price"         => $data['price'],
                     "start_working" => $data['start_working'],
-                    "end_working" => $data['end_working'],
-                    "address" => $data['address'],
-                    "governorate" => $data['governorate'],
-                    "phone_number" => $data['phone_number'],
+                    "end_working"   => $data['end_working'],
+                    "address"       => $data['address'],
+                    "governorate"   => $data['governorate'],
+                    "phone_number"  => $data['phone_number'],
                 ];
 
                 if ($this->assistantModel->editClinic($data_clinic)) {
-                    $Message = 'تم تعديل بيانات العيادة بنجاح';
-                    $Status = 201;
-                    userMessage($Status, $Message);
+                    $new_data = $this->userModel->getPlace('clinic', $data['clinic_id']);
+                    $num = $this->doctorModel->numberAppointPres($data['clinic_id']);
+                    $url = [
+                        "place"     => URL_PLACE,
+                        "person"    => URL_PERSON
+                    ];
+
+                    $data_clinic = viewClinic($new_data, $num, $url);
+                    $Message    = 'تم تعديل بيانات العيادة بنجاح';
+                    $Status     = 201;
+                    userMessage($Status, $Message, $data_clinic);
                     die();
                 } else {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -317,17 +314,9 @@ class Assistants extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
                 "clinic_id" => @$id
             ];
 
@@ -336,8 +325,8 @@ class Assistants extends Controller
             ];
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'أنت بافعل خارج العيادة';
-                $Status = 400;
+                $Message    = 'أنت بافعل خارج العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -356,27 +345,27 @@ class Assistants extends Controller
             if (empty($data_err['clinic_id_err'])) {
 
                 if (!$this->doctorModel->editStatus($data['clinic_id'], 0)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
                 unset($_SESSION['clinic']);
 
-                $Message = 'تم تسجيل الخروج بنجاح';
-                $Status = 201;
+                $Message    = 'تم تسجيل الخروج بنجاح';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -387,36 +376,28 @@ class Assistants extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "clinic_id" => @$id,
-                "appointment_id" => @$_GET['appointment_id'],
+                "id"                => $this->CheckToken['id'],
+                "type"              => $this->CheckToken['type'],
+                "clinic_id"         => @$id,
+                "appointment_id"    => @$_GET['appointment_id'],
             ];
 
             $data_err = [
-                "clinic_id_err" => '',
-                "appointment_id_err" => '',
+                "clinic_id_err"         => '',
+                "appointment_id_err"    => '',
             ];
 
             if ($data['type'] !== 'assistant') {
-                $Message = 'غير مصرح لك التعديل على الموعد';
-                $Status = 403;
+                $Message    = 'غير مصرح لك التعديل على الموعد';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -432,14 +413,14 @@ class Assistants extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -457,25 +438,25 @@ class Assistants extends Controller
             if (empty($data_err['clinic_id_err']) && empty($data_err['appointment_id_err'])) {
 
                 if (!$this->doctorModel->editAppointStatus($data['clinic_id'], $data['appointment_id'], 1)) {
-                    $Message = 'الرجاء المحاولة فى وقت لأحق';
-                    $Status = 422;
+                    $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                    $Status     = 422;
                     userMessage($Status, $Message);
                     die();
                 }
 
-                $Message = 'تم التحويل للدكتور بنجاح';
-                $Status = 201;
+                $Message    = 'تم التحويل للدكتور بنجاح';
+                $Status     = 201;
                 userMessage($Status, $Message);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -486,47 +467,39 @@ class Assistants extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
+                "id"    => $this->CheckToken['id'],
+                "type"  => $this->CheckToken['type'],
             ];
 
             if ($data['type'] !== 'assistant') {
-                $Message = 'غير مصرح لك الإطلاع على العيادات';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على العيادات';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
 
             @$result = $this->assistantModel->getClinicAss($data['id']);
             if (!$result) {
-                $Message = 'لم يتم العثور على بيانات';
-                $Status = 204;
+                $Message    = 'لم يتم العثور على بيانات';
+                $Status     = 204;
                 userMessage($Status, $Message);
                 die();
             }
 
-            $url = "images/place_image/";
+            $url = URL_PLACE;
             $new_data = [];
             foreach ($result as $element) {
                 $element['logo'] = getImage($element['logo'], $url);
                 $new_data[] = $element;
             }
-            $Message = 'تم جلب البيانات بنجاح';
-            $Status = 200;
+            $Message    = 'تم جلب البيانات بنجاح';
+            $Status     = 200;
             userMessage($Status, $Message, $new_data);
             die();
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
@@ -537,23 +510,15 @@ class Assistants extends Controller
     {
         if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
-            @$check_token = $this->tokenVerify();
-            if (!$check_token) {
-                $Message = 'الرجاء تسجيل الدخول';
-                $Status = 401;
-                userMessage($Status, $Message);
-                die();
-            }
-
             $_GET = filter_input_array(1, 513); // INPUT_GET    //FILTER_SANITIZE_STRING
 
             $data = [
-                "id" => $check_token['id'],
-                "type" => $check_token['type'],
-                "filter" => @$_GET['filter'],
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
+                "filter"    => @$_GET['filter'],
                 "clinic_id" => @$id,
-                "date" => @$_GET['date'],
-                "status" => @$_GET['status']
+                "date"      => @$_GET['date'],
+                "status"    => @$_GET['status']
             ];
 
             $data_err = [
@@ -561,15 +526,15 @@ class Assistants extends Controller
             ];
 
             if ($data['type'] !== 'assistant') {
-                $Message = 'غير مصرح لك الإطلاع على المواعيد';
-                $Status = 403;
+                $Message    = 'غير مصرح لك الإطلاع على المواعيد';
+                $Status     = 403;
                 userMessage($Status, $Message);
                 die();
             }
 
             if (!isset($_SESSION['clinic'])) {
-                $Message = 'الرجاء تسجيل الدخول إلى العيادة';
-                $Status = 400;
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -585,14 +550,14 @@ class Assistants extends Controller
                     } else {
                         @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
                         if (!$get_clinic) {
-                            $Message = 'يجب تنشيط العيادة';
-                            $Status = 400;
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
                         if ($get_clinic->isActive !== 1) {
-                            $Message = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status = 202;
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 202;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -617,34 +582,34 @@ class Assistants extends Controller
                 if (!empty($data['filter'])) {
                     @$result = $this->doctorModel->filterAppoint($data['clinic_id'], $date, $case, $data['filter']);
                     if (!$result) {
-                        $Message = 'لم يتم العثور على بيانات';
-                        $Status = 204;
+                        $Message    = 'لم يتم العثور على بيانات';
+                        $Status     = 204;
                         userMessage($Status, $Message);
                         die();
                     }
                 } else {
                     @$result = $this->doctorModel->getAppointClinic($data['clinic_id'], $date, $case);
                     if (!$result) {
-                        $Message = 'لم يتم العثور على بيانات';
-                        $Status = 204;
+                        $Message    = 'لم يتم العثور على بيانات';
+                        $Status     = 204;
                         userMessage($Status, $Message);
                         die();
                     }
                 }
 
-                $Message = 'تم جلب البيانات بنجاح';
-                $Status = 200;
+                $Message    = 'تم جلب البيانات بنجاح';
+                $Status     = 200;
                 userMessage($Status, $Message, $result);
                 die();
             } else {
-                $Message = $data_err;
-                $Status = 400;
+                $Message    = $data_err;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
         } else {
-            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
-            $Status = 405;
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
             userMessage($Status, $Message);
             die();
         }
