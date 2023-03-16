@@ -718,7 +718,7 @@ class Users extends Controller
             if (empty($data['password'])) {
                 $data_err['password_err'] = 'برجاء إدخال كلمة المرور الجديدة';
             } else {
-                if (strlen($data['password'] < 6)) $data_err['password_err'] = 'كلمة المرور يجب الأ تقل عن 6 عناصر';
+                if (strlen($data['password']) < 6 ) $data_err['password_err'] = 'كلمة المرور يجب الأ تقل عن 6 عناصر';
             }
             if (empty($data['confirm_password'])) {
                 $data_err['confirm_password_err'] = 'برجاء تأكيد كلمة المرور الجديدة';
