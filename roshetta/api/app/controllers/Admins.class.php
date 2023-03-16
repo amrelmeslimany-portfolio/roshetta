@@ -1144,7 +1144,7 @@ class Admins extends Controller
             $data = [  //Array Data
                 "id"            => @$this->CheckToken['id'],
                 "type"          => @$this->CheckToken['type'],
-                "user_q"        => @$_POST['user_q'],
+                "user_q"        => @strtolower($_POST['user_q']),
                 "type_user_q"   => @$_GET['type_user_q'],
                 "type_user"     => @$_GET['type'],
                 "user_id"       => @$id

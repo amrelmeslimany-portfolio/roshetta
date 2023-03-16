@@ -55,7 +55,7 @@ class Users extends Controller
             $data = [  //Array Data
                 "type"              => @$_POST['role'],
                 "name"              => @$_POST['first_name'] . ' ' . @$_POST['last_name'],
-                "email"             => @$email,
+                "email"             => @strtolower($email),
                 "ssd"               => @$ssd,
                 "phone_number"      => @$phone_number,
                 "birth_date"        => @$_POST['birth_date'],
@@ -340,7 +340,7 @@ class Users extends Controller
 
             $data = [ //Array Data
                 "type"      => @$_POST['role'],
-                "user_id"   => @$_POST['user_id'],
+                "user_id"   => @strtolower($_POST['user_id']),
                 "password"  => @$_POST['password']
             ];
             $data_err = [  //Array Error Data 
@@ -472,7 +472,7 @@ class Users extends Controller
                                 userMessage($Status, $Message, ["isActive" => $result->email_isActive]);
                                 die();
                             } else {
-                                $Message    = 'الرجاء المحاولة فى وقت لأحق';
+                                $Message    = 'فشل إرسال كود التفعيل';
                                 $Status     = 422;
                                 userMessage($Status, $Message);
                                 die();
@@ -547,7 +547,7 @@ class Users extends Controller
             $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
             $data = [
                 "type"  => @$_POST['role'],
-                "email" => @$_POST['email'],
+                "email" => @strtolower($_POST['email']),
                 "code"  => @$_POST['code']
             ];
             $data_err = [
@@ -662,7 +662,7 @@ class Users extends Controller
             }
 
             $data = [
-                "id"    > $check_token['id'],
+                "id"    => $check_token['id'],
                 "type"  => $check_token['type']
             ];
             @$profile   = $this->userModel->viewProfile($data);
@@ -1143,7 +1143,7 @@ class Users extends Controller
 
             $data = [ //Array Data
                 "type"      => @$_POST['role'],
-                "user_id"   => @$_POST['user_id'],
+                "user_id"   => @strtolower($_POST['user_id']),
             ];
             $data_err = [  //Array Error Data 
                 "type_err"      => '',
@@ -1238,7 +1238,7 @@ class Users extends Controller
 
             $data = [ //Array Data
                 "type"      => @$_POST['role'],
-                "user_id"   => @$_POST['user_id'],
+                "user_id"   => @strtolower($_POST['user_id']),
                 "code"      => @$_POST['code']
             ];
             $data_err = [  //Array Error Data 
@@ -1328,7 +1328,7 @@ class Users extends Controller
             $_POST = filter_input_array(0, 513); // INPUT_POST    //FILTER_SANITIZE_STRING
 
             $data = [
-                "user_id"           => @$_POST['user_id'],
+                "user_id"           => @strtolower($_POST['user_id']),
                 "type"              => @$_POST['role'],
                 "password"          => @$_POST['password'],
                 "confirm_password"  => @$_POST['confirm_password']
@@ -1717,7 +1717,7 @@ class Users extends Controller
 
             $data = [ //Array Data
                 "type"      => @$_POST['role'],
-                "user_id"   => @$_POST['user_id']
+                "user_id"   => @strtolower($_POST['user_id'])
             ];
             $data_err = [  //Array Error Data 
                 "type_err"      => '',
