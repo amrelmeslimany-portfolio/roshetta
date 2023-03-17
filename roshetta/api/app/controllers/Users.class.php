@@ -665,8 +665,19 @@ class Users extends Controller
                 "id"    => $check_token['id'],
                 "type"  => $check_token['type']
             ];
-            @$profile   = $this->userModel->viewProfile($data);
-            @$number    = $this->userModel->numberPatient($data['id']);
+            
+            @$profile = $this->userModel->viewProfile($data);
+
+            if ($data['type'] == 'patient') {
+                @$number = $this->userModel->numberPatient($data['id']);
+            } elseif ($data['type'] == 'doctor') {
+                @$number = $this->userModel->numberDoctor($data['id']);
+            } elseif ($data['type'] == 'pharmacist'){
+                @$number = $this->userModel->numberPharmacist($data['id']);
+            } else {
+                @$number = $this->userModel->numberAssistant($data['id']);
+            }
+            
             if ($profile) {
                 $url = URL_PERSON;
                 $data_new = messageProfile($profile, $url, $number); // Determind Data User

@@ -403,4 +403,98 @@ class User
 
         return $data;
     }
+    public function numberDoctor($id)
+    {
+        $this->db->query("SELECT clinic.id FROM clinic,doctor WHERE clinic.doctor_id = doctor.id AND doctor.id = :ID");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0) {
+            $data_clinic = $this->db->rowCount();
+        }
+
+        $this->db->query("SELECT prescript.id FROM prescript,doctor WHERE prescript.doctor_id = doctor.id AND doctor.id = :ID");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0) {
+            $data_prescript = $this->db->rowCount();
+        }
+
+        $this->db->query("SELECT appointment.id FROM appointment,clinic,doctor WHERE appointment.clinic_id = clinic.id AND clinic.doctor_id = doctor.id AND doctor.id = :ID");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0) {
+            $data_appointment = $this->db->rowCount();
+        }
+
+        $data = [
+            "clinic" => $data_clinic,
+            "prescript" => $data_prescript,
+            "appointment" => $data_appointment
+        ];
+
+        return $data;
+    }
+    public function numberAssistant($id)
+    {
+        $this->db->query("SELECT clinic.id FROM clinic,assistant WHERE clinic.assistant_id = assistant.id AND assistant.id = :ID");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0) {
+            $data_clinic = $this->db->rowCount();
+        }
+
+        $this->db->query("SELECT appointment.id FROM appointment,clinic,assistant WHERE appointment.clinic_id = clinic.id AND clinic.assistant_id = assistant.id AND assistant.id = :ID AND appointment.appoint_date = :DATE");
+        $this->db->bind(":ID", $id);
+        $this->db->bind(":DATE", date('Y-m-d'));
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0) {
+            $today_appointment = $this->db->rowCount();
+        }
+
+        $this->db->query("SELECT appointment.id FROM appointment,clinic,assistant WHERE appointment.clinic_id = clinic.id AND clinic.assistant_id = assistant.id AND assistant.id = :ID");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0) {
+            $all_appointment = $this->db->rowCount();
+        }
+
+        $data = [
+            "clinic" => $data_clinic,
+            "today_appointment" => $today_appointment,
+            "all_appointment" => $all_appointment
+        ];
+
+        return $data;
+    }
+    public function numberPharmacist($id)
+    {
+        $this->db->query("SELECT pharmacy.id FROM pharmacy,pharmacist WHERE pharmacy.pharmacist_id = pharmacist.id AND pharmacist.id = :ID");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0) {
+            $data_pharmacy = $this->db->rowCount();
+        }
+
+        $this->db->query("SELECT pharmacy_prescript.id FROM pharmacy_prescript,pharmacy,prescript,pharmacist WHERE pharmacy_prescript.prescript_id = prescript.id AND pharmacy_prescript.pharmacy_id = pharmacy.id AND pharmacy.pharmacist_id = pharmacist.id AND pharmacist.id = :ID");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0) {
+            $data_prescript = $this->db->rowCount();
+        }
+
+        $this->db->query("SELECT pharmacy_order.id FROM pharmacy_order,pharmacy,prescript,pharmacist WHERE pharmacy_order.prescript_id = prescript.id AND pharmacy_order.pharmacy_id = pharmacy.id AND pharmacy.pharmacist_id = pharmacist.id AND pharmacist.id = :ID");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0) {
+            $data_order = $this->db->rowCount();
+        }
+
+        $data = [
+            "pharmacy" => $data_pharmacy,
+            "prescript" => $data_prescript,
+            "order" => $data_order
+        ];
+
+        return $data;
+    }
 }

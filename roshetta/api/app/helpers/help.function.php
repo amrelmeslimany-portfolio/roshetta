@@ -164,16 +164,27 @@ function messageProfile($data_user, $url, $number = null)
     ];
     switch ($data_user->role) {
         case 'patient':
-            $data_message['weight'] = $data_user->weight;
-            $data_message['height'] = $data_user->height;
-            if (!empty($number)) {
-                $data_message['number_prescript']   = $number['pre'];
-                $data_message['number_disease']     = $number['dis'];
-                $data_message['number_appoint']     = $number['app'];
-            }
+            $data_message['weight']             = $data_user->weight;
+            $data_message['height']             = $data_user->height;
+            $data_message['number_prescript']   = $number['pre'];
+            $data_message['number_disease']     = $number['dis'];
+            $data_message['number_appoint']     = $number['app'];
             break;
         case 'doctor':
-            $data_message['specialist'] = $data_user->specialist;
+            $data_message['specialist']         = $data_user->specialist;
+            $data_message['number_clinic']      = $number['clinic'];
+            $data_message['number_prescript']   = $number['prescript'];
+            $data_message['number_appoint']     = $number['appointment'];
+            break;
+        case 'pharmacist':
+            $data_message['number_pharmacy']      = $number['pharmacy'];
+            $data_message['number_prescript']     = $number['prescript'];
+            $data_message['number_order']         = $number['order'];
+            break;
+        case 'assistant':
+            $data_message['number_clinic']              = $number['clinic'];
+            $data_message['number_today_appoint']       = $number['today_appointment'];
+            $data_message['number_all_appointment']     = $number['all_appointment'];
             break;
         default:
             $data_message;
