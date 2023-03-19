@@ -7,8 +7,6 @@ import {
 } from 'react';
 import reducer from './reducer';
 
-// Created By Muhammad El Hassan @2022 All rights reserved
-
 const AppContext = createContext();
 
 const initialState = {

@@ -5,7 +5,7 @@ import Layout from './pages/Layout';
 import { DoctorHome, AuthLogin, AuthRegister } from './pages';
 import './App.scss';
 
-// Created By Muhammad El Hassan @2022 All rights reserved
+// Created devm7md @2023 All rights reserved
 
 export default function App() {
   return (

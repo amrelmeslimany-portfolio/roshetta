@@ -5,9 +5,9 @@ import './Navbar.scss';
 const Navbar = () => {
   return (
     <>
-      <Link to="doctor-home">Doctor Home</Link>
-      <Link to="register">Register</Link>
-      <Link to="login">Login</Link>
+      <Link to="doctor-home">صفحة الدكتور</Link>
+      <Link to="register">تسجيل جديد</Link>
+      <Link to="login">تسجيل الدخول</Link>
     </>
   );
 };
