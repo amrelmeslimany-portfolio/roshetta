@@ -14,7 +14,7 @@ export default function App() {
           <ul>
             <li>صفحات تسجيل الدخول (pages/auth/)</li>
             <li>صفحات الادمن (pages/admin)</li>
-            <li>صفحات الدكتور (pages/doctor)</li>
+            <li>صفحات  الدكتور (pages/doctor)</li>
           </ul>
         </li>
         <li>

@@ -1,0 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
+:root {
+  --primary-color: #49ce91;
+  font-family: 'Cairo', sans-serif;
+}
