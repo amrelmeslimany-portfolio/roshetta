@@ -10,7 +10,7 @@ export default function App() {
       </p>
       <ul>
         <li>
-          <h2>محمد الحسن</h2>
+          <h2> محمد الحسن ابو الهيشام</h2>
           <ul>
             <li>صفحات تسجيل الدخول (pages/auth/)</li>
             <li>صفحات الادمن (pages/admin)</li>
