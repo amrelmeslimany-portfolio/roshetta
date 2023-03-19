@@ -405,10 +405,17 @@ class Users extends Controller
                                 if ($result->role == 'doctor' || $result->role == 'pharmacist') {
                                     @$isVerify = $this->userModel->getActivation($result->id, $result->role);
                                     if ($isVerify) {
-                                        array_push($data_message, $data_message['isVerify'] = $isVerify->isActive);
+                                        if ($isVerify->isActive == 0 ) {
+                                            $status_active = 'waiting';
+                                        } elseif($isVerify->isActive == 1 ) {
+                                            $status_active = 'success';
+                                        } else {
+                                            $status_active = 'error';
+                                        }
+                                        array_push($data_message, $data_message['isVerify'] = $status_active);
                                         unset($data_message['0']);
                                     } else {
-                                        array_push($data_message, $data_message['isVerify'] = 0);
+                                        array_push($data_message, $data_message['isVerify'] = 'none');
                                         unset($data_message['0']);
                                     }
                                 }

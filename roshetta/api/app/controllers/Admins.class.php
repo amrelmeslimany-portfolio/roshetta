@@ -213,7 +213,7 @@ class Admins extends Controller
             if (empty($data['status'])) {
                 $data['status'] = 0;
             } else {
-                $sta = [0, 1];
+                $sta = [0, 1, -1];
                 if (!in_array($data['status'], $sta)) $data_err['status_err'] = 'نوع الحالة غير صالح';
             }
 
@@ -258,8 +258,13 @@ class Admins extends Controller
                     die();
                     //************************************* End Send Email Success ***********************************//
 
-                } else {
+                } elseif($data['status'] == 0) {
                     $Message    = 'تم إلغاء تنشيط الحساب بنجاح';
+                    $Status     = 201;
+                    userMessage($Status, $Message);
+                    die();
+                } else {
+                    $Message    = 'تم رفض المستندات بنجاح';
                     $Status     = 201;
                     userMessage($Status, $Message);
                     die();
