@@ -2812,6 +2812,119 @@
 							"body": "{\n    \"Status\": 200,\n    \"Message\": \"تم جلب البيانات بنجاح\",\n    \"Data\": [\n        {\n            \"name\": \"Accident and emergency medicine\",\n            \"ar_name\": \"طب الطوارئ والحوادث\"\n        },\n        {\n            \"name\": \"Allergology\",\n            \"ar_name\": \"علم الحساسية\"\n        },\n        {\n            \"name\": \"Anaesthetics\",\n            \"ar_name\": \"التخدير\"\n        },\n        {\n            \"name\": \"Biological hematology\",\n            \"ar_name\": \"الأمراض الدموية الحيوية\"\n        },\n        {\n            \"name\": \"Cardiology\",\n            \"ar_name\": \"أمراض القلب\"\n        },\n        {\n            \"name\": \"Child psychiatry\",\n            \"ar_name\": \"طب الأطفال النفسي\"\n        },\n        {\n            \"name\": \"Clinical biology\",\n            \"ar_name\": \"الأحياء السريرية\"\n        },\n        {\n            \"name\": \"Clinical chemistry\",\n            \"ar_name\": \"الكيمياء السريرية\"\n        },\n        {\n            \"name\": \"Clinical neurophysiology\",\n            \"ar_name\": \"العلم العصبي الفيزيولوجي السريري\"\n        },\n        {\n            \"name\": \"Clinical radiology\",\n            \"ar_name\": \"التصوير الطبي السريري\"\n        },\n        {\n            \"name\": \"Dental, oral and maxillo-facial surgery\",\n            \"ar_name\": \"جراحة الأسنان والفم والوجه\"\n        },\n        {\n            \"name\": \"Dermato-venerology\",\n            \"ar_name\": \"أمراض الجلد والأمراض الجنسية\"\n        },\n        {\n            \"name\": \"Dermatology\",\n            \"ar_name\": \"أمراض الجلدية\"\n        },\n        {\n            \"name\": \"Endocrinology\",\n            \"ar_name\": \"علم الغدد الصماء\"\n        },\n        {\n            \"name\": \"Gastro-enterologic surgery\",\n            \"ar_name\": \"جراحة الجهاز الهضمي\"\n        },\n        {\n            \"name\": \"Gastroenterology\",\n            \"ar_name\": \"أمراض المعدة والأمعاء\"\n        },\n        {\n            \"name\": \"General hematology\",\n            \"ar_name\": \"الأمراض الدموية العامة\"\n        },\n        {\n            \"name\": \"General Practice\",\n            \"ar_name\": \"الطب العام\"\n        },\n        {\n            \"name\": \"General surgery\",\n            \"ar_name\": \"جراحة عامة\"\n        },\n        {\n            \"name\": \"Geriatrics\",\n            \"ar_name\": \"طب المسنين\"\n        },\n        {\n            \"name\": \"Immunology\",\n            \"ar_name\": \"مناعة\"\n        },\n        {\n            \"name\": \"Infectious diseases\",\n            \"ar_name\": \"الأمراض المعدية\"\n        },\n        {\n            \"name\": \"Internal medicine\",\n            \"ar_name\": \"الطب الباطني\"\n        },\n        {\n            \"name\": \"Laboratory medicine\",\n            \"ar_name\": \"طب المختبرات\"\n        },\n        {\n            \"name\": \"Maxillo-facial surgery\",\n            \"ar_name\": \"جراحة الفك والوجه\"\n        },\n        {\n            \"name\": \"Microbiology\",\n            \"ar_name\": \"علم الأحياء الدقيقة\"\n        },\n        {\n            \"name\": \"Nephrology\",\n            \"ar_name\": \"أمراض الكلى\"\n        },\n        {\n            \"name\": \"Neuro-psychiatry\",\n            \"ar_name\": \"أمراض الأعصاب والطب النفسي\"\n        },\n        {\n            \"name\": \"Neurology\",\n            \"ar_name\": \"أمراض الأعصاب\"\n        },\n        {\n            \"name\": \"Neurosurgery\",\n            \"ar_name\": \"جراحة الأعصاب\"\n        },\n        {\n            \"name\": \"Nuclear medicine\",\n            \"ar_name\": \"الطب النووي\"\n        },\n        {\n            \"name\": \"Obstetrics and gynecology\",\n            \"ar_name\": \"النسا والتوليد\"\n        },\n        {\n            \"name\": \"Occupational medicine\",\n            \"ar_name\": \"طب العمل\"\n        },\n        {\n            \"name\": \"Ophthalmology\",\n            \"ar_name\": \"طب العيون\"\n        },\n        {\n            \"name\": \"Orthopaedics\",\n            \"ar_name\": \"جراحة العظام\"\n        },\n        {\n            \"name\": \"Otorhinolaryngology\",\n            \"ar_name\": \"أمراض الأنف والأذن والحنجرة\"\n        },\n        {\n            \"name\": \"Paediatric surgery\",\n            \"ar_name\": \"جراحة الأطفال\"\n        },\n        {\n            \"name\": \"Paediatrics\",\n            \"ar_name\": \"طب الأطفال\"\n        },\n        {\n            \"name\": \"Pathology\",\n            \"ar_name\": \"علم المرض\"\n        },\n        {\n            \"name\": \"Pharmacology\",\n            \"ar_name\": \"علم الأدوية\"\n        },\n        {\n            \"name\": \"Physical medicine and rehabilitation\",\n            \"ar_name\": \"الطب الطبيعي وإعادة التأهيل\"\n        },\n        {\n            \"name\": \"Plastic surgery\",\n            \"ar_name\": \"جراحة التجميل\"\n        },\n        {\n            \"name\": \"Podiatric Medicine\",\n            \"ar_name\": \"طب القدمين\"\n        },\n        {\n            \"name\": \"Podiatric Surgery\",\n            \"ar_name\": \"جراحة القدمين\"\n        },\n        {\n            \"name\": \"Psychiatry\",\n            \"ar_name\": \"طب النفس\"\n        },\n        {\n            \"name\": \"Public health and Preventive Medicine\",\n            \"ar_name\": \"الصحة العامة والوقاية\"\n        },\n        {\n            \"name\": \"Radiology\",\n            \"ar_name\": \"التصوير الطبي\"\n        },\n        {\n            \"name\": \"Radiotherapy\",\n            \"ar_name\": \"العلاج الإشعاعي\"\n        },\n        {\n            \"name\": \"Respiratory medicine\",\n            \"ar_name\": \"أمراض الجهاز التنفسي\"\n        },\n        {\n            \"name\": \"Rheumatology\",\n            \"ar_name\": \"الروماتيزم\"\n        },\n        {\n            \"name\": \"Stomatology\",\n            \"ar_name\": \"طب الفم والأسنان\"\n        },\n        {\n            \"name\": \"Thoracic surgery\",\n            \"ar_name\": \"جراحة الصدر\"\n        },\n        {\n            \"name\": \"Tropical medicine\",\n            \"ar_name\": \"طب الأمراض الاستوائية\"\n        },\n        {\n            \"name\": \"Urology\",\n            \"ar_name\": \"جراحة المسالك البولية\"\n        },\n        {\n            \"name\": \"Vascular surgery\",\n            \"ar_name\": \"جراحة الأوعية الدموية\"\n        },\n        {\n            \"name\": \"Venereology\",\n            \"ar_name\": \"أمراض الجنس\"\n        }\n    ]\n}"
 						}
 					]
+				},
+				{
+					"name": "view account status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImRvY3RvciIsImV4cCI6MTY3OTMzMzM2MywiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MC5yb3NoZXR0YS5lZyIsImF1ZCI6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAucm9zaGV0dGEuY29tIiwiaWF0IjoxMzU2OTk5NTI0LCJuYmYiOjEzNTcwMDAwMDB9.ulWYO7UxpMrDJKyvlUlb7fIINAc7l9ssrRW69UYuJKQ",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/users/view_account_status",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"users",
+								"view_account_status"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "view account status",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/users/view_account_status",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"users",
+										"view_account_status"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Date",
+									"value": "Mon, 20 Mar 2023 09:29:52 GMT"
+								},
+								{
+									"key": "Server",
+									"value": "Apache/2.4.54 (Win64) OpenSSL/1.1.1p PHP/8.2.0"
+								},
+								{
+									"key": "X-Powered-By",
+									"value": "PHP/8.2.0"
+								},
+								{
+									"key": "Expires",
+									"value": "Thu, 19 Nov 1981 08:52:00 GMT"
+								},
+								{
+									"key": "Cache-Control",
+									"value": "no-store, no-cache, must-revalidate"
+								},
+								{
+									"key": "Pragma",
+									"value": "no-cache"
+								},
+								{
+									"key": "Set-Cookie",
+									"value": "PHPSESSID=ffak85tb36r6kqtp20phuss72p; path=/"
+								},
+								{
+									"key": "Access-Control-Allow-Origin",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Allow-Methods",
+									"value": "*"
+								},
+								{
+									"key": "Access-Control-Max-Age",
+									"value": "3600"
+								},
+								{
+									"key": "Access-Control-Allow-Headers",
+									"value": "*"
+								},
+								{
+									"key": "Content-Length",
+									"value": "155"
+								},
+								{
+									"key": "Keep-Alive",
+									"value": "timeout=5, max=100"
+								},
+								{
+									"key": "Connection",
+									"value": "Keep-Alive"
+								},
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"Status\": 200,\n    \"Message\": \"تم جلب البيانات بنجاح\",\n    \"Data\": \"success\"\n}"
+						}
+					]
 				}
 			]
 		},
@@ -9788,7 +9901,7 @@
 								{
 									"key": "status",
 									"value": "",
-									"description": "status [0 , 1] (0)=> notActive , (1)=>Active"
+									"description": "status [0 , 1 , -1] (0)=> notActive , (1)=>Active , (-1)=> toReject"
 								}
 							]
 						}

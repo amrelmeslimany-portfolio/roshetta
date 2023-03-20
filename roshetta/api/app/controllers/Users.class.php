@@ -2,10 +2,12 @@
 
 class Users extends Controller
 {
-    private $userModel;
+    private $userModel, $doctorModel, $pharmacistModel;
     public function __construct()
     {
-        $this->userModel = $this->model('User');
+        $this->userModel        = $this->model('User');
+        $this->doctorModel      = $this->model('Doctor');
+        $this->pharmacistModel  = $this->model('Pharmacist');
     }
 
     public function document()
@@ -405,9 +407,9 @@ class Users extends Controller
                                 if ($result->role == 'doctor' || $result->role == 'pharmacist') {
                                     @$isVerify = $this->userModel->getActivation($result->id, $result->role);
                                     if ($isVerify) {
-                                        if ($isVerify->isActive == 0 ) {
+                                        if ($isVerify->isActive == 0) {
                                             $status_active = 'waiting';
-                                        } elseif($isVerify->isActive == 1 ) {
+                                        } elseif ($isVerify->isActive == 1) {
                                             $status_active = 'success';
                                         } else {
                                             $status_active = 'error';
@@ -672,19 +674,19 @@ class Users extends Controller
                 "id"    => $check_token['id'],
                 "type"  => $check_token['type']
             ];
-            
+
             @$profile = $this->userModel->viewProfile($data);
 
             if ($data['type'] == 'patient') {
                 @$number = $this->userModel->numberPatient($data['id']);
             } elseif ($data['type'] == 'doctor') {
                 @$number = $this->userModel->numberDoctor($data['id']);
-            } elseif ($data['type'] == 'pharmacist'){
+            } elseif ($data['type'] == 'pharmacist') {
                 @$number = $this->userModel->numberPharmacist($data['id']);
             } else {
                 @$number = $this->userModel->numberAssistant($data['id']);
             }
-            
+
             if ($profile) {
                 $url = URL_PERSON;
                 $data_new = messageProfile($profile, $url, $number); // Determind Data User
@@ -736,7 +738,7 @@ class Users extends Controller
             if (empty($data['password'])) {
                 $data_err['password_err'] = 'برجاء إدخال كلمة المرور الجديدة';
             } else {
-                if (strlen($data['password']) < 6 ) $data_err['password_err'] = 'كلمة المرور يجب الأ تقل عن 6 عناصر';
+                if (strlen($data['password']) < 6) $data_err['password_err'] = 'كلمة المرور يجب الأ تقل عن 6 عناصر';
             }
             if (empty($data['confirm_password'])) {
                 $data_err['confirm_password_err'] = 'برجاء تأكيد كلمة المرور الجديدة';
@@ -1834,5 +1836,45 @@ class Users extends Controller
         $Status     = 200;
         userMessage($Status, $Message, $result);
         die();
+    }
+
+    //********************************************************** Get Account Status *************************************************//
+    public function view_account_status()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+
+            @$check_token = $this->tokenVerify();
+            if (!$check_token) {
+                $Message    = 'الرجاء تسجيل الدخول';
+                $Status     = 401;
+                userMessage($Status, $Message);
+                die();
+            }
+
+            if ($check_token['type'] == 'doctor' || $check_token['type'] == 'pharmacist') {
+                @$isVerify = $this->userModel->getActivation($check_token['id'], $check_token['type']);
+                if ($isVerify) {
+                    if ($isVerify->isActive == 0) {
+                        $status_active = 'waiting';
+                    } elseif ($isVerify->isActive == 1) {
+                        $status_active = 'success';
+                    } else {
+                        $status_active = 'error';
+                    }
+                } else {
+                    $status_active = 'none';
+                }
+            }
+
+            $Message    = 'تم جلب البيانات بنجاح';
+            $Status     = 200;
+            userMessage($Status, $Message, $status_active);
+            die();
+        } else {
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
+            userMessage($Status, $Message);
+            die();
+        }
     }
 }
