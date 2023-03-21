@@ -3,7 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 // import ProtectedRoute from './pages/ProtectedRoute';
 import Layout from './pages/Layout';
 import { DoctorHome, AuthLogin, AuthRegister } from './pages';
-import './App.scss';
+import './App.css';
 
 // Created devm7md @2023 All rights reserved
 

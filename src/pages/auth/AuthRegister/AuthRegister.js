@@ -1,9 +1,9 @@
 import React from 'react';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { UserOutlined } from '@ant-design/icons';
 import { Row, Col, Divider } from 'antd';
-import './AuthRegister.scss';
+import './AuthRegister.css';
 
 const AuthRegister = () => {
   const [role, setRole] = useState('');
@@ -49,11 +49,21 @@ const AuthRegister = () => {
     })
       .then((res) => res.json())
       .then((data) => console.log(data));
+    setRole('');
     setFirstName('');
     setLastName('');
     setEmail('');
     setPassword('');
     setConfirmPassword('');
+    setGovernorate('');
+    setGender('');
+    setSsd('');
+    setPhoneNumber('');
+    setBirthDate('');
+    setWeight('');
+    setHeight('');
+    setSpecialist('');
+
     navigate('/');
   };
   return (
@@ -79,10 +89,18 @@ const AuthRegister = () => {
         </button>
       </form>
       <Row gutter={[24, 16]}>
-        <Col span={12}><Divider>Text</Divider></Col>
-        <Col span={12}><Divider>Text</Divider></Col>
-        <Col span={12}><Divider>Text</Divider></Col>
-        <Col span={12}><Divider>Text</Divider></Col>
+        <Col span={12}>
+          <Divider>Text</Divider>
+        </Col>
+        <Col span={12}>
+          <Divider>Text</Divider>
+        </Col>
+        <Col span={12}>
+          <Divider>Text</Divider>
+        </Col>
+        <Col span={12}>
+          <Divider>Text</Divider>
+        </Col>
       </Row>
       <Row gutter={[24, 16]}>
         <Col span={12} />
