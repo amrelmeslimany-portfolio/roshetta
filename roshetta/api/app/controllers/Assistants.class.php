@@ -491,8 +491,22 @@ class Assistants extends Controller
             $new_data = [];
             foreach ($result as $element) {
                 $element['logo'] = getImage($element['logo'], $url);
+                @$isVerify = $this->userModel->getActivation($element['id'],'clinic');
+            if ($isVerify) {
+                if ($isVerify->isActive == 0) {
+                    $status_active = 'waiting';
+                } elseif ($isVerify->isActive == 1) {
+                    $status_active = 'success';
+                } else {
+                    $status_active = 'error';
+                }
+            } else {
+                $status_active = 'none';
+            }
+                $element['isVerify'] = $status_active;
                 $new_data[] = $element;
             }
+            
             $Message    = 'تم جلب البيانات بنجاح';
             $Status     = 200;
             userMessage($Status, $Message, $new_data);

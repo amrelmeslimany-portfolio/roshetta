@@ -11,7 +11,15 @@ class User
 
     public function getActivation($id, $type)
     {
-        $this->db->query("SELECT isActive FROM activation_person WHERE user_id = :ID AND role = :TYPE");
+        if ($type == 'doctor' || $type == 'pharmacist') {
+            $table_name = 'activation_person';
+            $user_id = 'user_id';
+        } else {
+            $table_name = 'activation_place';
+            $user_id = 'place_id';
+        }
+
+        $this->db->query("SELECT isActive FROM $table_name WHERE $user_id = :ID AND role = :TYPE");
         $this->db->bind(":TYPE", $type);
         $this->db->bind(":ID", $id);
         $this->db->execute();
@@ -21,6 +29,7 @@ class User
         } else {
             false;
         }
+        
     }
     public function getUserEmail($email, $table_name)  // Check User Email
     {
