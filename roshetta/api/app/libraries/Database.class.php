@@ -22,10 +22,10 @@ class Database
     }
     public function __destruct()
     {
-        if ($this->stmt !== null) {
+        if ($this->stmt != null) {
             $this->stmt = null;
         }
-        if ($this->pdo !== null) {
+        if ($this->pdo != null) {
             $this->pdo = null;
         }
     }

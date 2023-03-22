@@ -99,7 +99,7 @@ class JWT
             throw new InvalidArgumentException('Key may not be empty');
         }
         $tks = \explode('.', $jwt);
-        if (\count($tks) !== 3) {
+        if (\count($tks) != 3) {
             throw new UnexpectedValueException('Wrong number of segments');
         }
         list($headb64, $bodyb64, $cryptob64) = $tks;
@@ -189,7 +189,7 @@ class JWT
         array $head = null
     ): string {
         $header = ['typ' => 'JWT', 'alg' => $alg];
-        if ($keyId !== null) {
+        if ($keyId != null) {
             $header['kid'] = $keyId;
         }
         if (isset($head) && \is_array($head)) {
@@ -351,7 +351,7 @@ class JWT
 
         if ($errno = \json_last_error()) {
             self::handleJsonError($errno);
-        } elseif ($obj === null && $input !== 'null') {
+        } elseif ($obj === null && $input != 'null') {
             throw new DomainException('Null result with non-null input');
         }
         return $obj;
@@ -376,7 +376,7 @@ class JWT
         }
         if ($errno = \json_last_error()) {
             self::handleJsonError($errno);
-        } elseif ($json === 'null' && $input !== null) {
+        } elseif ($json === 'null' && $input != null) {
             throw new DomainException('Null result with non-null input');
         }
         if ($json === false) {

@@ -39,7 +39,7 @@ class Pharmacists extends Controller
             if (!$token_in) {
                 return false;
             }
-            if ($token_in->token !== $Auth) {
+            if ($token_in->token != $Auth) {
                 return false;
             } else {
                 return $token_out;
@@ -77,7 +77,7 @@ class Pharmacists extends Controller
                 "address_err"       => '',
             ];
 
-            if ($data['type'] !== 'pharmacist') {
+            if ($data['type'] != 'pharmacist') {
                 $Message    = 'غير مصرح لك القيام بالإضافة';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -92,24 +92,17 @@ class Pharmacists extends Controller
                 die();
             }
 
-            if ($get_pharmacist->isActive !== 1) {
+            if ($get_pharmacist->isActive != 1) {
                 $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                $Status     = 202;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
 
             @$get_pharmacy = $this->pharmacistModel->getPharmacy($data['id']);
-            if (!$get_pharmacy) {
-                $Message    = 'الرجاء المحاولة فى وقت لأحق';
-                $Status     = 422;
-                userMessage($Status, $Message);
-                die();
-            }
-
-            if ($get_pharmacy >= 2) {
+            if (@$get_pharmacy >= 2) {
                 $Message    = 'لايمكنك تسجيل أكثر من 2 صيدلية';
-                $Status     = 202;
+                $Status     = 400;
                 userMessage($Status, $Message);
                 die();
             }
@@ -119,7 +112,7 @@ class Pharmacists extends Controller
             if (empty($data['phone_number'])) {  // Check Phone
                 $data_err['phone_number_err'] = 'برجاء إدخال رقم الهاتف';
             } else {
-                if (strlen($data['phone_number']) !== 11) {
+                if (strlen($data['phone_number']) != 11) {
                     $data_err['phone_number_err'] = 'رقم الهاتف غير صالح';
                 } else {
                     if ($this->userModel->getUserPhone($data['phone_number'], 'pharmacy')) $data_err['phone_number_err'] = 'رقم الهاتف موجود من قبل';
@@ -208,7 +201,7 @@ class Pharmacists extends Controller
                 "pharmacy_id_err"   => ''
             ];
 
-            if ($data['type'] !== 'pharmacist') {
+            if ($data['type'] != 'pharmacist') {
                 $Message    = 'غير مصرح لك القيام بالتعديل';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -239,9 +232,9 @@ class Pharmacists extends Controller
                             userMessage($Status, $Message);
                             die();
                         }
-                        if ($get_pharmacy->isActive !== 1) {
+                        if ($get_pharmacy->isActive != 1) {
                             $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status     = 202;
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -251,11 +244,11 @@ class Pharmacists extends Controller
                             if (empty($data['phone_number'])) {  // Check Phone
                                 $data_err['phone_number_err'] = 'برجاء إدخال رقم الهاتف';
                             } else {
-                                if (strlen($data['phone_number']) !== 11) {
+                                if (strlen($data['phone_number']) != 11) {
                                     $data_err['phone_number_err'] = 'رقم الهاتف غير صالح';
                                 } else {
                                     if ($this->userModel->getUserPhone($data['phone_number'], 'pharmacy')) {
-                                        if ($data_p->phone_number !== $data['phone_number']) $data_err['phone_number_err'] = 'رقم الهاتف موجود من قبل';
+                                        if ($data_p->phone_number != $data['phone_number']) $data_err['phone_number_err'] = 'رقم الهاتف موجود من قبل';
                                     }
                                 }
                             }
@@ -335,7 +328,7 @@ class Pharmacists extends Controller
                 "pharmacy_id_err" => ''
             ];
 
-            if ($data['type'] !== 'pharmacist') {
+            if ($data['type'] != 'pharmacist') {
                 $Message    = 'غير مصرح لك تسجيل الدخول';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -349,9 +342,9 @@ class Pharmacists extends Controller
                     die();
                 }
 
-                if ($get_pharmacist->isActive !== 1) {
+                if ($get_pharmacist->isActive != 1) {
                     $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status     = 202;
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -374,9 +367,9 @@ class Pharmacists extends Controller
                             userMessage($Status, $Message);
                             die();
                         }
-                        if ($get_pharmacy->isActive !== 1) {
+                        if ($get_pharmacy->isActive != 1) {
                             $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status     = 202;
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -444,7 +437,7 @@ class Pharmacists extends Controller
                 "type"  => $this->CheckToken['type'],
             ];
 
-            if ($data['type'] !== 'pharmacist') {
+            if ($data['type'] != 'pharmacist') {
                 $Message    = 'غير مصرح لك الإطلاع على الصيداليات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -496,7 +489,7 @@ class Pharmacists extends Controller
                 "type_filter_err"   => ''
             ];
 
-            if ($data['type'] !== 'pharmacist') {
+            if ($data['type'] != 'pharmacist') {
                 $Message    = 'غير مصرح لك الإطلاع على البيانات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -510,9 +503,9 @@ class Pharmacists extends Controller
                     die();
                 }
 
-                if ($get_pharmacist->isActive !== 1) {
+                if ($get_pharmacist->isActive != 1) {
                     $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status     = 202;
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -535,9 +528,9 @@ class Pharmacists extends Controller
                             userMessage($Status, $Message);
                             die();
                         }
-                        if ($get_pharmacy->isActive !== 1) {
+                        if ($get_pharmacy->isActive != 1) {
                             $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status     = 202;
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -636,7 +629,7 @@ class Pharmacists extends Controller
                 "pharmacy_id_err" => ''
             ];
 
-            if ($data['type'] !== 'pharmacist') {
+            if ($data['type'] != 'pharmacist') {
                 $Message    = 'غير مصرح لك الإطلاع على الطلبات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -650,9 +643,9 @@ class Pharmacists extends Controller
                     die();
                 }
 
-                if ($get_pharmacist->isActive !== 1) {
+                if ($get_pharmacist->isActive != 1) {
                     $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status     = 202;
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -675,9 +668,9 @@ class Pharmacists extends Controller
                             userMessage($Status, $Message);
                             die();
                         }
-                        if ($get_pharmacy->isActive !== 1) {
+                        if ($get_pharmacy->isActive != 1) {
                             $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status     = 202;
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -760,7 +753,7 @@ class Pharmacists extends Controller
                 "prescript_id_err"  => ''
             ];
 
-            if ($data['type'] !== 'pharmacist') {
+            if ($data['type'] != 'pharmacist') {
                 $Message    = 'غير مصرح لك صرف روشتات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -774,9 +767,9 @@ class Pharmacists extends Controller
                     die();
                 }
 
-                if ($get_pharmacist->isActive !== 1) {
+                if ($get_pharmacist->isActive != 1) {
                     $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status     = 202;
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -799,9 +792,9 @@ class Pharmacists extends Controller
                             userMessage($Status, $Message);
                             die();
                         }
-                        if ($get_pharmacy->isActive !== 1) {
+                        if ($get_pharmacy->isActive != 1) {
                             $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status     = 202;
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -859,7 +852,7 @@ class Pharmacists extends Controller
                 "order_id_err"      => ''
             ];
 
-            if ($data['type'] !== 'pharmacist') {
+            if ($data['type'] != 'pharmacist') {
                 $Message    = 'غير مصرح لك صرف روشتات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -873,9 +866,9 @@ class Pharmacists extends Controller
                     die();
                 }
 
-                if ($get_pharmacist->isActive !== 1) {
+                if ($get_pharmacist->isActive != 1) {
                     $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
-                    $Status     = 202;
+                    $Status     = 400;
                     userMessage($Status, $Message);
                     die();
                 }
@@ -898,9 +891,9 @@ class Pharmacists extends Controller
                             userMessage($Status, $Message);
                             die();
                         }
-                        if ($get_pharmacy->isActive !== 1) {
+                        if ($get_pharmacy->isActive != 1) {
                             $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status     = 202;
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -991,9 +984,9 @@ class Pharmacists extends Controller
                             userMessage($Status, $Message);
                             die();
                         }
-                        if ($get_pharmacy->isActive !== 1) {
+                        if ($get_pharmacy->isActive != 1) {
                             $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status     = 202;
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -1097,9 +1090,9 @@ class Pharmacists extends Controller
                             userMessage($Status, $Message);
                             die();
                         }
-                        if ($get_pharmacy->isActive !== 1) {
+                        if ($get_pharmacy->isActive != 1) {
                             $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
-                            $Status     = 202;
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -1116,7 +1109,7 @@ class Pharmacists extends Controller
                     "url" => URL_PLACE
                 ];
 
-                if ($result->logo !== DF_IMAGE_PHARMACY) {
+                if ($result->logo != DF_IMAGE_PHARMACY) {
 
                     @$url_img = removeImage($data_image);
                     if (!$url_img) {

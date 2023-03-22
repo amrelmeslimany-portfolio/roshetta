@@ -38,7 +38,7 @@ class Patients extends Controller  // Extends The Controller
             if (!$token_in) {
                 return false;
             }
-            if ($token_in->token !== $Auth) {
+            if ($token_in->token != $Auth) {
                 return false;
             } else {
                 return $token_out;
@@ -67,7 +67,7 @@ class Patients extends Controller  // Extends The Controller
                 "appoint_date_err"  => '',
                 "clinic_id_err"     => ''
             ];
-            if ($data['type'] !== 'patient') {
+            if ($data['type'] != 'patient') {
                 $Message    = 'غير مصرح لك القيام بالحجز';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -130,7 +130,7 @@ class Patients extends Controller  // Extends The Controller
                 "type"  => $this->CheckToken['type'],
             ];
 
-            if ($data['type'] !== 'patient') {
+            if ($data['type'] != 'patient') {
                 $Message    = 'غير مصرح لك الإطلاع على المواعيد';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -186,7 +186,7 @@ class Patients extends Controller  // Extends The Controller
                 "clinic_id_err"     => '',
                 "appoint_id_err"    => ''
             ];
-            if ($data['type'] !== 'patient') {
+            if ($data['type'] != 'patient') {
                 $Message    = 'غير مصرح لك القيام بالتعديل';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -264,7 +264,7 @@ class Patients extends Controller  // Extends The Controller
                 "appoint_id_err" => ''
             ];
 
-            if ($data['type'] !== 'patient') {
+            if ($data['type'] != 'patient') {
                 $Message    = 'غير مصرح لك القيام بالحذف';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -322,7 +322,7 @@ class Patients extends Controller  // Extends The Controller
                 "filter"    => @$_Get['filter']
             ];
 
-            if ($data['type'] !== 'patient') {
+            if ($data['type'] != 'patient') {
                 $Message    = 'غير مصرح لك الإطلاع على العيادات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -380,7 +380,7 @@ class Patients extends Controller  // Extends The Controller
             $data_err = [
                 "clinic_id_err" => ''
             ];
-            if ($data['type'] !== 'patient') {
+            if ($data['type'] != 'patient') {
                 $Message    = 'غير مصرح لك الإطلاع على التفاصيل';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -438,7 +438,7 @@ class Patients extends Controller  // Extends The Controller
                 "type"  => $this->CheckToken['type']
             ];
 
-            if ($data['type'] !== 'patient') {
+            if ($data['type'] != 'patient') {
                 $Message    = 'غير مصرح لك الإطلاع على العيادات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -477,7 +477,7 @@ class Patients extends Controller  // Extends The Controller
                 "type"  => $this->CheckToken['type']
             ];
 
-            if ($data['type'] !== 'patient') {
+            if ($data['type'] != 'patient') {
                 $Message    = 'غير مصرح لك الإطلاع على الصيداليات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -526,7 +526,7 @@ class Patients extends Controller  // Extends The Controller
             $data_err = [
                 "pharmacy_id_err" => ''
             ];
-            if ($data['type'] !== 'patient') {
+            if ($data['type'] != 'patient') {
                 $Message    = 'غير مصرح لك الإطلاع على التفاصيل';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -584,7 +584,7 @@ class Patients extends Controller  // Extends The Controller
                 "type"  => $this->CheckToken['type'],
             ];
 
-            if ($data['type'] !== 'patient') {
+            if ($data['type'] != 'patient') {
                 $Message    = 'غير مصرح لك الإطلاع على الروشتات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -631,7 +631,7 @@ class Patients extends Controller  // Extends The Controller
                 "prescript_id_err"  => '',
                 "pharmacy_id_err"   => ''
             ];
-            if ($data['type'] !== 'patient') {
+            if ($data['type'] != 'patient') {
                 $Message    = 'غير مصرح لك القيام بالإرسال';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -709,7 +709,7 @@ class Patients extends Controller  // Extends The Controller
                 "prescript_id_err" => ''
             ];
 
-            if ($data['type'] !== 'patient') {
+            if ($data['type'] != 'patient') {
                 $Message    = 'غير مصرح لك الإطلاع على التفاصيل';
                 $Status     = 403;
                 userMessage($Status, $Message);

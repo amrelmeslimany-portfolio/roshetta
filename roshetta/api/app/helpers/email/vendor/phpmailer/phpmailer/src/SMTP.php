@@ -429,10 +429,10 @@ class SMTP
 
         //SMTP server can take longer to respond, give longer timeout for first read
         //Windows does not have support for this timeout function
-        if (strpos(PHP_OS, 'WIN') !== 0) {
+        if (strpos(PHP_OS, 'WIN') != 0) {
             $max = (int)ini_get('max_execution_time');
             //Don't bother if unlimited, or if set_time_limit is disabled
-            if (0 !== $max && $timeout > $max && strpos(ini_get('disable_functions'), 'set_time_limit') === false) {
+            if (0 != $max && $timeout > $max && strpos(ini_get('disable_functions'), 'set_time_limit') === false) {
                 @set_time_limit($timeout);
             }
             stream_set_timeout($connection, $timeout, 0);
@@ -516,7 +516,7 @@ class SMTP
             );
 
             //If we have requested a specific auth type, check the server supports it before trying others
-            if (null !== $authtype && !in_array($authtype, $this->server_caps['AUTH'], true)) {
+            if (null != $authtype && !in_array($authtype, $this->server_caps['AUTH'], true)) {
                 $this->edebug('Requested auth method not available: ' . $authtype, self::DEBUG_LOWLEVEL);
                 $authtype = null;
             }
@@ -943,11 +943,11 @@ class SMTP
             $dsn = strtoupper($dsn);
             $notify = [];
 
-            if (strpos($dsn, 'NEVER') !== false) {
+            if (strpos($dsn, 'NEVER') != false) {
                 $notify[] = 'NEVER';
             } else {
                 foreach (['SUCCESS', 'FAILURE', 'DELAY'] as $value) {
-                    if (strpos($dsn, $value) !== false) {
+                    if (strpos($dsn, $value) != false) {
                         $notify[] = $value;
                     }
                 }
@@ -992,7 +992,7 @@ class SMTP
             return false;
         }
         //Reject line breaks in all commands
-        if ((strpos($commandstring, "\n") !== false) || (strpos($commandstring, "\r") !== false)) {
+        if ((strpos($commandstring, "\n") != false) || (strpos($commandstring, "\r") != false)) {
             $this->setError("Command '$command' contained line breaks");
 
             return false;
@@ -1037,7 +1037,7 @@ class SMTP
         }
 
         //Don't clear the error store when using keepalive
-        if ($command !== 'RSET') {
+        if ($command != 'RSET') {
             $this->setError('');
         }
 
@@ -1240,7 +1240,7 @@ class SMTP
 
                 //stream_select returns false when the `select` system call is interrupted
                 //by an incoming signal, try the select again
-                if (stripos($message, 'interrupted system call') !== false) {
+                if (stripos($message, 'interrupted system call') != false) {
                     $this->edebug(
                         'SMTP -> get_lines(): retrying stream_select',
                         self::DEBUG_LOWLEVEL

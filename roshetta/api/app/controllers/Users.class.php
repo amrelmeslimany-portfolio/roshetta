@@ -33,7 +33,7 @@ class Users extends Controller
             if (!$token_in) {
                 return false;
             }
-            if ($token_in->token !== $Auth) {
+            if ($token_in->token != $Auth) {
                 return false;
             } else {
                 return $token_out;
@@ -112,7 +112,7 @@ class Users extends Controller
                     if (empty($data['ssd'])) { // Check SSD
                         $data_err['ssd_err'] = 'برجاء إدخال الرقم القومى';
                     } else {
-                        if (!filter_var($data['ssd'], 257) || strlen($data['ssd']) !== 14) {
+                        if (!filter_var($data['ssd'], 257) || strlen($data['ssd']) != 14) {
                             $data_err['ssd_err'] = 'الرقم القومى غير صالح';  // FILTER_VALIDATE_INT
                         } else {
                             if ($this->userModel->getUserSSD($data['ssd'], $data['type'])) $data_err['ssd_err'] = 'الرقم القومى موجود من قبل';
@@ -122,7 +122,7 @@ class Users extends Controller
                     if (empty($data['phone_number'])) {  // Check Phone
                         $data_err['phone_number_err'] = 'برجاء إدخال رقم الهاتف';
                     } else {
-                        if (strlen($data['phone_number']) !== 11) {
+                        if (strlen($data['phone_number']) != 11) {
                             $data_err['phone_number_err'] = 'رقم الهاتف غير صالح';
                         } else {
                             if ($this->userModel->getUserPhone($data['phone_number'], $data['type'])) $data_err['phone_number_err'] = 'رقم الهاتف موجود من قبل';
@@ -141,7 +141,7 @@ class Users extends Controller
                     if (empty($data['confirm_password'])) {
                         $data_err['confirm_password_err'] = 'برجاء تأكيد كلمة المرور'; // Check Confirm Password
                     } else {
-                        if ($data['password'] !== $data['confirm_password']) $data_err['confirm_password_err'] = 'كلمة المرور غير متطابقة'; //Check Validate Password
+                        if ($data['password'] != $data['confirm_password']) $data_err['confirm_password_err'] = 'كلمة المرور غير متطابقة'; //Check Validate Password
                     }
 
                     switch ($data['type']) {
@@ -477,7 +477,7 @@ class Users extends Controller
 
                             if ($mail->send()) {
                                 $Message    = 'يجب تفعيل البريد الإلكترونى';
-                                $Status     = 202;
+                                $Status     = 400;
                                 userMessage($Status, $Message, ["isActive" => $result->email_isActive]);
                                 die();
                             } else {
@@ -589,7 +589,7 @@ class Users extends Controller
                                 if (empty($data['code'])) { // Check Code
                                     $data_err['code_err'] = 'برجاء إدخال الكود';
                                 } else {
-                                    if (!filter_var($data['code'], 257) || strlen($data['code']) !== 6) $data_err['code_err'] = 'الكود غير صالح';  // FILTER_VALIDATE_INT
+                                    if (!filter_var($data['code'], 257) || strlen($data['code']) != 6) $data_err['code_err'] = 'الكود غير صالح';  // FILTER_VALIDATE_INT
                                 }
                             } else {
                                 $data_err['email_err'] = 'البريد الإلكترونى غير صحيح';
@@ -611,7 +611,7 @@ class Users extends Controller
                 @$result = $this->userModel->login($data_code);
                 if ($result) {
                     $code_user = $result->security_code;
-                    if ($code_user !== $data['code']) {
+                    if ($code_user != $data['code']) {
                         $Message    = 'الكود غير صحيح';
                         $Status     = 400;
                         userMessage($Status, $Message);
@@ -743,7 +743,7 @@ class Users extends Controller
             if (empty($data['confirm_password'])) {
                 $data_err['confirm_password_err'] = 'برجاء تأكيد كلمة المرور الجديدة';
             } else {
-                if ($data['password'] !== $data['confirm_password']) $data_err['confirm_password_err'] = 'كلمة المرور غير متطابقة';
+                if ($data['password'] != $data['confirm_password']) $data_err['confirm_password_err'] = 'كلمة المرور غير متطابقة';
             }
 
             if (empty($data_err['password_err']) && empty($data_err['confirm_password_err'])) {
@@ -816,7 +816,7 @@ class Users extends Controller
             if (empty($data['phone_number'])) {
                 $data_err['phone_number_err'] = 'برجاء إدخال رقم الهاتف';
             } else {
-                if (!filter_var($data['phone_number'], 519) || strlen($data['phone_number']) !== 11) {
+                if (!filter_var($data['phone_number'], 519) || strlen($data['phone_number']) != 11) {
                     $data_err['phone_number_err'] = 'رقم الهاتف غير صالح';
                 } else {
                     $result = $this->userModel->getUserPhone($data['phone_number'], $data['type']);
@@ -1027,7 +1027,7 @@ class Users extends Controller
                 $image = DF_IMAGE_PERSON_FEMALE;
             }
 
-            if ($user->profile_img !== $image) {
+            if ($user->profile_img != $image) {
                 @$url_img = removeImage($data_image);
                 if (!$url_img) {
                     $Message    = 'الرجاء المحاولة فى وق لأحق';
@@ -1300,7 +1300,7 @@ class Users extends Controller
                     userMessage($Status, $Message);
                     die();
                 }
-                if ($result->security_code !== $data['code']) {
+                if ($result->security_code != $data['code']) {
                     $Message    = 'الكود غير صحيح';
                     $Status     = 400;
                     userMessage($Status, $Message);
@@ -1385,7 +1385,7 @@ class Users extends Controller
             if (empty($data['confirm_password'])) {
                 $data_err['confirm_password_err'] = 'برجاء تأكيد كلمة المرور الجديدة';
             } else {
-                if ($data['password'] !== $data['confirm_password']) $data_err['confirm_password_err'] = 'كلمة المرور غير متطابقة';
+                if ($data['password'] != $data['confirm_password']) $data_err['confirm_password_err'] = 'كلمة المرور غير متطابقة';
             }
 
             if (

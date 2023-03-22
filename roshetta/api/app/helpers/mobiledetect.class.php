@@ -889,7 +889,7 @@ class MobileDetect
             $type = self::DETECTION_TYPE_MOBILE;
         }
 
-        if ($type !== self::DETECTION_TYPE_MOBILE && $type !== self::DETECTION_TYPE_EXTENDED) {
+        if ($type != self::DETECTION_TYPE_MOBILE && $type != self::DETECTION_TYPE_EXTENDED) {
             return;
         }
 
@@ -1047,7 +1047,7 @@ class MobileDetect
             if (isset($this->httpHeaders[$mobileHeader])) {
                 if (isset($matchType['matches']) && is_array($matchType['matches'])) {
                     foreach ($matchType['matches'] as $_match) {
-                        if (strpos($this->httpHeaders[$mobileHeader], $_match) !== false) {
+                        if (strpos($this->httpHeaders[$mobileHeader], $_match) != false) {
                             return true;
                         }
                     }
@@ -1074,7 +1074,7 @@ class MobileDetect
     public function __call($name, $arguments)
     {
         // make sure the name starts with 'is', otherwise 
-        if (substr($name, 0, 2) !== 'is') {
+        if (substr($name, 0, 2) != 'is') {
             throw new BadMethodCallException("No such method exists: $name");
         }
 
@@ -1313,7 +1313,7 @@ class MobileDetect
         }
 
         // set the $type to the default if we don't recognize the type 
-        if ($type !== self::VERSION_TYPE_STRING && $type !== self::VERSION_TYPE_FLOAT) {
+        if ($type != self::VERSION_TYPE_STRING && $type != self::VERSION_TYPE_FLOAT) {
             $type = self::VERSION_TYPE_STRING;
         }
 

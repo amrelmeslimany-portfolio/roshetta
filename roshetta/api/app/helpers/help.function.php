@@ -118,7 +118,7 @@ function addVideo($data = [])
         $link               = URL() . "videos\\"; //File Link
 
         if (is_file($link . $data['db_name'])) {
-            if (explode(".", $data['db_name'])[0] !== 'df_video') {
+            if (explode(".", $data['db_name'])[0] != 'df_video') {
                 unlink($link . $data['db_name']); //To Delete File Data
             }
         }
@@ -137,7 +137,7 @@ function removeVideo($name)
 {
     $link    = URL() . "videos\\"; //File Link
     if (is_file($link . $name)) {
-        if (explode(".", $name)[0] !== 'df_video') {
+        if (explode(".", $name)[0] != 'df_video') {
             unlink($link  . $name); //To Delete File Data;
             return true;
         }

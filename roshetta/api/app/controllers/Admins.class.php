@@ -41,7 +41,7 @@ class Admins extends Controller
             if (!$token_in) {
                 return false;
             }
-            if ($token_in->token !== $Auth) {
+            if ($token_in->token != $Auth) {
                 return false;
             } else {
                 return $token_out;
@@ -66,7 +66,7 @@ class Admins extends Controller
                 "filter"    => @$_GET['filter']
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك الإطلاع على البيانات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -165,7 +165,7 @@ class Admins extends Controller
                 "status_err"        => ''
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك الإطلاع على البيانات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -302,7 +302,7 @@ class Admins extends Controller
                 "activation_id_err" => '',
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك الإطلاع على البيانات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -385,7 +385,7 @@ class Admins extends Controller
                 "type_err"  => ''
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك إضافة تلك البيانات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -470,7 +470,7 @@ class Admins extends Controller
                 "type"  => $this->CheckToken['type'],
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك الإطلاع على البيانات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -518,7 +518,7 @@ class Admins extends Controller
                 "type_err" => ''
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك حذف تلك البيانات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -609,7 +609,7 @@ class Admins extends Controller
                 "filter"    => @$_GET['filter']
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك الإطلاع على البيانات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -722,7 +722,7 @@ class Admins extends Controller
                 "user_id_err"   => ''
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك الإطلاع على البيانات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -808,7 +808,7 @@ class Admins extends Controller
                 "user_id_err"   => ''
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك حذف تلك البيانات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -876,7 +876,7 @@ class Admins extends Controller
                 "status_err"    => ''
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك الإطلاع على البيانات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -943,7 +943,7 @@ class Admins extends Controller
                 "message_id_err"    => ''
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك الرد على الرسائل';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -1017,7 +1017,7 @@ class Admins extends Controller
                 "type"  => @$this->CheckToken['type'],
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك الإطلاع على البيانات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -1067,7 +1067,7 @@ class Admins extends Controller
                 "confirm_password_err"  => ''
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك التعديل';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -1097,7 +1097,7 @@ class Admins extends Controller
             if (empty($data['confirm_password'])) {
                 $data_err['confirm_password_err'] = 'برجاء تأكيد كلمة المرور'; // Check Confirm Password
             } else {
-                if ($data['password'] !== $data['confirm_password']) $data_err['confirm_password_err'] = 'كلمة المرور غير متطابقة'; //Check Validate Password
+                if ($data['password'] != $data['confirm_password']) $data_err['confirm_password_err'] = 'كلمة المرور غير متطابقة'; //Check Validate Password
             }
 
             if (
@@ -1162,7 +1162,7 @@ class Admins extends Controller
                 "type_user_q_err"   => '',
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك التعديل';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -1205,7 +1205,7 @@ class Admins extends Controller
                         if (empty($data['user_q'])) { // Check SSD
                             $data_err['user_q_err'] = 'برجاء إدخال الرقم القومى';
                         } else {
-                            if (!filter_var($data['user_q'], 257) || strlen($data['user_q']) !== 14) {
+                            if (!filter_var($data['user_q'], 257) || strlen($data['user_q']) != 14) {
                                 $data_err['user_q_err'] = 'الرقم القومى غير صالح';  // FILTER_VALIDATE_INT
                             } else {
                                 if ($this->userModel->getUserSSD($data['user_q'], $data['type_user'])) $data_err['user_q_err'] = 'الرقم القومى موجود من قبل';
@@ -1290,7 +1290,7 @@ class Admins extends Controller
                 "specialist_err"    => ''
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك التعديل';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -1313,7 +1313,7 @@ class Admins extends Controller
                     if (empty($data['phone_number'])) {
                         $data_err['phone_number_err'] = 'برجاء إدخال رقم الهاتف';
                     } else {
-                        if (!filter_var($data['phone_number'], 519) || strlen($data['phone_number']) !== 11) {
+                        if (!filter_var($data['phone_number'], 519) || strlen($data['phone_number']) != 11) {
                             $data_err['phone_number_err'] = 'رقم الهاتف غير صالح';
                         } else {
                             @$result = $this->userModel->getUserPhone($data['phone_number'], $data['type_user']);
@@ -1450,7 +1450,7 @@ class Admins extends Controller
                 "owner_err"         => ''
             ];
 
-            if ($data['type'] !== 'admin') {
+            if ($data['type'] != 'admin') {
                 $Message    = 'غير مصرح لك التعديل';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -1473,7 +1473,7 @@ class Admins extends Controller
                     if (empty($data['phone_number'])) {
                         $data_err['phone_number_err'] = 'برجاء إدخال رقم الهاتف';
                     } else {
-                        if (!filter_var($data['phone_number'], 519) || strlen($data['phone_number']) !== 11) {
+                        if (!filter_var($data['phone_number'], 519) || strlen($data['phone_number']) != 11) {
                             $data_err['phone_number_err'] = 'رقم الهاتف غير صالح';
                         } else {
                             @$result = $this->userModel->getUserPhone($data['phone_number'], $data['type_user']);

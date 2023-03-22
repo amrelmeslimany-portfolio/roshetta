@@ -39,7 +39,7 @@ class Assistants extends Controller
             if (!$token_in) {
                 return false;
             }
-            if ($token_in->token !== $Auth) {
+            if ($token_in->token != $Auth) {
                 return false;
             } else {
                 return $token_out;
@@ -64,7 +64,7 @@ class Assistants extends Controller
                 "clinic_id_err" => ''
             ];
 
-            if ($data['type'] !== 'assistant') {
+            if ($data['type'] != 'assistant') {
                 $Message    = 'غير مصرح لك تسجيل الدخول';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -88,9 +88,9 @@ class Assistants extends Controller
                             userMessage($Status, $Message);
                             die();
                         }
-                        if ($get_clinic->isActive !== 1) {
+                        if ($get_clinic->isActive != 1) {
                             $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status     = 202;
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -193,7 +193,7 @@ class Assistants extends Controller
                 "clinic_id_err"     => ''
             ];
 
-            if ($data['type'] !== 'assistant') {
+            if ($data['type'] != 'assistant') {
                 $Message    = 'غير مصرح لك القيام بالتعديل';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -224,9 +224,9 @@ class Assistants extends Controller
                             userMessage($Status, $Message);
                             die();
                         }
-                        if ($get_clinic->isActive !== 1) {
+                        if ($get_clinic->isActive != 1) {
                             $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status     = 202;
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -236,11 +236,11 @@ class Assistants extends Controller
                             if (empty($data['phone_number'])) {  // Check Phone
                                 $data_err['phone_number_err'] = 'برجاء إدخال رقم الهاتف';
                             } else {
-                                if (strlen($data['phone_number']) !== 11) {
+                                if (strlen($data['phone_number']) != 11) {
                                     $data_err['phone_number_err'] = 'رقم الهاتف غير صالح';
                                 } else {
                                     if ($this->userModel->getUserPhone($data['phone_number'], 'clinic')) {
-                                        if ($data_c->phone_number !== $data['phone_number']) $data_err['phone_number_err'] = 'رقم الهاتف موجود من قبل';
+                                        if ($data_c->phone_number != $data['phone_number']) $data_err['phone_number_err'] = 'رقم الهاتف موجود من قبل';
                                     }
                                 }
                             }
@@ -388,7 +388,7 @@ class Assistants extends Controller
                 "appointment_id_err"    => '',
             ];
 
-            if ($data['type'] !== 'assistant') {
+            if ($data['type'] != 'assistant') {
                 $Message    = 'غير مصرح لك التعديل على الموعد';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -418,9 +418,9 @@ class Assistants extends Controller
                             userMessage($Status, $Message);
                             die();
                         }
-                        if ($get_clinic->isActive !== 1) {
+                        if ($get_clinic->isActive != 1) {
                             $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status     = 202;
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
@@ -472,7 +472,7 @@ class Assistants extends Controller
                 "type"  => $this->CheckToken['type'],
             ];
 
-            if ($data['type'] !== 'assistant') {
+            if ($data['type'] != 'assistant') {
                 $Message    = 'غير مصرح لك الإطلاع على العيادات';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -525,7 +525,7 @@ class Assistants extends Controller
                 "clinic_id_err" => ''
             ];
 
-            if ($data['type'] !== 'assistant') {
+            if ($data['type'] != 'assistant') {
                 $Message    = 'غير مصرح لك الإطلاع على المواعيد';
                 $Status     = 403;
                 userMessage($Status, $Message);
@@ -555,9 +555,9 @@ class Assistants extends Controller
                             userMessage($Status, $Message);
                             die();
                         }
-                        if ($get_clinic->isActive !== 1) {
+                        if ($get_clinic->isActive != 1) {
                             $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
-                            $Status     = 202;
+                            $Status     = 400;
                             userMessage($Status, $Message);
                             die();
                         }
