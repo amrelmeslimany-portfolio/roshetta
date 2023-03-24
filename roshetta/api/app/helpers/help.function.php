@@ -333,15 +333,22 @@ function decodeMedicine($data)
 //***************************************************** View Clinic Details **************************************************//
 function viewClinic($data, $num, $url)
 {
+    $stuff = [];
     if (!empty($num['data_assistant'])) {
-        $assistant_name     = $num['data_assistant']->name;
-        $assistant_age      = userAge($num['data_assistant']->birth_date);
-        $assistant_image    = getImage($num['data_assistant']->profile_img, $url['person']);
-    } else {
-        $assistant_name     = null;
-        $assistant_age      = null;
-        $assistant_image    = null;
+        array_push($stuff, [
+            "name"  => $num['data_assistant']->name,
+            "age"   => userAge($num['data_assistant']->birth_date),
+            "image" => getImage($num['data_assistant']->profile_img, $url['person']),
+            "type"  => $num['data_assistant']->role,
+        ]);
     }
+    array_push($stuff, [
+        "name"  => $num['data_doctor']->name,
+        "age"   => userAge($num['data_doctor']->birth_date),
+        "image" => getImage($num['data_doctor']->profile_img, $url['person']),
+        "type"  => $num['data_doctor']->role,
+    ]);
+
     $clinic_data = [
         "id"                    => $data->id,
         "ser_id"                => $data->ser_id,
@@ -360,15 +367,7 @@ function viewClinic($data, $num, $url)
         "appoint_all"           => $num['num_appoint'],
         "appoint_day"           => $num['num_ap_day'],
         "number_of_prescript"   => $num['num_pres'],
-        "stuff"                 => [
-            "doctor_name"           => $num['data_doctor']->name,
-            "doctor_age"            => userAge($num['data_doctor']->birth_date),
-            "doctor_image"          => getImage($num['data_doctor']->profile_img, $url['person']),
-            "assistant_name"        => $assistant_name,
-            "assistant_age"         => $assistant_age,
-            "assistant_image"       => $assistant_image
-        ]
-
+        "stuff"                 => $stuff
     ];
     return $clinic_data;
 }

@@ -92,14 +92,14 @@ class Doctor
             $data_prescript_clinic = $this->db->rowCount();
         }
 
-        $this->db->query("SELECT assistant.name,birth_date,profile_img FROM clinic,assistant WHERE clinic.id = :ID AND assistant_id = assistant.id");
+        $this->db->query("SELECT assistant.name,birth_date,profile_img,role FROM clinic,assistant WHERE clinic.id = :ID AND assistant_id = assistant.id");
         $this->db->bind(":ID", $clinic_id);
         $this->db->execute();
         if ($this->db->rowCount() >= 0) {
             $data_assistant_clinic = $this->db->fetchObject();
         }
 
-        $this->db->query("SELECT doctor.name,birth_date,profile_img FROM clinic,doctor WHERE clinic.id = :ID AND doctor_id = doctor.id");
+        $this->db->query("SELECT doctor.name,birth_date,profile_img,role FROM clinic,doctor WHERE clinic.id = :ID AND doctor_id = doctor.id");
         $this->db->bind(":ID", $clinic_id);
         $this->db->execute();
         if ($this->db->rowCount() >= 0) {
