@@ -4,6 +4,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { GiWeight } from 'react-icons/gi';
 import { MdLocationOn } from 'react-icons/md';
 import { TbArrowAutofitHeight } from 'react-icons/tb';
+import { FaHandHoldingMedical } from 'react-icons/fa';
 import {
   UserOutlined,
   MailFilled,
@@ -35,7 +36,7 @@ const AuthRegister = () => {
 
   const handleSubmit = (e) => {
     console.log({
-      type: role,
+      role,
       first_name: firstName,
       last_name: lastName,
       email,
@@ -220,6 +221,7 @@ const AuthRegister = () => {
               </div>
               <div className="auth-register__form--form-custom-input">
                 <Select
+                  d
                   placeholder="اختر نوع الحساب..."
                   style={{
                     width: 450,
@@ -237,36 +239,30 @@ const AuthRegister = () => {
                       label: 'دكتور',
                     },
                     {
+                      value: 'assistant',
+                      label: 'مساعد',
+                    },
+                    {
+                      value: 'pharmacist',
+                      label: 'صيدلي',
+                    },
+                    {
                       value: 'admin',
                       label: 'ادمن',
-                      disabled: true,
                     },
                   ]}
                 />
               </div>
-              <div className="auth-register__form--form-custom-input">
-                <Select
+              <div className="auth-register__form--form-input">
+                <span>
+                  <FaHandHoldingMedical />
+                </span>
+                <input
+                  name="specialist"
+                  type="text"
                   placeholder="اختر تخصصك الطبي..."
-                  style={{
-                    width: 450,
-                    marginTop: 5,
-                    marginBottom: 35,
-                  }}
-                  onChange={(value) => setSpecialist(value)}
-                  options={[
-                    {
-                      value: '',
-                      label: 'سمك',
-                    },
-                    {
-                      value: '',
-                      label: 'لبن',
-                    },
-                    {
-                      value: '',
-                      label: 'تمر هندي',
-                    },
-                  ]}
+                  value={specialist}
+                  onChange={(e) => setSpecialist(e.target.value)}
                 />
               </div>
               <div className="auth-register__form--form-input">
@@ -299,7 +295,7 @@ const AuthRegister = () => {
                 </span>
                 <input
                   name="password"
-                  type="text"
+                  type="password"
                   placeholder="ادخل كلمة المرور..."
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -311,7 +307,7 @@ const AuthRegister = () => {
                 </span>
                 <input
                   name="confirmPassword"
-                  type="text"
+                  type="password"
                   placeholder="اعد ادخال كلمة المرور..."
                   value={confirmPassword}
                   onChange={(e) => setConfirmPassword(e.target.value)}
