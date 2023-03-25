@@ -1,9 +1,12 @@
-import React from 'react'
+import { Row, Col } from 'antd';
+import React from 'react';
 
 const AuthLogin = () => {
   return (
-    <div>AuthLogin</div>
-  )
-}
+    <>
+      
+    </>
+  );
+};
 
-export default AuthLogin
+export default AuthLogin;

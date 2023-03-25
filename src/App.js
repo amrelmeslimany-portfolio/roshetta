@@ -2,31 +2,33 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 // import ProtectedRoute from './pages/ProtectedRoute';
 import Layout from './pages/Layout';
-import { DoctorHome, AuthLogin, AuthRegister } from './pages';
-import './App.css';
+import { DoctorHome, AuthLogin, AuthRegister, HomePage } from './pages';
+import './App.scss';
 
 // Created devm7md @2023 All rights reserved
 
 export default function App() {
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<Layout />}>
-            <Route
-              index
-              element={
-                <>
-                  <h2>Hello, World!</h2>
-                </>
-              }
-            />
-            <Route path="/doctor-home" element={<DoctorHome />} />
+      <div className="app">
+        <BrowserRouter>
+          <Routes>
+            <Route index path="/" element={<HomePage />} />
             <Route path="/login" element={<AuthLogin />} />
             <Route path="/register" element={<AuthRegister />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+            <Route element={<Layout />}>
+              <Route
+                element={
+                  <>
+                    <h2>Hello, World!</h2>
+                  </>
+                }
+              />
+              <Route path="/doctor-home" element={<DoctorHome />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </div>
     </>
   );
 }

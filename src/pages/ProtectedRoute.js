@@ -5,7 +5,7 @@ const ProtectedRoute = ({ children }) => {
   const { auth } = useGlobalContext();
   console.log(auth);
   if (auth === 'No clients Found') {
-    return <Navigate to="/login" />;
+    return <Navigate to="/" />;
   }
   return children;
 };
