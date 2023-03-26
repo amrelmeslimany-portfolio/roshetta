@@ -12,14 +12,17 @@ const AppContext = createContext();
 const initialState = {
   loading: false,
   alert: { msg: '', show: false, type: '' },
-  auth: 'No clients Found',
+  auth: 400,
 };
 
 const AppProvider = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  
+
   const setAuthUser = (auth) => {
     dispatch({ type: 'SET_AUTH_USER', payload: auth });
+  };
+  const setAlert = ({ msg, show, type }) => {
+    dispatch({ type: 'SET_ALERT_MESSAGE', payload: { msg, show, type } });
   };
 
   return (
@@ -27,6 +30,7 @@ const AppProvider = ({ children }) => {
       value={{
         ...state,
         setAuthUser,
+        setAlert,
       }}
     >
       {children}
@@ -39,5 +43,3 @@ const useGlobalContext = () => {
 };
 
 export { AppProvider, useGlobalContext };
-
-

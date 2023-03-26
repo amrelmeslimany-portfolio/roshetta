@@ -1,5 +1,5 @@
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GiWeight } from 'react-icons/gi';
 import { MdLocationOn } from 'react-icons/md';
@@ -12,13 +12,13 @@ import {
   PhoneFilled,
   IdcardFilled,
 } from '@ant-design/icons';
-import { DatePicker, Select } from 'antd';
+import { DatePicker, Select, Alert } from 'antd';
 import './AuthRegister.scss';
 import images from '../../../images';
 import { useGlobalContext } from '../../../context';
 
 const AuthRegister = () => {
-  const { setAuthUser } = useGlobalContext();
+  const { setAuthUser, alert, setAlert } = useGlobalContext();
   const [auth, setAuth] = useState('');
 
   const [role, setRole] = useState('');
@@ -38,7 +38,10 @@ const AuthRegister = () => {
 
   const navigate = useNavigate();
 
+  let formData = new FormData();
+
   const handleSubmit = (e) => {
+    e.preventDefault();
     console.log({
       role,
       first_name: firstName,
@@ -55,46 +58,109 @@ const AuthRegister = () => {
       height,
       specialist,
     });
-    e.preventDefault();
-    fetch('http://localhost:80/roshetta/api/users/register', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        role,
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        governorate,
-        gender,
-        ssd,
-        phone_number: phoneNumber,
-        birth_date: birthDate,
-        password,
-        confirm_password: confirmPassword,
-        weight,
-        height,
-        specialist,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data));
-    // setRole('');
-    // setFirstName('');
-    // setLastName('');
-    // setEmail('');
-    // setPassword('');
-    // setConfirmPassword('');
-    // setGovernorate('');
-    // setGender('');
-    // setSsd('');
-    // setPhoneNumber('');
-    // setBirthDate('');
-    // setWeight('');
-    // setHeight('');
-    // setSpecialist('');
-    // navigate('/');
+
+    formData.append('role', role);
+    formData.append('first_name', firstName);
+    formData.append('last_name', lastName);
+    formData.append('email', email);
+    formData.append('governorate', governorate);
+    formData.append('gender', gender);
+    formData.append('ssd', ssd);
+    formData.append('phone_number', phoneNumber);
+    formData.append('birth_date', birthDate);
+    formData.append('password', password);
+    formData.append('confirm_password', confirmPassword);
+    formData.append('weight', weight);
+    formData.append('height', height);
+    formData.append('specialist', specialist);
+    console.log(formData);
+
+    if (password < 6 && confirmPassword < 6) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+      setAlert({
+        msg: 'ادخل باسوورد مكون من 6 ارقام او اكثر',
+        show: true,
+        type: 'error',
+      });
+    } else if (password !== confirmPassword) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+      setAlert({
+        msg: 'الباسوورد غير متشابة',
+        show: true,
+        type: 'error',
+      });
+    } else if (ssd < 14) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+      setAlert({
+        msg: 'الرقم القومي يجب ان يكون 14 رقم',
+        show: true,
+        type: 'error',
+      });
+    } else if (phoneNumber < 11) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+      setAlert({
+        msg: 'الرقم القومي يجب ان يكون 14 رقم',
+        show: true,
+        type: 'error',
+      });
+    } else {
+      fetch('http://localhost:80/roshetta/api/users/register', {
+        method: 'POST',
+        // headers: {
+        //   'content-type': 'multipart/form-data',
+        //   // 'Content-Type': 'application/json',
+        // },
+        body: formData,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.Status);
+          setAuth(data.Status);
+          if (data.Status) {
+            window.scrollTo({
+              top: 0,
+              left: 0,
+              behavior: 'smooth',
+            });
+            setAlert({
+              msg: 'يوجد خطأ في تسجيل الدخول',
+              show: true,
+              type: 'error',
+            });
+          }
+        });
+      // setRole('');
+      // setFirstName('');
+      // setLastName('');
+      // setEmail('');
+      // setPassword('');
+      // setConfirmPassword('');
+      // setGovernorate('');
+      // setGender('');
+      // setSsd('');
+      // setPhoneNumber('');
+      // setBirthDate('');
+      // setWeight('');
+      // setHeight('');
+      // setSpecialist('');
+      // navigate('/');
+    }
   };
 
   const onDateChange = (date, dateString) => {
@@ -104,10 +170,30 @@ const AuthRegister = () => {
   const handleChange = (value) => {
     console.log(`selected ${value}`);
   };
+  useEffect(() => {
+    const myTimeout = setTimeout(() => {
+      setAlert({ msg: '', show: false, type: '' });
+    }, 2000);
+
+    return () => {
+      clearTimeout(myTimeout);
+    };
+  }, [alert.show]);
 
   return (
     <>
       <div className="auth-register">
+        {alert.show && (
+          <Alert
+            style={{
+              marginBottom: 20,
+            }}
+            message="حدثت مشكلة"
+            description={alert.msg}
+            type={alert.type}
+            showIcon
+          />
+        )}
         <div className="auth-register__img">
           <img src={images.logo1} alt="logo" />
         </div>

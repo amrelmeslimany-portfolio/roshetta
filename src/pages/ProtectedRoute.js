@@ -4,7 +4,7 @@ import { useGlobalContext } from '../context';
 const ProtectedRoute = ({ children }) => {
   const { auth } = useGlobalContext();
   console.log(auth);
-  if (auth === 'No clients Found') {
+  if (auth > 299) {
     return <Navigate to="/" />;
   }
   return children;

@@ -1,6 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-// import ProtectedRoute from './pages/ProtectedRoute';
+import ProtectedRoute from './pages/ProtectedRoute';
 import Layout from './pages/Layout';
 import {
   DoctorHome,
@@ -8,6 +8,7 @@ import {
   AuthRegister,
   HomePage,
   ForgetPassword,
+  Home,
 } from './pages';
 import './App.scss';
 
@@ -23,7 +24,14 @@ export default function App() {
             <Route path="/login" element={<AuthLogin />} />
             <Route path="/register" element={<AuthRegister />} />
             <Route path="/forget-password" element={<ForgetPassword />} />
-
+            <Route
+              path="/admin-home"
+              element={
+                <ProtectedRoute>
+                  <Home />
+                </ProtectedRoute>
+              }
+            />
             <Route element={<Layout />}>
               <Route
                 element={
@@ -32,7 +40,14 @@ export default function App() {
                   </>
                 }
               />
-              <Route path="/doctor-home" element={<DoctorHome />} />
+              <Route
+                path="/doctor-home"
+                element={
+                  <ProtectedRoute>
+                    <DoctorHome />
+                  </ProtectedRoute>
+                }
+              />
             </Route>
           </Routes>
         </BrowserRouter>
