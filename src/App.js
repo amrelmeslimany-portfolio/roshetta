@@ -2,7 +2,13 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 // import ProtectedRoute from './pages/ProtectedRoute';
 import Layout from './pages/Layout';
-import { DoctorHome, AuthLogin, AuthRegister, HomePage } from './pages';
+import {
+  DoctorHome,
+  AuthLogin,
+  AuthRegister,
+  HomePage,
+  ForgetPassword,
+} from './pages';
 import './App.scss';
 
 // Created devm7md @2023 All rights reserved
@@ -16,6 +22,8 @@ export default function App() {
             <Route index path="/" element={<HomePage />} />
             <Route path="/login" element={<AuthLogin />} />
             <Route path="/register" element={<AuthRegister />} />
+            <Route path="/forget-password" element={<ForgetPassword />} />
+
             <Route element={<Layout />}>
               <Route
                 element={

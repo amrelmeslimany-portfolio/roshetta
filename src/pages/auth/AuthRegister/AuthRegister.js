@@ -15,9 +15,13 @@ import {
 import { DatePicker, Select } from 'antd';
 import './AuthRegister.scss';
 import images from '../../../images';
+import { useGlobalContext } from '../../../context';
 
 const AuthRegister = () => {
-  const [role, setRole] = useState('النوع...');
+  const { setAuthUser } = useGlobalContext();
+  const [auth, setAuth] = useState('');
+
+  const [role, setRole] = useState('');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
@@ -322,10 +326,10 @@ const AuthRegister = () => {
         <p className="auth-register__login-btn">
           لديك حساب بالفعل ؟ <Link to={'/login'}>اضغط هنا لتسجيل الدخول</Link>
         </p>
-        <p className="app__footer">
-          برمجه فريق <span>روشتة</span> 2023
-        </p>
       </div>
+      <p className="app__footer">
+        برمجه فريق <span>روشتة</span> 2023
+      </p>
     </>
   );
 };
