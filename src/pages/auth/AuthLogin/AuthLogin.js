@@ -54,7 +54,7 @@ const AuthLogin = () => {
           <img src={images.logo1} alt="logo" />
         </div>
         <h2 className="auth-login__title">تسجيل الدخول</h2>
-        <p className="auth-login__text">يرجي مليء البياتات لتسجيل الدخول</p>
+        <p className="auth-login__text">يرجي مليء البيانات لتسجيل الدخول</p>
         <form className="auth-login__form" onSubmit={handleSubmit}>
           <div className="auth-login__form--form-custom-input">
             <Select
