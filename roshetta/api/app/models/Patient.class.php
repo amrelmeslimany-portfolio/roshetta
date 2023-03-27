@@ -7,7 +7,7 @@ class Patient
     {
         $this->db = new Database;
     }
-    public function getPlace($id,$type)
+    public function getPlace($id, $type)
     {
         $this->db->query("SELECT * FROM $type WHERE id = :ID");
         $this->db->bind(":ID", $id);
@@ -16,6 +16,18 @@ class Patient
             return true;
         else
             false;
+    }
+    public function getAppointStatus($id)
+    {
+        $this->db->query("SELECT * FROM appointment,patient WHERE patient.id = :ID AND appointment.patient_id = patient.id");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() > 0) {
+            $data_app = $this->db->fetchAll();
+            return $data_app;
+        } else {
+            false;
+        }
     }
     public function addAppointPatient($data = [])
     {
@@ -34,7 +46,7 @@ class Patient
         $this->db->query("SELECT appointment.id AS appointment_id,logo,name,phone_number,start_working,end_working,specialist,address,appoint_date FROM clinic,appointment WHERE clinic.id = appointment.clinic_id AND appointment.patient_id = :ID AND appoint_case = 0 ORDER BY appoint_date DESC");
         $this->db->bind(":ID", $id);
         $this->db->execute();
-        if ($this->db->rowCount() > 0 ) {
+        if ($this->db->rowCount() > 0) {
             $data = $this->db->fetchAll();
             return $data;
         } else {
@@ -75,9 +87,9 @@ class Patient
     }
     public function getDataClinic()
     {
-        $this->db->query("SELECT clinic.id AS clinic_id,name,logo,specialist,governorate,status FROM activation_place,clinic WHERE activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
+        $this->db->query("SELECT clinic.id AS clinic_id,name,logo,specialist,governorate,status As isOpen FROM activation_place,clinic WHERE activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
         $this->db->execute();
-        if ($this->db->rowCount() > 0 ) {
+        if ($this->db->rowCount() > 0) {
             $data = $this->db->fetchAll();
             return $data;
         } else {
@@ -89,19 +101,19 @@ class Patient
         $this->db->query("SELECT clinic.id AS clinic_id,name,logo,specialist,governorate,status FROM activation_place,clinic WHERE clinic.specialist = :FILTER AND activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
         $this->db->bind(":FILTER", $filter);
         $this->db->execute();
-        if ($this->db->rowCount() > 0 ) {
+        if ($this->db->rowCount() > 0) {
             $data = $this->db->fetchAll();
             return $data;
         } else {
             false;
         }
     }
-    public function viewClinicDetails($clinic_id,$patient_id)
+    public function viewClinicDetails($clinic_id, $patient_id)
     {
         $this->db->query("SELECT * FROM activation_place,clinic WHERE clinic.id = :ID AND activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
         $this->db->bind(":ID", $clinic_id);
         $this->db->execute();
-        if ($this->db->rowCount() > 0 ) {
+        if ($this->db->rowCount() > 0) {
 
             $data = $this->db->fetchObject();
 
@@ -126,7 +138,7 @@ class Patient
                 "number_appoint_patient" => $data_appoint_patient
             ];
 
-            return $data_all ;
+            return $data_all;
         } else {
             false;
         }
@@ -136,7 +148,7 @@ class Patient
         $this->db->query("SELECT id AS disease_id ,name,place,date FROM disease WHERE patient_id = :ID ORDER BY date DESC");
         $this->db->bind(":ID", $id);
         $this->db->execute();
-        if ($this->db->rowCount() > 0 ) {
+        if ($this->db->rowCount() > 0) {
             $data = $this->db->fetchAll();
             return $data;
         } else {
@@ -147,19 +159,19 @@ class Patient
     {
         $this->db->query("SELECT pharmacy.id AS pharmacy_id,name,logo,phone_number,governorate,status FROM activation_place,pharmacy WHERE activation_place.isActive = 1 AND activation_place.place_id = pharmacy.id AND activation_place.role = 'pharmacy'");
         $this->db->execute();
-        if ($this->db->rowCount() > 0 ) {
+        if ($this->db->rowCount() > 0) {
             $data = $this->db->fetchAll();
             return $data;
         } else {
             false;
         }
     }
-    public function viewPharmacyDetails($pharmacy_id,$patient_id)
+    public function viewPharmacyDetails($pharmacy_id, $patient_id)
     {
         $this->db->query("SELECT * FROM activation_place,pharmacy WHERE pharmacy.id = :ID AND activation_place.isActive = 1 AND activation_place.place_id = pharmacy.id AND activation_place.role = 'pharmacy'");
         $this->db->bind(":ID", $pharmacy_id);
         $this->db->execute();
-        if ($this->db->rowCount() > 0 ) {
+        if ($this->db->rowCount() > 0) {
 
             $data = $this->db->fetchObject();
 
@@ -184,7 +196,7 @@ class Patient
                 "number_prescript_patient" => $data_prescript_patient
             ];
 
-            return $data_all ;
+            return $data_all;
         } else {
             false;
         }
@@ -194,7 +206,7 @@ class Patient
         $this->db->query("SELECT prescript.id AS prescript_id,ser_id,created_date,name AS disease_name FROM disease,prescript WHERE disease.id = prescript.disease_id AND prescript.patient_id = :ID  ORDER BY created_date DESC");
         $this->db->bind(":ID", $id);
         $this->db->execute();
-        if ($this->db->rowCount() > 0 ) {
+        if ($this->db->rowCount() > 0) {
             $data = $this->db->fetchAll();
             return $data;
         } else {
@@ -213,13 +225,13 @@ class Patient
         else
             false;
     }
-    public function getPrescriptDetails($prescript_id , $patient_id)
+    public function getPrescriptDetails($prescript_id, $patient_id)
     {
         $this->db->query("SELECT prescript.ser_id AS prescript_ser_id,created_date,patient.name AS patient_name, disease.name AS disease_name,rediscovery_date,doctor.name AS doctor_name,doctor.specialist AS doctor_specialist,logo AS clinic_logo,clinic.name AS clinic_name,clinic.phone_number AS clinic_phone_number,address AS clinic_address,start_working,end_working  FROM  disease,prescript,doctor,clinic,patient WHERE  disease.id = prescript.disease_id AND prescript.patient_id = patient.id AND patient.id = :PA_ID AND prescript.doctor_id = doctor.id AND prescript.clinic_id = clinic.id  AND prescript.id = :PR_ID");
         $this->db->bind(":PR_ID", $prescript_id);
         $this->db->bind(":PA_ID", $patient_id);
         $this->db->execute();
-        if ($this->db->rowCount() > 0 ) {
+        if ($this->db->rowCount() > 0) {
             $data = $this->db->fetchAll();
             return $data;
         } else {
@@ -231,7 +243,7 @@ class Patient
         $this->db->query("SELECT medicine_data FROM medicine WHERE medicine.prescript_id = :PR_ID");
         $this->db->bind(":PR_ID", $prescript_id);
         $this->db->execute();
-        if ($this->db->rowCount() > 0 ) {
+        if ($this->db->rowCount() > 0) {
             $data = $this->db->fetchAll();
             return $data;
         } else {

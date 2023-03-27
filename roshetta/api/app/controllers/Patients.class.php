@@ -82,7 +82,23 @@ class Patients extends Controller  // Extends The Controller
                 if (!filter_var($data['clinic_id'], 257)) {
                     $data_err['clinic_id_err'] = 'معرف العيادة غير صالح';
                 } else {
-                    if (!$this->patientModel->getPlace($data['clinic_id'], 'clinic')) $data_err['clinic_id_err'] = 'معرف العيادة غير صحيح';
+                    if (!$this->patientModel->getPlace($data['clinic_id'], 'clinic')) {
+                        $data_err['clinic_id_err'] = 'معرف العيادة غير صحيح';
+                    } else {
+                        $appoint_data = $this->patientModel->getAppointStatus($data['id']);
+                        if ($appoint_data) {
+                            foreach ($appoint_data as $app) {
+                                if ($data['clinic_id'] == $app['clinic_id']) {
+                                    if ($app['appoint_case'] == 0) {
+                                        $Message    = 'لديك حجز بالفعل';
+                                        $Status     = 400;
+                                        userMessage($Status, $Message);
+                                        die();
+                                    }
+                                }
+                            }
+                        }
+                    }
                 }
             }
 
@@ -350,7 +366,20 @@ class Patients extends Controller  // Extends The Controller
             $url = URL_PLACE;
             $new_data = [];
             foreach ($result as $element) {
+                @$appoint_data = $this->patientModel->getAppointStatus($data['id']);
+                if ($appoint_data) {
+                    foreach ($appoint_data as $app) {
+                        if ($element['clinic_id'] == $app['clinic_id']) {
+                            if ($app['appoint_case'] == 0) {
+                                $appoint_case = 0;
+                            } else {
+                                $appoint_case = 1;
+                            }
+                        }
+                    }
+                }
                 $element['logo'] = getImage($element['logo'], $url);
+                $element['appoint_case'] = $appoint_case;
                 $new_data[] = $element;
             }
             $Message    = 'تم جلب البيانات بنجاح';
