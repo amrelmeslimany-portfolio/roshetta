@@ -29,14 +29,27 @@ class Patient
             false;
         }
     }
-    public function getDateAppoint($clinic_id,$id)
+    public function getDateAppoint($clinic_id, $id)
     {
-        $this->db->query("SELECT appoint_date FROM appointment WHERE patient_id = :ID AND clinic_id = :CL_ID AND appoint_case = 0");
+        $this->db->query("SELECT * FROM appointment WHERE patient_id = :ID AND clinic_id = :CL_ID AND appoint_case = 0");
         $this->db->bind(":ID", $id);
         $this->db->bind(":CL_ID", $clinic_id);
         $this->db->execute();
         if ($this->db->rowCount() > 0) {
-            $data = $this->db->fetchAll();
+            $data = $this->db->fetchObject();
+            return $data;
+        } else {
+            false;
+        }
+    }
+    public function getDateAppointClinic($clinic_id, $id)
+    {
+        $this->db->query("SELECT * FROM appointment WHERE patient_id = :ID AND clinic_id = :CL_ID ORDER BY id DESC");
+        $this->db->bind(":ID", $id);
+        $this->db->bind(":CL_ID", $clinic_id);
+        $this->db->execute();
+        if ($this->db->rowCount() > 0) {
+            $data = $this->db->fetchObject();
             return $data;
         } else {
             false;
@@ -148,7 +161,8 @@ class Patient
             $data_all = [
                 "data_clinic" => $data,
                 "number_appoint_clinic" => $data_appoint_clinic,
-                "number_appoint_patient" => $data_appoint_patient
+                "number_appoint_patient" => $data_appoint_patient,
+                "data_appoint" => $this->getDateAppointClinic($clinic_id, $patient_id),
             ];
 
             return $data_all;

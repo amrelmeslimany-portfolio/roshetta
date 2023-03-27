@@ -375,6 +375,16 @@ function viewClinic($data, $num, $url)
 //***************************************************************** Clinic Design Message ***********************************************************//
 function clinicMessageDetails($data, $url)
 {
+    if (!empty($data['data_appoint'])) {
+        if ($data['data_appoint']->appoint_case == 0) {
+            $appoint_case = 0;
+        } else {
+            $appoint_case = 1;
+        }
+    } else {
+        $appoint_case = 1;
+    }
+
     $data_clinic = [
         "clinic_id"                 => $data['data_clinic']->id,
         "logo"                      => getImage($data['data_clinic']->logo, $url),
@@ -386,9 +396,10 @@ function clinicMessageDetails($data, $url)
         "start_working"             => $data['data_clinic']->start_working,
         "end_working"               => $data['data_clinic']->end_working,
         "address"                   => $data['data_clinic']->address,
-        "status"                    => $data['data_clinic']->status,
+        "isOpen"                    => $data['data_clinic']->status,
         "number_appoint_clinic"     => $data['number_appoint_clinic'],
-        "number_appoint_patient"    => $data['number_appoint_patient']
+        "number_appoint_patient"    => $data['number_appoint_patient'],
+        "appoint_case"              => $appoint_case
     ];
     return $data_clinic;
 }
