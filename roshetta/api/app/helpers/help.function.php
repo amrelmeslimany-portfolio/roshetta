@@ -384,7 +384,7 @@ function clinicMessageDetails($data, $url)
         "phone_number"              => $data['data_clinic']->phone_number,
         "price"                     => $data['data_clinic']->price,
         "start_working"             => $data['data_clinic']->start_working,
-        "end_working"               => $data['data_clinic']->phone_number,
+        "end_working"               => $data['data_clinic']->end_working,
         "address"                   => $data['data_clinic']->address,
         "status"                    => $data['data_clinic']->status,
         "number_appoint_clinic"     => $data['number_appoint_clinic'],

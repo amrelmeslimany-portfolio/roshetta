@@ -29,6 +29,19 @@ class Patient
             false;
         }
     }
+    public function getDateAppoint($clinic_id,$id)
+    {
+        $this->db->query("SELECT appoint_date FROM appointment WHERE patient_id = :ID AND clinic_id = :CL_ID AND appoint_case = 0");
+        $this->db->bind(":ID", $id);
+        $this->db->bind(":CL_ID", $clinic_id);
+        $this->db->execute();
+        if ($this->db->rowCount() > 0) {
+            $data = $this->db->fetchAll();
+            return $data;
+        } else {
+            false;
+        }
+    }
     public function addAppointPatient($data = [])
     {
         $this->db->query("INSERT INTO appointment(appoint_date,patient_id,clinic_id,appoint_case) VALUES (:APPOINT_DATE,:PA_ID,:CL_ID,0)");

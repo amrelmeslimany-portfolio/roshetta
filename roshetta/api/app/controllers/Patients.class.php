@@ -366,24 +366,7 @@ class Patients extends Controller  // Extends The Controller
             $url = URL_PLACE;
             $new_data = [];
             foreach ($result as $element) {
-                @$appoint_data = $this->patientModel->getAppointStatus($data['id']);
-                if ($appoint_data) {
-                    foreach ($appoint_data as $app) {
-                        if ($element['clinic_id'] == $app['clinic_id']) {
-                            if ($app['appoint_case'] == 0) {
-                                $appoint_case = 0;
-                            } else {
-                                $appoint_case = 1;
-                            }
-                        } else {
-                            $appoint_case = 1;
-                        }
-                    }
-                } else {
-                    $appoint_case = 1;
-                }
                 $element['logo'] = getImage($element['logo'], $url);
-                $element['appoint_case'] = $appoint_case;
                 $new_data[] = $element;
             }
             $Message    = 'تم جلب البيانات بنجاح';
@@ -805,6 +788,65 @@ class Patients extends Controller  // Extends The Controller
                 $Message    = 'تم جلب البيانات بنجاح';
                 $Status     = 200;
                 userMessage($Status, $Message, $data_message);
+                die();
+            } else {
+                $Message    = $data_err;
+                $Status     = 400;
+                userMessage($Status, $Message);
+                die();
+            }
+        } else {
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
+            userMessage($Status, $Message);
+            die();
+        }
+    }
+
+    //*************************************************** View Appoint Date **************************************************************//
+
+    public function view_appoint_date($id = null)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+
+            $data = [
+                "id"        => $this->CheckToken['id'],
+                "type"      => $this->CheckToken['type'],
+                "clinic_id" => @$id
+            ];
+
+            $data_err = [
+                "clinic_id_err" => ''
+            ];
+            if ($data['type'] != 'patient') {
+                $Message    = 'غير مصرح لك الإطلاع على التفاصيل';
+                $Status     = 403;
+                userMessage($Status, $Message);
+                die();
+            }
+
+            if (empty($data['clinic_id'])) {
+                $data_err['clinic_id_err'] = 'برجاء إدخال معرف العيادة';
+            } else {
+                if (!filter_var($data['clinic_id'], 257)) {
+                    $data_err['clinic_id_err'] = 'معرف العيادة غير صالح';
+                } else {
+                    if (!$this->patientModel->getPlace($data['clinic_id'], 'clinic')) $data_err['clinic_id_err'] = 'معرف العيادة غير صحيح';
+                }
+            }
+
+            if (empty($data_err['clinic_id_err'])) {
+
+                @$data_appoint = $this->patientModel->getDateAppoint($data['clinic_id'], $data['id']);
+                if (!$data_appoint) {
+                    $Message    = 'لم يتم العثور على بيانات';
+                    $Status     = 204;
+                    userMessage($Status, $Message);
+                    die();
+                }
+                $Message    = 'تم جلب البيانات بنجاح';
+                $Status     = 200;
+                userMessage($Status, $Message, $data_appoint);
                 die();
             } else {
                 $Message    = $data_err;
