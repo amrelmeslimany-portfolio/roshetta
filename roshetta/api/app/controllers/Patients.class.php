@@ -375,8 +375,12 @@ class Patients extends Controller  // Extends The Controller
                             } else {
                                 $appoint_case = 1;
                             }
+                        } else {
+                            $appoint_case = 1;
                         }
                     }
+                } else {
+                    $appoint_case = 1;
                 }
                 $element['logo'] = getImage($element['logo'], $url);
                 $element['appoint_case'] = $appoint_case;
