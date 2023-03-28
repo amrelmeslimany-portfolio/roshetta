@@ -376,11 +376,13 @@ function viewClinic($data, $num, $url)
 function clinicMessageDetails($data, $url)
 {
     $appoint_case = 1;
+    $appoint_date = null;
     if (!empty($data['data_appoint'])) {
         foreach ($data['data_appoint'] as $app) {
             if ($data['data_clinic']->id == $app['clinic_id']) {
                 if ($app['appoint_case'] == 0) {
                     $appoint_case = 0;
+                    $appoint_date = $app['appoint_date'];
                 }
             }
         }
@@ -400,7 +402,8 @@ function clinicMessageDetails($data, $url)
         "isOpen"                    => $data['data_clinic']->status,
         "number_appoint_clinic"     => $data['number_appoint_clinic'],
         "number_appoint_patient"    => $data['number_appoint_patient'],
-        "appoint_case"              => $appoint_case
+        "appoint_case"              => $appoint_case,
+        "appoint_date"              => $appoint_date,
     ];
     return $data_clinic;
 }
