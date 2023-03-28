@@ -12,8 +12,6 @@ import {
 } from './pages';
 import './App.scss';
 
-// Created devm7md @2023 All rights reserved
-
 export default function App() {
   return (
     <>
