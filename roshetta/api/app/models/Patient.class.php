@@ -162,7 +162,7 @@ class Patient
                 "data_clinic" => $data,
                 "number_appoint_clinic" => $data_appoint_clinic,
                 "number_appoint_patient" => $data_appoint_patient,
-                "data_appoint" => $this->getDateAppointClinic($clinic_id, $patient_id),
+                "data_appoint" => $this->getAppointStatus($patient_id),
             ];
 
             return $data_all;

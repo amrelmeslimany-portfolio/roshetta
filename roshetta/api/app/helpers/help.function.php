@@ -375,14 +375,15 @@ function viewClinic($data, $num, $url)
 //***************************************************************** Clinic Design Message ***********************************************************//
 function clinicMessageDetails($data, $url)
 {
+    $appoint_case = 1;
     if (!empty($data['data_appoint'])) {
-        if ($data['data_appoint']->appoint_case == 0) {
-            $appoint_case = 0;
-        } else {
-            $appoint_case = 1;
+        foreach ($data['data_appoint'] as $app) {
+            if ($data['data_clinic']->id == $app['clinic_id']) {
+                if ($app['appoint_case'] == 0) {
+                    $appoint_case = 0;
+                }
+            }
         }
-    } else {
-        $appoint_case = 1;
     }
 
     $data_clinic = [

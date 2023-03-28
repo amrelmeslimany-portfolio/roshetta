@@ -363,21 +363,39 @@ class Patients extends Controller  // Extends The Controller
                 }
             }
 
+            // $url = URL_PLACE;
+            // $new_data = [];
+            // foreach ($result as $element) {
+            //     @$data_app = $this->patientModel->getDateAppointClinic($element['clinic_id'], $data['id']);
+            //     $appoint_case = 1;
+            //     $appoint_date = null;
+            //     if ($data_app) {
+            //         if ($data_app->appoint_case == 0) {
+            //             $appoint_case = 0;
+            //             $appoint_date = $data_app->appoint_date;
+            //         } 
+            //     } 
+            //     $element['logo'] = getImage($element['logo'], $url);
+            //     $element['appoint_case'] = $appoint_case;
+            //     $element['appoint_date'] = $appoint_date;
+            //     $new_data[] = $element;
+            // }
+
+            @$data_app = $this->patientModel->getAppointStatus($data['id']);
             $url = URL_PLACE;
             $new_data = [];
             foreach ($result as $element) {
-                @$data_app = $this->patientModel->getDateAppointClinic($element['clinic_id'], $data['id']);
+                $appoint_case = 1;
+                $appoint_date = null;
                 if ($data_app) {
-                    if ($data_app->appoint_case == 0) {
-                        $appoint_case = 0;
-                        $appoint_date = $data_app->appoint_date;
-                    } else {
-                        $appoint_case = 1;
-                        $appoint_date = null;
+                    foreach ($data_app as $app) {
+                        if ($element['clinic_id'] == $app['clinic_id']) {
+                            if ($app['appoint_case'] == 0) {
+                                $appoint_case = 0;
+                                $appoint_date = $app['appoint_date'];
+                            }
+                        }
                     }
-                } else {
-                    $appoint_case = 1;
-                    $appoint_date = null;
                 }
                 $element['logo'] = getImage($element['logo'], $url);
                 $element['appoint_case'] = $appoint_case;
