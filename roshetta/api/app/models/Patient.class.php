@@ -69,7 +69,7 @@ class Patient
     }
     public function getDataAppointPatient($id)
     {
-        $this->db->query("SELECT appointment.id AS appointment_id,logo,name,phone_number,start_working,end_working,specialist,address,appoint_date FROM clinic,appointment WHERE clinic.id = appointment.clinic_id AND appointment.patient_id = :ID AND appoint_case = 0 ORDER BY appoint_date DESC");
+        $this->db->query("SELECT appointment.id AS appointment_id,logo,name,phone_number,start_working,end_working,specialist,address,appoint_date,appoint_case FROM clinic,appointment WHERE clinic.id = appointment.clinic_id AND appointment.patient_id = :ID ORDER BY appoint_case");
         $this->db->bind(":ID", $id);
         $this->db->execute();
         if ($this->db->rowCount() > 0) {
