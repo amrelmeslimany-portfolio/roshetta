@@ -81,10 +81,10 @@ class Patient
     }
     public function editAppointPatient($data = [])
     {
-        $this->db->query("UPDATE appointment SET appoint_date = :APPOINT_DATE , clinic_id = :CL_ID WHERE id = :AP_ID");
+        $this->db->query("UPDATE appointment SET appoint_date = :APPOINT_DATE WHERE id = :AP_ID AND patient_id = :PA_ID");
         $this->db->bind(":APPOINT_DATE", $data['appoint_date']);
         $this->db->bind(":AP_ID", $data['appoint_id']);
-        $this->db->bind(":CL_ID", $data['clinic_id']);
+        $this->db->bind(":PA_ID", $data['id']);
         $this->db->execute();
         if ($this->db->rowCount())
             return true;
@@ -96,10 +96,12 @@ class Patient
         $this->db->query("SELECT * FROM appointment WHERE id = :ID");
         $this->db->bind(":ID", $id);
         $this->db->execute();
-        if ($this->db->rowCount())
-            return true;
-        else
+        if ($this->db->rowCount()) {
+            $data = $this->db->fetchObject();
+            return $data;
+        } else {
             false;
+        }
     }
     public function deleteAppointPatient($id)
     {

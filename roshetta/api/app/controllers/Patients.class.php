@@ -182,7 +182,7 @@ class Patients extends Controller  // Extends The Controller
 
     //*************************************************** Edit Appointment **************************************************************//
 
-    public function edit_appointment($id = null)
+    public function edit_appointment()
     {
         if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
@@ -194,12 +194,10 @@ class Patients extends Controller  // Extends The Controller
                 "type"          => $this->CheckToken['type'],
                 "appoint_id"    => @$_GET['appoint_id'],
                 "appoint_date"  => @$_POST['appoint_date'],
-                "clinic_id"     => @$id
             ];
 
             $data_err = [
                 "appoint_date_err"  => '',
-                "clinic_id_err"     => '',
                 "appoint_id_err"    => ''
             ];
             if ($data['type'] != 'patient') {
@@ -211,37 +209,38 @@ class Patients extends Controller  // Extends The Controller
 
             if (empty($data['appoint_date'])) $data_err['appoint_date_err'] = 'برجاء إدخال تاريخ الحجز';
 
-            if (empty($data['clinic_id'])) {
-                $data_err['clinic_id_err'] = 'برجاء إدخال معرف العيادة';
-            } else {
-                if (!filter_var($data['clinic_id'], 257)) {
-                    $data_err['clinic_id_err'] = 'معرف العيادة غير صالح';
-                } else {
-                    if (!$this->patientModel->getPlace($data['clinic_id'], 'clinic')) $data_err['clinic_id_err'] = 'معرف العيادة غير صحيح';
-                }
-            }
             if (empty($data['appoint_id'])) {
                 $data_err['appoint_id_err'] = 'برجاء إدخال معرف الموعد';
             } else {
                 if (!filter_var($data['appoint_id'], 257)) {
                     $data_err['appoint_id_err'] = 'معرف الموعد غير صالح';
                 } else {
-                    if (!$this->patientModel->getAppoint($data['appoint_id'])) $data_err['appoint_id_err'] = 'معرف الموعد غير صحيح';
+                    $data_appoint = $this->patientModel->getAppoint($data['appoint_id']);
+                    if (!$data_appoint) {
+                        $data_err['appoint_id_err'] = 'معرف الموعد غير صحيح';
+                    } else {
+                        if ($data_appoint->patient_id != $data['id']) {
+                            $Message    = 'غير مصرح لك التعديل على هذا الموعد';
+                            $Status     = 400;
+                            userMessage($Status, $Message);
+                            die();
+                        }
+                    }
                 }
             }
 
-            if (empty($data_err['appoint_date_err']) && empty($data_err['clinic_id_err']) && empty($data_err['appoint_id_err'])) {
+            if (empty($data_err['appoint_date_err']) && empty($data_err['appoint_id_err'])) {
 
                 $data_appoint = [
+                    "id"            => $data['id'],
                     "appoint_id"    => $data['appoint_id'],
-                    "clinic_id"     => $data['clinic_id'],
                     "appoint_date"  => $data['appoint_date']
                 ];
 
                 if ($this->patientModel->editAppointPatient($data_appoint)) {
                     $Message    = 'تم تعديل الحجز بنجاح';
                     $Status     = 201;
-                    userMessage($Status, $Message);
+                    userMessage($Status, $Message, $data['appoint_date']);
                     die();
                 } else {
                     $Message    = 'الرجاء المحاولة فى وقت لأحق';
