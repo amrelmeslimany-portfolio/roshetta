@@ -284,7 +284,7 @@ class Doctor
     }
     public function getAppointClinic($id, $date, $Status)
     {
-        $this->db->query("SELECT appointment.id AS appointment_id,appoint_date,patient.id AS patient_id,patient.name,patient.phone_number  FROM  patient,appointment  WHERE appoint_date = :DATE AND appointment.clinic_id = :ID AND appointment.patient_id = patient.id AND appointment.appoint_case = :STATUS ORDER BY appointment.appoint_date");
+        $this->db->query("SELECT appointment.id AS appointment_id,appoint_date,appoint_case,patient.id AS patient_id,patient.name,patient.phone_number  FROM  patient,appointment  WHERE appoint_date = :DATE AND appointment.clinic_id = :ID AND appointment.patient_id = patient.id AND appointment.appoint_case = :STATUS ORDER BY appointment.appoint_date");
         $this->db->bind(":ID", $id);
         $this->db->bind(":DATE", $date);
         $this->db->bind(":STATUS", $Status);
@@ -298,7 +298,7 @@ class Doctor
     }
     public function filterAppoint($id, $date, $Status, $filter)
     {
-        $this->db->query("SELECT appointment.id AS appointment_id,appoint_date,patient.id AS patient_id,patient.name,patient.phone_number  FROM  patient,appointment WHERE appoint_date = :DATE AND appointment.clinic_id = :ID AND appointment.patient_id = patient.id AND appointment.appoint_case = :STATUS AND (patient.name = :FILTER OR patient.ssd = :FILTER OR patient.phone_number = :FILTER) ORDER BY appointment.appoint_date");
+        $this->db->query("SELECT appointment.id AS appointment_id,appoint_date,appoint_case,patient.id AS patient_id,patient.name,patient.phone_number  FROM  patient,appointment WHERE appoint_date = :DATE AND appointment.clinic_id = :ID AND appointment.patient_id = patient.id AND appointment.appoint_case = :STATUS AND (patient.name = :FILTER OR patient.ssd = :FILTER OR patient.phone_number = :FILTER) ORDER BY appointment.appoint_date");
         $this->db->bind(":ID", $id);
         $this->db->bind(":DATE", $date);
         $this->db->bind(":STATUS", $Status);
