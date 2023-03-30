@@ -126,7 +126,7 @@ class Patient
     }
     public function filterClinic($filter)
     {
-        $this->db->query("SELECT clinic.id AS clinic_id,name,logo,specialist,governorate,status AS isOpen FROM activation_place,clinic WHERE clinic.specialist = :FILTER AND activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
+        $this->db->query("SELECT clinic.id AS clinic_id,name,logo,specialist,governorate,status AS isOpen FROM activation_place,clinic WHERE clinic.specialist REGEXP :FILTER AND activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
         $this->db->bind(":FILTER", $filter);
         $this->db->execute();
         if ($this->db->rowCount() > 0) {

@@ -581,17 +581,15 @@ class Assistants extends Controller
             }
             if (empty($data_err['clinic_id_err'])) {
 
+                $date = $data['date'];
+                $case = $data['status'];
+
                 if (empty($data['date'])) {
                     $date = date("Y-m-d");
-                } else {
-                    $date = $data['date'];
-                }
-
+                } 
                 if (empty($data['status'])) {
                     $case = '0';
-                } else {
-                    $case = $data['status'];
-                }
+                } 
 
                 if (!empty($data['filter'])) {
                     @$result = $this->doctorModel->filterAppoint($data['clinic_id'], $date, $case, $data['filter']);

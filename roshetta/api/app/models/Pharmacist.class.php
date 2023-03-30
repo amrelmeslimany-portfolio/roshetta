@@ -196,7 +196,7 @@ class Pharmacist
     }
     public function getOrderFilter($id, $filter)
     {
-        $this->db->query("SELECT pharmacy_order.prescript_id,prescript.ser_id,patient.name AS patient_name,patient.phone_number AS patient_phone_number FROM pharmacy_order,patient,prescript,pharmacy WHERE pharmacy.id = :ID AND pharmacy_order.pharmacy_id = pharmacy.id AND pharmacy_order.prescript_id = prescript.id AND prescript.patient_id = patient.id AND pharmacy_order.status = 0 AND (patient.name = :FILTER OR patient.ssd = :FILTER OR prescript.ser_id = :FILTER) ORDER BY pharmacy_order.time DESC");
+        $this->db->query("SELECT pharmacy_order.prescript_id,prescript.ser_id,patient.name AS patient_name,patient.phone_number AS patient_phone_number FROM pharmacy_order,patient,prescript,pharmacy WHERE pharmacy.id = :ID AND pharmacy_order.pharmacy_id = pharmacy.id AND pharmacy_order.prescript_id = prescript.id AND prescript.patient_id = patient.id AND pharmacy_order.status = 0 AND (patient.name REGEXP :FILTER OR patient.ssd REGEXP :FILTER OR prescript.ser_id REGEXP :FILTER) ORDER BY pharmacy_order.time DESC");
         $this->db->bind(":ID", $id);
         $this->db->bind(":FILTER", $filter);
         $this->db->execute();
@@ -221,7 +221,7 @@ class Pharmacist
     }
     public function getOrderPayFilter($id, $filter)
     {
-        $this->db->query("SELECT prescript.id AS prescript_id,prescript.ser_id AS prescript_ser_id,date_pay,patient.name AS patient_name FROM prescript,patient,pharmacy_prescript,pharmacy WHERE prescript.patient_id = patient.id AND pharmacy.id = :ID AND pharmacy_prescript.pharmacy_id = pharmacy.id AND pharmacy_prescript.prescript_id = prescript.id AND (patient.name = :FILTER OR patient.ssd = :FILTER OR prescript.ser_id = :FILTER) ORDER BY date_pay DESC");
+        $this->db->query("SELECT prescript.id AS prescript_id,prescript.ser_id AS prescript_ser_id,date_pay,patient.name AS patient_name FROM prescript,patient,pharmacy_prescript,pharmacy WHERE prescript.patient_id = patient.id AND pharmacy.id = :ID AND pharmacy_prescript.pharmacy_id = pharmacy.id AND pharmacy_prescript.prescript_id = prescript.id AND (patient.name REGEXP :FILTER OR patient.ssd REGEXP :FILTER OR prescript.ser_id REGEXP :FILTER) ORDER BY date_pay DESC");
         $this->db->bind(":ID", $id);
         $this->db->bind(":FILTER", $filter);
         $this->db->execute();

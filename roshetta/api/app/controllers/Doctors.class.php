@@ -1860,7 +1860,7 @@ class Doctors extends Controller
                 if (empty($data['date'])) {
                     $date = date("Y-m-d");
                 } 
-                if (empty($data['status'])) {
+                if (empty($data['status'] && $data['status'] != 0)) {
                     $case = 1;
                 } 
 

@@ -88,7 +88,7 @@ class Admin
             }
         } else {
             if (empty($type)) {
-                $this->db->query("SELECT activation_person.id AS activation_id,doctor.id AS user_id,name,ssd,profile_img,doctor.role AS type,activation_person.isActive AS status FROM doctor,activation_person WHERE doctor.id = activation_person.user_id AND activation_person.isActive = :STATUS AND activation_person.role = 'doctor' AND (ssd = :FILTER XOR name = :FILTER XOR email = :FILTER)");
+                $this->db->query("SELECT activation_person.id AS activation_id,doctor.id AS user_id,name,ssd,profile_img,doctor.role AS type,activation_person.isActive AS status FROM doctor,activation_person WHERE doctor.id = activation_person.user_id AND activation_person.isActive = :STATUS AND activation_person.role = 'doctor' AND (ssd REGEXP :FILTER XOR name REGEXP :FILTER XOR email REGEXP :FILTER)");
                 $this->db->bind(":STATUS", $status);
                 $this->db->bind(":FILTER", $filter);
                 $this->db->execute();
@@ -98,7 +98,7 @@ class Admin
                     $data_doctor = null;
                 }
 
-                $this->db->query("SELECT activation_person.id AS activation_id,pharmacist.id AS user_id,name,ssd,profile_img,pharmacist.role AS type,activation_person.isActive AS status FROM pharmacist,activation_person WHERE pharmacist.id = activation_person.user_id AND activation_person.isActive = :STATUS AND activation_person.role = 'pharmacist' AND (ssd = :FILTER XOR name = :FILTER XOR email = :FILTER)");
+                $this->db->query("SELECT activation_person.id AS activation_id,pharmacist.id AS user_id,name,ssd,profile_img,pharmacist.role AS type,activation_person.isActive AS status FROM pharmacist,activation_person WHERE pharmacist.id = activation_person.user_id AND activation_person.isActive = :STATUS AND activation_person.role = 'pharmacist' AND (ssd REGEXP :FILTER XOR name REGEXP :FILTER XOR email REGEXP :FILTER)");
                 $this->db->bind(":STATUS", $status);
                 $this->db->bind(":FILTER", $filter);
                 $this->db->execute();
@@ -108,7 +108,7 @@ class Admin
                     $data_pharmacist = null;
                 }
 
-                $this->db->query("SELECT activation_place.id AS activation_id,clinic.id AS place_id,name,ser_id,logo,activation_place.role AS type,activation_place.isActive AS status FROM clinic,activation_place WHERE clinic.id = activation_place.place_id AND activation_place.isActive = :STATUS AND activation_place.role = 'clinic' AND (ser_id = :FILTER XOR name = :FILTER XOR owner = :FILTER)");
+                $this->db->query("SELECT activation_place.id AS activation_id,clinic.id AS place_id,name,ser_id,logo,activation_place.role AS type,activation_place.isActive AS status FROM clinic,activation_place WHERE clinic.id = activation_place.place_id AND activation_place.isActive = :STATUS AND activation_place.role = 'clinic' AND (ser_id REGEXP :FILTER XOR name REGEXP :FILTER XOR owner REGEXP :FILTER)");
                 $this->db->bind(":STATUS", $status);
                 $this->db->bind(":FILTER", $filter);
                 $this->db->execute();
@@ -118,7 +118,7 @@ class Admin
                     $data_clinic = null;
                 }
 
-                $this->db->query("SELECT activation_place.id AS activation_id,pharmacy.id AS place_id,name,ser_id,logo,activation_place.role AS type,activation_place.isActive AS status FROM pharmacy,activation_place WHERE pharmacy.id = activation_place.place_id AND activation_place.isActive = :STATUS AND activation_place.role = 'pharmacy' AND (ser_id = :FILTER XOR name = :FILTER XOR owner = :FILTER)");
+                $this->db->query("SELECT activation_place.id AS activation_id,pharmacy.id AS place_id,name,ser_id,logo,activation_place.role AS type,activation_place.isActive AS status FROM pharmacy,activation_place WHERE pharmacy.id = activation_place.place_id AND activation_place.isActive = :STATUS AND activation_place.role = 'pharmacy' AND (ser_id REGEXP :FILTER XOR name REGEXP :FILTER XOR owner REGEXP :FILTER)");
                 $this->db->bind(":STATUS", $status);
                 $this->db->bind(":FILTER", $filter);
                 $this->db->execute();
@@ -129,7 +129,7 @@ class Admin
                 }
             } else {
                 if ($type == 'doctor') {
-                    $this->db->query("SELECT activation_person.id AS activation_id,doctor.id AS user_id,name,ssd,profile_img,doctor.role AS type,activation_person.isActive AS status FROM doctor,activation_person WHERE doctor.id = activation_person.user_id AND activation_person.isActive = :STATUS AND activation_person.role = 'doctor' AND (ssd = :FILTER XOR name = :FILTER XOR email = :FILTER)");
+                    $this->db->query("SELECT activation_person.id AS activation_id,doctor.id AS user_id,name,ssd,profile_img,doctor.role AS type,activation_person.isActive AS status FROM doctor,activation_person WHERE doctor.id = activation_person.user_id AND activation_person.isActive = :STATUS AND activation_person.role = 'doctor' AND (ssd REGEXP :FILTER XOR name REGEXP :FILTER XOR email REGEXP :FILTER)");
                     $this->db->bind(":STATUS", $status);
                     $this->db->bind(":FILTER", $filter);
                     $this->db->execute();
@@ -139,7 +139,7 @@ class Admin
                         $data_doctor = null;
                     }
                 } elseif ($type == 'pharmacist') {
-                    $this->db->query("SELECT activation_person.id AS activation_id,pharmacist.id AS user_id,name,ssd,profile_img,pharmacist.role AS type,activation_person.isActive AS status FROM pharmacist,activation_person WHERE pharmacist.id = activation_person.user_id AND activation_person.isActive = :STATUS AND activation_person.role = 'pharmacist' AND (ssd = :FILTER XOR name = :FILTER XOR email = :FILTER)");
+                    $this->db->query("SELECT activation_person.id AS activation_id,pharmacist.id AS user_id,name,ssd,profile_img,pharmacist.role AS type,activation_person.isActive AS status FROM pharmacist,activation_person WHERE pharmacist.id = activation_person.user_id AND activation_person.isActive = :STATUS AND activation_person.role = 'pharmacist' AND (ssd REGEXP :FILTER XOR name REGEXP :FILTER XOR email REGEXP :FILTER)");
                     $this->db->bind(":STATUS", $status);
                     $this->db->bind(":FILTER", $filter);
                     $this->db->execute();
@@ -149,7 +149,7 @@ class Admin
                         $data_pharmacist = null;
                     }
                 } elseif ($type == 'clinic') {
-                    $this->db->query("SELECT activation_place.id AS activation_id,clinic.id AS place_id,name,ser_id,logo,activation_place.role AS type,activation_place.isActive AS status FROM clinic,activation_place WHERE clinic.id = activation_place.place_id AND activation_place.isActive = :STATUS AND activation_place.role = 'clinic' AND (ser_id = :FILTER XOR name = :FILTER XOR owner = :FILTER)");
+                    $this->db->query("SELECT activation_place.id AS activation_id,clinic.id AS place_id,name,ser_id,logo,activation_place.role AS type,activation_place.isActive AS status FROM clinic,activation_place WHERE clinic.id = activation_place.place_id AND activation_place.isActive = :STATUS AND activation_place.role = 'clinic' AND (ser_id REGEXP :FILTER XOR name REGEXP :FILTER XOR owner REGEXP :FILTER)");
                     $this->db->bind(":STATUS", $status);
                     $this->db->bind(":FILTER", $filter);
                     $this->db->execute();
@@ -159,7 +159,7 @@ class Admin
                         $data_clinic = null;
                     }
                 } else {
-                    $this->db->query("SELECT activation_place.id AS activation_id,pharmacy.id AS place_id,name,ser_id,logo,activation_place.role AS type,activation_place.isActive AS status FROM pharmacy,activation_place WHERE pharmacy.id = activation_place.place_id AND activation_place.isActive = :STATUS AND activation_place.role = 'pharmacy' AND (ser_id = :FILTER XOR name = :FILTER XOR owner = :FILTER)");
+                    $this->db->query("SELECT activation_place.id AS activation_id,pharmacy.id AS place_id,name,ser_id,logo,activation_place.role AS type,activation_place.isActive AS status FROM pharmacy,activation_place WHERE pharmacy.id = activation_place.place_id AND activation_place.isActive = :STATUS AND activation_place.role = 'pharmacy' AND (ser_id REGEXP :FILTER XOR name REGEXP :FILTER XOR owner REGEXP :FILTER)");
                     $this->db->bind(":STATUS", $status);
                     $this->db->bind(":FILTER", $filter);
                     $this->db->execute();
@@ -348,7 +348,7 @@ class Admin
             }
         } else {
             if (empty($type)) {
-                $this->db->query("SELECT id,name,ssd,profile_img,role FROM doctor WHERE (ssd = :FILTER XOR name = :FILTER XOR email = :FILTER)");
+                $this->db->query("SELECT id,name,ssd,profile_img,role FROM doctor WHERE (ssd REGEXP :FILTER XOR name REGEXP :FILTER XOR email REGEXP :FILTER)");
                 $this->db->bind(":FILTER", $filter);
                 $this->db->execute();
                 if ($this->db->rowCount() > 0) {
@@ -357,7 +357,7 @@ class Admin
                     $data_doctor = null;
                 }
 
-                $this->db->query("SELECT id,name,ssd,profile_img,role FROM pharmacist WHERE (ssd = :FILTER XOR name = :FILTER XOR email = :FILTER)");
+                $this->db->query("SELECT id,name,ssd,profile_img,role FROM pharmacist WHERE (ssd REGEXP :FILTER XOR name REGEXP :FILTER XOR email REGEXP :FILTER)");
                 $this->db->bind(":FILTER", $filter);
                 $this->db->execute();
                 if ($this->db->rowCount() > 0) {
@@ -366,7 +366,7 @@ class Admin
                     $data_pharmacist = null;
                 }
 
-                $this->db->query("SELECT id,name,ssd,profile_img,role FROM patient WHERE (ssd = :FILTER XOR name = :FILTER XOR email = :FILTER)");
+                $this->db->query("SELECT id,name,ssd,profile_img,role FROM patient WHERE (ssd REGEXP :FILTER XOR name REGEXP :FILTER XOR email REGEXP :FILTER)");
                 $this->db->bind(":FILTER", $filter);
                 $this->db->execute();
                 if ($this->db->rowCount() > 0) {
@@ -375,7 +375,7 @@ class Admin
                     $data_patient = null;
                 }
 
-                $this->db->query("SELECT id,name,ssd,profile_img,role FROM assistant WHERE (ssd = :FILTER XOR name = :FILTER XOR email = :FILTER)");
+                $this->db->query("SELECT id,name,ssd,profile_img,role FROM assistant WHERE (ssd REGEXP :FILTER XOR name REGEXP :FILTER XOR email REGEXP :FILTER)");
                 $this->db->bind(":FILTER", $filter);
                 $this->db->execute();
                 if ($this->db->rowCount() > 0) {
@@ -384,7 +384,7 @@ class Admin
                     $data_assistant = null;
                 }
 
-                $this->db->query("SELECT id,name,ser_id,logo FROM clinic WHERE (ser_id = :FILTER XOR name = :FILTER XOR owner = :FILTER)");
+                $this->db->query("SELECT id,name,ser_id,logo FROM clinic WHERE (ser_id REGEXP :FILTER XOR name REGEXP :FILTER XOR owner REGEXP :FILTER)");
                 $this->db->bind(":FILTER", $filter);
                 $this->db->execute();
                 if ($this->db->rowCount() > 0) {
@@ -393,7 +393,7 @@ class Admin
                     $data_clinic = null;
                 }
 
-                $this->db->query("SELECT id,name,ser_id,logo FROM clinic WHERE (ser_id = :FILTER XOR name = :FILTER XOR owner = :FILTER)");
+                $this->db->query("SELECT id,name,ser_id,logo FROM clinic WHERE (ser_id REGEXP :FILTER XOR name REGEXP :FILTER XOR owner REGEXP :FILTER)");
                 $this->db->bind(":FILTER", $filter);
                 $this->db->execute();
                 if ($this->db->rowCount() > 0) {
@@ -403,7 +403,7 @@ class Admin
                 }
             } else {
                 if ($type == 'doctor') {
-                    $this->db->query("SELECT id,name,ssd,profile_img,role FROM doctor WHERE (ssd = :FILTER XOR name = :FILTER XOR email = :FILTER)");
+                    $this->db->query("SELECT id,name,ssd,profile_img,role FROM doctor WHERE (ssd REGEXP :FILTER XOR name REGEXP :FILTER XOR email REGEXP :FILTER)");
                     $this->db->bind(":FILTER", $filter);
                     $this->db->execute();
                     if ($this->db->rowCount() > 0) {
@@ -412,7 +412,7 @@ class Admin
                         $data_doctor = null;
                     }
                 } elseif ($type == 'pharmacist') {
-                    $this->db->query("SELECT id,name,ssd,profile_img,role FROM pharmacist WHERE (ssd = :FILTER XOR name = :FILTER XOR email = :FILTER)");
+                    $this->db->query("SELECT id,name,ssd,profile_img,role FROM pharmacist WHERE (ssd REGEXP :FILTER XOR name REGEXP :FILTER XOR email REGEXP :FILTER)");
                     $this->db->bind(":FILTER", $filter);
                     $this->db->execute();
                     if ($this->db->rowCount() > 0) {
@@ -421,7 +421,7 @@ class Admin
                         $data_pharmacist = null;
                     }
                 } elseif ($type == 'patient') {
-                    $this->db->query("SELECT id,name,ssd,profile_img,role FROM patient WHERE (ssd = :FILTER XOR name = :FILTER XOR email = :FILTER)");
+                    $this->db->query("SELECT id,name,ssd,profile_img,role FROM patient WHERE (ssd REGEXP :FILTER XOR name REGEXP :FILTER XOR email REGEXP :FILTER)");
                     $this->db->bind(":FILTER", $filter);
                     $this->db->execute();
                     if ($this->db->rowCount() > 0) {
@@ -430,7 +430,7 @@ class Admin
                         $data_patient = null;
                     }
                 } elseif ($type == 'assistant') {
-                    $this->db->query("SELECT id,name,ssd,profile_img,role FROM assistant WHERE (ssd = :FILTER XOR name = :FILTER XOR email = :FILTER)");
+                    $this->db->query("SELECT id,name,ssd,profile_img,role FROM assistant WHERE (ssd REGEXP :FILTER XOR name REGEXP :FILTER XOR email REGEXP :FILTER)");
                     $this->db->bind(":FILTER", $filter);
                     $this->db->execute();
                     if ($this->db->rowCount() > 0) {
@@ -439,7 +439,7 @@ class Admin
                         $data_assistant = null;
                     }
                 } elseif ($type == 'clinic') {
-                    $this->db->query("SELECT id,name,ser_id,logo FROM clinic WHERE (ser_id = :FILTER XOR name = :FILTER XOR owner = :FILTER)");
+                    $this->db->query("SELECT id,name,ser_id,logo FROM clinic WHERE (ser_id REGEXP :FILTER XOR name REGEXP :FILTER XOR owner REGEXP :FILTER)");
                     $this->db->bind(":FILTER", $filter);
                     $this->db->execute();
                     if ($this->db->rowCount() > 0) {
@@ -448,7 +448,7 @@ class Admin
                         $data_clinic = null;
                     }
                 } else {
-                    $this->db->query("SELECT id,name,ser_id,logo FROM pharmacy WHERE (ser_id = :FILTER XOR name = :FILTER XOR owner = :FILTER)");
+                    $this->db->query("SELECT id,name,ser_id,logo FROM pharmacy WHERE (ser_id REGEXP :FILTER XOR name REGEXP :FILTER XOR owner REGEXP :FILTER)");
                     $this->db->bind(":FILTER", $filter);
                     $this->db->execute();
                     if ($this->db->rowCount() > 0) {
