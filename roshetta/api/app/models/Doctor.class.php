@@ -193,7 +193,7 @@ class Doctor
 
     public function getDiseaseNew($data = [])
     {
-        $this->db->query("SELECT id,patient_id FROM disease WHERE doctor_id = :DO_ID AND clinic_id = :CL_ID AND  patient_id = :PA_ID AND date = :DATE AND name = :NAME AND place = :PLACE");
+        $this->db->query("SELECT * FROM disease WHERE doctor_id = :DO_ID AND clinic_id = :CL_ID AND  patient_id = :PA_ID AND date = :DATE AND name = :NAME AND place = :PLACE");
         $this->db->bind(":NAME", $data['name']);
         $this->db->bind(":PLACE", $data['place']);
         $this->db->bind(":DATE", $data['date']);

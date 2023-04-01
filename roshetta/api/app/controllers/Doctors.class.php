@@ -1322,18 +1322,18 @@ class Doctors extends Controller
             $new_data = [];
             foreach ($result as $element) {
                 $element['logo'] = getImage($element['logo'], $url);
-                @$isVerify = $this->userModel->getActivation($element['id'],'clinic');
-            if ($isVerify) {
-                if ($isVerify->isActive == 0) {
-                    $status_active = 'waiting';
-                } elseif ($isVerify->isActive == 1) {
-                    $status_active = 'success';
+                @$isVerify = $this->userModel->getActivation($element['id'], 'clinic');
+                if ($isVerify) {
+                    if ($isVerify->isActive == 0) {
+                        $status_active = 'waiting';
+                    } elseif ($isVerify->isActive == 1) {
+                        $status_active = 'success';
+                    } else {
+                        $status_active = 'error';
+                    }
                 } else {
-                    $status_active = 'error';
+                    $status_active = 'none';
                 }
-            } else {
-                $status_active = 'none';
-            }
                 $element['isVerify'] = $status_active;
                 $new_data[] = $element;
             }
@@ -1859,10 +1859,10 @@ class Doctors extends Controller
 
                 if (empty($data['date'])) {
                     $date = date("Y-m-d");
-                } 
-                if (empty($data['status'] && $data['status'] != 0)) {
+                }
+                if ($data['status'] != 0 && empty($data['status'])) {
                     $case = 1;
-                } 
+                }
 
                 if (!empty($data['filter'])) {
                     @$result = $this->doctorModel->filterAppoint($data['clinic_id'], $date, $case, $data['filter']);
@@ -2353,6 +2353,300 @@ class Doctors extends Controller
             $Status     = 200;
             userMessage($Status, $Message, $new_data_message);
             die();
+        } else {
+            $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status     = 405;
+            userMessage($Status, $Message);
+            die();
+        }
+    }
+
+    //***************************************************************** Add Patient Disease And Prescript And Medicine ***********************************************************//
+    public function add_patient_prescript($id = null)
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $_POST  = filter_input_array(0, 513); //INPUT_POST   //FILTER_SANITIZE_STRING
+            $_GET   = filter_input_array(1, 513); //INPUT_GET   //FILTER_SANITIZE_STRING
+
+            $data = [
+                "id"                => $this->CheckToken['id'],
+                "type"              => $this->CheckToken['type'],
+                "patient_id"        => @$_GET['patient_id'],
+                "disease_id"        => @$_GET['disease_id'],
+                "clinic_id"         => @$id,
+                "name"              => @$_POST['name'],
+                "place"             => @$_POST['place'],
+                "rediscovery_date"  => @$_POST['rediscovery_date'],
+                "medicine"          => @$_POST['medicine'],
+                "type_prescript"    => @$_GET['type'],
+            ];
+
+            $data_err = [
+                "clinic_id_err"         => '',
+                "patient_id_err"        => '',
+                "name_err"              => '',
+                "place_err"             => '',
+                "rediscovery_date_err"  => '',
+                "medicine_err"          => '',
+                "type_prescript_err"    => '',
+                "disease_id_err"        => ''
+            ];
+
+            if ($data['type'] != 'doctor') {
+                $Message    = 'غير مصرح لك إضافة تشخيص';
+                $Status     = 403;
+                userMessage($Status, $Message);
+                die();
+            } else {
+                @$get_doctor = $this->doctorModel->getDoctorActivation($data['id']);
+                if (!$get_doctor) {
+                    $Message    = 'يجب تنشيط الحساب';
+                    $Status     = 400;
+                    userMessage($Status, $Message);
+                    die();
+                }
+
+                if ($get_doctor->isActive != 1) {
+                    $Message    = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+                    $Status     = 400;
+                    userMessage($Status, $Message);
+                    die();
+                }
+            }
+
+            if (!isset($_SESSION['clinic'])) {
+                $Message    = 'الرجاء تسجيل الدخول إلى العيادة';
+                $Status     = 400;
+                userMessage($Status, $Message);
+                die();
+            }
+
+            if (empty($data['clinic_id'])) {
+                $data_err['clinic_id_err'] = 'برجاء إدخال معرف العيادة';
+            } else {
+                if (!filter_var($data['clinic_id'], 257)) {
+                    $data_err['clinic_id_err'] = 'معرف العيادة غير صالح';
+                } else {
+                    if (!$this->userModel->getPlace('clinic', $data['clinic_id'])) {
+                        $data_err['clinic_id_err'] = 'معرف العيادة غير صحيح';
+                    } else {
+                        @$get_clinic = $this->doctorModel->getClinicActivation($data['clinic_id']);
+                        if (!$get_clinic) {
+                            $Message    = 'يجب تنشيط العيادة';
+                            $Status     = 400;
+                            userMessage($Status, $Message);
+                            die();
+                        }
+                        if ($get_clinic->isActive != 1) {
+                            $Message    = 'الرجاء الإنتظار حتى يتم تنشيط العيادة';
+                            $Status     = 400;
+                            userMessage($Status, $Message);
+                            die();
+                        }
+                        if ($data['clinic_id'] != $_SESSION['clinic']) $data_err['clinic_id_err'] = 'معرف العيادة غير صحيح';
+                    }
+                }
+            }
+
+            if (empty($data['type_prescript'])) {
+                $data_err['type_prescript_err'] = 'برجاء تحديد النوع';
+            } else {
+                $types = ['new', 'rediscovery'];
+                if (!in_array($data['type_prescript'], $types)) {
+                    $data_err['type_prescript_err'] = 'النوع غير مدعوم';
+                }
+            }
+
+            if (empty($data['patient_id'])) {
+                $data_err['patient_id_err'] = 'برجاء إدخال معرف المريض';
+            } else {
+                if (!$this->userModel->getPlace('patient', $data['patient_id'])) {
+                    $data_err['patient_id_err'] = 'معرف المريض غير صحيح';
+                }
+            }
+
+            if (
+                empty($data_err['clinic_id_err'])
+                && empty($data_err['type_prescript_err'])
+                && empty($data_err['patient_id_err'])
+            ) {
+
+                if ($data['type_prescript'] == 'new') {
+
+                    if (empty($data['name'])) $data_err['name_err'] = 'برجاء إدخال التشخيص';
+                    if (empty($data['place'])) $data_err['place_err'] = 'برجاء إدخال مكان الإصابة';
+                    if (empty($data['rediscovery_date'])) $data_err['rediscovery_date_err'] = 'برجاء إدخال ميعاد إعادة الكشف';
+                    if (empty($data['medicine'])) $data_err['medicine_err'] = 'برجاء إدخال الادوية';
+
+                    // Add New Disease
+
+                    if (
+                        empty($data_err['name_err'])
+                        && empty($data_err['place_err'])
+                        && empty($data_err['rediscovery_date_err'])
+                        && empty($data_err['medicine_err'])
+                    ) {
+
+                        $data_disease = [
+                            "name"          => $data['name'],
+                            "place"         => $data['place'],
+                            "clinic_id"     => $data['clinic_id'],
+                            "patient_id"    => $data['patient_id'],
+                            "doctor_id"     => $data['id'],
+                            "date"          => date('Y-m-d')
+                        ];
+                        if (!$this->doctorModel->addDisease($data_disease)) {
+                            $Message    = 'فشل إضافة المرض';
+                            $Status     = 422;
+                            userMessage($Status, $Message);
+                            die();
+                        }
+                        @$result_dis = $this->doctorModel->getDiseaseNew($data_disease);
+                        if (!$result_dis) {
+                            $Message    = 'فشل جلب بيانات المرض';
+                            $Status     = 422;
+                            userMessage($Status, $Message);
+                            die();
+                        }
+
+                        //Add New Prescript
+
+                        $data_pres = [
+                            "clinic_id"         => $data['clinic_id'],
+                            "patient_id"        => $data['patient_id'],
+                            "disease_id"        => $result_dis->id,
+                            "doctor_id"         => $data['id'],
+                            "rediscovery_date"  => $data['rediscovery_date'],
+                            "created_date"      => date('Y-m-d'),
+                            "ser_id"            => random_int(100000, 999999) .  $result_dis->id
+                        ];
+
+                        if (!$this->doctorModel->addPrescript($data_pres)) {
+                            $Message    = 'فشل إضافة الروشتة';
+                            $Status     = 422;
+                            userMessage($Status, $Message);
+                            die();
+                        }
+
+                        $new_appoint = [
+                            "clinic_id"     => $data['clinic_id'],
+                            "patient_id"    => $data['patient_id'],
+                            "appoint_date"  => $data['rediscovery_date']
+                        ];
+
+                        if (@$this->patientModel->addAppointPatient($new_appoint)) {
+                            //***********/
+                        }
+
+                        @$result_pre = $this->doctorModel->getPrescriptNew($data_pres['ser_id']);
+                        if (!$result_pre) {
+                            $Message    = 'فشل جلب بيانات الروشتة';
+                            $Status     = 422;
+                            userMessage($Status, $Message);
+                            die();
+                        }
+
+                        // Add New Medicine
+
+                        $data_med = [
+                            "prescript_id"  => $result_pre->id,
+                            "medicine_data" => base64_encode(serialize($data['medicine']))
+                        ];
+
+                        if (!$this->doctorModel->addMedicine($data_med)) {
+                            $Message    = 'فشل إضافة الأدوية';
+                            $Status     = 422;
+                            userMessage($Status, $Message);
+                            die();
+                        }
+
+                        $Message    = 'تم إضافة الأدوية بنجاح';
+                        $Status     = 201;
+                        userMessage($Status, $Message);
+                        die();
+                    } else {
+                        $Message    = $data_err;
+                        $Status     = 400;
+                        userMessage($Status, $Message);
+                        die();
+                    }
+                } else {
+
+                    if (empty($data['rediscovery_date'])) $data_err['rediscovery_date_err'] = 'برجاء إدخال ميعاد إعادة الكشف';
+                    if (empty($data['medicine'])) $data_err['medicine_err'] = 'برجاء إدخال الادوية';
+                    if (empty($data['disease_id'])) {
+                        $data_err['disease_id_err'] = 'برجاء إدخال معرف التشخيص';
+                    } else {
+                        if (!$this->userModel->getPlace('disease', $data['disease_id'])) {
+                            $data_err['disease_id_err'] = 'معرف التشخيص غير صحيح';
+                        }
+                    }
+
+                    if (
+                        empty($data_err['rediscovery_date_err'])
+                        && empty($data_err['medicine_err'])
+                        && empty($data_err['disease_id_err'])
+                    ) {
+
+                        // Add New Prescript
+
+                        $data_pres = [
+                            "clinic_id"         => $data['clinic_id'],
+                            "patient_id"        => $data['patient_id'],
+                            "disease_id"        => $data['disease_id'],
+                            "doctor_id"         => $data['id'],
+                            "rediscovery_date"  => $data['rediscovery_date'],
+                            "created_date"      => date('Y-m-d'),
+                            "ser_id"            => random_int(100000, 999999) . $data['patient_id']
+                        ];
+
+                        if (!$this->doctorModel->addPrescript($data_pres)) {
+                            $Message    = 'فشل إضافة الروشتة';
+                            $Status     = 422;
+                            userMessage($Status, $Message);
+                            die();
+                        }
+
+                        @$result_pre = $this->doctorModel->getPrescriptNew($data_pres['ser_id']);
+                        if (!$result_pre) {
+                            $Message    = 'فشل جلب بيانات الروشتة';
+                            $Status     = 422;
+                            userMessage($Status, $Message);
+                            die();
+                        }
+
+                        // Add New Medicine
+
+                        $data_med = [
+                            "prescript_id"  => $result_pre->id,
+                            "medicine_data" => base64_encode(serialize($data['medicine']))
+                        ];
+
+                        if (!$this->doctorModel->addMedicine($data_med)) {
+                            $Message    = 'فشل إضافة الأدوية';
+                            $Status     = 422;
+                            userMessage($Status, $Message);
+                            die();
+                        }
+
+                        $Message    = 'تم إضافة الأدوية بنجاح';
+                        $Status     = 201;
+                        userMessage($Status, $Message);
+                        die();
+                    } else {
+                        $Message    = $data_err;
+                        $Status     = 400;
+                        userMessage($Status, $Message);
+                        die();
+                    }
+                }
+            } else {
+                $Message    = $data_err;
+                $Status     = 400;
+                userMessage($Status, $Message);
+                die();
+            }
         } else {
             $Message    = 'غير مصرح الدخول عبر هذة الطريقة';
             $Status     = 405;
