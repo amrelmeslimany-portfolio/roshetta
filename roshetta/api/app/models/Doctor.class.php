@@ -313,7 +313,7 @@ class Doctor
     }
     public function getDiseasePrescript($id)
     {
-        $this->db->query("SELECT prescript.id AS prescript_id,prescript.ser_id AS prescript_ser_id,disease.name AS disease_name FROM prescript,disease WHERE prescript.disease_id = disease.id AND disease.id = :ID");
+        $this->db->query("SELECT prescript.id AS prescript_id,prescript.ser_id AS prescript_ser_id,prescript.created_date,disease.name AS disease_name FROM prescript,disease WHERE prescript.disease_id = disease.id AND disease.id = :ID");
         $this->db->bind(":ID", $id);
         $this->db->execute();
         if ($this->db->rowCount() > 0) {
