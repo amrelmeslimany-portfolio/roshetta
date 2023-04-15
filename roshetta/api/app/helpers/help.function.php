@@ -325,7 +325,7 @@ function decodeMedicine($data)
 
         $array_value = $value["medicine_data"]; //Determine Medicine Data
         $data_decode = unserialize(base64_decode($array_value)); // Decode Medicine Data
-        // $medicine_data_array = array($data_decode); //Medicine Data In Array For Print
+        //$medicine_data_array = [$data_decode]; //Medicine Data In Array For Print
     }
     return $data_decode;
 }
