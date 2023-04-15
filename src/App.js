@@ -25,9 +25,9 @@ export default function App() {
             <Route
               path="/admin-home"
               element={
-                <ProtectedRoute>
+                // <ProtectedRoute>
                   <Home />
-                </ProtectedRoute>
+                /* </ProtectedRoute> */
               }
             />
             <Route element={<Layout />}>

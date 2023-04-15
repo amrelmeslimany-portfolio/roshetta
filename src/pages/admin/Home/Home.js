@@ -1,12 +1,22 @@
 import React from 'react';
+import { Space } from 'antd';
 import { useGlobalContext } from '../../../context';
-
+import './Home.scss';
+import AdminHeader from '../components/AdminHeader/AdminHeader';
+import AdminSideMenu from '../components/AdminSideMenu/AdminSideMenu';
+import AdminPageContent from '../components/AdminPageContent/AdminPageContent';
+import AdminFooter from '../components/AdminFooter/AdminFooter';
 const Home = () => {
   return (
     <>
-      <h1>Home</h1>
-      <p>--</p> <br />
-      <h2>Authenticated User, Welcome Back {}</h2>
+      <div className="admin">
+        <AdminHeader />
+        <Space>
+          <AdminSideMenu></AdminSideMenu>
+          <AdminPageContent></AdminPageContent>
+        </Space>
+        <AdminFooter />
+      </div>
     </>
   );
 };
