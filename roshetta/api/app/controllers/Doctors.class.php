@@ -2659,7 +2659,8 @@ class Doctors extends Controller
                     if (empty($data['disease_id'])) {
                         $data_err['disease_id_err'] = 'برجاء إدخال معرف التشخيص';
                     } else {
-                        if (!$this->userModel->getPlace('disease', $data['disease_id'])) {
+                        @$disease_data = $this->userModel->getPlace('disease', $data['disease_id']);
+                        if (!$disease_data) {
                             $data_err['disease_id_err'] = 'معرف التشخيص غير صحيح';
                         }
                     }
@@ -2715,9 +2716,15 @@ class Doctors extends Controller
                             die();
                         }
 
+                        $data_message = [
+                            'ser_id' => $result_pre->ser_id,
+                            'date' => $result_pre->created_date,
+                            'disease_name' => $disease_data->name
+                        ];
+
                         $Message = 'تم إضافة الأدوية بنجاح';
                         $Status = 201;
-                        userMessage($Status, $Message);
+                        userMessage($Status, $Message, $data_message);
                         die();
                     } else {
                         $Message = $data_err;
