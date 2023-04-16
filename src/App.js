@@ -9,6 +9,14 @@ import {
   HomePage,
   ForgetPassword,
   Home,
+  ActivateAccounts,
+  AddAdmin,
+  Clinics,
+  Dashboard,
+  EditInfo,
+  Logout,
+  Pharmacies,
+  Users,
 } from './pages';
 import './App.scss';
 
@@ -23,13 +31,22 @@ export default function App() {
             <Route path="/register" element={<AuthRegister />} />
             <Route path="/forget-password" element={<ForgetPassword />} />
             <Route
-              path="/admin-home"
+              path="admin"
               element={
                 // <ProtectedRoute>
-                  <Home />
+                <Home />
                 /* </ProtectedRoute> */
               }
-            />
+            >
+              <Route path="dashboard" element={<Dashboard />} />
+              <Route path="activate-accounts" element={<ActivateAccounts />} />
+              <Route path="add-admin" element={<AddAdmin />} />
+              <Route path="clinics" element={<Clinics />} />
+              <Route path="edit-info" element={<EditInfo />} />
+              <Route path="logout" element={<Logout />} />
+              <Route path="pharmacies" element={<Pharmacies />} />
+              <Route path="users" element={<Users />} />
+            </Route>
             <Route element={<Layout />}>
               <Route
                 element={

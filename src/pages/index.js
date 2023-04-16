@@ -4,4 +4,11 @@ export { default as AuthLogin } from './auth/AuthLogin/AuthLogin';
 export { default as HomePage } from './HomePage/HomePage';
 export { default as ForgetPassword } from './auth/ForgetPassword/ForgetPassword';
 export { default as Home } from './admin/Home/Home';
-
+export { default as ActivateAccounts } from './admin/pages/ActivateAccounts';
+export { default as AddAdmin } from './admin/pages/AddAdmin';
+export { default as Clinics } from './admin/pages/Clinics';
+export { default as Dashboard } from './admin/pages/Dashboard';
+export { default as EditInfo } from './admin/pages/EditInfo';
+export { default as Logout } from './admin/pages/Logout';
+export { default as Pharmacies } from './admin/pages/Pharmacies';
+export { default as Users } from './admin/pages/Users';

@@ -11,7 +11,7 @@ root.render(
   <StrictMode>
     <AppProvider>
       <ConfigProvider direction="rtl">
-        <App />
+          <App />
       </ConfigProvider>
     </AppProvider>
   </StrictMode>

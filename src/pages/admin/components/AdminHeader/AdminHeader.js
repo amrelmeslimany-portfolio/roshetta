@@ -10,10 +10,10 @@ const AdminHeader = () => {
       <Image width={40} src={images.logo1} />
       <h1>ادمن روشتة</h1>
       <Space>
-        <Badge count={12}>
+        <Badge count={12} dot>
           <MailOutlined style={{ fontSize: 24 }} />
         </Badge>
-        <Badge>
+        <Badge count={22}>
           <BellFilled style={{ fontSize: 24 }} />
         </Badge>
       </Space>
