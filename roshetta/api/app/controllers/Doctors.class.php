@@ -2717,6 +2717,7 @@ class Doctors extends Controller
                         }
 
                         $data_message = [
+                            'id' => $result_pre->id,
                             'ser_id' => $result_pre->ser_id,
                             'date' => $result_pre->created_date,
                             'disease_name' => $disease_data->name
