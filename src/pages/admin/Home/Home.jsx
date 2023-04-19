@@ -3,7 +3,6 @@ import { Space } from 'antd';
 import { useGlobalContext } from '../../../context';
 import AdminHeader from '../components/AdminHeader/AdminHeader';
 import AdminSideMenu from '../components/AdminSideMenu/AdminSideMenu';
-import AdminPageContent from '../components/AdminPageContent/AdminPageContent';
 import AdminFooter from '../components/AdminFooter/AdminFooter';
 import { Outlet } from 'react-router-dom';
 
@@ -16,7 +15,9 @@ const Home = () => {
         <Space className="SideMenuAndPageContent">
           <AdminSideMenu></AdminSideMenu>
           {/* <AdminPageContent></AdminPageContent> */}
-          <Outlet />
+          <div className="admin__page-content">
+            <Outlet />
+          </div>
         </Space>
         <AdminFooter />
       </div>

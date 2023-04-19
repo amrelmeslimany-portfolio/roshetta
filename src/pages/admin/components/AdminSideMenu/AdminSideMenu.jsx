@@ -6,6 +6,8 @@ import {
 } from '@ant-design/icons';
 import { Menu } from 'antd';
 import React from 'react';
+import { MdAdminPanelSettings, MdDashboardCustomize, MdEdit, MdLocalPharmacy, MdOutlineLocalPharmacy } from 'react-icons/md';
+import { TbActivityHeartbeat, TbUsers } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
 
 const AdminSideMenu = () => {
@@ -20,37 +22,37 @@ const AdminSideMenu = () => {
         items={[
           {
             label: 'الصفحة الرئيسية',
-            icon: <AppstoreOutlined />,
+            icon: <MdDashboardCustomize />,
             key: '/admin/dashboard',
           },
           {
             label: 'اضافه ادمن',
-            icon: <AppstoreOutlined />,
+            icon: <MdAdminPanelSettings />,
             key: '/admin/add-admin',
           },
           {
             label: 'تعديل مباشر',
-            icon: <AppstoreOutlined />,
+            icon: <MdEdit />,
             key: '/admin/edit-info',
           },
           {
             label: 'العيادات',
-            icon: <AppstoreOutlined />,
+            icon: <MdLocalPharmacy />,
             key: '/admin/clinics',
           },
           {
             label: 'الصيدليات',
-            icon: <AppstoreOutlined />,
+            icon: <MdOutlineLocalPharmacy />,
             key: '/admin/pharmacies',
           },
           {
             label: 'المستخدمين',
-            icon: <AppstoreOutlined />,
+            icon: <TbUsers />,
             key: '/admin/users',
           },
           {
             label: 'تفعيل الحسابات',
-            icon: <ShoppingCartOutlined />,
+            icon: <TbActivityHeartbeat />,
             key: '/admin/activate-accounts',
           },
           {
