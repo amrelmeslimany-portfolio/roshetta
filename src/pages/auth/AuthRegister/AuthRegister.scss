@@ -60,10 +60,16 @@
   width: 45%;
 }
 .auth-register__form--form-input {
-  position: relative;
+
+  display: flex;
+  flex-direction: row-reverse;
+  // width: 100%;
+  border: 2px solid #a7a7a7;
+  border-radius: 30px;
+
   margin-bottom: 1.5rem;
   input {
-    width: 448px;
+    width: 85%;
     height: 56px;
     padding: 1rem 2rem;
 
@@ -76,19 +82,21 @@
     color: #a7a7a7;
 
     background: #ffffff;
-    border: 1px solid #a7a7a7;
+    border: none;
+    outline: none;
     border-radius: 50px;
   }
   span {
-    text-align: center;
+    width: 15%;
     display: flex;
+    text-align: center;
     justify-content: center;
     align-items: center;
-    display: block;
+    // display: block;
     font-size: 25px;
-    position: absolute;
-    left: 2%;
-    bottom: 17%;
+    // position: absolute;
+    // left: 5%;
+    // bottom: 6%;
     color: var(--secondary-color);
   }
 }

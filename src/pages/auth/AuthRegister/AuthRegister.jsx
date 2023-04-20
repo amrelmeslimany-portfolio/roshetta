@@ -42,7 +42,7 @@ const AuthRegister = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({
+    ({
       role,
       first_name: firstName,
       last_name: lastName,
@@ -73,8 +73,6 @@ const AuthRegister = () => {
     formData.append('weight', weight);
     formData.append('height', height);
     formData.append('specialist', specialist);
-    console.log(formData);
-
     if (password < 6 && confirmPassword < 6) {
       window.scrollTo({
         top: 0,
@@ -115,7 +113,7 @@ const AuthRegister = () => {
         behavior: 'smooth',
       });
       setAlert({
-        msg: 'الرقم القومي يجب ان يكون 14 رقم',
+        msg: 'رقم الهاتف يجب ان يكون 11 رقم',
         show: true,
         type: 'error',
       });
@@ -130,50 +128,43 @@ const AuthRegister = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data.Status);
+          data;
           setAuth(data.Status);
-          if (data.Status) {
+          if (data.Status > 299) {
             window.scrollTo({
               top: 0,
               left: 0,
               behavior: 'smooth',
             });
             setAlert({
-              msg: 'يوجد خطأ في تسجيل الدخول',
+              msg: 'يوجد خطأ في تسجيل الحساب',
               show: true,
               type: 'error',
             });
+          } else {
+            // setRole('');
+            // setFirstName('');
+            // setLastName('');
+            // setEmail('');
+            // setPassword('');
+            // setConfirmPassword('');
+            // setGovernorate('');
+            // setGender('');
+            // setSsd('');
+            // setPhoneNumber('');
+            // setBirthDate('');
+            // setWeight('');
+            // setHeight('');
+            // setSpecialist('');
+            // navigate('/admin/dashboard');
           }
         });
-      // setRole('');
-      // setFirstName('');
-      // setLastName('');
-      // setEmail('');
-      // setPassword('');
-      // setConfirmPassword('');
-      // setGovernorate('');
-      // setGender('');
-      // setSsd('');
-      // setPhoneNumber('');
-      // setBirthDate('');
-      // setWeight('');
-      // setHeight('');
-      // setSpecialist('');
-      // navigate('/');
     }
-  };
-
-  const onDateChange = (date, dateString) => {
-    console.log(date, dateString);
-  };
-
-  const handleChange = (value) => {
-    console.log(`selected ${value}`);
   };
   useEffect(() => {
     const myTimeout = setTimeout(() => {
       setAlert({ msg: '', show: false, type: '' });
-    }, 2000);
+    }, 3000);
 
     return () => {
       clearTimeout(myTimeout);
@@ -348,6 +339,7 @@ const AuthRegister = () => {
                   <FaHandHoldingMedical />
                 </span>
                 <input
+                  disabled={role === 'doctor' ? false : true}
                   name="specialist"
                   type="text"
                   placeholder="اختر تخصصك الطبي..."

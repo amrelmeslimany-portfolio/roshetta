@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { LockFilled, IdcardFilled } from '@ant-design/icons';
-import { Select } from 'antd';
+import { Alert, Select } from 'antd';
 
 import { useGlobalContext } from '../../../context';
 import images from '../../../images';
 import './AuthLogin.scss';
 
 const AuthLogin = () => {
-  const { setAuthUser } = useGlobalContext();
+  const { setAuthUser, alert, setAlert } = useGlobalContext();
   const [auth, setAuth] = useState('');
 
   const [email, setEmail] = useState('');
@@ -18,38 +18,122 @@ const AuthLogin = () => {
 
   const navigate = useNavigate();
 
+  let formData = new FormData();
+
   const handleSubmit = (e) => {
-    console.log({
+    e.preventDefault();
+    ({
       role,
       email,
       ssd,
       password,
     });
-    e.preventDefault();
+
+    formData.append('role', role);
+    formData.append('email', email);
+    formData.append('ssd', ssd);
+    formData.append('password', password);
+
+    if (ssd < 14 && password < 6 && role === null) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+      setAlert({
+        msg: ' الرقم القومي يجب ان يكون 14 رقم والباسوورد غير خالي',
+        show: true,
+        type: 'error',
+      });
+    } else if (ssd < 14) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+      setAlert({
+        msg: 'الرقم القومي يجب ان يكون 14 رقم',
+        show: true,
+        type: 'error',
+      });
+    } else if (password < 6) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+      setAlert({
+        msg: 'ادخل باسوورد مكون من 6 ارقام او اكثر',
+        show: true,
+        type: 'error',
+      });
+    } else if (!role) {
+      window.scrollTo({
+        top: 0,
+        left: 0,
+        behavior: 'smooth',
+      });
+      setAlert({
+        msg: 'ادخل نوع الحساب لو سمحت',
+        show: true,
+        type: 'error',
+      });
+    }
+
     fetch('http://localhost:80/roshetta/api/users/login', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        role,
-        email,
-        ssd,
-        password,
-      }),
+      // headers: {
+      //   'Content-Type': 'application/json',
+      // },
+      body: formData,
     })
       .then((res) => res.json())
-      .then((data) => console.log(data));
-    // setRole('');
-    // setEmail('');
-    // setPassword('');
-    // setSsd('');
+      .then((data) => {
+        console.log(data)
+        if (data.Status > 299) {
+          window.scrollTo({
+            top: 0,
+            left: 0,
+            behavior: 'smooth',
+          });
+          setAlert({
+            msg: 'يوجد خطأ في تسجيل الدخول',
+            show: true,
+            type: 'error',
+          });
+        } else {
+          setRole('');
+          setEmail('');
+          setPassword('');
+          setSsd('');
 
-    // navigate('/');
+          navigate('/admin/dashboard');
+        }
+      });
   };
+  useEffect(() => {
+    const myTimeout = setTimeout(() => {
+      setAlert({ msg: '', show: false, type: '' });
+    }, 3000);
+
+    return () => {
+      clearTimeout(myTimeout);
+    };
+  }, [alert.show]);
   return (
     <>
       <div className="auth-login">
+        {alert.show && (
+          <Alert
+            style={{
+              marginBottom: 20,
+            }}
+            message="حدثت مشكلة"
+            description={alert.msg}
+            type={alert.type}
+            showIcon
+          />
+        )}
         <div className="auth-login__img">
           <img src={images.logo1} alt="logo" />
         </div>

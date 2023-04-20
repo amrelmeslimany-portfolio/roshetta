@@ -117,7 +117,7 @@ const RecentOrders = () => {
   useEffect(() => {
     setLoading(true);
     getOrders().then((res) => {
-      console.log(res.products);
+      res.products;
       setDataSource(res.products.splice(0, 3));
       setLoading(false);
     });
