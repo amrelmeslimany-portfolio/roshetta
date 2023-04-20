@@ -2642,6 +2642,8 @@ class Doctors extends Controller
                             die();
                         }
 
+                        @$this->doctorModel->editAppointStatus($data['clinic_id'], $data['appoint_id'], 2);
+
                         $Message = 'تم إضافة الأدوية بنجاح';
                         $Status = 201;
                         userMessage($Status, $Message, ['disease_id' => $result_dis->id]);
@@ -2722,6 +2724,8 @@ class Doctors extends Controller
                             'date' => $result_pre->created_date,
                             'disease_name' => $disease_data->name
                         ];
+
+                        @$this->doctorModel->editAppointStatus($data['clinic_id'], $data['appoint_id'], 2);
 
                         $Message = 'تم إضافة الأدوية بنجاح';
                         $Status = 201;

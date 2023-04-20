@@ -645,7 +645,23 @@ class Patients extends Controller // Extends The Controller
                 die();
             }
 
-            @$result = $this->patientModel->getDataPrescript($data['id']);
+            $disease_id = null;
+            if (isset($_GET['disease_id'])) {
+                $disease_id = $_GET['disease_id'];
+            }
+
+            if (!empty($disease_id)) {
+                if (!$this->userModel->getPlace('disease', $disease_id)) {
+                    @$result = $this->patientModel->getDataPrescript($data['id']);
+                    $Message = 'معرف المرض غير صحيح';
+                    $Status = 400;
+                    userMessage($Status, $Message, $result);
+                    die();
+                }
+                @$result = $this->patientModel->getDataPrescriptDisease($data['id'], $disease_id);
+            } else {
+                @$result = $this->patientModel->getDataPrescript($data['id']);
+            }
 
             if (!$result) {
                 $Message = 'لم يتم العثور على بيانات';

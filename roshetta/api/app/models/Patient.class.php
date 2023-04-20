@@ -242,6 +242,19 @@ class Patient
             false;
         }
     }
+    public function getDataPrescriptDisease($id,$dis_id)
+    {
+        $this->db->query("SELECT prescript.id AS prescript_id,ser_id,created_date,name AS disease_name FROM disease,prescript WHERE disease.id = :ID_DIS AND disease.id = prescript.disease_id AND prescript.patient_id = :ID  ORDER BY created_date DESC");
+        $this->db->bind(":ID", $id);
+        $this->db->bind(":ID_DIS", $dis_id);
+        $this->db->execute();
+        if ($this->db->rowCount() > 0) {
+            $data = $this->db->fetchAll();
+            return $data;
+        } else {
+            false;
+        }
+    }
     public function addOrderPatient($data = [])
     {
         $this->db->query("INSERT INTO pharmacy_order(status,patient_id,prescript_id,pharmacy_id) VALUES (0,:PA_ID,:PR_ID,:PH_ID)");
