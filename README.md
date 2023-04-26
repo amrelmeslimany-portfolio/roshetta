@@ -1,15 +1,16 @@
-# Roshetta - روشته
-مشروع تخرج,
-روشته هوا تطبيق لحل مشكلة الروشتات الورقيه وعدم وضوح اسماء الادويه للصيدلي
-## اهم ما يقدمه البروجيكت ؟
-لسا هنبقا نعدلها في المستقبل
-## تعليمات الباك اند (Back-End APIs):
-1. <mark>http://127.0.0.0:8000/login</mark> 
-  - tpye : **Post**
-  - Body: {**username**: String , **password**: String}
-  - Response: {**error**: String , **result**: Array} 
+# Getting Started with Vite
 
-2. <mark>http://127.0.0.0:8000/login</mark> 
-  - tpye : **Post**
-  - Body: {**username**: String , **password**: String}
-  - Response: {**error**: String , **result**: Array} 
+## بعدين يا غالي هتكتب الامرين دول
+
+### `npm install`
+عشان يثبت كل الحاجات المطلوبة عشان الموقع يشتغل
+
+### `npm run dev`
+هيشتغل الموقع معاك في ثواني زي الصاروووووخ. Vite دي تكنولوجيا رهيييييييبة
+
+### `والف مبروك عليك يا غالي`
+
+الموقع هيشتغل معاك زي الفل.
+
+متنساش تفتح ال سيرفر ال `PHP` Back-end وال `MySQL Server`
+

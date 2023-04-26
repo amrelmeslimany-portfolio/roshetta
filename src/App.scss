@@ -1,0 +1,107 @@
+
+
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900;1000&display=swap');
+:root {
+  font-family: 'Cairo', sans-serif;
+
+  --font-base: 'Cairo', sans-serif;
+  --primary-color: #49ce91;
+  --secondary-color: #a7a7a7;
+  --black-color: black;
+  --white-color: #fff;
+  --gray-color: rgb(223, 223, 223);
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  scroll-behavior: smooth;
+
+  /*For Arabic Website */
+  direction: rtl;
+}
+
+.section__padding {
+  padding: 2rem 2rem;
+}
+.section__margin {
+  margin: 2rem 1rem;
+}
+
+.main__btn {
+  width: 370px;
+  height: 51px;
+
+  border: 1px solid #49ce91;
+  background: transparent;
+  border-radius: 50px;
+
+  font-family: 'Cairo';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 45px;
+
+  text-align: center;
+
+  text-decoration: none;
+
+  color: #49ce91;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  &:hover {
+    border: 1px solid var(--primary-color);
+    background: var(--primary-color);
+    color: var(--white-color);
+    transform: scale(1.04);
+  }
+}
+
+.main__btn-fill {
+  width: 370px;
+  height: 51px;
+
+  background-color: #49ce91;
+  border-radius: 50px;
+  border: none;
+
+  font-family: 'Cairo';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 45px;
+  text-align: center;
+
+  text-decoration: none;
+
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border: 1px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+    transform: scale(1.04);
+  }
+}
+.app__footer {
+  font-family: 'Cairo';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 37px;
+  text-align: center;
+
+  color: #a7a7a7;
+
+  span {
+    font-weight: 600;
+    color: var(--primary-color);
+  }
+  a {
+    font-weight: 600;
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+}
