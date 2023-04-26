@@ -16,7 +16,7 @@ import {
 import { TbActivityHeartbeat, TbUsers } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
 
-const AdminSideMenu = () => {
+const DoctorSideMenu = () => {
   const navigate = useNavigate();
   return (
     <div className="admin__side-menu">
@@ -27,39 +27,24 @@ const AdminSideMenu = () => {
         }}
         items={[
           {
-            label: 'الصفحة الرئيسية',
-            icon: <MdDashboardCustomize style={{ color: '#49ce91' }} />,
-            key: '/admin/dashboard',
-          },
-          {
-            label: 'اضافه ادمن',
-            icon: <MdAdminPanelSettings style={{ color: '#49ce91' }} />,
-            key: '/admin/add-admin',
-          },
-          {
-            label: 'تعديل مباشر',
+            label: 'الملف الشخصي',
             icon: <MdEdit style={{ color: '#49ce91' }} />,
-            key: '/admin/edit-info',
+            key: '/doctor/personal-info',
           },
           {
-            label: 'العيادات',
-            icon: <MdLocalPharmacy style={{ color: '#49ce91' }} />,
-            key: '/admin/clinics',
-          },
-          {
-            label: 'الصيدليات',
+            label: 'تنشيط الحساب',
             icon: <MdOutlineLocalPharmacy style={{ color: '#49ce91' }} />,
-            key: '/admin/pharmacies',
+            key: '/doctor/activate-account',
           },
           {
-            label: 'المستخدمين',
+            label: 'عرض العيادات',
             icon: <TbUsers style={{ color: '#49ce91' }} />,
-            key: '/admin/users',
+            key: '/doctor/view-clinics',
           },
           {
-            label: 'تفعيل الحسابات',
+            label: 'اضافة عيادة جديد',
             icon: <TbActivityHeartbeat style={{ color: '#49ce91' }} />,
-            key: '/admin/activate-accounts',
+            key: '/doctor/add-clinic',
           },
           {
             label: 'تسجيل الخروج',
@@ -72,4 +57,4 @@ const AdminSideMenu = () => {
   );
 };
 
-export default AdminSideMenu;
+export default DoctorSideMenu;

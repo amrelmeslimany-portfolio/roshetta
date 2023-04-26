@@ -3,7 +3,11 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import ProtectedRoute from './pages/ProtectedRoute';
 import Layout from './pages/Layout';
 import {
-  DoctorHome,
+  Doctor,
+  ActivateAccountDoc,
+  AddClinic,
+  PersonalData,
+  ViewClinics,
   AuthLogin,
   AuthRegister,
   HomePage,
@@ -14,7 +18,6 @@ import {
   Clinics,
   Dashboard,
   EditInfo,
-  Logout,
   Pharmacies,
   Users,
 } from './pages';
@@ -30,6 +33,7 @@ export default function App() {
             <Route path="/login" element={<AuthLogin />} />
             <Route path="/register" element={<AuthRegister />} />
             <Route path="/forget-password" element={<ForgetPassword />} />
+            {/* ------------------- Admin   ------------------- */}
             <Route
               path="admin"
               element={
@@ -43,26 +47,24 @@ export default function App() {
               <Route path="add-admin" element={<AddAdmin />} />
               <Route path="clinics" element={<Clinics />} />
               <Route path="edit-info" element={<EditInfo />} />
-              <Route path="logout" element={<Logout />} />
               <Route path="pharmacies" element={<Pharmacies />} />
               <Route path="users" element={<Users />} />
             </Route>
-            <Route element={<Layout />}>
-              <Route
-                element={
-                  <>
-                    <h2>Hello, World!</h2>
-                  </>
-                }
-              />
-              <Route
-                path="/doctor-home"
-                element={
-                  <ProtectedRoute>
-                    <DoctorHome />
-                  </ProtectedRoute>
-                }
-              />
+
+            {/* ------------------- Doctor   ------------------- */}
+
+            <Route
+              path="doctor"
+              element={
+                // <ProtectedRoute>
+                <Doctor />
+                /* </ProtectedRoute> */
+              }
+            >
+              <Route path="activate-account" element={<ActivateAccountDoc />} />
+              <Route path="add-clinic" element={<AddClinic />} />
+              <Route path="personal-info" element={<PersonalData />} />
+              <Route path="view-clinics" element={<ViewClinics />} />
             </Route>
           </Routes>
         </BrowserRouter>

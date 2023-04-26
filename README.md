@@ -12,5 +12,5 @@
 
 الموقع هيشتغل معاك زي الفل.
 
-متنساش تفتك ال سيرفر ال `PHP` Back-end وال `MySQL Server`
+متنساش تفتح ال سيرفر ال `PHP` Back-end وال `MySQL Server`
 

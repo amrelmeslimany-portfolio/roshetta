@@ -122,8 +122,32 @@
 }
 
 .login-btn {
-  width: 462px !important;
-  height: 63px !important;
+  width: 462px;
+  height: 51px;
+
+  background-color: #49ce91;
+  border-radius: 50px;
+  border: none;
+
+  font-family: 'Cairo';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 45px;
+  text-align: center;
+
+  text-decoration: none;
+
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border: 1px solid var(--primary-color);
+    background: transparent;
+    color: var(--primary-color);
+    transform: scale(1.04);
+  }
 }
 
 .auth-login__register-btn {

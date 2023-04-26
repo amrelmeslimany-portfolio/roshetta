@@ -29,13 +29,14 @@ ChartJS.register(
 const Dashboard = () => {
   return (
     <Space size={20} direction="vertical">
-      <h2>صفحة التحكم</h2>
+      <h2 className="text-3xl p-2">صفحة التحكم</h2>
+
       <Space direction="horizontal">
         <DashboardCard
           icon={
             <GiPlayerTime
               style={{
-                color: 'green',
+                color: '#49ce91',
                 backgroundColor: 'rgba(0,255,0,0.25)',
                 borderRadius: 20,
                 fontSize: 40,
@@ -50,8 +51,8 @@ const Dashboard = () => {
           icon={
             <MdLocalPharmacy
               style={{
-                color: 'purple',
-                backgroundColor: 'rgba(0,255,255,0.25)',
+                color: '#49ce91',
+                backgroundColor: 'rgba(0,255,0,0.25)',
                 borderRadius: 20,
                 fontSize: 40,
                 padding: 8,
@@ -65,8 +66,8 @@ const Dashboard = () => {
           icon={
             <MdOutlineLocalPharmacy
               style={{
-                color: 'red',
-                backgroundColor: 'rgba(255,0,0,0.25)',
+                color: '#49ce91',
+                backgroundColor: 'rgba(0,255,0,0.25)',
                 borderRadius: 20,
                 fontSize: 40,
                 padding: 8,
@@ -80,8 +81,8 @@ const Dashboard = () => {
           icon={
             <TbCurrencyDollarCanadian
               style={{
-                color: 'blue',
-                backgroundColor: 'rgba(0,0,255,0.25)',
+                color: '#49ce91',
+                backgroundColor: 'rgba(0,255,0,0.25)',
                 borderRadius: 20,
                 fontSize: 40,
                 padding: 8,
@@ -161,12 +162,13 @@ const DashboardChart = () => {
           {
             label: 'المريض المتسلخ',
             data: data,
-            backgroundColor: 'rgb(255, 77, 77)',
+            backgroundColor: '#49ce91',
           },
+
           {
             label: 'المريض الكحيان ههه',
             data: data,
-            backgroundColor: 'rgb(0, 0, 255)',
+            backgroundColor: 'rgba(0,255,0,0.25)',
           },
         ],
       };

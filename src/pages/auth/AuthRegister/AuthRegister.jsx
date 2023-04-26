@@ -13,9 +13,9 @@ import {
   IdcardFilled,
 } from '@ant-design/icons';
 import { DatePicker, Select, Alert } from 'antd';
-import './AuthRegister.scss';
 import images from '../../../images';
 import { useGlobalContext } from '../../../context';
+import './AuthRegister.scss';
 
 const AuthRegister = () => {
   const { setAuthUser, alert, setAlert } = useGlobalContext();
@@ -42,22 +42,6 @@ const AuthRegister = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    ({
-      role,
-      first_name: firstName,
-      last_name: lastName,
-      email,
-      governorate,
-      gender,
-      ssd,
-      phone_number: phoneNumber,
-      birth_date: birthDate,
-      password,
-      confirm_password: confirmPassword,
-      weight,
-      height,
-      specialist,
-    });
 
     formData.append('role', role);
     formData.append('first_name', firstName);
@@ -128,7 +112,7 @@ const AuthRegister = () => {
       })
         .then((res) => res.json())
         .then((data) => {
-          data;
+          console.log(data);
           setAuth(data.Status);
           if (data.Status > 299) {
             window.scrollTo({
@@ -397,7 +381,10 @@ const AuthRegister = () => {
               </div>
             </div>
           </div>
-          <button className="main__btn-fill" type="submit">
+          <button
+            className="text-white bg-roshetta text-2xl px-44 py-5 rounded-full hover:px-48 hover:py-6 transition-all "
+            type="submit"
+          >
             انشاء حساب
           </button>
         </form>

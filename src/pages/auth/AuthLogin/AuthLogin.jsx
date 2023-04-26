@@ -30,9 +30,9 @@ const AuthLogin = () => {
     });
 
     formData.append('role', role);
-    formData.append('email', email);
-    formData.append('ssd', ssd);
+    formData.append('user_id', ssd);
     formData.append('password', password);
+    formData.append('password_edit', '');
 
     if (ssd < 14 && password < 6 && role === null) {
       window.scrollTo({
@@ -89,7 +89,8 @@ const AuthLogin = () => {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data)
+        console.log(data.Message);
+        let message = data.Message;
         if (data.Status > 299) {
           window.scrollTo({
             top: 0,
@@ -97,7 +98,7 @@ const AuthLogin = () => {
             behavior: 'smooth',
           });
           setAlert({
-            msg: 'يوجد خطأ في تسجيل الدخول',
+            msg: `${message.password_err} \n ${message.type_err} \n ${message.user_id_err} `,
             show: true,
             type: 'error',
           });
@@ -199,8 +200,11 @@ const AuthLogin = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </div>
-          <button className="login-btn main__btn-fill" type="submit">
-            انشاء حساب
+          <button
+            className="bg-roshetta px-40 py-5 text-white rounded-full text-2xl "
+            type="submit"
+          >
+            تسجيل الدخول
           </button>
           <p className="auth-login__register-btn">
             <Link to={'/forget-password'}>هل نسيت كلمه المرور ؟</Link>
