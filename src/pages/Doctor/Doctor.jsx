@@ -11,12 +11,14 @@ const Doctor = () => {
     <>
       <div className="doctor">
         <DoctorHeader />
-        <Space className="SideMenuAndPageContent">
-          <DoctorSideMenu></DoctorSideMenu>
+        {/* <Space className="SideMenuAndPageContent"> */}
+        <div className="doctor-SideMenuAndPageContent">
+          <DoctorSideMenu />
           <div className="doctor__page-content">
             <Outlet />
           </div>
-        </Space>
+        </div>
+        {/* </Space> */}
         <DoctorFooter />
       </div>
     </>

@@ -25,14 +25,16 @@
 }
 
 .doctor__side-menu {
+  width: 15%;
   
 }
 
 .doctor__page-content {
-  padding-right: 12px;
+  width: 85%;
+  // padding-right: 12px;
 }
 
-.SideMenuAndPageContent {
+.doctor-SideMenuAndPageContent {
   display: flex;
   flex: 1;
   justify-content: flex-start;

@@ -10,6 +10,7 @@ import {
   ViewClinics,
   AuthLogin,
   AuthRegister,
+  ActiveEmail,
   HomePage,
   ForgetPassword,
   Home,
@@ -31,6 +32,7 @@ export default function App() {
           <Routes>
             <Route index path="/" element={<HomePage />} />
             <Route path="/login" element={<AuthLogin />} />
+            <Route path="/active-email" element={<ActiveEmail />} />
             <Route path="/register" element={<AuthRegister />} />
             <Route path="/forget-password" element={<ForgetPassword />} />
             {/* ------------------- Admin   ------------------- */}

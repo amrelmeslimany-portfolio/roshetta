@@ -126,6 +126,9 @@ const AuthRegister = () => {
               type: 'error',
             });
           } else {
+            localStorage.setItem('registerData', JSON.stringify([role, email]))
+            navigate('/active-email');
+
             // setRole('');
             // setFirstName('');
             // setLastName('');
@@ -140,7 +143,6 @@ const AuthRegister = () => {
             // setWeight('');
             // setHeight('');
             // setSpecialist('');
-            // navigate('/admin/dashboard');
           }
         });
     }

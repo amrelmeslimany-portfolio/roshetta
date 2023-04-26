@@ -19,7 +19,7 @@ import { useNavigate } from 'react-router-dom';
 const DoctorSideMenu = () => {
   const navigate = useNavigate();
   return (
-    <div className="admin__side-menu">
+    <div className="doctor__side-menu ">
       <Menu
         onClick={(item) => {
           // item.key

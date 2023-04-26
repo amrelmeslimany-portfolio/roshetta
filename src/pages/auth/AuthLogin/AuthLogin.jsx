@@ -19,15 +19,10 @@ const AuthLogin = () => {
   const navigate = useNavigate();
 
   let formData = new FormData();
+  const message = JSON.parse(localStorage.getItem('message'));
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    ({
-      role,
-      email,
-      ssd,
-      password,
-    });
 
     formData.append('role', role);
     formData.append('user_id', ssd);
@@ -103,12 +98,17 @@ const AuthLogin = () => {
             type: 'error',
           });
         } else {
-          setRole('');
-          setEmail('');
-          setPassword('');
-          setSsd('');
-
-          navigate('/admin/dashboard');
+          console.log(data);
+          localStorage.setItem('userData', JSON.stringify(data.Data));
+          if (data.Data.type === 'doctor') {
+            navigate('/doctor/personal-info');
+          } else if (data.Data.type === 'admin') {
+            navigate('/admin/dashboard');
+          }
+          // setRole('');
+          // setEmail('');
+          // setPassword('');
+          // setSsd('');
         }
       });
   };
@@ -124,6 +124,17 @@ const AuthLogin = () => {
   return (
     <>
       <div className="auth-login">
+        {message && (
+          <Alert
+            style={{
+              marginBottom: 20,
+            }}
+            message="رسالة!"
+            description={message}
+            type="success"
+            showIcon
+          />
+        )}
         {alert.show && (
           <Alert
             style={{
