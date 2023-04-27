@@ -444,6 +444,7 @@ function viewPharmacy($data, $num, $url)
         "address"               => $data->address,
         "status"                => $data->status,
         "number_of_prescript"   => $num['num_pres'],
+        'number_of_orders'      => $num['data_order'],
         "stuff"                 => [
             "name"           => $num['data_pharmacist']->name,
             "age"            => userAge($num['data_pharmacist']->birth_date),

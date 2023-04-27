@@ -103,9 +103,17 @@ class Pharmacist
             $data_pharmacist = $this->db->fetchObject();
         }
 
+        $this->db->query("SELECT * FROM pharmacy_order WHERE pharmacy_id = :ID");
+        $this->db->bind(":ID", $pharmacy_id);
+        $this->db->execute();
+        if ($this->db->rowCount() >= 0) {
+            $data_order = $this->db->rowCount();
+        }
+
         $data = [
             "num_pres" => $data_pres,
-            "data_pharmacist" => $data_pharmacist
+            "data_pharmacist" => $data_pharmacist,
+            'data_order' => $data_order,
         ];
 
         return $data;
