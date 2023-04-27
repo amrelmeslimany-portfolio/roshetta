@@ -4,6 +4,7 @@ import { MdEmail } from 'react-icons/md';
 import { Alert } from 'antd';
 import { useGlobalContext } from '../../../context';
 import { useNavigate } from 'react-router-dom';
+import { AppWrapper } from '../../../wrapper';
 
 const ActiveEmail = () => {
   const { setAuthUser, alert, setAlert } = useGlobalContext();
@@ -128,4 +129,4 @@ const ActiveEmail = () => {
   );
 };
 
-export default ActiveEmail;
+export default AppWrapper(ActiveEmail);

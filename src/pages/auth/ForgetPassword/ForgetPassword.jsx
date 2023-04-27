@@ -7,6 +7,7 @@ import { BiMessageAltCheck } from 'react-icons/bi';
 import { useGlobalContext } from '../../../context';
 import { Link, useNavigate } from 'react-router-dom';
 import './ForgetPassword.scss';
+import { AppWrapper } from '../../../wrapper';
 
 const ForgetPassword = () => {
   const { setAuthUser, alert, setAlert } = useGlobalContext();
@@ -194,4 +195,4 @@ const ForgetPassword = () => {
   );
 };
 
-export default ForgetPassword;
+export default AppWrapper(ForgetPassword);

@@ -1,13 +1,23 @@
 import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { LockFilled, IdcardFilled } from '@ant-design/icons';
 import { Alert, Select } from 'antd';
 
 import { useGlobalContext } from '../../../context';
 import images from '../../../images';
 import './AuthLogin.scss';
+import { AppWrapper } from '../../../wrapper';
 
 const AuthLogin = () => {
+  const userData = JSON.parse(localStorage.getItem('userData'));
+
+  if (JSON.parse(localStorage.getItem('userData'))) {
+    const userData = JSON.parse(localStorage.getItem('userData'));
+
+    if (userData.type === 'doctor') {
+      return <Navigate to="/doctor/personal-info" />;
+    }
+  }
   const { setAuthUser, alert, setAlert } = useGlobalContext();
   const [auth, setAuth] = useState('');
 
@@ -124,23 +134,12 @@ const AuthLogin = () => {
   return (
     <>
       <div className="auth-login">
-        {message && (
-          <Alert
-            style={{
-              marginBottom: 20,
-            }}
-            message="رسالة!"
-            description={message}
-            type="success"
-            showIcon
-          />
-        )}
         {alert.show && (
           <Alert
             style={{
               marginBottom: 20,
             }}
-            message="حدثت مشكلة"
+            message="عفواً!"
             description={alert.msg}
             type={alert.type}
             showIcon
@@ -233,4 +232,4 @@ const AuthLogin = () => {
   );
 };
 
-export default AuthLogin;
+export default AppWrapper(AuthLogin);

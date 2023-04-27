@@ -16,6 +16,7 @@ import { DatePicker, Select, Alert } from 'antd';
 import images from '../../../images';
 import { useGlobalContext } from '../../../context';
 import './AuthRegister.scss';
+import { AppWrapper } from '../../../wrapper';
 
 const AuthRegister = () => {
   const { setAuthUser, alert, setAlert } = useGlobalContext();
@@ -126,7 +127,7 @@ const AuthRegister = () => {
               type: 'error',
             });
           } else {
-            localStorage.setItem('registerData', JSON.stringify([role, email]))
+            localStorage.setItem('registerData', JSON.stringify([role, email]));
             navigate('/active-email');
 
             // setRole('');
@@ -401,4 +402,4 @@ const AuthRegister = () => {
   );
 };
 
-export default AuthRegister;
+export default AppWrapper(AuthRegister);
