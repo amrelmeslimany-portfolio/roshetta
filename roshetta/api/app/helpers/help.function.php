@@ -418,7 +418,7 @@ function pharmacyMessageDetails($data, $url)
         "governorate"                   => $data['data_pharmacy']->governorate,
         "phone_number"                  => $data['data_pharmacy']->phone_number,
         "start_working"                 => $data['data_pharmacy']->start_working,
-        "end_working"                   => $data['data_pharmacy']->phone_number,
+        "end_working"                   => $data['data_pharmacy']->end_working,
         "address"                       => $data['data_pharmacy']->address,
         "status"                        => $data['data_pharmacy']->status,
         "number_prescript_pharmacy"     => $data['number_prescript_pharmacy'],
