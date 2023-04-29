@@ -242,7 +242,7 @@ class Patient
             false;
         }
     }
-    public function getDataPrescriptDisease($id,$dis_id)
+    public function getDataPrescriptDisease($id, $dis_id)
     {
         $this->db->query("SELECT prescript.id AS prescript_id,ser_id,created_date,name AS disease_name FROM disease,prescript WHERE disease.id = :ID_DIS AND disease.id = prescript.disease_id AND prescript.patient_id = :ID  ORDER BY created_date DESC");
         $this->db->bind(":ID", $id);
@@ -291,5 +291,29 @@ class Patient
         } else {
             false;
         }
+    }
+
+    public function getDataOrders($id)
+    {
+        $this->db->query("SELECT pharmacy_order.id AS order_id,pharmacy_order.time,pharmacy_order.prescript_id,prescript.ser_id,pharmacy.name As pharmacy_name  FROM pharmacy_order,patient,prescript,pharmacy WHERE prescript.id = pharmacy_order.prescript_id AND pharmacy.id = pharmacy_order.pharmacy_id AND patient.id = pharmacy_order.patient_id AND patient.id = :ID AND  pharmacy_order.status = 0");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount() > 0) {
+            $data = $this->db->fetchAll();
+            return $data;
+        } else {
+            false;
+        }
+    }
+
+    public function deleteOrder($id)
+    {
+        $this->db->query("DELETE FROM pharmacy_order WHERE id = :ID");
+        $this->db->bind(":ID", $id);
+        $this->db->execute();
+        if ($this->db->rowCount())
+            return true;
+        else
+            false;
     }
 }

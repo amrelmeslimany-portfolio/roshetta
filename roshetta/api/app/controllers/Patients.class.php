@@ -919,4 +919,108 @@ class Patients extends Controller // Extends The Controller
             die();
         }
     }
+
+    //*************************************************** View Orders **************************************************************//
+
+    public function view_orders()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+
+            $data = [
+                "id" => $this->CheckToken['id'],
+                "type" => $this->CheckToken['type'],
+            ];
+
+            if ($data['type'] != 'patient') {
+                $Message = 'غير مصرح لك الإطلاع على التفاصيل';
+                $Status = 403;
+                userMessage($Status, $Message);
+                die();
+            }
+
+            $data_order = $this->patientModel->getDataOrders($data['id']);
+            if (!$data_order) {
+                $Message = 'لم يتم العثور على طلبات';
+                $Status = 200;
+                userMessage($Status, $Message, );
+                die();
+            }
+
+            $Message = 'تم جلب البيانات بنجاح';
+            $Status = 200;
+            userMessage($Status, $Message, $data_order);
+            die();
+
+        } else {
+            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status = 405;
+            userMessage($Status, $Message);
+            die();
+        }
+    }
+
+    //*************************************************** Delete Orders **************************************************************//
+
+    public function delete_order()
+    {
+        if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+
+            $data = [
+                "id" => $this->CheckToken['id'],
+                "type" => $this->CheckToken['type'],
+                "order_id" => @$_GET['order_id']
+            ];
+
+            $data_err = [
+                'order_id_err' => ''
+            ];
+
+            if ($data['type'] != 'patient') {
+                $Message = 'غير مصرح لك الحذف ';
+                $Status = 403;
+                userMessage($Status, $Message);
+                die();
+            }
+
+            if (empty($data['order_id'])) {
+                $data_err['order_id_err'] = 'برجاء إدخال معرف الطلب';
+            } else {
+                @$data_order = $this->userModel->getPlace('pharmacy_order', $data['order_id']);
+                if (!$data_order) {
+                    $data_err['order_id_err'] = 'معرف الطلب غير صحيح';
+                } else {
+                    if ($data_order->patient_id != $data['id']) {
+                        $data_err['order_id_err'] = 'هذا الطلب ليس لك للقيام بالحذف';
+                    }
+                }
+            }
+
+            if (empty($data_err['order_id_err'])) {
+
+                if (!$this->patientModel->deleteOrder($data['order_id'])) {
+                    $Message = 'فشل الحذف';
+                    $Status = 400;
+                    userMessage($Status, $Message);
+                    die();
+                }
+
+                $Message = 'تم الحذف بنجاح';
+                $Status = 201;
+                userMessage($Status, $Message);
+                die();
+
+            } else {
+                $Message = $data_err;
+                $Status = 400;
+                userMessage($Status, $Message);
+                die();
+            }
+
+        } else {
+            $Message = 'غير مصرح الدخول عبر هذة الطريقة';
+            $Status = 405;
+            userMessage($Status, $Message);
+            die();
+        }
+    }
 }

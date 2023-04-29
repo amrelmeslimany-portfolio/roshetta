@@ -778,12 +778,13 @@ class Pharmacists extends Controller
                 "id" => $this->CheckToken['id'],
                 "type" => $this->CheckToken['type'],
                 "pharmacy_id" => @$id,
-                "prescript_id" => @$_GET['prescript_id']
+                "prescript_id" => @$_GET['prescript_id'],
+                "order_id" => @$_GET['order_id'],
             ];
 
             $data_err = [
                 "pharmacy_id_err" => '',
-                "prescript_id_err" => ''
+                "prescript_id_err" => '',
             ];
 
             if ($data['type'] != 'pharmacist') {
@@ -845,6 +846,18 @@ class Pharmacists extends Controller
             if (empty($data_err['pharmacy_id_err']) && empty($data_err['prescript_id_err'])) {
 
                 if ($this->pharmacistModel->payPrescript($data['pharmacy_id'], $data['prescript_id'])) {
+
+                    if (!empty($data['order_id'])) {
+                        if ($this->userModel->getPlace('pharmacy_order', $data['order_id'])) {
+                            if (!$this->pharmacistModel->editStatusPre($data['order_id'])) {
+                                $Message = 'فشل تعديل حالة الطلب';
+                                $Status = 422;
+                                userMessage($Status, $Message);
+                                die();
+                            }
+                        }
+                    }
+
                     $Message = 'تم الصرف بنجاح';
                     $Status = 201;
                     userMessage($Status, $Message);
@@ -855,6 +868,7 @@ class Pharmacists extends Controller
                 $Status = 422;
                 userMessage($Status, $Message);
                 die();
+
             } else {
                 $Message = $data_err;
                 $Status = 400;
