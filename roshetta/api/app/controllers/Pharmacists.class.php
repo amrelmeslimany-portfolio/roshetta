@@ -2,12 +2,13 @@
 
 class Pharmacists extends Controller
 {
-    private $CheckToken, $doctorModel, $userModel, $pharmacistModel;
+    private $CheckToken, $doctorModel, $userModel, $pharmacistModel,$patientModel;
     public function __construct()
     {
-        $this->pharmacistModel = $this->model('pharmacist');
+        $this->pharmacistModel = $this->model('Pharmacist');
         $this->userModel = $this->model('User');
-        $this->doctorModel = $this->model('doctor');
+		$this->doctorModel = $this->model('Doctor');
+		$this->patientModel = $this->model('Patient');
         $this->CheckToken = $this->tokenVerify();
         if (!$this->CheckToken) {
             $Message = 'الرجاء تسجيل الدخول';
@@ -568,7 +569,7 @@ class Pharmacists extends Controller
             if (empty($data['type_filter'])) {
                 $data_err['type_filter_err'] = 'برجاء إدخال النوع';
             } else {
-                $type_filter = ['ssd', 'ser_id', 'prescript_id'];
+                $type_filter = ['ssd', 'ser_id', 'id'];
                 if (!in_array($data['type_filter'], $type_filter))
                     $data_err['type_filter_err'] = 'النوع غير مدعوم';
             }
@@ -576,13 +577,36 @@ class Pharmacists extends Controller
             if (empty($data_err['pharmacy_id_err']) && empty($data_err['user_id_err']) && empty($data_err['type_filter_err'])) {
 
                 if ($data['type_filter'] == 'ssd') {
-                    $data_message = $this->pharmacistModel->getPrescript($data['user_id']);
-                    if (!$data_message) {
+
+                    $data_message_old = $this->pharmacistModel->getPrescript($data['user_id']);
+                    if (!$data_message_old) {
                         $Message = 'لم يتم العثور على بيانات';
                         $Status = 204;
                         userMessage($Status, $Message);
                         die();
                     }
+
+					$data_message = [];
+					foreach ($data_message_old as $element) {
+
+						@$pres_Order = $this->patientModel->getPrescriptIsOrder($element['prescript_id']);
+						@$pres_confirm = $this->patientModel->getPrescriptIsConfirm($element['prescript_id']);
+						$prescriptStatus = 'none';
+						if ($pres_confirm) {
+							$prescriptStatus = 'done';
+						}
+						if ($pres_Order) {
+							foreach ($pres_Order as $one_order){
+								if ($one_order['status'] == 0){
+									$prescriptStatus = 'isOrder';
+								}
+							}
+						}
+
+						$element['prescriptStatus'] = $prescriptStatus;
+						$data_message[] = $element;
+					}
+
                 } else {
                     $data_pre = $this->pharmacistModel->getPrescriptDetails($data['user_id']);
                     if (!$data_pre) {
@@ -608,6 +632,23 @@ class Pharmacists extends Controller
                     $url = URL_PLACE;
                     $new_data_pre = [];
                     foreach ($data_pre as $element) {
+
+						@$pres_Order = $this->patientModel->getPrescriptIsOrder($element['prescript_id']);
+						@$pres_confirm = $this->patientModel->getPrescriptIsConfirm($element['prescript_id']);
+						$prescriptStatus = 'none';
+						if ($pres_confirm) {
+							$prescriptStatus = 'done';
+						}
+						if ($pres_Order) {
+							foreach ($pres_Order as $one_order){
+								if ($one_order['status'] == 0){
+									$prescriptStatus = 'isOrder';
+								}
+							}
+						}
+
+						$element['prescriptStatus'] = $prescriptStatus;
+
                         $element['clinic_logo'] = getImage($element['clinic_logo'], $url);
                         $new_data_pre[] = $element;
                     }
@@ -617,16 +658,18 @@ class Pharmacists extends Controller
                         $new_decode_medicine[] = $element;
                     }
 
-                    $data_message = [
+					$data_message = [
                         "prescript_data" => $new_data_pre,
                         "medicine_data" => $new_decode_medicine
                     ];
                 }
 
-                $Message = 'تم جلب البيانات بنجاح';
-                $Status = 200;
-                userMessage($Status, $Message, $data_message);
-                die();
+
+				$Message = 'تم جلب البيانات بنجاح';
+				$Status = 200;
+				userMessage($Status, $Message, $data_message);
+				die();
+
             } else {
                 $Message = $data_err;
                 $Status = 400;

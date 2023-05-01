@@ -876,6 +876,22 @@ class Patients extends Controller // Extends The Controller
                 $url = URL_PLACE;
                 $new_result_prescript = [];
                 foreach ($result_prescript as $element) {
+
+					@$pres_Order = $this->patientModel->getPrescriptIsOrder($element['prescript_id']);
+					@$pres_confirm = $this->patientModel->getPrescriptIsConfirm($element['prescript_id']);
+					$prescriptStatus = 'none';
+					if ($pres_confirm) {
+						$prescriptStatus = 'done';
+					}
+					if ($pres_Order) {
+						foreach ($pres_Order as $one_order){
+							if ($one_order['status'] == 0){
+								$prescriptStatus = 'isOrder';
+							}
+						}
+					}
+
+					$element['prescriptStatus'] = $prescriptStatus;
                     $element['clinic_logo'] = getImage($element['clinic_logo'], $url);
                     $new_result_prescript[] = $element;
                 }

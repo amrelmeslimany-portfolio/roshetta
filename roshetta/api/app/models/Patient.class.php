@@ -313,7 +313,7 @@ class Patient
     }
     public function getPrescriptDetails($prescript_id, $patient_id)
     {
-        $this->db->query("SELECT prescript.ser_id AS prescript_ser_id,created_date,patient.name AS patient_name, disease.name AS disease_name,rediscovery_date,doctor.name AS doctor_name,doctor.specialist AS doctor_specialist,logo AS clinic_logo,clinic.name AS clinic_name,clinic.phone_number AS clinic_phone_number,address AS clinic_address,start_working,end_working  FROM  disease,prescript,doctor,clinic,patient WHERE  disease.id = prescript.disease_id AND prescript.patient_id = patient.id AND patient.id = :PA_ID AND prescript.doctor_id = doctor.id AND prescript.clinic_id = clinic.id  AND prescript.id = :PR_ID");
+        $this->db->query("SELECT prescript.id AS prescript_id ,prescript.ser_id AS prescript_ser_id,created_date,patient.name AS patient_name, disease.name AS disease_name,rediscovery_date,doctor.name AS doctor_name,doctor.specialist AS doctor_specialist,logo AS clinic_logo,clinic.name AS clinic_name,clinic.phone_number AS clinic_phone_number,address AS clinic_address,start_working,end_working  FROM  disease,prescript,doctor,clinic,patient WHERE  disease.id = prescript.disease_id AND prescript.patient_id = patient.id AND patient.id = :PA_ID AND prescript.doctor_id = doctor.id AND prescript.clinic_id = clinic.id  AND prescript.id = :PR_ID");
         $this->db->bind(":PR_ID", $prescript_id);
         $this->db->bind(":PA_ID", $patient_id);
         $this->db->execute();
