@@ -416,10 +416,6 @@ class Pharmacists extends Controller
                     die();
                 }
 
-                if (!$this->pharmacistModel->deleteOrder($data['pharmacy_id'])) {
-                    /********** */
-                }
-
                 @$data_login = $this->pharmacistModel->loginPharmacy($data['pharmacy_id'], $data['id']);
 
                 $data_pharmacy = viewPharmacy($data_login, $num, $url);
@@ -655,7 +651,6 @@ class Pharmacists extends Controller
                 "type" => $this->CheckToken['type'],
                 "pharmacy_id" => @$id,
                 "filter" => @$_GET['filter'],
-                "type_pre" => @$_GET['type']
             ];
 
             $data_err = [
@@ -713,47 +708,38 @@ class Pharmacists extends Controller
 
             if (empty($data_err['pharmacy_id_err'])) {
 
-                if (empty($data['type_pre']) || $data['type_pre'] == 'wating') {
-                    if (empty($data['filter'])) {
-                        $data_order = $this->pharmacistModel->getOrder($data['pharmacy_id']);
-                        if (!$data_order) {
-                            $Message = 'لم يتم العثور على بيانات';
-                            $Status = 204;
-                            userMessage($Status, $Message);
-                            die();
-                        }
-                    } else {
-                        $data_order = $this->pharmacistModel->getOrderFilter($data['pharmacy_id'], $data['filter']);
-                        if (!$data_order) {
-                            $Message = 'لم يتم العثور على بيانات';
-                            $Status = 204;
-                            userMessage($Status, $Message);
-                            die();
-                        }
-                    }
-                } else {
-                    if (empty($data['filter'])) {
-                        $data_order = $this->pharmacistModel->getOrderPay($data['pharmacy_id']);
-                        if (!$data_order) {
-                            $Message = 'لم يتم العثور على بيانات';
-                            $Status = 204;
-                            userMessage($Status, $Message);
-                            die();
-                        }
-                    } else {
-                        $data_order = $this->pharmacistModel->getOrderPayFilter($data['pharmacy_id'], $data['filter']);
-                        if (!$data_order) {
-                            $Message = 'لم يتم العثور على بيانات';
-                            $Status = 204;
-                            userMessage($Status, $Message);
-                            die();
-                        }
-                    }
-                }
+				if (empty($data['filter'])) {
+					$data_order = $this->pharmacistModel->getOrder($data['pharmacy_id']);
+					if (!$data_order) {
+						$Message = 'لم يتم العثور على بيانات';
+						$Status = 204;
+						userMessage($Status, $Message);
+						die();
+					}
+				} else {
+					$data_order = $this->pharmacistModel->getOrderFilter($data['pharmacy_id'], $data['filter']);
+					if (!$data_order) {
+						$Message = 'لم يتم العثور على بيانات';
+						$Status = 204;
+						userMessage($Status, $Message);
+						die();
+					}
+				}
+
+				$new_orders = [];
+				foreach ($data_order as $order){
+					$orderStatus = 'wating';
+					if ($order['status'] == 1){
+						$orderStatus = 'done';
+					}
+					unset($order['status']);
+					$order['orderStatus'] = $orderStatus;
+					$new_orders[] = $order;
+				}
 
                 $Message = 'تم جلب البيانات بنجاح';
                 $Status = 200;
-                userMessage($Status, $Message, $data_order);
+                userMessage($Status, $Message, $new_orders);
                 die();
             } else {
                 $Message = $data_err;
@@ -768,6 +754,110 @@ class Pharmacists extends Controller
             die();
         }
     }
+
+	//***************************************************************** View Pay Prescript ***********************************************************//
+	public function view_pay_prescript($id = null)
+	{
+		if ($_SERVER['REQUEST_METHOD'] == 'GET') {
+
+			$data = [
+				"id" => $this->CheckToken['id'],
+				"type" => $this->CheckToken['type'],
+				"pharmacy_id" => @$id,
+				"filter" => @$_GET['filter'],
+			];
+
+			$data_err = [
+				"pharmacy_id_err" => ''
+			];
+
+			if ($data['type'] != 'pharmacist') {
+				$Message = 'غير مصرح لك الإطلاع على الطلبات';
+				$Status = 403;
+				userMessage($Status, $Message);
+				die();
+			} else {
+				@$get_pharmacist = $this->pharmacistModel->getPharmacistActivation($data['id']);
+				if (!$get_pharmacist) {
+					$Message = 'يجب تنشيط الحساب';
+					$Status = 400;
+					userMessage($Status, $Message);
+					die();
+				}
+
+				if ($get_pharmacist->isActive != 1) {
+					$Message = 'الرجاء الإنتظار حتى يتم تنشيط الحساب';
+					$Status = 400;
+					userMessage($Status, $Message);
+					die();
+				}
+			}
+
+			if (empty($data['pharmacy_id'])) {
+				$data_err['pharmacy_id_err'] = 'برجاء إدخال معرف الصيدلية';
+			} else {
+				if (!filter_var($data['pharmacy_id'], 257)) {
+					$data_err['pharmacy_id_err'] = 'معرف الصيدلية غير صالح';
+				} else {
+					@$result = $this->userModel->getPlace('pharmacy', $data['pharmacy_id']);
+					if (!$result) {
+						$data_err['pharmacy_id_err'] = 'معرف الصيدلية غير صحيح';
+					} else {
+						@$get_pharmacy = $this->pharmacistModel->getPharmacyActivation($data['pharmacy_id']);
+						if (!$get_pharmacy) {
+							$Message = 'يجب تنشيط الصيدلية';
+							$Status = 400;
+							userMessage($Status, $Message);
+							die();
+						}
+						if ($get_pharmacy->isActive != 1) {
+							$Message = 'الرجاء الإنتظار حتى يتم تنشيط الصيدلية';
+							$Status = 400;
+							userMessage($Status, $Message);
+							die();
+						}
+					}
+				}
+			}
+
+			if (empty($data_err['pharmacy_id_err'])) {
+
+					if (empty($data['filter'])) {
+						$data_order = $this->pharmacistModel->getOrderPay($data['pharmacy_id']);
+						if (!$data_order) {
+							$Message = 'لم يتم العثور على بيانات';
+							$Status = 204;
+							userMessage($Status, $Message);
+							die();
+						}
+					} else {
+						$data_order = $this->pharmacistModel->getOrderPayFilter($data['pharmacy_id'], $data['filter']);
+						if (!$data_order) {
+							$Message = 'لم يتم العثور على بيانات';
+							$Status = 204;
+							userMessage($Status, $Message);
+							die();
+						}
+					}
+
+
+				$Message = 'تم جلب البيانات بنجاح';
+				$Status = 200;
+				userMessage($Status, $Message, $data_order);
+				die();
+			} else {
+				$Message = $data_err;
+				$Status = 400;
+				userMessage($Status, $Message);
+				die();
+			}
+		} else {
+			$Message = 'غير مصرح الدخول عبر هذة الطريقة';
+			$Status = 405;
+			userMessage($Status, $Message);
+			die();
+		}
+	}
 
     //***************************************************************** Pay Prescript ***********************************************************//
     public function confirm_pay_prescript($id = null)
@@ -845,24 +935,44 @@ class Pharmacists extends Controller
 
             if (empty($data_err['pharmacy_id_err']) && empty($data_err['prescript_id_err'])) {
 
-                if ($this->pharmacistModel->payPrescript($data['pharmacy_id'], $data['prescript_id'])) {
+				if (empty($data['order_id'])) {
+					if ($this->pharmacistModel->payPrescript($data['pharmacy_id'], $data['prescript_id'])){
+						$Message = 'تم الصرف بنجاح';
+						$Status = 201;
+						userMessage($Status, $Message);
+						die();
+					}
+				}
 
-                    if (!empty($data['order_id'])) {
-                        if ($this->userModel->getPlace('pharmacy_order', $data['order_id'])) {
-                            if (!$this->pharmacistModel->editStatusPre($data['order_id'])) {
-                                $Message = 'فشل تعديل حالة الطلب';
-                                $Status = 422;
-                                userMessage($Status, $Message);
-                                die();
-                            }
-                        }
-                    }
-
-                    $Message = 'تم الصرف بنجاح';
-                    $Status = 201;
-                    userMessage($Status, $Message);
-                    die();
-                }
+				if (!empty($data['order_id'])) {
+					@$status_order = $this->userModel->getPlace('pharmacy_order', $data['order_id']);
+					if ($status_order) {
+						if ($status_order->status == 1) {
+							$Message = 'تم صرف هذا الطلب من قبل';
+							$Status = 400;
+							userMessage($Status, $Message);
+							die();
+						}
+						if ($status_order->prescript_id != $data['prescript_id']) {
+							$Message = 'هذا الطلب لا يتطابق مع معرف الروشتة';
+							$Status = 400;
+							userMessage($Status, $Message);
+							die();
+						}
+						if (!$this->pharmacistModel->editStatusPre($data['order_id'])) {
+							$Message = 'فشل تعديل حالة الطلب';
+							$Status = 422;
+							userMessage($Status, $Message);
+							die();
+						}
+						if ($this->pharmacistModel->payPrescript($data['pharmacy_id'], $data['prescript_id'])){
+							$Message = 'تم الصرف بنجاح';
+							$Status = 201;
+							userMessage($Status, $Message);
+							die();
+						}
+					}
+				}
 
                 $Message = 'الرجاء المحاولة فى وقت لأحق';
                 $Status = 422;

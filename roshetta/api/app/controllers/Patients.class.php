@@ -653,9 +653,27 @@ class Patients extends Controller // Extends The Controller
             if (!empty($disease_id)) {
                 if (!$this->userModel->getPlace('disease', $disease_id)) {
                     @$result = $this->patientModel->getDataPrescript($data['id']);
+					$new_result = [];
+					foreach ($result as $pres) {
+						@$pres_Order = $this->patientModel->getPrescriptIsOrder($pres['prescript_id']);
+						@$pres_confirm = $this->patientModel->getPrescriptIsConfirm($pres['prescript_id']);
+						$prescriptStatus = 'none';
+						if ($pres_confirm) {
+							$prescriptStatus = 'done';
+						}
+						if ($pres_Order) {
+							foreach ($pres_Order as $one_order){
+								if ($one_order['status'] == 0){
+									$prescriptStatus = 'isOrder';
+								}
+							}
+						}
+						$pres['prescriptStatus'] = $prescriptStatus;
+						$new_result[] = $pres;
+					}
                     $Message = 'معرف المرض غير صحيح';
                     $Status = 400;
-                    userMessage($Status, $Message, $result);
+                    userMessage($Status, $Message, $new_result);
                     die();
                 }
                 @$result = $this->patientModel->getDataPrescriptDisease($data['id'], $disease_id);
@@ -670,9 +688,28 @@ class Patients extends Controller // Extends The Controller
                 die();
             }
 
+			$new_result = [];
+			foreach ($result as $pres) {
+				@$pres_Order = $this->patientModel->getPrescriptIsOrder($pres['prescript_id']);
+				@$pres_confirm = $this->patientModel->getPrescriptIsConfirm($pres['prescript_id']);
+				$prescriptStatus = 'none';
+				if ($pres_confirm) {
+					$prescriptStatus = 'done';
+				}
+				if ($pres_Order) {
+					foreach ($pres_Order as $one_order){
+						if ($one_order['status'] == 0){
+							$prescriptStatus = 'isOrder';
+						}
+					}
+				}
+				$pres['prescriptStatus'] = $prescriptStatus;
+				$new_result[] = $pres;
+			}
+
             $Message = 'تم جلب البيانات بنجاح';
             $Status = 200;
-            userMessage($Status, $Message, $result);
+            userMessage($Status, $Message, $new_result);
             die();
         } else {
             $Message = 'غير مصرح الدخول عبر هذة الطريقة';
@@ -725,8 +762,19 @@ class Patients extends Controller // Extends The Controller
                 if (!filter_var($data['prescript_id'], 257)) {
                     $data_err['prescript_id_err'] = 'معرف الروشتة غير صالح';
                 } else {
-                    if (!$this->patientModel->getPlace($data['prescript_id'], 'prescript'))
-                        $data_err['prescript_id_err'] = 'معرف الروشتة غير صحيح';
+                    if (!$this->patientModel->getPlace($data['prescript_id'], 'prescript')){
+						$data_err['prescript_id_err'] = 'معرف الروشتة غير صحيح';
+					} else {
+						@$status = $this->patientModel->getPrescriptStatusInOrders($data['prescript_id'],$data['pharmacy_id']);
+						if ($status) {
+							foreach ($status as $stat){
+								if ($stat['status'] == 0) {
+									$data_err['prescript_id_err'] = 'الطلب موجود من قبل ولم يتم الصرف حتى الان';
+								}
+							}
+						}
+					}
+
                 }
             }
 

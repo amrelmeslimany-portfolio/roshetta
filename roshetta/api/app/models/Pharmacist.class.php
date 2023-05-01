@@ -19,16 +19,6 @@ class Pharmacist
             false;
         }
     }
-    public function deleteOrder($id)
-    {
-        $this->db->query("DELETE FROM pharmacy_order WHERE pharmacy_id = :ID AND status = 1 ");
-        $this->db->bind(":ID", $id);
-        $this->db->execute();
-        if ($this->db->rowCount())
-            return true;
-        else
-            false;
-    }
 
     public function getPharmacy($id)
     {
@@ -192,7 +182,7 @@ class Pharmacist
     }
     public function getOrder($id)
     {
-        $this->db->query("SELECT pharmacy_order.id AS order_id,pharmacy_order.time,pharmacy_order.prescript_id,prescript.ser_id,patient.name AS patient_name,patient.phone_number AS patient_phone_number FROM pharmacy_order,patient,prescript,pharmacy WHERE pharmacy.id = :ID AND pharmacy_order.pharmacy_id = pharmacy.id AND pharmacy_order.prescript_id = prescript.id AND prescript.patient_id = patient.id AND pharmacy_order.status = 0 ORDER BY pharmacy_order.time DESC");
+        $this->db->query("SELECT pharmacy_order.id AS order_id,pharmacy_order.time,pharmacy_order.prescript_id,prescript.ser_id,patient.name AS patient_name,patient.phone_number AS patient_phone_number,pharmacy_order.status FROM pharmacy_order,patient,prescript,pharmacy WHERE pharmacy.id = :ID AND pharmacy_order.pharmacy_id = pharmacy.id AND pharmacy_order.prescript_id = prescript.id AND pharmacy_order.patient_id = patient.id ");
         $this->db->bind(":ID", $id);
         $this->db->execute();
         if ($this->db->rowCount() > 0) {
@@ -204,7 +194,7 @@ class Pharmacist
     }
     public function getOrderFilter($id, $filter)
     {
-        $this->db->query("SELECT pharmacy_order.id AS order_id,pharmacy_order.time,pharmacy_order.prescript_id,prescript.ser_id,patient.name AS patient_name,patient.phone_number AS patient_phone_number FROM pharmacy_order,patient,prescript,pharmacy WHERE pharmacy.id = :ID AND pharmacy_order.pharmacy_id = pharmacy.id AND pharmacy_order.prescript_id = prescript.id AND prescript.patient_id = patient.id AND pharmacy_order.status = 0 AND (patient.name REGEXP :FILTER OR patient.ssd REGEXP :FILTER OR prescript.ser_id REGEXP :FILTER) ORDER BY pharmacy_order.time DESC");
+        $this->db->query("SELECT pharmacy_order.id AS order_id,pharmacy_order.time,pharmacy_order.prescript_id,prescript.ser_id,patient.name AS patient_name,patient.phone_number AS patient_phone_number,pharmacy_order.status FROM pharmacy_order,patient,prescript,pharmacy WHERE pharmacy.id = :ID AND pharmacy_order.pharmacy_id = pharmacy.id AND pharmacy_order.prescript_id = prescript.id AND pharmacy_order.patient_id = patient.id AND (patient.name REGEXP :FILTER OR patient.ssd REGEXP :FILTER OR prescript.ser_id REGEXP :FILTER)");
         $this->db->bind(":ID", $id);
         $this->db->bind(":FILTER", $filter);
         $this->db->execute();

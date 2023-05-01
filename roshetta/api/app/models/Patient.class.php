@@ -17,6 +17,20 @@ class Patient
         else
             false;
     }
+
+	public function getPrescriptStatusInOrders($prescript_id, $pharmacy_id)
+	{
+		$this->db->query("SELECT * FROM pharmacy_order WHERE prescript_id = :PRE_ID AND pharmacy_id = :PHA_ID");
+		$this->db->bind(":PRE_ID", $prescript_id);
+		$this->db->bind(":PHA_ID", $pharmacy_id);
+		$this->db->execute();
+		if ($this->db->rowCount() > 0) {
+			$data = $this->db->fetchAll();
+				return $data;
+		}  else{
+			  	false;
+		}
+	}
     public function getAppointStatus($id)
     {
         $this->db->query("SELECT * FROM appointment,patient WHERE patient.id = :ID AND appointment.patient_id = patient.id");
@@ -113,6 +127,33 @@ class Patient
         else
             false;
     }
+
+	public function getPrescriptIsOrder($id)
+	{
+		$this->db->query("SELECT * FROM pharmacy_order WHERE prescript_id = :ID");
+		$this->db->bind(":ID", $id);
+		$this->db->execute();
+		if ($this->db->rowCount() > 0) {
+			   $data = $this->db->fetchAll();
+			   return $data;
+		} else {
+			false;
+		}
+	}
+
+	public function getPrescriptIsConfirm($id)
+	{
+		$this->db->query("SELECT * FROM pharmacy_prescript WHERE prescript_id = :ID");
+		$this->db->bind(":ID", $id);
+		$this->db->execute();
+		if ($this->db->rowCount() > 0) {
+			$data = $this->db->fetchAll();
+			return $data;
+		} else {
+			false;
+		}
+	}
+
     public function getDataClinic()
     {
         $this->db->query("SELECT clinic.id AS clinic_id,name,logo,specialist,governorate,status As isOpen FROM activation_place,clinic WHERE activation_place.isActive = 1 AND activation_place.place_id = clinic.id AND activation_place.role = 'clinic'");
@@ -230,6 +271,21 @@ class Patient
             false;
         }
     }
+
+	public function getDataPrescriptDisease($id, $dis_id)
+	{
+		$this->db->query("SELECT prescript.id AS prescript_id,ser_id,created_date,name AS disease_name FROM disease,prescript WHERE disease.id = :ID_DIS AND disease.id = prescript.disease_id AND prescript.patient_id = :ID  ORDER BY created_date DESC");
+		$this->db->bind(":ID", $id);
+		$this->db->bind(":ID_DIS", $dis_id);
+		$this->db->execute();
+		if ($this->db->rowCount() > 0) {
+			$data = $this->db->fetchAll();
+			return $data;
+		} else {
+			false;
+		}
+	}
+
     public function getDataPrescript($id)
     {
         $this->db->query("SELECT prescript.id AS prescript_id,ser_id,created_date,name AS disease_name FROM disease,prescript WHERE disease.id = prescript.disease_id AND prescript.patient_id = :ID  ORDER BY created_date DESC");
@@ -242,19 +298,7 @@ class Patient
             false;
         }
     }
-    public function getDataPrescriptDisease($id, $dis_id)
-    {
-        $this->db->query("SELECT prescript.id AS prescript_id,ser_id,created_date,name AS disease_name FROM disease,prescript WHERE disease.id = :ID_DIS AND disease.id = prescript.disease_id AND prescript.patient_id = :ID  ORDER BY created_date DESC");
-        $this->db->bind(":ID", $id);
-        $this->db->bind(":ID_DIS", $dis_id);
-        $this->db->execute();
-        if ($this->db->rowCount() > 0) {
-            $data = $this->db->fetchAll();
-            return $data;
-        } else {
-            false;
-        }
-    }
+
     public function addOrderPatient($data = [])
     {
         $this->db->query("INSERT INTO pharmacy_order(status,patient_id,prescript_id,pharmacy_id) VALUES (0,:PA_ID,:PR_ID,:PH_ID)");
