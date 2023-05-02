@@ -51,7 +51,7 @@ const DoctorSideMenu = () => {
             label: 'تسجيل الخروج',
             icon: <UserOutlined style={{ color: '#49ce91' }} />,
             key: '/login',
-            onClick: () => logOut(),
+            onClick: () => logOut().then((data) => console.log(data)),
           },
         ]}
       ></Menu>

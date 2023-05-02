@@ -385,7 +385,7 @@ const AuthRegister = () => {
             </div>
           </div>
           <button
-            className="text-white bg-roshetta text-2xl px-44 py-5 rounded-full hover:px-48 hover:py-6 transition-all "
+            className="foucs:outline-2 mt-6 rounded-full bg-roshetta px-40 py-3 text-2xl text-white hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300  active:bg-green-600"
             type="submit"
           >
             انشاء حساب

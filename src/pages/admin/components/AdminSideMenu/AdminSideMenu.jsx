@@ -15,6 +15,7 @@ import {
 } from 'react-icons/md';
 import { TbActivityHeartbeat, TbUsers } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
+import { logOut } from '../../API';
 
 const AdminSideMenu = () => {
   const navigate = useNavigate();
@@ -64,7 +65,8 @@ const AdminSideMenu = () => {
           {
             label: 'تسجيل الخروج',
             icon: <UserOutlined style={{ color: '#49ce91' }} />,
-            key: '/',
+            key: '/login',
+            onClick: () => logOut().then((data) => console.log(data)),
           },
         ]}
       ></Menu>

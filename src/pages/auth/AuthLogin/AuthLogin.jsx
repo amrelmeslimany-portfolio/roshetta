@@ -211,7 +211,7 @@ const AuthLogin = () => {
             />
           </div>
           <button
-            className="bg-roshetta px-40 py-5 text-white rounded-full text-2xl "
+            className="foucs:outline-2 mt-6 rounded-full bg-roshetta px-40 py-3 text-2xl text-white hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300  active:bg-green-600"
             type="submit"
           >
             تسجيل الدخول

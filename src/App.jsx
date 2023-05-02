@@ -45,7 +45,14 @@ export default function App() {
               }
             >
               <Route path="dashboard" element={<Dashboard />} />
-              <Route path="activate-accounts" element={<ActivateAccounts />} />
+              <Route
+                path="activate-accounts"
+                element={
+                  // <ProtectedRoute>
+                  <ActivateAccounts />
+                  // </ProtectedRoute>
+                }
+              />
               <Route path="add-admin" element={<AddAdmin />} />
               <Route path="clinics" element={<Clinics />} />
               <Route path="edit-info" element={<EditInfo />} />

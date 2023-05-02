@@ -87,20 +87,25 @@ const ForgetPassword = () => {
   if (doneForget) {
     return (
       <>
-        <div className="h-screen mx-auto flex-col gap-6 flex justify-center items-center">
+        <div className="mx-auto flex h-screen flex-col items-center justify-center gap-6">
           <div className="text-8xl text-roshetta">
             <BiMessageAltCheck />
           </div>
           <h2 className="text-2xl font-extrabold text-roshetta">
             تم الارسال بنجاح
           </h2>
-          <p className="text-xl text-[#a7a7a7] mb-4">
+          <p className="mb-4 text-xl text-[#a7a7a7]">
             تم ارسال كود الي بريدك الالكتروني بنجاح
           </p>
-          <p className="text-xl text-[#a7a7a7] mb-4">
+          <p className="mb-4 text-xl text-[#a7a7a7]">
             قم باستخدام هذا الكود ك كلمة المرور الخاصه بحسابك.
           </p>
-          <Link className='bg-roshetta text-white px-6 py-2 rounded-full hover:text-lg transition-all' to={'/login'}>الرجوع لصفحة تسجيل الدخول</Link>
+          <Link
+            className="rounded-full bg-roshetta px-6 py-2 text-white transition-all hover:text-lg"
+            to={'/login'}
+          >
+            الرجوع لصفحة تسجيل الدخول
+          </Link>
         </div>
       </>
     );
@@ -174,13 +179,16 @@ const ForgetPassword = () => {
                 onChange={(e) => setSsd(e.target.value)}
               />
             </div>
-            <button className="" type="submit">
+            <button
+              className="foucs:outline-2 mt-6 rounded-full bg-roshetta px-40 py-3 text-2xl text-white hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300  active:bg-green-600"
+              type="submit"
+            >
               ارسال
             </button>
           </form>
           <p className="auth-forget__login-btn">
             <Link
-              className="text-roshetta text-lg hover:text-gray-400 transition-all"
+              className="text-lg text-roshetta transition-all hover:text-gray-400"
               to={'/login'}
             >
               الرجوع لصفحة تسجيل الدخول

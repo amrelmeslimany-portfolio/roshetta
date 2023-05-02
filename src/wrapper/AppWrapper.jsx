@@ -6,8 +6,8 @@ const AppWrapper = (Component, classNames) =>
   function HigherOrderComponent() {
     return (
       <motion.div
-        transition={{ duration: 0.5 }}
-        whileInView={{ opacity: [0, 0, 1] }}
+        transition={{ duration: 0 }}
+        whileInView={{ opacity: [1, 1, 1] }}
         className="app__wrapper"
       >
         <Component className={`${classNames} `} />

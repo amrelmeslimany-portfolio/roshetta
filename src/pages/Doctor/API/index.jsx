@@ -1,31 +1,46 @@
+let token;
+const getToken = () => {
+  let tokenData;
+  if (JSON.parse(localStorage.getItem('userData'))) {
+    tokenData = JSON.parse(localStorage.getItem('userData'));
+  }
+  token = tokenData.token;
+};
 export const addClinic = (formData) => {
+  getToken();
   return fetch('http://localhost:80/roshetta/api/doctors/add_clinic', {
     method: 'POST',
-    // headers: {
-    //   'content-type': 'multipart/form-data',
-    // },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
     body: formData,
   }).then((res) => res.json());
 };
 
 export const logOut = () => {
-  const userData = JSON.parse(localStorage.getItem('userData')) ?? null;
+  getToken();
+  const headers = { Authorization: `Bearer ${token}` }; // auth header with bearer token
   localStorage.clear('userData');
-  return fetch(
-    `http://localhost:80/roshetta/api/users/logout?Auth=bearer%20${userData.token}`
-  ).then((res) => res.json());
+
+  return fetch(`http://localhost:80/roshetta/api/users/logout`, {
+    headers,
+  }).then((res) => res.json());
 };
-
 // هاااااااااااام جدا لاتنسى
-
 // const getTaxAmount = (price, taxRate) => {
 //   return Promise.resolve(Math.floor((price * taxRate) / 100));
 // };
+// useEffect(() => {
+//   const headers = { Authorization: `Bearer ${userData.token}` };
+//   axios
+//     .get('http://localhost:80/roshetta/api/users/profile', { headers })
+//     .then((response) => console.log(response.data));
+// }, []);
+export const viewProfile = () => {
+  getToken();
+  const headers = { Authorization: `Bearer ${token}` }; // auth header with bearer token
 
-// getTaxAmount(100, 12).then((taxAmount) => console.log(taxAmount));
-
-export const viewProfile = (token) => {
-  return fetch(
-    `http://localhost:80/roshetta/api/users/profile?Auth=bearer%20${token}`
-  ).then((res) => res.json());
+  return fetch(`http://localhost:80/roshetta/api/users/profile`, {
+    headers,
+  }).then((res) => res.json());
 };
