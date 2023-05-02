@@ -7,6 +7,7 @@ import AdminFooter from '../components/AdminFooter/AdminFooter';
 import { Outlet } from 'react-router-dom';
 
 import './Home.scss';
+import AdminAuthHandler from '../components/AdminAuthHandler';
 const Home = () => {
   return (
     <>
@@ -16,6 +17,7 @@ const Home = () => {
           <AdminSideMenu></AdminSideMenu>
           {/* <AdminPageContent></AdminPageContent> */}
           <div className="admin__page-content">
+            <AdminAuthHandler />
             <Outlet />
           </div>
         </Space>
