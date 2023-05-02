@@ -18,7 +18,7 @@ const ActivateAccounts = () => {
 
   return (
     <Space direction="vertical" size={20}>
-      <h2 className="p-2 text-3xl">المستخدمين</h2>
+      <h2 className="p-4 text-4xl font-bold text-roshetta">تفعيل الحسابات</h2>
       <Table
         columns={[
           {
