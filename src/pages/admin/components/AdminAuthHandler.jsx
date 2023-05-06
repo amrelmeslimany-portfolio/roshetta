@@ -34,23 +34,7 @@ const AdminAuthHandler = () => {
     localStorage.clear('userData');
     return <Navigate to="/login" />;
   }
-  return (
-    <>
-      <div className="fixed mx-auto flex min-h-screen items-center justify-center ">
-        {alert.show && (
-          <Alert
-            style={{
-              marginBottom: 20,
-            }}
-            message="حدثت مشكلة"
-            description={alert.msg}
-            type={alert.type}
-            showIcon
-          />
-        )}
-      </div>
-    </>
-  );
+  return <></>;
 };
 
 export default AdminAuthHandler;
