@@ -92,22 +92,23 @@ export const getUsers = (type = '', filter = '') => {
   ).then((res) => res.json());
 };
 
-export const viewUserDetails = (type = 'doctor', number = 1) => {
+export const viewUserDetails = (type = '', id = '') => {
   getToken();
   const headers = { Authorization: `Bearer ${token}` }; // auth header with bearer token
 
   return fetch(
-    `http://localhost:80/roshetta/api/admins/view_users_details/${number}?type=${type}`,
+    `http://localhost:80/roshetta/api/admins/view_users_details/${id}?type=${type}`,
     { headers }
   ).then((res) => res.json());
 };
 
-export const deleteUser = (type = '', number = 1) => {
+export const deleteUser = (type = '', id = '') => {
   getToken();
   const headers = { Authorization: `Bearer ${token}` }; // auth header with bearer token
 
   return fetch(
-    `http://localhost:80/roshetta/api/admins/view_users_details/${number}?type=${type}`,
+    `
+    http://localhost:80/roshetta/api/admins/remove_user_place/${id}?type=${type}`,
     {
       method: 'POST',
       headers,
@@ -115,12 +116,12 @@ export const deleteUser = (type = '', number = 1) => {
   ).then((res) => res.json());
 };
 
-export const editUserDetails = (type = '', number = 1) => {
+export const editUserDetails = (type = '', id = '') => {
   getToken();
   const headers = { Authorization: `Bearer ${token}` }; // auth header with bearer token
 
   return fetch(
-    `http://localhost:80/roshetta/api/admins/view_users_details/${number}?type=${type}`,
+    `http://localhost:80/roshetta/api/admins/view_users_details/${id}?type=${type}`,
     {
       method: 'POST',
       headers,

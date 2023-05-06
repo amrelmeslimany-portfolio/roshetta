@@ -21,6 +21,8 @@ import {
   EditInfo,
   Pharmacies,
   Users,
+  ViewSingleUser,
+  EditSingleUser,
 } from './pages';
 import './App.scss';
 
@@ -53,11 +55,13 @@ export default function App() {
                   // </ProtectedRoute>
                 }
               />
-              <Route path="add-admin" element={<AddAdmin />} />
+              {/* <Route path="add-admin" element={<AddAdmin />} /> */}
               <Route path="clinics" element={<Clinics />} />
               <Route path="edit-info" element={<EditInfo />} />
               <Route path="pharmacies" element={<Pharmacies />} />
               <Route path="users" element={<Users />} />
+              <Route path="users/view/:type/:id" element={<ViewSingleUser />} />
+              <Route path="users/edit/:id" element={<EditSingleUser />} />
             </Route>
 
             {/* ------------------- Doctor   ------------------- */}

@@ -19,3 +19,5 @@ export { default as Dashboard } from './admin/pages/Dashboard';
 export { default as EditInfo } from './admin/pages/EditInfo';
 export { default as Pharmacies } from './admin/pages/Pharmacies';
 export { default as Users } from './admin/pages/Users';
+export { default as ViewSingleUser } from './admin/pages/Users/ViewSingleUser';
+export { default as EditSingleUser } from './admin/pages/Users/EditSingleUser';

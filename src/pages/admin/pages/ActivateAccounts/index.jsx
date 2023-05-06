@@ -54,14 +54,14 @@ const ActivateAccounts = () => {
     setLoading(true);
     if (e === false) {
       setSwitchValue(0);
-      viewActivation('', '', switchValue).then((res) => {
+      viewActivation(radioValue, '', 0).then((res) => {
         setDataSource(res.Data);
         setLoading(false);
       });
     }
     if (e === true) {
       setSwitchValue(1);
-      viewActivation('', '', switchValue).then((res) => {
+      viewActivation(radioValue, '', 1).then((res) => {
         setDataSource(res.Data);
         setLoading(false);
       });
@@ -69,8 +69,11 @@ const ActivateAccounts = () => {
   };
   const onRadioChange = (e) => {
     setLoading(true);
+    // ابحث في المشكلة دي
     setRadioValue(e.target.value);
-    viewActivation(radioValue, '', switchValue).then((res) => {
+    viewActivation(e.target.value, '', switchValue).then((res) => {
+      // ممكن اسأل عمرو فيها
+      // viewActivation(radioValue, '', switchValue).then((res) => {
       setDataSource(res.Data);
       setLoading(false);
     });
@@ -104,8 +107,7 @@ const ActivateAccounts = () => {
         <h4 className="px-4 text-2xl font-bold text-slate-500">
           فلترة النتائج
         </h4>
-        <div className=""></div>
-        <Space size={20}>
+        <Space className="rounded-lg bg-slate-200 p-4" size={20}>
           <span>مفعل / غير مفعل</span>
           <Switch onChange={onChange} />
           <span>اختار النوع:</span>
@@ -130,7 +132,7 @@ const ActivateAccounts = () => {
             {
               title: 'الرقم القومي',
               dataIndex: 'ssd',
-              render: (value) => <span>${value}</span>,
+              render: (value) => <span>{value}</span>,
             },
             // {
             //   title: 'Rating',
@@ -160,6 +162,11 @@ const ActivateAccounts = () => {
               key: 'activation_id',
             },
             {
+              title: 'نوع الحساب',
+              dataIndex: 'type',
+              key: 'type',
+            },
+            {
               title: 'تفعيل',
               dataIndex: ['type'],
               key: 'x',
@@ -169,15 +176,13 @@ const ActivateAccounts = () => {
                     <a
                       onClick={() => {
                         setLoading(true);
-                        console.log(
-                          type,
-                          userData.name,
-                          userData.activation_id
-                        );
                         activateUser(type, userData.activation_id, 1).then(
                           (res) => {
-                            showAlert(res.Message, 'success');
-                            console.log(res);
+                            if (res.Message === 'الحساب مفعل بالفعل') {
+                              showAlert(res.Message, 'warning');
+                            } else {
+                              showAlert(res.Message, 'success');
+                            }
                             refreshTableData();
                             setLoading(false);
                           }
@@ -190,15 +195,10 @@ const ActivateAccounts = () => {
                     <a
                       onClick={() => {
                         setLoading(true);
-                        console.log(
-                          type,
-                          userData.name,
-                          userData.activation_id
-                        );
+                        type, userData.name, userData.activation_id;
                         activateUser(type, userData.activation_id, -1).then(
                           (res) => {
                             showAlert(res.Message, 'success');
-                            console.log(res);
                             refreshTableData();
                             setLoading(false);
                           }
@@ -215,7 +215,7 @@ const ActivateAccounts = () => {
           ]}
           dataSource={dataSource}
           loading={loading}
-          pagination={{ pageSize: 7 }}
+          pagination={{ pageSize: 5 }}
         ></Table>
       </Space>
     </>
