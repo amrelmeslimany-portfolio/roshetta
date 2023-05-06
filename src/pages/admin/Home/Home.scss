@@ -25,7 +25,10 @@
 }
 
 .admin__side-menu {
-  
+  height: 100%;
+}
+.admin__side-menu--vertical {
+  height: 100%;
 }
 
 .admin__page-content {
@@ -37,4 +40,5 @@
   flex: 1;
   justify-content: flex-start;
   align-items: flex-start;
+  // background-color: ;
 }

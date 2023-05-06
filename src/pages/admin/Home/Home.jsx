@@ -13,14 +13,14 @@ const Home = () => {
     <>
       <div className="admin">
         <AdminHeader />
-        <Space className="SideMenuAndPageContent">
+        <div className="SideMenuAndPageContent bg-slate-100">
           <AdminSideMenu></AdminSideMenu>
           {/* <AdminPageContent></AdminPageContent> */}
           <div className="admin__page-content">
             <AdminAuthHandler />
             <Outlet />
           </div>
-        </Space>
+        </div>
         <AdminFooter />
       </div>
     </>

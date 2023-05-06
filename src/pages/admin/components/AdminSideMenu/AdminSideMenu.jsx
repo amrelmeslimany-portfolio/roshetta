@@ -5,7 +5,7 @@ import {
   UserOutlined,
 } from '@ant-design/icons';
 import { Menu } from 'antd';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   MdAdminPanelSettings,
   MdDashboardCustomize,
@@ -14,29 +14,39 @@ import {
   MdOutlineLocalPharmacy,
 } from 'react-icons/md';
 import { TbActivityHeartbeat, TbUsers } from 'react-icons/tb';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { logOut } from '../../API';
 
 const AdminSideMenu = () => {
+  const location = useLocation();
+  const [selectedKeys, setSelectedKeys] = useState('/');
+  useEffect(() => {
+    const pathname = location.pathname;
+    setSelectedKeys(pathname);
+  }, [location.pathname]);
+
   const navigate = useNavigate();
   return (
     <div className="admin__side-menu">
       <Menu
+      className='admin__side-menu--vertical'
+        mode="vertical"
         onClick={(item) => {
           // item.key
           navigate(item.key);
         }}
+        selectedKeys={[selectedKeys]}
         items={[
           {
             label: 'الصفحة الرئيسية',
             icon: <MdDashboardCustomize style={{ color: '#49ce91' }} />,
             key: '/admin/dashboard',
           },
-          {
-            label: 'اضافه ادمن',
-            icon: <MdAdminPanelSettings style={{ color: '#49ce91' }} />,
-            key: '/admin/add-admin',
-          },
+          // {
+          //   label: 'اضافه ادمن',
+          //   icon: <MdAdminPanelSettings style={{ color: '#49ce91' }} />,
+          //   key: '/admin/add-admin',
+          // },
           {
             label: 'تعديل مباشر',
             icon: <MdEdit style={{ color: '#49ce91' }} />,
