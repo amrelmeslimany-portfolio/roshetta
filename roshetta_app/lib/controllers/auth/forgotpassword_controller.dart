@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
+import 'package:roshetta_app/core/class/crud.dart';
+import 'package:roshetta_app/core/class/request_status.dart';
 
 import 'package:roshetta_app/core/constants/app_routes.dart';
+import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/shared/custom_buttons.dart';
+import 'package:roshetta_app/data/source/remote/auth/forgotpassword_data.dart';
 import 'package:roshetta_app/view/widgets/auth/auth_dialogs.dart';
 
 abstract class ForgotPasswordController extends GetxController {
@@ -18,6 +22,8 @@ class ForgotPasswordControllerImp extends ForgotPasswordController {
   bool isVisiblePassword = true;
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  ForgotPasswordData requests = ForgotPasswordData(Get.find<Crud>());
+  RequestStatus status = RequestStatus.none;
 
   @override
   void onInit() {
@@ -37,30 +43,42 @@ class ForgotPasswordControllerImp extends ForgotPasswordController {
   }
 
   @override
-  void onSubmit(BuildContext context) {
+  void onSubmit(BuildContext context) async {
+    if (Get.isSnackbarOpen) return;
     if (formKey.currentState!.validate()) {
-      diplayDialog(context);
+      formKey.currentState!.save();
+      status = RequestStatus.loading;
+      update();
+      var response = await requests.postData(accountType, ssdOrEmail.text);
+      status = checkResponseStatus(response);
+      if (status == RequestStatus.success) {
+        diplayDialog(context);
+      } else {
+        handleSnackErrors(response);
+      }
+
+      update();
     }
   }
 
-  @override
-  void onClose() {
-    ssdOrEmail.dispose();
-    super.onClose();
-  }
-}
+  diplayDialog(BuildContext context) {
+    Get.defaultDialog(
+        content: const AuthDiologs(
+            icon: FontAwesomeIcons.envelopeCircleCheck,
+            title: "تم الارسال بنجاح",
+            content: "تم ارسال كود الي الايميل الخاص بك, قم بفحص الايميل جيدا"),
+        contentPadding: const EdgeInsets.all(15),
+        barrierDismissible: true,
+        actions: [
+          BGButton(context, text: "ادخل الكود", onPressed: () => Get.back())
+              .button
+        ]).then((value) => Get.toNamed(AppRoutes.verifyForgotPassCode,
+        arguments: {"role": accountType, "ssdOrEmail": ssdOrEmail.text}));
 
-diplayDialog(BuildContext context) {
-  Get.defaultDialog(
-      content: const AuthDiologs(
-          icon: FontAwesomeIcons.envelopeCircleCheck,
-          title: "تم الارسال بنجاح",
-          content:
-              "تم ارسال رساله الي الايميل الخاص بك, قم بفحص الايميل جيدا لتري ما به من رسائل"),
-      contentPadding: const EdgeInsets.all(15),
-      barrierDismissible: true,
-      actions: [
-        BGButton(context, text: "تسجيل الدخول", onPressed: () => Get.back())
-            .button
-      ]).then((value) => Get.offNamed(AppRoutes.login));
+    @override
+    void onClose() {
+      ssdOrEmail.dispose();
+      super.onClose();
+    }
+  }
 }

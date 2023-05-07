@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
+import 'package:roshetta_app/core/functions/widget_functions.dart';
+import 'package:roshetta_app/core/shared/custom_buttons.dart';
 
 abstract class Fields {
   final String hintText;
@@ -17,7 +19,9 @@ class CustomTextField extends Fields {
   bool? secure;
   Function()? passwordTap;
   Function()? onTap;
+  Function(String)? onFieldSubmitted;
   bool? readOnly;
+  String? initialValue;
 
   CustomTextField(
       {required this.controller,
@@ -27,23 +31,27 @@ class CustomTextField extends Fields {
       required this.icon,
       this.keyboardType = TextInputType.text,
       this.passwordTap,
+      this.onFieldSubmitted,
       this.onTap,
       this.readOnly,
+      this.initialValue,
       this.secure});
 
   SizedBox get textfield {
     FaIcon iconWidget = FaIcon(
       icon,
       color: AppColors.lightTextColor,
-      size: 16,
+      size: onTap == null ? 16 : 20,
     );
     return SizedBox(
       width: 320,
       child: TextFormField(
         readOnly: readOnly ?? false,
         onTap: onTap,
+        initialValue: initialValue,
         validator: onValidator,
         keyboardType: keyboardType,
+        onFieldSubmitted: onFieldSubmitted,
         controller: controller,
         obscureText: (secure == null || secure == false) ? false : true,
         style: Theme.of(context).textTheme.bodyLarge,
@@ -140,13 +148,16 @@ class CustomDropdown extends Fields {
 class CustomRadio extends Fields {
   final String groupValue;
   final String value;
+  final bool? isBorder;
   final void Function(String?) onChange;
-  CustomRadio(
-      {required super.context,
-      required super.hintText,
-      required this.value,
-      required this.onChange,
-      required this.groupValue});
+  CustomRadio({
+    required super.context,
+    required super.hintText,
+    required this.value,
+    required this.onChange,
+    required this.groupValue,
+    this.isBorder,
+  });
 
   GestureDetector get radio {
     return GestureDetector(
@@ -156,7 +167,9 @@ class CustomRadio extends Fields {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 7),
         decoration: BoxDecoration(
-            border: Border.all(color: AppColors.lightTextColor),
+            border: isBorder == null
+                ? Border.all(color: AppColors.lightTextColor)
+                : null,
             color: AppColors.whiteColor,
             borderRadius: BorderRadius.circular(50)),
         child: Row(
@@ -181,4 +194,25 @@ class CustomRadio extends Fields {
       ),
     );
   }
+}
+
+class UploadImageCircle {
+  final Container imgWidgt;
+  final Function() onUpload;
+
+  UploadImageCircle({required this.imgWidgt, required this.onUpload});
+
+  Widget get defaultField => Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          imgWidgt,
+          ICButton(
+                  onPressed: onUpload,
+                  icon: Icons.add_a_photo,
+                  color: AppColors.primaryColor,
+                  padding: const EdgeInsets.all(10),
+                  iconColor: AppColors.whiteColor)
+              .bordered
+        ],
+      );
 }

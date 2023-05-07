@@ -7,7 +7,8 @@ import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
 import 'package:roshetta_app/data/models/user.model.dart';
-import 'package:roshetta_app/view/widgets/custom_texts.dart';
+import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
+import 'package:roshetta_app/view/widgets/profile/header.dart';
 
 import '../../../core/constants/app_colors.dart';
 
@@ -64,16 +65,32 @@ class CustomDrawer extends StatelessWidget {
                                         Get.toNamed(AppRoutes.home);
                                       }),
                                   const Divider(),
-                                  pageItem(
-                                      isActive: Get.currentRoute ==
-                                          AppRoutes.appointments,
-                                      icon: FontAwesomeIcons.tableCells,
-                                      text: "الحجوزات",
-                                      onTap: () {
-                                        Get.toNamed(AppRoutes.appointments);
-                                        bottomNavbar.onChangePage(1);
-                                      }),
+                                  ...drawerController.linkList
+                                      .map((element) => pageItem(
+                                          isActive: Get.currentRoute ==
+                                              element["page"],
+                                          icon: element["icon"],
+                                          text: element["title"],
+                                          onTap: () {
+                                            bottomNavbar.onChangePage(1);
+                                            Get.toNamed(element["page"]);
+                                          }))
+                                      .toList(),
                                   const Divider(),
+                                  bottomNavbar.auth.localUser.value!.isVerify !=
+                                          null
+                                      ? pageItem(
+                                          isActive: Get.currentRoute ==
+                                              AppRoutes.verifyDPAccount,
+                                          icon:
+                                              FontAwesomeIcons.solidCircleCheck,
+                                          text: "توثيق الحساب",
+                                          onTap: () {
+                                            bottomNavbar.onChangePage(1);
+                                            Get.toNamed(
+                                                AppRoutes.verifyDPAccount);
+                                          })
+                                      : const SizedBox(),
                                   pageItem(
                                       isActive:
                                           Get.currentRoute == AppRoutes.home &&
@@ -88,7 +105,9 @@ class CustomDrawer extends StatelessWidget {
                                       icon: FontAwesomeIcons
                                           .arrowRightFromBracket,
                                       text: "تسجيل الخروج",
-                                      onTap: () {}),
+                                      onTap: () async {
+                                        await bottomNavbar.onLogout();
+                                      }),
                                 ],
                               );
                             }),
@@ -121,9 +140,16 @@ class CustomDrawer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(child: shadowCircleAvatar(user.image!)),
+                ProfileHeader(
+                        title: user.name!,
+                        image: user.image,
+                        subTitle: user.ssd!,
+                        isVerify: user.isVerify,
+                        icon: FontAwesomeIcons.solidIdCard)
+                    .verifiedPicture(context, radius: 45, pos: 15),
                 const SizedBox(height: 10),
-                CustomText(text: user.name!).truncateText(context),
+                CustomText(text: user.name!, align: TextAlign.start)
+                    .truncateText(context),
                 iconAndWidget(FontAwesomeIcons.idCard,
                     widget: Text(
                       user.ssd!,

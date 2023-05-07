@@ -1,20 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
 import 'package:roshetta_app/core/class/crud.dart';
 
 import 'package:roshetta_app/core/class/request_status.dart';
-import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
 import 'package:roshetta_app/core/services/init_services.dart';
 import 'package:roshetta_app/data/models/user.model.dart';
 import 'package:roshetta_app/data/source/remote/auth/login_data.dart';
-import 'package:roshetta_app/view/screens/home/home.dart';
-import 'package:roshetta_app/view/widgets/custom_request.dart';
-import 'package:roshetta_app/view/widgets/home/home_layout.dart';
+import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
 
 abstract class LoginController extends GetxController {
   void onLogin(context);
@@ -29,6 +25,8 @@ class LoginControllerImp extends LoginController {
   late TextEditingController idOrEmail;
   late TextEditingController password;
   bool isVisiblePassword = true;
+
+  AuthenticationController auth = Get.find<AuthenticationController>();
 
   GlobalKey<FormState> loginFormKey = GlobalKey<FormState>();
 
@@ -82,51 +80,55 @@ class LoginControllerImp extends LoginController {
       };
       var response =
           await loginData.postData(body["role"], body["id"], body["password"]);
-
       requestStatus = checkResponseStatus(response);
+      print(response);
       if (requestStatus == RequestStatus.success) {
-        int? isActive = int.parse(await response["Data"]["isActive"]);
-        // Get.offAll(const Home());
+        Map data = response["Data"];
 
-        if (isActive == 1) {
-          Map data = response["Data"];
+        LocalUser user = LocalUser(
+            expiredToken: data["expiredToken"],
+            image: data["image"],
+            name: data["name"],
+            ssd: data["ssd"],
+            isVerify: data["isVerify"],
+            token: data["token"],
+            type: data["type"]);
 
-          LocalUser user = LocalUser(
-              expiredToken: data["expiredToken"],
-              image: data["image"],
-              name: data["name"],
-              ssd: data["ssd"],
-              token: data["token"],
-              type: data["type"]);
+        auth.localUser.value = user;
+        auth.isAuth.value = true;
+        auth.getStorage.setString("user", user.encodeUser);
 
-          // Save data to local storage
-          services.sharedPreferences.setString("user", user.encodeUser);
+        snackbar();
 
-          snackbar();
-
-          Get.offAllNamed(AppRoutes.home);
-        } else if (isActive == 0) {
-          successDialog(context,
-              buttonText: "تفعيل", content: response["Message"], onSuccess: () {
-            // Close dialog
-            Get.back();
-            Get.offAndToNamed(AppRoutes.verifyEmailCode, arguments: {
-              "role": accountType,
-              "email": idOrEmail.text,
-              "password": password.text
-            });
-          });
-        }
+        Get.offAllNamed(AppRoutes.home);
       } else if (requestStatus == RequestStatus.userFailure) {
-        DialogRequestMessages(context,
+        if (response["Data"] != null) {
+          int? isActive = int.parse(response["Data"]["isActive"]);
+          if (isActive == 0) onVerify(response);
+          update();
+          return;
+        }
+        DialogRequestMessages(Get.context!,
             status: requestStatus, failureText: response["Message"]);
       } else {
-        if (!context.mounted) return;
-        DialogRequestMessages(context, status: requestStatus);
+        DialogRequestMessages(Get.context!, status: requestStatus);
       }
     }
 
     update();
+  }
+
+  onVerify(response) {
+    successDialog(Get.context!,
+        buttonText: "تفعيل", content: response["Message"], onSuccess: () {
+      // Close dialog
+      if (Get.isDialogOpen == true) Get.back();
+      Get.offAndToNamed(AppRoutes.verifyEmailCode, arguments: {
+        "role": accountType,
+        "email": idOrEmail.text,
+        "password": password.text
+      });
+    });
   }
 
   @override

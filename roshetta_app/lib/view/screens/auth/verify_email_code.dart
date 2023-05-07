@@ -6,8 +6,8 @@ import 'package:roshetta_app/controllers/auth/verifyemailcode_controller.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/view/widgets/auth/layout.dart';
-import 'package:roshetta_app/view/widgets/custom_request.dart';
-import 'package:roshetta_app/view/widgets/custom_texts.dart';
+import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
+import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
 
 class VerifyEmailCode extends StatelessWidget {
   const VerifyEmailCode({super.key});

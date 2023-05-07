@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/shared/custom_appbar.dart';
 import 'package:roshetta_app/view/widgets/home/body.dart';
 import 'package:roshetta_app/view/widgets/home/header_content.dart';
-import 'package:roshetta_app/view/widgets/home/home_layout.dart';
 
 class Settings extends StatelessWidget {
   final GlobalKey<ScaffoldState> drawerState;
@@ -13,7 +11,6 @@ class Settings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // GlobalKey<ScaffoldState> drawerState = GlobalKey<ScaffoldState>();
     return BodyLayout(
         appbar: CustomAppBar(
           isBack: false,

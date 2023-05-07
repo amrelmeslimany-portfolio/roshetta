@@ -7,7 +7,7 @@ import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/core/shared/custom_buttons.dart';
 import 'package:roshetta_app/view/widgets/auth/auth_dialogs.dart';
-import 'package:roshetta_app/view/widgets/custom_texts.dart';
+import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
 
 class CustomRequest extends StatelessWidget {
   final RequestStatus status;
@@ -50,11 +50,12 @@ class CustomRequest extends StatelessWidget {
       case RequestStatus.offlineFailure:
         return _lottieAndText(AssetPaths.offline, "تأكد من اتصالك بالانترنت");
 
+      case RequestStatus.failure:
       case RequestStatus.serverFailure:
         return _lottieAndText(AssetPaths.server, "هناك مشكله من السيرفر");
 
       case RequestStatus.empty:
-        return _lottieAndText(AssetPaths.empty, "لا تحتوي علي شئ");
+        return _lottieAndText(AssetPaths.empty, "لم يتم العثور علي بيانات");
 
       case RequestStatus.userFailure:
         return _lottieAndText(
@@ -123,8 +124,10 @@ class DialogRequestMessages {
         contentPadding: const EdgeInsets.all(15),
         barrierDismissible: true,
         actions: [
-          BGButton(context, text: "اعاده المحاوله", onPressed: () => Get.back())
-              .button
+          BGButton(context,
+              small: true,
+              text: "اعاده المحاوله",
+              onPressed: () => Get.back()).button
         ]);
   }
 }

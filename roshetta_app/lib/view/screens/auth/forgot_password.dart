@@ -10,7 +10,8 @@ import 'package:roshetta_app/core/shared/custom_buttons.dart';
 import 'package:roshetta_app/core/shared/custom_fields.dart';
 import 'package:roshetta_app/data/source/static/static_data.dart';
 import 'package:roshetta_app/view/widgets/auth/layout.dart';
-import 'package:roshetta_app/view/widgets/custom_texts.dart';
+import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
+import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
 
 class ForgotPassword extends StatelessWidget {
   const ForgotPassword({super.key});
@@ -39,50 +40,61 @@ class ForgotPassword extends StatelessWidget {
             const SizedBox(height: 30),
             Form(
                 key: controller.formKey,
-                child: Column(
-                  children: [
-                    CustomDropdown(
-                        context: context,
-                        onValidator: (value) => dropdownValidator(value),
-                        hintText: "اختر نوع الحساب",
-                        items: StaticData.usersList,
-                        onChange: (value) {
-                          controller.onAccountTypeChange(value!);
-                        }).dropdown,
-                    const SizedBox(height: 15),
-                    CustomTextField(
-                            context: context,
-                            onValidator: (value) => fieldValidor(value!),
-                            controller: controller.ssdOrEmail,
-                            hintText: "البريد او الرقم القومي",
-                            keyboardType: TextInputType.emailAddress,
-                            icon: FontAwesomeIcons.solidUser)
-                        .textfield,
-                    const SizedBox(height: 15),
-                    BGButton(context, text: "ارسال", onPressed: () {
-                      controller.onSubmit(context);
-                    }).button,
-                    const SizedBox(height: 15),
-                    SizedBox(
-                      width: 300,
-                      child: Wrap(
-                        alignment: WrapAlignment.center,
+                child: CustomRequest(
+                  sameContent: true,
+                  status: controller.status,
+                  widget: Column(
+                    children: [
+                      CustomDropdown(
+                          context: context,
+                          initalVal: controller.accountType.isNotEmpty
+                              ? controller.accountType
+                              : null,
+                          onValidator: (value) => dropdownValidator(value),
+                          hintText: "اختر نوع الحساب",
+                          items: StaticData.usersList,
+                          onChange: (value) {
+                            controller.onAccountTypeChange(value!);
+                          }).dropdown,
+                      const SizedBox(height: 15),
+                      CustomTextField(
+                              context: context,
+                              onValidator: (value) => fieldValidor(value!),
+                              controller: controller.ssdOrEmail,
+                              hintText: "البريد او الرقم القومي",
+                              keyboardType: TextInputType.emailAddress,
+                              icon: FontAwesomeIcons.solidUser)
+                          .textfield,
+                      const SizedBox(height: 15),
+                      Column(
                         children: [
-                          InkWell(
-                            onTap: () {
-                              controller.goToLoginPage();
-                            },
-                            child: const CustomText(
-                              text: "الرجوع لتسجيل الدخول",
-                              color: AppColors.primaryColor,
-                              textType: 3,
-                              fontWeight: FontWeight.w600,
+                          BGButton(context, text: "ارسال", onPressed: () {
+                            controller.onSubmit(context);
+                          }).button,
+                          const SizedBox(height: 15),
+                          SizedBox(
+                            width: 300,
+                            child: Wrap(
+                              alignment: WrapAlignment.center,
+                              children: [
+                                InkWell(
+                                  onTap: () {
+                                    controller.goToLoginPage();
+                                  },
+                                  child: const CustomText(
+                                    text: "الرجوع لتسجيل الدخول",
+                                    color: AppColors.primaryColor,
+                                    textType: 3,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                )
+                              ],
                             ),
                           )
                         ],
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 )),
           ],
         );

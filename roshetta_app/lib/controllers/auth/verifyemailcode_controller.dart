@@ -12,7 +12,7 @@ import 'package:roshetta_app/core/functions/widget_functions.dart';
 
 import 'package:roshetta_app/data/source/remote/auth/verifyemailcode_data.dart';
 
-import 'package:roshetta_app/view/widgets/custom_request.dart';
+import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
 
 import '../../core/functions/reused_functions.dart';
 

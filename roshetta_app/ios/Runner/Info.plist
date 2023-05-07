@@ -52,6 +52,12 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>يجب اعطاء الصلاحية لاستخدام الصور التي تريدها في الملف الشخصي</string>
+	<key>NSCameraUsageDescription</key>
+	<string>يجب اعطاء الصلاحية لاستخدام الصور التي تريدها في الملف الشخصي</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>يجب اعطاء الصلاحية لاستخدام الصوت فى الملاحظات الصوتيه</string>
 </dict>
 
 </plist>

@@ -28,10 +28,10 @@ class MyApp extends StatelessWidget {
       localizationsDelegates: const [
         GlobalMaterialLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate
+        GlobalWidgetsLocalizations.delegate,
       ],
-      locale: const Locale("ar"),
-      fallbackLocale: const Locale("ar"),
+      locale: const Locale("ar", "AE"),
+      fallbackLocale: const Locale("ar", "AE"),
     );
   }
 }

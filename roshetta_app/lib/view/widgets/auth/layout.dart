@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:roshetta_app/core/shared/circle.dart';
-import 'package:roshetta_app/view/widgets/custom_texts.dart';
+import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
 
 class AuthLayout extends StatelessWidget {
   final Widget widget;

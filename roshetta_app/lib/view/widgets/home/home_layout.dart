@@ -8,8 +8,15 @@ import 'package:roshetta_app/view/widgets/home/drawer.dart';
 class HomeLayout extends StatelessWidget {
   final BodyLayout? body;
   final GlobalKey<ScaffoldState> scaffoldKey;
+  final Widget? floatingButton;
+  final FloatingActionButtonLocation? location;
 
-  const HomeLayout({super.key, this.body, required this.scaffoldKey});
+  const HomeLayout(
+      {super.key,
+      this.body,
+      required this.scaffoldKey,
+      this.floatingButton,
+      this.location});
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +24,8 @@ class HomeLayout extends StatelessWidget {
     return GetBuilder<HomeLayoutConrollerImp>(builder: (controller) {
       return Scaffold(
         drawerEnableOpenDragGesture: false,
+        floatingActionButton: floatingButton,
+        floatingActionButtonLocation: location,
         key: scaffoldKey,
         drawer: CustomDrawer(
           drawer: scaffoldKey,

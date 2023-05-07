@@ -1,50 +1,65 @@
-import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
-import 'package:roshetta_app/core/class/auth.dart';
+import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
 import 'package:roshetta_app/core/class/crud.dart';
 import 'package:roshetta_app/core/class/request_status.dart';
+import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/data/models/user.model.dart';
 import 'package:roshetta_app/data/source/remote/profiles/myprofile_data.dart';
 
-class MyProfileController extends GetxController {}
+import '../../core/functions/quick_functions.dart';
 
-class MyProfileControllerImp extends MyProfileController {
-  late User? information = User();
-  late String? error = "حدثت مشكله";
+class MyProfileController extends GetxController {
+  final information = User().obs;
+  late RxString error = "حدثت مشكله".obs;
 
-  Authentication auth = Authentication();
-  LocalUser? user = LocalUser();
+  AuthenticationController auth = Get.find<AuthenticationController>();
 
-  RequestStatus profileStatus = RequestStatus.none;
+  Rx<RequestStatus> profileStatus = RequestStatus.none.obs;
 
   MyProfileData requests = MyProfileData(Get.find<Crud>());
 
   @override
   void onInit() async {
-    user = auth.getUser!;
-
     await getProfileData();
 
     super.onInit();
   }
 
   getProfileData() async {
-    profileStatus = RequestStatus.loading;
-    update();
+    profileStatus.value = RequestStatus.loading;
 
-    var response = await requests.getProfileData(user!.token!);
+    var response = await requests.getProfileData(getToken(auth)!);
 
-    profileStatus = checkResponseStatus(response);
+    profileStatus.value = checkResponseStatus(response);
 
-    if (profileStatus == RequestStatus.success) {
-      information = User.fromJson(response["Data"]);
+    if (profileStatus.value == RequestStatus.success) {
+      if (response["Data"] == null) {
+        profileStatus.value = RequestStatus.userFailure;
+        return;
+      }
+      information.value = User.fromJson(response["Data"]);
       print(response);
-    } else if (profileStatus == RequestStatus.userFailure) {
+    } else if (profileStatus.value == RequestStatus.userFailure) {
       logoutError401(response["Status"], auth, 4);
-      error = "يرجي تسجيل الدخول مرة اخري";
+      error.value = "يرجي تسجيل الدخول مرة اخري";
     }
+  }
 
-    update();
+  void goToEditProfile() {
+    Get.toNamed(AppRoutes.editProfile);
+  }
+
+  updateInformation({
+    String? phone,
+    String? governorate,
+    String? height,
+    String? weight,
+  }) {
+    information.value.phoneNumber = phone;
+    information.value.governorate = governorate;
+    information.value.height = height;
+    information.value.weight = weight;
+    information.refresh();
   }
 }

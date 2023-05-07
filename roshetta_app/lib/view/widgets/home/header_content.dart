@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:roshetta_app/view/widgets/custom_texts.dart';
+import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
 
 class HeaderContent extends StatelessWidget {
   final String header;
   final Widget content;
+  final double? spacer;
 
-  const HeaderContent({super.key, required this.header, required this.content});
+  const HeaderContent(
+      {super.key,
+      required this.header,
+      required this.content,
+      this.spacer = 15});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +20,7 @@ class HeaderContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           CustomText(text: header).subHeader(context),
-          const SizedBox(height: 15),
+          SizedBox(height: spacer),
           content,
         ],
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
-import 'package:roshetta_app/view/widgets/custom_texts.dart';
+import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
 
 class AuthDiologs extends StatelessWidget {
   final IconData icon;
@@ -68,7 +68,7 @@ class AuthDiologs extends StatelessWidget {
         child: CustomText(
           text: content,
           color: AppColors.greyColor,
-          align: TextAlign.start,
+          align: TextAlign.center,
           textType: 2,
         ),
       );

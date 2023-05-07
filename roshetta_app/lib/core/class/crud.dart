@@ -1,12 +1,13 @@
-import 'dart:io';
-
 import 'package:dartz/dartz.dart';
 import 'package:get/get.dart';
 
 import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
+import 'package:roshetta_app/core/services/init_services.dart';
 
 class Crud {
+  InitServices services = Get.put(InitServices());
+
   Future<Either<RequestStatus, Map>> baseCrud(
     String url,
     String method, {
@@ -24,6 +25,14 @@ class Crud {
         // print(response.body);
 
         if (response.isOk) {
+          String? cookie = response.headers?["set-cookie"];
+
+          if (cookie != null) {
+            int index = cookie.indexOf(';');
+            services.sharedPreferences.setString(
+                "cookies", (index == -1) ? cookie : cookie.substring(0, index));
+          }
+
           var responseBody = response.body;
           return Right(responseBody);
         } else {

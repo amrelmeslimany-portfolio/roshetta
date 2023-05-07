@@ -45,12 +45,17 @@ ThemeData arTheme = ThemeData(
     appBarTheme: const AppBarTheme(
         elevation: 0,
         systemOverlayStyle:
-            SystemUiOverlayStyle(statusBarColor: Color(0xff4aa77e))));
+            SystemUiOverlayStyle(statusBarColor: Color(0xff4aa77e))),
+    timePickerTheme: TimePickerThemeData(
+      backgroundColor: AppColors.whiteColor,
+      dialBackgroundColor: AppColors.lightenWhiteColor.withOpacity(0.5),
+      hourMinuteColor: AppColors.lightenWhiteColor.withOpacity(0.5),
+    ));
 
 BoxDecoration shadowBoxWhite = BoxDecoration(
     color: AppColors.whiteColor,
     borderRadius: const BorderRadius.all(Radius.circular(15)),
     boxShadow: [
       BoxShadow(
-          spreadRadius: 1, color: Colors.black.withOpacity(0.09), blurRadius: 8)
+          spreadRadius: 1, color: Colors.black.withOpacity(0.06), blurRadius: 8)
     ]);

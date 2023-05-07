@@ -7,15 +7,16 @@ class CustomText extends StatelessWidget {
   final TextAlign align;
   final Color? color;
   final FontWeight? fontWeight;
+  final bool? wrap;
 
-  const CustomText({
-    super.key,
-    required this.text,
-    this.color,
-    this.fontWeight = FontWeight.w500,
-    this.textType = 1,
-    this.align = TextAlign.center,
-  });
+  const CustomText(
+      {super.key,
+      required this.text,
+      this.color,
+      this.fontWeight = FontWeight.w500,
+      this.textType = 1,
+      this.align = TextAlign.center,
+      this.wrap = true});
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +24,7 @@ class CustomText extends StatelessWidget {
       case 2:
         return Text(text,
             textAlign: align,
+            softWrap: wrap,
             style: Theme.of(context)
                 .textTheme
                 .titleSmall
@@ -30,6 +32,7 @@ class CustomText extends StatelessWidget {
       case 3:
         return Text(text,
             textAlign: align,
+            softWrap: wrap,
             style: Theme.of(context)
                 .textTheme
                 .bodyLarge
@@ -37,6 +40,7 @@ class CustomText extends StatelessWidget {
       case 5:
         return Text(text,
             textAlign: align,
+            softWrap: wrap,
             style: Theme.of(context)
                 .textTheme
                 .bodyMedium
@@ -44,6 +48,7 @@ class CustomText extends StatelessWidget {
       case 4:
         return Text(text,
             textAlign: align,
+            softWrap: wrap,
             style: Theme.of(context)
                 .textTheme
                 .bodySmall
@@ -51,6 +56,7 @@ class CustomText extends StatelessWidget {
       default:
         return Text(text,
             textAlign: align,
+            softWrap: wrap,
             style: Theme.of(context)
                 .textTheme
                 .headlineLarge
@@ -77,12 +83,14 @@ class CustomText extends StatelessWidget {
           width: width,
           child: Text(
             text,
+            textAlign: align,
             overflow: TextOverflow.ellipsis,
             softWrap: false,
             maxLines: maxLines,
             style: style ??
                 Theme.of(context).textTheme.titleSmall!.copyWith(
-                    color: AppColors.whiteColor, fontWeight: FontWeight.w800),
+                    color: color ?? AppColors.whiteColor,
+                    fontWeight: fontWeight ?? FontWeight.w800),
           ));
 
   RichText copyrightText(BuildContext context) {

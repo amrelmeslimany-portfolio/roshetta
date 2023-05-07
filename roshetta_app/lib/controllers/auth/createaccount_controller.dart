@@ -13,7 +13,7 @@ import 'package:roshetta_app/data/models/user.model.dart';
 import 'package:roshetta_app/data/source/remote/auth/createaccount_data.dart';
 import 'package:roshetta_app/data/source/static/static_data.dart';
 import 'package:roshetta_app/view/widgets/auth/auth_dialogs.dart';
-import 'package:roshetta_app/view/widgets/custom_request.dart';
+import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
 
 import '../../core/functions/reused_functions.dart';
 
@@ -95,12 +95,13 @@ class CreateAccControllerImp extends CreateAccController {
     if (requestStatusSpecialists == RequestStatus.success) {
       List data = response["Data"];
       specialistsList = data
-          .map((goverment) => DropdownMenuItem(
-              value: goverment["ar_name"].toString(),
-              child: Text(goverment["ar_name"].toString())))
+          .map((specialist) => DropdownMenuItem(
+              value: specialist["ar_name"].toString(),
+              child: Text(specialist["ar_name"].toString())))
           .toList();
     } else {
-      snackbar(title: "حدثت مشكلة", content: "لا يمك عرض التخصصات الطبيه الان");
+      snackbar(
+          title: "حدثت مشكلة", content: "لا يمكن عرض التخصصات الطبيه الان");
 
       specialistsList = [
         const DropdownMenuItem(
@@ -116,7 +117,7 @@ class CreateAccControllerImp extends CreateAccController {
   @override
   void onShowDatePicker(BuildContext context) async {
     DateTime? date = await customDatePicker(context);
-    birthDate.text = date != null ? DateFormat("dd-MM-yyyy").format(date) : "";
+    birthDate.text = date != null ? DateFormat("yyyy-MM-dd").format(date) : "";
   }
 
   @override
@@ -181,7 +182,7 @@ class CreateAccControllerImp extends CreateAccController {
         governorate: government,
         phoneNumber: phone.text,
         role: accountType,
-        specialist: "عيون",
+        specialist: doctorSpecialist,
         ssd: ssd.text,
         password: password.text,
         confirmPassword: rePassword.text,

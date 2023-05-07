@@ -11,7 +11,7 @@ class BottomNavbar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CurvedNavigationBar(
-      iconPadding: 15,
+      iconPadding: 5,
       index: controller.currentPage,
       height: 65,
       backgroundColor: AppColors.whiteColor,
@@ -42,10 +42,13 @@ class BottomNavbar extends StatelessWidget {
       CurvedNavigationBarItem(
         label: label,
         labelStyle: const TextStyle(fontSize: 13),
-        child: FaIcon(
-          icon,
-          size: size ?? 26,
-          color: checkPage(controller.currentPage, index),
+        child: Padding(
+          padding: const EdgeInsets.all(10.0),
+          child: FaIcon(
+            icon,
+            size: size ?? 26,
+            color: checkPage(controller.currentPage, index),
+          ),
         ),
       );
 
