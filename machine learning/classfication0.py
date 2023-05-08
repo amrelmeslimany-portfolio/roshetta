@@ -28,31 +28,29 @@ X_train, y_train = SMOTE().fit_resample(X_train, y_train)
 LRclassifier = LogisticRegression(solver='liblinear', max_iter=5000)
 LRclassifier.fit(X_train, y_train)
 
+# inputs taking from user 
+
 age = int(input("Enter age: "))
 sex = input("Enter sex (M or F): ")
 bp = input("Enter blood pressure (HIGH, NORMAL or LOW): ")
 cholesterol = input("Enter cholesterol (HIGH, NORMAL OR LOW): ")
 na_to_k = float(input("Enter Na_to_K ratio: "))
 
-# Create a new dataframe with the input data
 user_df = pd.DataFrame({'Age_binned': pd.cut([age], bins=bin_age, labels=category_age),
                         'Sex': [sex],
                         'BP': [bp],
                         'Cholesterol': [cholesterol],
                         'Na_to_K_binned': pd.cut([na_to_k], bins=bin_NatoK, labels=category_NatoK)})
 
-# Convert categorical variables to one-hot encoding
 user_df = pd.get_dummies(user_df)
 
-# Add missing columns to the user_df (if any)
 missing_cols = set(X_train.columns) - set(user_df.columns)
 for col in missing_cols:
     user_df[col] = 0
 
-# Reorder the columns to match the order in the X_train dataframe
 user_df = user_df[X_train.columns]
 
 # Make prediction using the model
 y_pred = LRclassifier.predict(user_df)
-
+# ودا الأوت بوت اللى هيظهر الدوا المناسب للحالة اللى فيها الاعراض اللى فوق 
 print(f"The recommended drug for a person with age {age}, sex {sex}, BP {bp}, cholesterol {cholesterol}, and Na_to_K ratio {na_to_k} is {y_pred[0]}.")
