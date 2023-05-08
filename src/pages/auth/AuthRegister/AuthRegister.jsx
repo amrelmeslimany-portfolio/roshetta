@@ -17,10 +17,12 @@ import images from '../../../images';
 import { useGlobalContext } from '../../../context';
 import './AuthRegister.scss';
 import { AppWrapper } from '../../../wrapper';
+import { MyLoader } from '../../../components';
 
 const AuthRegister = () => {
   const { setAuthUser, alert, setAlert } = useGlobalContext();
   const [auth, setAuth] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [role, setRole] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -103,6 +105,7 @@ const AuthRegister = () => {
         type: 'error',
       });
     } else {
+      setLoading(true);
       fetch('http://localhost:80/roshetta/api/users/register', {
         method: 'POST',
         // headers: {
@@ -116,6 +119,7 @@ const AuthRegister = () => {
           console.log(data);
           setAuth(data.Status);
           if (data.Status > 299) {
+            setLoading(false);
             window.scrollTo({
               top: 0,
               left: 0,
@@ -127,6 +131,7 @@ const AuthRegister = () => {
               type: 'error',
             });
           } else {
+            setLoading(false);
             localStorage.setItem('registerData', JSON.stringify([role, email]));
             navigate('/active-email');
 
@@ -157,6 +162,10 @@ const AuthRegister = () => {
       clearTimeout(myTimeout);
     };
   }, [alert.show]);
+
+  if (loading) {
+    return <MyLoader loading={loading} />;
+  }
 
   return (
     <>

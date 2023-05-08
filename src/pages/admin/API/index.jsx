@@ -92,14 +92,21 @@ export const getUsers = (type = '', filter = '') => {
   ).then((res) => res.json());
 };
 
-export const viewUserDetails = (type = '', id = '') => {
+export const viewUserDetails = async (type = '', id = '') => {
   getToken();
   const headers = { Authorization: `Bearer ${token}` }; // auth header with bearer token
 
-  return fetch(
+  const response = await fetch(
     `http://localhost:80/roshetta/api/admins/view_users_details/${id}?type=${type}`,
     { headers }
-  ).then((res) => res.json());
+  );
+  const data = await response.json();
+  return data;
+
+  // return fetch(
+  //   `http://localhost:80/roshetta/api/admins/view_users_details/${id}?type=${type}`,
+  //   { headers }
+  // ).then((res) => res.json());
 };
 
 export const deleteUser = (type = '', id = '') => {
@@ -116,15 +123,52 @@ export const deleteUser = (type = '', id = '') => {
   ).then((res) => res.json());
 };
 
-export const editUserDetails = (type = '', id = '') => {
+export const editProfileDetails = (type = '', id = '', formData) => {
   getToken();
   const headers = { Authorization: `Bearer ${token}` }; // auth header with bearer token
 
   return fetch(
-    `http://localhost:80/roshetta/api/admins/view_users_details/${id}?type=${type}`,
+    `
+    http://localhost:80/roshetta/api/admins/edit_profile_user/${id}?type=${type}`,
     {
       method: 'POST',
       headers,
+      body: formData,
+    }
+  ).then((res) => res.json());
+};
+
+export const editPasswordDetails = (type = '', id = '', formData) => {
+  getToken();
+  const headers = { Authorization: `Bearer ${token}` }; // auth header with bearer token
+
+  return fetch(
+    ` 
+    http://localhost:80/roshetta/api/admins/edit_password_user/${id}?type=${type}`,
+    {
+      method: 'POST',
+      headers,
+      body: formData,
+    }
+  ).then((res) => res.json());
+};
+
+export const editEmailOrSSdDetails = (
+  editType,
+  type = '',
+  id = '',
+  formData
+) => {
+  getToken();
+  const headers = { Authorization: `Bearer ${token}` }; // auth header with bearer token
+
+  return fetch(
+    `
+    http://localhost:80/roshetta/api/admins/edit_email_ssd_user/${id}?type=${type}&type_user_q=${editType}`,
+    {
+      method: 'POST',
+      headers,
+      body: formData,
     }
   ).then((res) => res.json());
 };

@@ -16,6 +16,8 @@ import {
   Table,
   Typography,
 } from 'antd';
+import { Input } from 'antd';
+const { Search } = Input;
 import { TbEye } from 'react-icons/tb';
 import { BsFillPencilFill } from 'react-icons/bs';
 import { FiTrash2 } from 'react-icons/fi';
@@ -29,18 +31,9 @@ const Users = () => {
   const [radioValue, setRadioValue] = useState('');
   const [switchValue, setSwitchValue] = useState(0);
 
-  useEffect(() => {
+  const refreshTableData = (searchTerm = '') => {
     setLoading(true);
-    getUsers().then((res) => {
-      console.log(res);
-      setUsers(res.Data);
-      setLoading(false);
-    });
-  }, []);
-
-  const refreshTableData = () => {
-    setLoading(true);
-    getUsers(radioValue, '').then((res) => {
+    getUsers(radioValue, searchTerm).then((res) => {
       console.log(res);
       setUsers(res.Data);
       setLoading(false);
@@ -87,6 +80,20 @@ const Users = () => {
     });
   };
 
+  const onSearch = (e) => {
+    refreshTableData(e.target.value);
+    console.log(e.target.value);
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    getUsers().then((res) => {
+      console.log(res);
+      setUsers(res.Data);
+      setLoading(false);
+    });
+  }, []);
+
   useEffect(() => {
     const myTimeout = setTimeout(() => {
       setAlert({ msg: '', show: false, type: '' });
@@ -126,6 +133,14 @@ const Users = () => {
             <Radio value={'clinic'}>عيادة</Radio>
             <Radio value={'pharmacy'}>صيدلية</Radio>
           </Radio.Group>
+          <span>ابحث عن شخص:</span>
+          <Search
+            placeholder="اكتب الإسم او الرقم القومي"
+            allowClear
+            enterButton="ابحث"
+            size="large"
+            onChange={onSearch}
+          />
         </Space>
         <Table
           className="w-[80vw]"
@@ -145,7 +160,7 @@ const Users = () => {
               key: 'name',
             },
             {
-              title: 'الرقم',
+              title: 'الرقم القومي',
               dataIndex: 'ssd',
               render: (value) => <span>{value}</span>,
               key: 'ssd',
@@ -157,18 +172,12 @@ const Users = () => {
                 const id = userData.id;
                 return (
                   <div className="flex items-center justify-center  ">
-                    <span>{}</span>
                     <Link to={`/admin/users/view/${role}/${id}`}>
                       <TbEye className="mx-1 cursor-pointer text-xl text-roshetta" />
                     </Link>
-                    <BsFillPencilFill
-                      className="mx-1 cursor-pointer text-xl text-roshetta"
-                      onClick={() =>
-                        editUserDetails(role, id).then((res) =>
-                          console.log(res)
-                        )
-                      }
-                    />
+                    <Link to={`/admin/users/edit/${role}/${id}`}>
+                      <BsFillPencilFill className="mx-1 cursor-pointer text-xl text-roshetta" />
+                    </Link>
                     <FiTrash2
                       className="mx-1 cursor-pointer text-xl text-roshetta"
                       onClick={() => {

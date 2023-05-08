@@ -7,8 +7,10 @@ import { useGlobalContext } from '../../../context';
 import images from '../../../images';
 import './AuthLogin.scss';
 import { AppWrapper } from '../../../wrapper';
+import { MyLoader } from '../../../components';
 
 const AuthLogin = () => {
+  const [loading, setLoading] = useState(false);
   const userData = JSON.parse(localStorage.getItem('userData'));
 
   if (JSON.parse(localStorage.getItem('userData'))) {
@@ -16,6 +18,9 @@ const AuthLogin = () => {
 
     if (userData.type === 'doctor') {
       return <Navigate to="/doctor/personal-info" />;
+    }
+    if (userData.type === 'admin') {
+      return <Navigate to="/admin/dashboard" />;
     }
   }
   const { setAuthUser, alert, setAlert } = useGlobalContext();
@@ -83,44 +88,46 @@ const AuthLogin = () => {
         show: true,
         type: 'error',
       });
-    }
-
-    fetch('http://localhost:80/roshetta/api/users/login', {
-      method: 'POST',
-      // headers: {
-      //   'Content-Type': 'application/json',
-      // },
-      body: formData,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data.Message);
-        let message = data.Message;
-        if (data.Status > 299) {
-          window.scrollTo({
-            top: 0,
-            left: 0,
-            behavior: 'smooth',
-          });
-          setAlert({
-            msg: `${message.password_err} \n ${message.type_err} \n ${message.user_id_err} `,
-            show: true,
-            type: 'error',
-          });
-        } else {
-          console.log(data);
-          localStorage.setItem('userData', JSON.stringify(data.Data));
-          if (data.Data.type === 'doctor') {
-            navigate('/doctor/personal-info');
-          } else if (data.Data.type === 'admin') {
-            navigate('/admin/dashboard');
+    } else {
+      setLoading(true);
+      fetch('http://localhost:80/roshetta/api/users/login', {
+        method: 'POST',
+        // headers: {
+        //   'Content-Type': 'application/json',
+        // },
+        body: formData,
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log(data.Message);
+          let message = data.Message;
+          if (data.Status > 299) {
+            setLoading(false);
+            window.scrollTo({
+              top: 0,
+              left: 0,
+              behavior: 'smooth',
+            });
+            setAlert({
+              msg: `${message.password_err} \n ${message.type_err} \n ${message.user_id_err} `,
+              show: true,
+              type: 'error',
+            });
+          } else {
+            localStorage.setItem('userData', JSON.stringify(data.Data));
+            setLoading(false);
+            if (data.Data.type === 'doctor') {
+              navigate('/doctor/personal-info');
+            } else if (data.Data.type === 'admin') {
+              navigate('/admin/dashboard');
+            }
+            // setRole('');
+            // setEmail('');
+            // setPassword('');
+            // setSsd('');
           }
-          // setRole('');
-          // setEmail('');
-          // setPassword('');
-          // setSsd('');
-        }
-      });
+        });
+    }
   };
   useEffect(() => {
     const myTimeout = setTimeout(() => {
@@ -131,6 +138,11 @@ const AuthLogin = () => {
       clearTimeout(myTimeout);
     };
   }, [alert.show]);
+
+  if (loading) {
+    return <MyLoader text={'جاري تسجيل الدخول...'} loading={loading} />;
+  }
+
   return (
     <>
       <div className="auth-login">

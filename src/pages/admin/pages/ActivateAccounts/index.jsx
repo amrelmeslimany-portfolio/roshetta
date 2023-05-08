@@ -11,6 +11,8 @@ import {
   Table,
   Typography,
 } from 'antd';
+import { Input } from 'antd';
+const { Search } = Input;
 import { useGlobalContext } from '../../../../context';
 
 const ActivateAccounts = () => {
@@ -20,9 +22,10 @@ const ActivateAccounts = () => {
   const [dataSource, setDataSource] = useState([]);
   const [radioValue, setRadioValue] = useState('');
   const [switchValue, setSwitchValue] = useState(0);
-  const refreshTableData = () => {
+
+  const refreshTableData = (searchTerm = '') => {
     setLoading(true);
-    viewActivation(radioValue, '', switchValue).then((res) => {
+    viewActivation(radioValue, searchTerm, switchValue).then((res) => {
       setDataSource(res.Data);
       setLoading(false);
     });
@@ -39,13 +42,6 @@ const ActivateAccounts = () => {
       type: type,
     });
   };
-  useEffect(() => {
-    setLoading(true);
-    viewActivation(radioValue, '', switchValue).then((res) => {
-      setDataSource(res.Data);
-      setLoading(false);
-    });
-  }, []);
 
   const handleSubmit = () => {
     console.log('hello');
@@ -78,6 +74,19 @@ const ActivateAccounts = () => {
       setLoading(false);
     });
   };
+
+  const onSearch = (e) => {
+    refreshTableData(e.target.value);
+    console.log(e.target.value);
+  };
+
+  useEffect(() => {
+    setLoading(true);
+    viewActivation(radioValue, '', switchValue).then((res) => {
+      setDataSource(res.Data);
+      setLoading(false);
+    });
+  }, []);
 
   useEffect(() => {
     const myTimeout = setTimeout(() => {
@@ -118,6 +127,14 @@ const ActivateAccounts = () => {
             <Radio value={'clinic'}>عيادة</Radio>
             <Radio value={'pharmacy'}>صيدلية</Radio>
           </Radio.Group>
+          <span>ابحث عن شخص:</span>
+          <Search
+            placeholder="اكتب الإسم او الرقم القومي"
+            allowClear
+            enterButton="ابحث"
+            size="large"
+            onChange={onSearch}
+          />
         </Space>
         <Table
           columns={[

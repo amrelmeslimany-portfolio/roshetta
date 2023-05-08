@@ -61,7 +61,7 @@ export default function App() {
               <Route path="pharmacies" element={<Pharmacies />} />
               <Route path="users" element={<Users />} />
               <Route path="users/view/:type/:id" element={<ViewSingleUser />} />
-              <Route path="users/edit/:id" element={<EditSingleUser />} />
+              <Route path="users/edit/:type/:id" element={<EditSingleUser />} />
             </Route>
 
             {/* ------------------- Doctor   ------------------- */}
