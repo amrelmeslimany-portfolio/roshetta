@@ -47,11 +47,11 @@ const AdminSideMenu = () => {
           //   icon: <MdAdminPanelSettings style={{ color: '#49ce91' }} />,
           //   key: '/admin/add-admin',
           // },
-          {
-            label: 'تعديل مباشر',
-            icon: <MdEdit style={{ color: '#49ce91' }} />,
-            key: '/admin/edit-info',
-          },
+          // {
+          //   label: 'تعديل مباشر',
+          //   icon: <MdEdit style={{ color: '#49ce91' }} />,
+          //   key: '/admin/edit-info',
+          // },
           {
             label: 'العيادات',
             icon: <MdLocalPharmacy style={{ color: '#49ce91' }} />,

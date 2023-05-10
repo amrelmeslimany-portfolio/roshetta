@@ -130,8 +130,8 @@ const Users = () => {
             <Radio value={''}>الكل</Radio>
             <Radio value={'doctor'}>دكتور</Radio>
             <Radio value={'pharmacist'}>صيدلي</Radio>
-            <Radio value={'clinic'}>عيادة</Radio>
-            <Radio value={'pharmacy'}>صيدلية</Radio>
+            {/* <Radio value={'clinic'}>عيادة</Radio> */}
+            {/* <Radio value={'pharmacy'}>صيدلية</Radio> */}
           </Radio.Group>
           <span>ابحث عن شخص:</span>
           <Search
