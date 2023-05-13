@@ -337,9 +337,8 @@ class Doctor
     }
     public function addChat($data = [])
     {
-        $this->db->query("INSERT INTO chat(name,time,image,message,doctor_id) VALUES(:NAME,:TIME,:IMAGE,:MESSAGE,:DOC_ID)");
+        $this->db->query("INSERT INTO chat(name,image,message,doctor_id) VALUES(:NAME,:IMAGE,:MESSAGE,:DOC_ID)");
         $this->db->bind(":NAME", $data['name']);
-        $this->db->bind(":TIME", $data['time']);
         $this->db->bind(":IMAGE", $data['image']);
         $this->db->bind(":MESSAGE", $data['message']);
         $this->db->bind(":DOC_ID", $data['id']);
@@ -349,7 +348,7 @@ class Doctor
         else
             return false;
     }
-    public function getChat($data = [])
+    public function getChat()
     {
         $this->db->query("SELECT * FROM chat ORDER BY id DESC");
         $this->db->execute();
@@ -360,6 +359,20 @@ class Doctor
             return false;
         }
     }
+
+	public function getChatEndMessage($id)
+	{
+		$this->db->query("SELECT * FROM chat WHERE doctor_id = :ID ORDER BY id DESC");
+		$this->db->bind(":ID", $id);
+		$this->db->execute();
+		if ($this->db->rowCount() > 0 ) {
+			$data = $this->db->fetchObject();
+			return $data;
+		} else {
+			return false;
+		}
+	}
+
     public function deleteChat($id,$do_id)
     {
         $this->db->query("DELETE FROM chat WHERE id = :ID AND doctor_id = :DOC_ID");

@@ -1771,16 +1771,17 @@ class Doctors extends Controller
             }
 
             if (!empty($data['chat_id'])) {
-                if (!$this->doctorModel->deleteChat($data['chat_id'], $data['id'])) {
-                    @$data_message = $this->doctorModel->getChat();
-                    if (!$data_message) {
-                        $data_message = null;
-                    }
+                if (!@$this->doctorModel->deleteChat($data['chat_id'], $data['id'])) {
+					$Message = 'فشل الحذف لحدوث خطأ ما';
+					$Status = 422;
+					userMessage($Status, $Message);
+					die();
                 }
-                @$data_message = $this->doctorModel->getChat();
-                if (!$data_message) {
-                    $data_message = null;
-                }
+
+				$Message = 'تم الحذف بنجاح';
+				$Status = 201;
+				userMessage($Status, $Message);
+				die();
             }
 
             if (!empty($data['message'])) {
@@ -1795,7 +1796,6 @@ class Doctors extends Controller
                 $data_chat = [
                     "name" => $get_doctor->name,
                     "id" => $data['id'],
-                    "time" => date("h:i"),
                     "image" => $get_doctor->profile_img,
                     "message" => $data['message']
                 ];
@@ -1807,23 +1807,31 @@ class Doctors extends Controller
                     die();
                 }
 
-                @$data_message = $this->doctorModel->getChat();
-                if (!$data_message) {
-                    $data_message = null;
+                @$data_message_one = $this->doctorModel->getChatEndMessage($data['id']);
+                if (!$data_message_one) {
+					$Message = 'حدث خطأ اثناء جلب الرسالة';
+					$Status = 422;
+					userMessage($Status, $Message);
+					die();
                 }
-            } else {
-                @$data_message = $this->doctorModel->getChat();
-                if (!$data_message) {
-                    $data_message = null;
-                }
+
+				unset($data_message_one->image);
+				$data_message_one->name = 1;
+
+				$Message = 'تم جلب البيانات بنجاح';
+				$Status = 200;
+				userMessage($Status, $Message, $data_message_one);
+				die();
+
             }
 
-            if (empty($data_message)) {
-                $Message = 'لم يتم العثور على بيانات';
-                $Status = 204;
-                userMessage($Status, $Message);
-                die();
-            }
+			@$data_message = $this->doctorModel->getChat();
+			if (!$data_message) {
+				$Message = 'لم يتم العثور على بيانات';
+				$Status = 204;
+				userMessage($Status, $Message);
+				die();
+			}
 
             $new_data_message = [];
 
@@ -1842,6 +1850,7 @@ class Doctors extends Controller
             $Status = 200;
             userMessage($Status, $Message, $new_data_message);
             die();
+
         } else {
             $Message = 'غير مصرح الدخول عبر هذة الطريقة';
             $Status = 405;

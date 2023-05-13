@@ -29,12 +29,27 @@ class Core
         //Instantiation Of controller
         $this->controller = new $this->controller;
 
-        if (isset($url[4])) {
-            if (method_exists($this->controller, $url[4])) {
-                $this->method = $url[4];
-                unset($url[4]);
-            }
-        }
+
+		if (isset($url[5])){
+			if (isset($url[4])) {
+				if (method_exists($this->controller, $url[4])) {
+					$this->method = $url[4];
+					unset($url[4]);
+				}
+			}
+
+			$url = explode('?',$url[5]);
+		}
+
+		if (isset($url[4])){
+			$url = explode('?',$url[4]);
+			if (isset($url[0])) {
+				if (method_exists($this->controller, $url[0])) {
+					$this->method = $url[0];
+					unset($url[0]);
+				}
+			}
+		}
 
         $this->param = $url ? array_values($url) : []; //Ternary Operator
 
