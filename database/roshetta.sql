@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Apr 15, 2023 at 05:22 PM
+-- Generation Time: May 13, 2023 at 05:23 PM
 -- Server version: 10.4.27-MariaDB
 -- PHP Version: 8.2.0
 
@@ -2303,7 +2303,7 @@ INSERT INTO `assistant` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`,
 CREATE TABLE `chat` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
-  `time` varchar(255) NOT NULL,
+  `time` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
   `message` text NOT NULL,
   `image` text DEFAULT NULL,
   `doctor_id` int(11) NOT NULL
@@ -2314,13 +2314,13 @@ CREATE TABLE `chat` (
 --
 
 INSERT INTO `chat` (`id`, `name`, `time`, `message`, `image`, `doctor_id`) VALUES
-(2, 'mohamed saeed', '07:00', 'مرحبا', 'df_male', 2),
-(7, 'mohamed saeed', '07:17', 'مرحبا', 'df_male', 1),
-(9, 'mohamed saeed', '07:19', 'كيف حالك', 'df_male', 1),
-(10, 'mohamed saeed', '07:21', 'بخير الحمد لله', 'df_male', 2),
-(11, 'mohamed saeed', '08:49', 'بخير الحمد لله', 'df_male', 1),
-(13, 'mohamed saeed', '08:50', 'بخير الحمد لله', 'df_male', 1),
-(14, 'mohamed saeed', '06:40', 'mm', 'df_male', 1);
+(2, 'mohamed saeed', '0000-00-00 00:00:00', 'مرحبا', 'df_male', 2),
+(7, 'mohamed saeed', '0000-00-00 00:00:00', 'مرحبا', 'df_male', 1),
+(9, 'mohamed saeed', '0000-00-00 00:00:00', 'كيف حالك', 'df_male', 1),
+(10, 'mohamed saeed', '0000-00-00 00:00:00', 'بخير الحمد لله', 'df_male', 2),
+(11, 'mohamed saeed', '0000-00-00 00:00:00', 'بخير الحمد لله', 'df_male', 1),
+(13, 'mohamed saeed', '0000-00-00 00:00:00', 'بخير الحمد لله', 'df_male', 1),
+(14, 'mohamed saeed', '0000-00-00 00:00:00', 'mm', 'df_male', 1);
 
 -- --------------------------------------------------------
 
