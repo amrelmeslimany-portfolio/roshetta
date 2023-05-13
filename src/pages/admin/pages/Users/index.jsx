@@ -23,6 +23,7 @@ import { BsFillPencilFill } from 'react-icons/bs';
 import { FiTrash2 } from 'react-icons/fi';
 import { useGlobalContext } from '../../../../context';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Users = () => {
   const { setAuthUser, alert, setAlert } = useGlobalContext();
@@ -30,11 +31,11 @@ const Users = () => {
   const [users, setUsers] = useState([]);
   const [radioValue, setRadioValue] = useState('');
   const [switchValue, setSwitchValue] = useState(0);
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const refreshTableData = (searchTerm = '') => {
+  const refreshTableData = (radioValue = '', searchTerm = '') => {
     setLoading(true);
     getUsers(radioValue, searchTerm).then((res) => {
-      console.log(res);
       setUsers(res.Data);
       setLoading(false);
     });
@@ -51,53 +52,24 @@ const Users = () => {
       type: type,
     });
   };
-  const onChange = (e) => {
-    setLoading(true);
-    if (e === false) {
-      setSwitchValue(0);
-      getUsers(radioValue, '').then((res) => {
-        setUsers(res.Data);
-        setLoading(false);
-      });
-    }
-    if (e === true) {
-      setSwitchValue(1);
-      getUsers(radioValue, '').then((res) => {
-        setUsers(res.Data);
-        setLoading(false);
-      });
-    }
-  };
   const onRadioChange = (e) => {
-    setLoading(true);
-    // ابحث في المشكلة دي
     setRadioValue(e.target.value);
-    getUsers(e.target.value, '').then((res) => {
-      // ممكن اسأل عمرو فيها
-      // setUsers(radioValue, '').then((res) => {
-      setUsers(res.Data);
-      setLoading(false);
-    });
+    refreshTableData(e.target.value, searchTerm);
   };
 
   const onSearch = (e) => {
-    refreshTableData(e.target.value);
-    console.log(e.target.value);
+    setSearchTerm(e.target.value);
+    refreshTableData(radioValue, e.target.value);
   };
 
   useEffect(() => {
-    setLoading(true);
-    getUsers().then((res) => {
-      console.log(res);
-      setUsers(res.Data);
-      setLoading(false);
-    });
+    refreshTableData(radioValue, searchTerm);
   }, []);
 
   useEffect(() => {
     const myTimeout = setTimeout(() => {
       setAlert({ msg: '', show: false, type: '' });
-    }, 3000);
+    }, 2000);
 
     return () => {
       clearTimeout(myTimeout);
@@ -107,29 +79,36 @@ const Users = () => {
   return (
     <>
       {alert.show && (
-        <Alert
-          style={{
-            marginBottom: 20,
-          }}
-          message="تنبيه!"
-          description={alert.msg}
-          type={alert.type}
-          showIcon
-        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Alert
+            style={{
+              marginBottom: 20,
+            }}
+            message="تنبيه!"
+            description={alert.msg}
+            type={alert.type}
+            showIcon
+          />
+        </motion.div>
       )}
       <Space direction="vertical" size={20}>
         <h2 className="p-4 text-4xl font-bold text-roshetta">المستخدمين</h2>
-        <h4 className="px-4 text-2xl font-bold text-slate-500">
-          فلترة النتائج
-        </h4>
-        <Space className="rounded-lg bg-slate-200 p-4" size={20}>
+        <h4 className="px-4 text-2xl font-bold text-black">فلترة النتائج</h4>
+        <Space className="rounded-lg bg-gray-200 p-4" size={20}>
           {/* <span>مفعل / غير مفعل</span>
           <Switch onChange={onChange} /> */}
           <span>اختار النوع:</span>
           <Radio.Group onChange={onRadioChange} value={radioValue}>
             <Radio value={''}>الكل</Radio>
+            // Add filter for Patient
             <Radio value={'doctor'}>دكتور</Radio>
+            <Radio value={'assistant'}>مساعد</Radio>
             <Radio value={'pharmacist'}>صيدلي</Radio>
+            <Radio value={'patient'}>مريض</Radio>
             {/* <Radio value={'clinic'}>عيادة</Radio> */}
             {/* <Radio value={'pharmacy'}>صيدلية</Radio> */}
           </Radio.Group>
@@ -162,8 +141,14 @@ const Users = () => {
             {
               title: 'الرقم القومي',
               dataIndex: 'ssd',
-              render: (value) => <span>{value}</span>,
+              render: (value) => <span className="font-bold">{value}</span>,
               key: 'ssd',
+            },
+            {
+              title: 'نوع الحساب',
+              dataIndex: 'role',
+              render: (value) => <span className="font-bold">{value}</span>,
+              key: 'role',
             },
             {
               title: 'الخيارات',
@@ -181,10 +166,9 @@ const Users = () => {
                     <FiTrash2
                       className="mx-1 cursor-pointer text-xl text-roshetta"
                       onClick={() => {
-                        console.log(role, userData.id);
                         deleteUser(role, id).then((res) => {
                           showAlert(res.Message, 'success');
-                          refreshTableData();
+                          refreshTableData(radioValue, searchTerm);
                         });
                       }}
                     />

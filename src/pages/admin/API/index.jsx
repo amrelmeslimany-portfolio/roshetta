@@ -50,13 +50,13 @@ export const viewMessage = (type = '', status = '') => {
   ).then((res) => res.json());
 };
 
-export const replyMessageUser = (id = '') => {
+export const replyMessageUser = (id = '', formData) => {
   getToken();
   const headers = { Authorization: `Bearer ${token}` }; // auth header with bearer token
 
   return fetch(
     `http://localhost:80/roshetta/api/admins/reply_message_user/${id}`,
-    { headers, method: 'POST' }
+    { headers, method: 'POST', body: formData }
   ).then((res) => res.json());
 };
 

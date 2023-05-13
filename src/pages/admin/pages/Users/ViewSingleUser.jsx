@@ -35,7 +35,7 @@ const ViewSingleUser = () => {
   if (user.name) {
     return (
       <>
-        <div className="my-4 w-[80vw] bg-slate-100">
+        <div className="my-4 w-[80vw] bg-gray-100">
           <img
             // src={user.image}
             src={user.image}

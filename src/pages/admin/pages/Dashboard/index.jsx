@@ -2,9 +2,21 @@ import React, { useState } from 'react';
 import { Card, Space, Statistic, Table, Typography } from 'antd';
 import { ShoppingCartOutlined } from '@ant-design/icons';
 import { TbCurrencyDollarCanadian } from 'react-icons/tb';
-import { MdLocalPharmacy, MdOutlineLocalPharmacy } from 'react-icons/md';
-import { GiPlayerTime } from 'react-icons/gi';
-import { getOrders, getRevenue, viewRoshettaNumbers } from '../../API';
+import {
+  MdLocalPharmacy,
+  MdOutlineLocalPharmacy,
+  MdOutlineSick,
+} from 'react-icons/md';
+import { GiNurseMale, GiPlayerTime } from 'react-icons/gi';
+import { RiAdminLine, RiNurseFill } from 'react-icons/ri';
+import { GrUserAdmin } from 'react-icons/gr';
+
+import {
+  getOrders,
+  getRevenue,
+  viewMessage,
+  viewRoshettaNumbers,
+} from '../../API';
 import { useEffect } from 'react';
 import {
   Chart as ChartJS,
@@ -19,6 +31,8 @@ import {
 
 import { Bar } from 'react-chartjs-2';
 import { MyLoader } from '../../../../components';
+import { FaPrescriptionBottleAlt, FaUserNurse } from 'react-icons/fa';
+import { BiClinic } from 'react-icons/bi';
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -29,7 +43,7 @@ ChartJS.register(
 );
 const cardStyles = {
   color: '#49ce91',
-  backgroundColor: 'rgba(0,255,0,0.25)',
+  backgroundColor: 'rgba(0,255,0,0.15)',
   borderRadius: 20,
   fontSize: 40,
   padding: 8,
@@ -48,8 +62,8 @@ const Dashboard = () => {
 
   useEffect(() => {
     setLoading(true);
+
     viewRoshettaNumbers().then((res) => {
-      console.log(res.Data);
       setAdmin(res.Data.admin);
       setAssistant(res.Data.assistant);
       setClinic(res.Data.clinic);
@@ -69,7 +83,7 @@ const Dashboard = () => {
           الصفحة الرئيسية
         </h2>
 
-        <Space direction="horizontal">
+        {/* <Space direction="horizontal">
           <DashboardCard
             icon={<GiPlayerTime style={cardStyles} />}
             title={'نشط-المرضى'}
@@ -105,48 +119,50 @@ const Dashboard = () => {
             title={'نشط-الصيادلة'}
             value={pharmacist.active_now}
           />
-        </Space>
+        </Space> */}
 
         <Space direction="horizontal">
           <DashboardCard
-            icon={<GiPlayerTime style={cardStyles} />}
+            icon={<MdOutlineSick style={cardStyles} />}
             title={'المرضى'}
             value={patient.all}
           />
           <DashboardCard
-            icon={<MdLocalPharmacy style={cardStyles} />}
+            icon={<FaUserNurse style={cardStyles} />}
             title={'الدكاترة'}
             value={doctor.all}
+          />
+          <DashboardCard
+            icon={<RiNurseFill style={cardStyles} />}
+            title={'المساعدين'}
+            value={assistant.all}
           />
           <DashboardCard
             icon={<MdOutlineLocalPharmacy style={cardStyles} />}
             title={'الصيدليات '}
             value={pharmacy.all}
           />
+        </Space>
+        <Space direction="horizontal">
           <DashboardCard
-            icon={<TbCurrencyDollarCanadian style={cardStyles} />}
-            title={'العيادات'}
-            value={clinic.all}
-          />
-          <DashboardCard
-            icon={<TbCurrencyDollarCanadian style={cardStyles} />}
+            icon={<RiAdminLine style={cardStyles} />}
             title={'الادمنز'}
             value={admin.all}
           />
           <DashboardCard
-            icon={<TbCurrencyDollarCanadian style={cardStyles} />}
-            title={'المساعدين'}
-            value={clinic.all}
-          />
-          <DashboardCard
-            icon={<TbCurrencyDollarCanadian style={cardStyles} />}
+            icon={<GiNurseMale style={cardStyles} />}
             title={'الصيادلة'}
             value={pharmacist.all}
           />
           <DashboardCard
-            icon={<TbCurrencyDollarCanadian style={cardStyles} />}
+            icon={<FaPrescriptionBottleAlt style={cardStyles} />}
             title={'الروشتات'}
             value={prescript}
+          />
+          <DashboardCard
+            icon={<BiClinic style={cardStyles} />}
+            title={'العيادات'}
+            value={clinic.all}
           />
         </Space>
         <Space>
@@ -162,8 +178,8 @@ const DashboardCard = ({ title, value, icon }) => {
   return (
     <>
       <div className="h-28 w-28 rounded-lg bg-gray-200 p-2 lg:w-36">
-        {icon} <h3 className="text-md font-bold text-slate-700">{title}</h3>
-        <p className="font-extrabold text-slate-600">{value}</p>
+        {icon} <h3 className="text-md font-bold text-black">{title}</h3>
+        <p className="font-extrabold text-gray-700">{value}</p>
       </div>
     </>
   );

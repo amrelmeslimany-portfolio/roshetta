@@ -3,19 +3,29 @@ import { MailOutlined, BellFilled } from '@ant-design/icons';
 
 import React, { useEffect, useState } from 'react';
 import images from '../../../../images';
-import { getComments, getOrders } from '../../API';
-
+import {
+  getComments,
+  getOrders,
+  getUsers,
+  replyMessageUser,
+  viewMessage,
+} from '../../API';
+import { BsFillReplyFill } from 'react-icons/bs';
 const AdminHeader = () => {
   const [comments, setComments] = useState([]);
   const [orders, setOrders] = useState([]);
   const [commentsOpen, setCommentsOpen] = useState(false);
   const [notificationOpen, setNotificationOpen] = useState(false);
   useEffect(() => {
-    getComments().then((res) => {
-      setComments(res.comments);
-    });
+    // getComments().then((res) => {
+    //   setComments(res.comments);
+    // });
     getOrders().then((res) => {
       setOrders(res.products);
+    });
+
+    viewMessage().then((res) => {
+      setComments(res.Data);
     });
   }, []);
   return (
@@ -34,12 +44,12 @@ const AdminHeader = () => {
             onClick={() => setCommentsOpen(true)}
           />
         </Badge>
-        <Badge count={orders.length}>
+        {/* <Badge count={orders.length}>
           <BellFilled
             style={{ fontSize: 24 }}
             onClick={() => setNotificationOpen(true)}
           />
-        </Badge>
+        </Badge> */}
       </Space>
       <Drawer
         width={450}
@@ -51,7 +61,33 @@ const AdminHeader = () => {
         <List
           dataSource={comments}
           renderItem={(item) => {
-            return <List.Item>{item.body}</List.Item>;
+            return (
+              <List.Item className="flex items-start justify-center">
+                <h3 className="inline-block text-lg font-bold">
+                  {item.name} :
+                </h3>
+                <p className="inline-block text-lg">{item.message}</p>
+                <BsFillReplyFill
+                  className="cursor-pointer text-xl"
+                  title="رد"
+                  onClick={() => {
+                    getUsers(item.role, item.email).then((res) => {
+                      console.log(item.email);
+                      let id;
+                      if (res.Data[0]) {
+                        id = res.Data[0].id || 0;
+                      }
+                      console.log(res.Data, id);
+                      let formData = new FormData();
+                      formData.append('message', item.message);
+                      replyMessageUser(id, formData).then((res) => {
+                        console.log(res);
+                      });
+                    });
+                  }}
+                />
+              </List.Item>
+            );
           }}
         ></List>
       </Drawer>

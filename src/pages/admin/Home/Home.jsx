@@ -13,7 +13,7 @@ const Home = () => {
     <>
       <div className="admin">
         <AdminHeader />
-        <div className="SideMenuAndPageContent bg-slate-100">
+        <div className="SideMenuAndPageContent bg-gray-100">
           <AdminSideMenu></AdminSideMenu>
           {/* <AdminPageContent></AdminPageContent> */}
           <div className="admin__page-content">

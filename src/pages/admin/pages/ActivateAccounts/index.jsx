@@ -14,6 +14,7 @@ import {
 import { Input } from 'antd';
 const { Search } = Input;
 import { useGlobalContext } from '../../../../context';
+import { motion } from 'framer-motion';
 
 const ActivateAccounts = () => {
   const { setAuthUser, alert, setAlert } = useGlobalContext();
@@ -21,9 +22,13 @@ const ActivateAccounts = () => {
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
   const [radioValue, setRadioValue] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
   const [switchValue, setSwitchValue] = useState(0);
-
-  const refreshTableData = (searchTerm = '') => {
+  const refreshTableData = (
+    radioValue = '',
+    searchTerm = '',
+    switchValue = ''
+  ) => {
     setLoading(true);
     viewActivation(radioValue, searchTerm, switchValue).then((res) => {
       setDataSource(res.Data);
@@ -42,50 +47,29 @@ const ActivateAccounts = () => {
       type: type,
     });
   };
-
-  const handleSubmit = () => {
-    console.log('hello');
-  };
   const onChange = (e) => {
     setLoading(true);
     if (e === false) {
       setSwitchValue(0);
-      viewActivation(radioValue, '', 0).then((res) => {
-        setDataSource(res.Data);
-        setLoading(false);
-      });
+      refreshTableData(radioValue, searchTerm, 0);
     }
     if (e === true) {
       setSwitchValue(1);
-      viewActivation(radioValue, '', 1).then((res) => {
-        setDataSource(res.Data);
-        setLoading(false);
-      });
+      refreshTableData(radioValue, searchTerm, 1);
     }
   };
   const onRadioChange = (e) => {
-    setLoading(true);
-    // ابحث في المشكلة دي
     setRadioValue(e.target.value);
-    viewActivation(e.target.value, '', switchValue).then((res) => {
-      // ممكن اسأل عمرو فيها
-      // viewActivation(radioValue, '', switchValue).then((res) => {
-      setDataSource(res.Data);
-      setLoading(false);
-    });
+    refreshTableData(e.target.value, searchTerm, switchValue);
   };
 
   const onSearch = (e) => {
-    refreshTableData(e.target.value);
-    console.log(e.target.value);
+    setSearchTerm(e.target.value);
+    refreshTableData(radioValue, e.target.value, switchValue);
   };
 
   useEffect(() => {
-    setLoading(true);
-    viewActivation(radioValue, '', switchValue).then((res) => {
-      setDataSource(res.Data);
-      setLoading(false);
-    });
+    refreshTableData(radioValue, searchTerm, switchValue);
   }, []);
 
   useEffect(() => {
@@ -101,22 +85,26 @@ const ActivateAccounts = () => {
   return (
     <>
       {alert.show && (
-        <Alert
-          style={{
-            marginBottom: 20,
-          }}
-          message="تنبيه!"
-          description={alert.msg}
-          type={alert.type}
-          showIcon
-        />
+        <motion.div
+          initial={{ opacity: 0, scale: 0.5 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Alert
+            style={{
+              marginBottom: 20,
+            }}
+            message="تنبيه!"
+            description={alert.msg}
+            type={alert.type}
+            showIcon
+          />
+        </motion.div>
       )}
       <Space direction="vertical" size={20}>
         <h2 className="p-4 text-4xl font-bold text-roshetta">تفعيل الحسابات</h2>
-        <h4 className="px-4 text-2xl font-bold text-slate-500">
-          فلترة النتائج
-        </h4>
-        <Space className="rounded-lg bg-slate-200 p-4" size={20}>
+        <h4 className="px-4 text-2xl font-bold text-black">فلترة النتائج</h4>
+        <Space className="rounded-lg bg-gray-200 px-2 py-4" size={3}>
           <span>مفعل / غير مفعل</span>
           <Switch onChange={onChange} />
           <span>اختار النوع:</span>
@@ -149,7 +137,7 @@ const ActivateAccounts = () => {
             {
               title: 'الرقم القومي',
               dataIndex: 'ssd',
-              render: (value) => <span>{value}</span>,
+              render: (value) => <span className="font-bold">{value}</span>,
             },
             // {
             //   title: 'Rating',
@@ -207,7 +195,7 @@ const ActivateAccounts = () => {
                       }}
                       className="m-2 rounded-lg border-2 border-green-400 bg-roshetta p-1 text-white transition-colors hover:bg-transparent hover:text-slate-600  "
                     >
-                      تفعيل الحساب
+                      تنشيط الحساب
                     </a>
                     <a
                       onClick={() => {
