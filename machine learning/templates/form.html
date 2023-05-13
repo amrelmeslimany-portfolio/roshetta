@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Drug Recommendation Form</title>
+  </head>
+  <body>
+    <h2>Drug Recommendation Form</h2>
+    <form action="/predict" method="POST">
+      <label for="age">Age:</label>
+      <input type="number" id="age" name="age" required><br><br>
+      
+      <label for="sex">Sex:</label>
+      <select id="sex" name="sex" required>
+        <option value="male">Male</option>
+        <option value="female">Female</option>
+      </select><br><br>
+      
+      <label for="bp">Blood Pressure:</label>
+      <select id="bp" name="bp" required>
+        <option value="low">Low</option>
+        <option value="normal">Normal</option>
+        <option value="high">High</option>
+      </select><br><br>
+      
+      <label for="cholesterol">Cholesterol:</label>
+      <select id="cholesterol" name="cholesterol" required>
+        <option value="low">Low</option>
+        <option value="normal">Normal</option>
+        <option value="high">High</option>
+      </select><br><br>
+      
+      <label for="na_to_k">Na_to_K Ratio:</label>
+      <input type="number" step="any" id="na_to_k" name="na_to_k" required><br><br>
+      
+      <input type="submit" value="Submit">
+    </form>
+  </body>
+</html>
