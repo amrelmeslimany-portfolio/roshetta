@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 13, 2023 at 05:23 PM
--- Server version: 10.4.27-MariaDB
--- PHP Version: 8.2.0
+-- Generation Time: 15 مايو 2023 الساعة 11:05
+-- إصدار الخادم: 10.4.25-MariaDB
+-- PHP Version: 8.1.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -24,7 +24,7 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
--- Table structure for table `activation_person`
+-- بنية الجدول `activation_person`
 --
 
 CREATE TABLE `activation_person` (
@@ -33,10 +33,10 @@ CREATE TABLE `activation_person` (
   `isActive` tinyint(1) NOT NULL,
   `user_id` smallint(6) NOT NULL,
   `role` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `activation_person`
+-- إرجاع أو استيراد بيانات الجدول `activation_person`
 --
 
 INSERT INTO `activation_person` (`id`, `images`, `isActive`, `user_id`, `role`) VALUES
@@ -644,7 +644,7 @@ INSERT INTO `activation_person` (`id`, `images`, `isActive`, `user_id`, `role`) 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `activation_place`
+-- بنية الجدول `activation_place`
 --
 
 CREATE TABLE `activation_place` (
@@ -653,10 +653,10 @@ CREATE TABLE `activation_place` (
   `isActive` tinyint(1) NOT NULL,
   `place_id` mediumint(9) NOT NULL,
   `role` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `activation_place`
+-- إرجاع أو استيراد بيانات الجدول `activation_place`
 --
 
 INSERT INTO `activation_place` (`id`, `license_img`, `isActive`, `place_id`, `role`) VALUES
@@ -1414,7 +1414,7 @@ INSERT INTO `activation_place` (`id`, `license_img`, `isActive`, `place_id`, `ro
 -- --------------------------------------------------------
 
 --
--- Table structure for table `admin`
+-- بنية الجدول `admin`
 --
 
 CREATE TABLE `admin` (
@@ -1432,22 +1432,22 @@ CREATE TABLE `admin` (
   `email_isActive` tinyint(1) NOT NULL,
   `profile_img` text DEFAULT NULL,
   `role` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `admin`
+-- إرجاع أو استيراد بيانات الجدول `admin`
 --
 
 INSERT INTO `admin` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `governorate`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
 (1, 'samy mohamed', 22222222222222, 'mohamedsaeed00451@gmail.com', '01010205040', 'ذكر', '2000-01-12', 'اسوان', '$2y$10$kkFMOz4K0IL32AFbeHj75ezc7ezEVs9yDNXtDd9HGjLPARJxjEgZ6', '512720', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6MSwidHlwZSI6ImFkbWluIiwiZXhwIjoxNjc4ODM2NTk0LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjgwLnJvc2hldHRhLmVnIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdDo4MC5yb3NoZXR0YS5jb20iLCJpYXQiOjEzNTY5OTk1MjQsIm5iZiI6MTM1NzAwMDAwMH0.4ckwn_eVO1myq338Jw3qjjD-Xz3YyRjpVuBVPc68v-E', 1, 'ad-22222222222222', 'admin'),
 (3, 'hamdy ahmed', 33333333333333, 'ha@gmail.com', '01010101010', 'ذكر', '2023-01-18', '', '$2y$10$IuvMcAe49/0Top/QpZZfouVH7ec8ZY.vGxrDhwckrMqc5x82uwDNa', '', NULL, 0, NULL, 'admin'),
 (4, 'ali ahmed', 12345678912345, 'ali@gmail.com', '01020231410', 'ذكر', '2023-01-05', '', '$2y$10$ah/NCnRsFJBmVjfCRZbGo.xgA8FPar4IdfUOro/b3Q9VMNli3WnLG', '', NULL, 0, NULL, 'admin'),
-(5, 'ahmed mohamed', 11111111111111, 'ah@gmail.com', '01010101011', 'male', '2000-10-12', '', '$2y$10$dxxRGwYI.QcoW5N.16WyoeN4VhfI7pcXzXcwXeVQ7cI2treOZ3NqW', '3aec9dc5cc33ecb878953000fa9d210e', NULL, 0, NULL, 'admin');
+(5, 'ahmed mohamed', 11111111111111, 'ah@gmail.com', '01010101011', 'male', '2000-10-12', '', '$2y$10$ae/jGxJKhdZRuleCCZupVuhQYIf2YERPL1oDvv7TmMtg1odUDfmkW', '535701', 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpZCI6NSwidHlwZSI6ImFkbWluIiwiZXhwIjoxNjg0MTcwMTMzLCJpc3MiOiJodHRwOi8vbG9jYWxob3N0LnJvc2hldHRhLmVnIiwiYXVkIjoiaHR0cDovL2xvY2FsaG9zdC5yb3NoZXR0YS5jb20iLCJpYXQiOjEzNTY5OTk1MjQsIm5iZiI6MTM1NzAwMDAwMH0.xq27AaO4l4Bm4knqr-A8-ZmTTFG-IvnPZ-vDvsUHsZE', 1, NULL, 'admin');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `appointment`
+-- بنية الجدول `appointment`
 --
 
 CREATE TABLE `appointment` (
@@ -1456,10 +1456,10 @@ CREATE TABLE `appointment` (
   `appoint_case` tinyint(4) NOT NULL,
   `patient_id` mediumint(9) NOT NULL,
   `clinic_id` mediumint(9) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `appointment`
+-- إرجاع أو استيراد بيانات الجدول `appointment`
 --
 
 INSERT INTO `appointment` (`id`, `appoint_date`, `appoint_case`, `patient_id`, `clinic_id`) VALUES
@@ -1967,7 +1967,7 @@ INSERT INTO `appointment` (`id`, `appoint_date`, `appoint_case`, `patient_id`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `assistant`
+-- بنية الجدول `assistant`
 --
 
 CREATE TABLE `assistant` (
@@ -1985,10 +1985,10 @@ CREATE TABLE `assistant` (
   `email_isActive` tinyint(1) NOT NULL,
   `profile_img` text DEFAULT NULL,
   `role` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `assistant`
+-- إرجاع أو استيراد بيانات الجدول `assistant`
 --
 
 INSERT INTO `assistant` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `governorate`, `birth_date`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
@@ -2297,7 +2297,7 @@ INSERT INTO `assistant` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `chat`
+-- بنية الجدول `chat`
 --
 
 CREATE TABLE `chat` (
@@ -2307,10 +2307,10 @@ CREATE TABLE `chat` (
   `message` text NOT NULL,
   `image` text DEFAULT NULL,
   `doctor_id` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `chat`
+-- إرجاع أو استيراد بيانات الجدول `chat`
 --
 
 INSERT INTO `chat` (`id`, `name`, `time`, `message`, `image`, `doctor_id`) VALUES
@@ -2325,7 +2325,7 @@ INSERT INTO `chat` (`id`, `name`, `time`, `message`, `image`, `doctor_id`) VALUE
 -- --------------------------------------------------------
 
 --
--- Table structure for table `clinic`
+-- بنية الجدول `clinic`
 --
 
 CREATE TABLE `clinic` (
@@ -2344,10 +2344,10 @@ CREATE TABLE `clinic` (
   `status` tinyint(1) NOT NULL,
   `doctor_id` smallint(6) NOT NULL,
   `assistant_id` smallint(6) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `clinic`
+-- إرجاع أو استيراد بيانات الجدول `clinic`
 --
 
 INSERT INTO `clinic` (`id`, `name`, `owner`, `specialist`, `phone_number`, `price`, `start_working`, `end_working`, `governorate`, `address`, `logo`, `ser_id`, `status`, `doctor_id`, `assistant_id`) VALUES
@@ -3057,7 +3057,7 @@ INSERT INTO `clinic` (`id`, `name`, `owner`, `specialist`, `phone_number`, `pric
 -- --------------------------------------------------------
 
 --
--- Table structure for table `disease`
+-- بنية الجدول `disease`
 --
 
 CREATE TABLE `disease` (
@@ -3068,10 +3068,10 @@ CREATE TABLE `disease` (
   `patient_id` mediumint(9) NOT NULL,
   `doctor_id` smallint(6) NOT NULL,
   `clinic_id` mediumint(9) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `disease`
+-- إرجاع أو استيراد بيانات الجدول `disease`
 --
 
 INSERT INTO `disease` (`id`, `name`, `place`, `date`, `patient_id`, `doctor_id`, `clinic_id`) VALUES
@@ -3579,7 +3579,7 @@ INSERT INTO `disease` (`id`, `name`, `place`, `date`, `patient_id`, `doctor_id`,
 -- --------------------------------------------------------
 
 --
--- Table structure for table `doctor`
+-- بنية الجدول `doctor`
 --
 
 CREATE TABLE `doctor` (
@@ -3598,14 +3598,13 @@ CREATE TABLE `doctor` (
   `email_isActive` tinyint(1) NOT NULL,
   `profile_img` text DEFAULT NULL,
   `role` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `doctor`
+-- إرجاع أو استيراد بيانات الجدول `doctor`
 --
 
 INSERT INTO `doctor` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `specialist`, `governorate`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
-(1, 'Cristal Jast III', 19140650251636, 'leannon.geovanny@hotmail.com', '63733018789', 'أنثى', '1982-09-07', 'جراحة الأسنان والفم والوجه', 'البحيرة', '$2y$10$MhPGVT/xzD.CoVwGwy8ssOcIaNglhGpKC/pw3PaEAHmgoAapWpH0i', '625540', NULL, 1, 'df_male', 'doctor'),
 (2, 'Dr. June Tromp', 73511488975755, 'noemie68@oberbrunner.info', '87365823223', 'أنثى', '2013-02-04', 'طب المختبرات', 'طنطا', '$2y$10$KjBWzQ/Le2TT4IRHqxot/Ot5Eh9P4KxMlhhAWvZFBFCcJ33.vb9eS', '916590', NULL, 1, 'df_male', 'doctor'),
 (3, 'Prof. Freeman Feeney', 15887623871154, 'emily.hane@hotmail.com', '79571280376', 'أنثى', '1980-09-23', 'الأمراض الدموية العامة', 'طنطا', '$2y$10$SYdVpsV1xbwuJYSTnu043ujKnxWZzKxiuVXf6LkrcKP6Ob907gZF6', '384824', NULL, 0, 'df_male', 'doctor'),
 (4, 'Major Mertz', 84207636661758, 'haag.rhett@kuhlman.com', '99903862436', 'ذكر', '2016-06-06', 'علم الأدوية', 'القاهرة', '$2y$10$tJNSJxh2WHJ2OC4g63hZquoNJ/aQJTtACKpNOrwv8nP.7EhJYWM5i', '608512', NULL, 1, 'df_male', 'doctor'),
@@ -3814,9 +3813,9 @@ INSERT INTO `doctor` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `b
 (207, 'Autumn Bergnaum', 98469060145184, 'talon.beahan@bauch.com', '83677085312', 'أنثى', '1996-02-06', 'جراحة الأوعية الدموية', 'طنطا', '$2y$10$jbgSZkCxVp7Ixajd3/wIwORt.PVU0mZG0Pj1dZYwVSLZ0KYs9cEVS', '899688', NULL, 0, 'df_male', 'doctor'),
 (208, 'Prof. Reyes Mraz', 72583949171259, 'fspencer@yahoo.com', '57940662240', 'ذكر', '2009-05-09', 'جراحة القدمين', 'الدقهلية', '$2y$10$0XNGLXA0K0MfGEL2rMFEvO539OmSN/lFcgx6ofhG1X/GErNjIR1Gm', '923280', NULL, 1, 'df_male', 'doctor'),
 (209, 'Francisca Hoeger', 82072113638215, 'elockman@gmail.com', '41061167756', 'ذكر', '1991-12-01', 'مناعة', 'الدقهلية', '$2y$10$3zOcTd6dtvGsNFJd7OKzZuoTcenOFCYwtHSupwsdY5l1OR3wavXhG', '408882', NULL, 1, 'df_male', 'doctor'),
-(210, 'Walter Murphy II', 59639529258464, 'kaylah51@yahoo.com', '76561984860', 'ذكر', '2020-05-27', 'أمراض الكلى', 'البحيرة', '$2y$10$YUQ/CFOJaKiw70c4B8N9L.fBNmAQnuF7c/hwbm1k104eUmywbsqP.', '21569', NULL, 1, 'df_male', 'doctor');
+(210, 'Walter Murphy II', 59639529258464, 'kaylah51@yahoo.com', '76561984860', 'ذكر', '2020-05-27', 'أمراض الكلى', 'البحيرة', '$2y$10$YUQ/CFOJaKiw70c4B8N9L.fBNmAQnuF7c/hwbm1k104eUmywbsqP.', '21569', NULL, 1, 'df_male', 'doctor'),
+(211, 'Wilson Muller', 38339720739850, 'wisoky.xander@connelly.com', '22452780011', 'ذكر', '1974-01-09', 'الكيمياء السريرية', 'القاهرة', '$2y$10$K47XAjt2uc3Tro50xERiYOaDxVTFMoQ7wbEIBk4dI26HKpKBdTxI6', '272942', NULL, 0, 'df_male', 'doctor');
 INSERT INTO `doctor` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `specialist`, `governorate`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
-(211, 'Wilson Muller', 38339720739850, 'wisoky.xander@connelly.com', '22452780011', 'ذكر', '1974-01-09', 'الكيمياء السريرية', 'القاهرة', '$2y$10$K47XAjt2uc3Tro50xERiYOaDxVTFMoQ7wbEIBk4dI26HKpKBdTxI6', '272942', NULL, 0, 'df_male', 'doctor'),
 (212, 'Liam Jones', 67990468526865, 'imayert@yahoo.com', '17959755448', 'ذكر', '2004-09-20', 'علم المرض', 'سيناء', '$2y$10$GvKlcjnphJZuBiyiJp5O2OMzAmxidMiT.czhOqkx6URtPlLRFySeO', '311815', NULL, 0, 'df_male', 'doctor'),
 (213, 'Marjolaine Schaden', 94843184475958, 'lavina05@schaefer.com', '35276924480', 'أنثى', '1971-09-16', 'جراحة الأعصاب', 'اسوان', '$2y$10$.t0SE6yg1kWva4C0dyuceee9oIU50MyPzj1U899HlTfHgVLHAH092', '780662', NULL, 1, 'df_male', 'doctor'),
 (214, 'Kyle Conroy', 55920905646210, 'ottilie.auer@cormier.com', '72692043854', 'ذكر', '1999-12-05', 'طب الأمراض الاستوائية', 'البحيرة', '$2y$10$hppj57hgj/igwHqw.hSINeTm9/E8NWmBOfZxxNioXnK2iBRBHtwT2', '166542', NULL, 1, 'df_male', 'doctor'),
@@ -4024,9 +4023,9 @@ INSERT INTO `doctor` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `b
 (416, 'Aileen Walker', 97874588879354, 'oweber@hotmail.com', '75574651921', 'ذكر', '2000-09-10', 'العلم العصبي الفيزيولوجي السريري', 'البحيرة', '$2y$10$Ybxtxq2GmlxIE4.p7/FqKeVXJ4/DEjxiP4VX/WhENl7s1MnKTlpQm', '291152', NULL, 0, 'df_male', 'doctor'),
 (417, 'Lillian Herman', 50941280734167, 'ezra.marks@baumbach.info', '21368282431', 'ذكر', '1985-11-20', 'الطب النووي', 'طنطا', '$2y$10$UFkj5KAItXvwWbgylBo7mOc42RnvvHexFcGjfMyv4l/Qemb9GGwiq', '194621', NULL, 0, 'df_male', 'doctor'),
 (418, 'Shawn Buckridge', 69333616129373, 'wava.muller@dietrich.org', '95753142215', 'أنثى', '1975-09-16', 'أمراض الأعصاب', 'طنطا', '$2y$10$buhCb2CJ.RSezvi0BTSz1eElXtIC85DD7euE3Mc97a.BKATANw692', '805525', NULL, 1, 'df_male', 'doctor'),
-(419, 'Dr. Barton Schmeler V', 97626174270916, 'glang@yahoo.com', '16215013463', 'أنثى', '1977-07-16', 'جراحة القدمين', 'القاهرة', '$2y$10$CA9U0tVwaUjrOcaNV.P0PeFUc2YOD1gVepCO/vcqUiHvMpkbTu3.m', '75340', NULL, 1, 'df_male', 'doctor');
+(419, 'Dr. Barton Schmeler V', 97626174270916, 'glang@yahoo.com', '16215013463', 'أنثى', '1977-07-16', 'جراحة القدمين', 'القاهرة', '$2y$10$CA9U0tVwaUjrOcaNV.P0PeFUc2YOD1gVepCO/vcqUiHvMpkbTu3.m', '75340', NULL, 1, 'df_male', 'doctor'),
+(420, 'Kavon Kautzer', 28306713066588, 'michele.okuneva@yahoo.com', '42532707477', 'ذكر', '1981-10-16', 'جراحة العظام', 'المنصورة', '$2y$10$lRZ1yduPoVLVwRvC2ozKMucyU6pmBy0a.BY3s..PLdRaUmPNvS.b2', '943203', NULL, 0, 'df_male', 'doctor');
 INSERT INTO `doctor` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `specialist`, `governorate`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
-(420, 'Kavon Kautzer', 28306713066588, 'michele.okuneva@yahoo.com', '42532707477', 'ذكر', '1981-10-16', 'جراحة العظام', 'المنصورة', '$2y$10$lRZ1yduPoVLVwRvC2ozKMucyU6pmBy0a.BY3s..PLdRaUmPNvS.b2', '943203', NULL, 0, 'df_male', 'doctor'),
 (421, 'Imelda Labadie', 16186190906092, 'brandon55@yahoo.com', '34986383198', 'أنثى', '1975-10-05', 'الصحة العامة والوقاية', 'البحيرة', '$2y$10$/6oPfhV7j0ppeAi24BykTOkg1skAsCIOKJkIc4P7FBCBNqbHZtvGe', '521508', NULL, 0, 'df_male', 'doctor'),
 (422, 'Rylan Price', 77200937975642, 'ricardo.miller@hotmail.com', '21562652094', 'ذكر', '2001-08-27', 'طب الفم والأسنان', 'الاسكندرية', '$2y$10$MBFSju9BZewLcOTauPCwUehqF.0c0sChThGp6imkJ7b3YHFizQXLu', '399939', NULL, 1, 'df_male', 'doctor'),
 (423, 'Rickie Beatty', 95380509461512, 'kelton04@gmail.com', '56702703572', 'أنثى', '1977-10-11', 'طب الأمراض الاستوائية', 'القاهرة', '$2y$10$WzRWb9mRU/wNXrEuR0XLle4LMrp4sU.6HPkhuyX94ukYkas0AXlO6', '995873', NULL, 0, 'df_male', 'doctor'),
@@ -4106,22 +4105,23 @@ INSERT INTO `doctor` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `b
 (497, 'Estelle Gaylord', 17518090721484, 'mateo.christiansen@lang.com', '4726240128', 'أنثى', '1991-07-26', 'الصحة العامة والوقاية', 'الاسكندرية', '$2y$10$3zkTa70fj0ZJrSfJi0p03Oa2TUXnA4Hy8dfs8X4BZNwO2.tfou63q', '766825', NULL, 0, 'df_male', 'doctor'),
 (498, 'Blake Kuvalis', 72000300974406, 'tatum79@yahoo.com', '9869721987', 'أنثى', '2000-12-23', 'جراحة المسالك البولية', 'طنطا', '$2y$10$zVGTtq8n144i.QSWERGHxuBiSagIP20zNzI/42XirLgLJ0i2BQhVK', '166274', NULL, 0, 'df_male', 'doctor'),
 (499, 'Prof. Moises Leuschke', 28157119421753, 'leonor.veum@pagac.org', '92391353848', 'أنثى', '1999-05-19', 'أمراض القلب', 'الاسكندرية', '$2y$10$RElrRwKNoXWiVWNhbugxDuRD2g6QqUugOO88swBq8jRdTTlLiy/Nm', '362230', NULL, 1, 'df_male', 'doctor'),
-(500, 'Miss Lenna Goldner Jr.', 26292400243512, 'jazmyn.rosenbaum@yahoo.com', '64582510361', 'أنثى', '2000-07-23', 'طب الطوارئ والحوادث', 'سيناء', '$2y$10$814mZE8/he/DZmWmX5fgZ.I8gj1Vzo/aTxmYqiwkEtQ4HD8keutJa', '9164', NULL, 0, 'df_male', 'doctor');
+(500, 'Miss Lenna Goldner Jr.', 26292400243512, 'jazmyn.rosenbaum@yahoo.com', '64582510361', 'أنثى', '2000-07-23', 'طب الطوارئ والحوادث', 'سيناء', '$2y$10$814mZE8/he/DZmWmX5fgZ.I8gj1Vzo/aTxmYqiwkEtQ4HD8keutJa', '9164', NULL, 0, 'df_male', 'doctor'),
+(501, 'Muhammad Abohashem', 30107231801999, 'mohammedelhassan2001@gmail.com', '01225786012', 'male', '2001-07-23', 'مسالك بولية وبواسير', 'البحيرة', '$2y$10$ae/jGxJKhdZRuleCCZupVuhQYIf2YERPL1oDvv7TmMtg1odUDfmkW', '260042', NULL, 1, 'df_male', 'doctor');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `medicine`
+-- بنية الجدول `medicine`
 --
 
 CREATE TABLE `medicine` (
   `id` bigint(20) NOT NULL,
   `medicine_data` text NOT NULL,
   `prescript_id` bigint(20) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `medicine`
+-- إرجاع أو استيراد بيانات الجدول `medicine`
 --
 
 INSERT INTO `medicine` (`id`, `medicine_data`, `prescript_id`) VALUES
@@ -4681,7 +4681,7 @@ INSERT INTO `medicine` (`id`, `medicine_data`, `prescript_id`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `message`
+-- بنية الجدول `message`
 --
 
 CREATE TABLE `message` (
@@ -4693,10 +4693,10 @@ CREATE TABLE `message` (
   `time` timestamp NOT NULL DEFAULT current_timestamp(),
   `m_case` tinyint(1) NOT NULL,
   `role` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `message`
+-- إرجاع أو استيراد بيانات الجدول `message`
 --
 
 INSERT INTO `message` (`id`, `name`, `ssd`, `email`, `message`, `time`, `m_case`, `role`) VALUES
@@ -4710,7 +4710,7 @@ INSERT INTO `message` (`id`, `name`, `ssd`, `email`, `message`, `time`, `m_case`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `patient`
+-- بنية الجدول `patient`
 --
 
 CREATE TABLE `patient` (
@@ -4730,10 +4730,10 @@ CREATE TABLE `patient` (
   `email_isActive` double NOT NULL,
   `profile_img` text DEFAULT NULL,
   `role` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `patient`
+-- إرجاع أو استيراد بيانات الجدول `patient`
 --
 
 INSERT INTO `patient` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `weight`, `height`, `governorate`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
@@ -5745,7 +5745,7 @@ INSERT INTO `patient` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pharmacist`
+-- بنية الجدول `pharmacist`
 --
 
 CREATE TABLE `pharmacist` (
@@ -5763,10 +5763,10 @@ CREATE TABLE `pharmacist` (
   `email_isActive` tinyint(1) NOT NULL,
   `profile_img` text DEFAULT NULL,
   `role` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `pharmacist`
+-- إرجاع أو استيراد بيانات الجدول `pharmacist`
 --
 
 INSERT INTO `pharmacist` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`, `birth_date`, `governorate`, `password`, `security_code`, `token`, `email_isActive`, `profile_img`, `role`) VALUES
@@ -6075,7 +6075,7 @@ INSERT INTO `pharmacist` (`id`, `name`, `ssd`, `email`, `phone_number`, `gender`
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pharmacy`
+-- بنية الجدول `pharmacy`
 --
 
 CREATE TABLE `pharmacy` (
@@ -6091,10 +6091,10 @@ CREATE TABLE `pharmacy` (
   `ser_id` varchar(255) NOT NULL,
   `status` tinyint(1) NOT NULL,
   `pharmacist_id` smallint(6) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `pharmacy`
+-- إرجاع أو استيراد بيانات الجدول `pharmacy`
 --
 
 INSERT INTO `pharmacy` (`id`, `name`, `owner`, `phone_number`, `start_working`, `end_working`, `governorate`, `address`, `logo`, `ser_id`, `status`, `pharmacist_id`) VALUES
@@ -6603,7 +6603,7 @@ INSERT INTO `pharmacy` (`id`, `name`, `owner`, `phone_number`, `start_working`, 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pharmacy_order`
+-- بنية الجدول `pharmacy_order`
 --
 
 CREATE TABLE `pharmacy_order` (
@@ -6613,10 +6613,10 @@ CREATE TABLE `pharmacy_order` (
   `patient_id` mediumint(9) NOT NULL,
   `prescript_id` bigint(20) NOT NULL,
   `pharmacy_id` mediumint(9) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `pharmacy_order`
+-- إرجاع أو استيراد بيانات الجدول `pharmacy_order`
 --
 
 INSERT INTO `pharmacy_order` (`id`, `time`, `status`, `patient_id`, `prescript_id`, `pharmacy_id`) VALUES
@@ -6724,7 +6724,7 @@ INSERT INTO `pharmacy_order` (`id`, `time`, `status`, `patient_id`, `prescript_i
 -- --------------------------------------------------------
 
 --
--- Table structure for table `pharmacy_prescript`
+-- بنية الجدول `pharmacy_prescript`
 --
 
 CREATE TABLE `pharmacy_prescript` (
@@ -6732,10 +6732,10 @@ CREATE TABLE `pharmacy_prescript` (
   `prescript_id` bigint(20) NOT NULL,
   `pharmacy_id` mediumint(9) NOT NULL,
   `date_pay` timestamp NOT NULL DEFAULT current_timestamp()
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `pharmacy_prescript`
+-- إرجاع أو استيراد بيانات الجدول `pharmacy_prescript`
 --
 
 INSERT INTO `pharmacy_prescript` (`id`, `prescript_id`, `pharmacy_id`, `date_pay`) VALUES
@@ -7043,7 +7043,7 @@ INSERT INTO `pharmacy_prescript` (`id`, `prescript_id`, `pharmacy_id`, `date_pay
 -- --------------------------------------------------------
 
 --
--- Table structure for table `prescript`
+-- بنية الجدول `prescript`
 --
 
 CREATE TABLE `prescript` (
@@ -7055,10 +7055,10 @@ CREATE TABLE `prescript` (
   `disease_id` smallint(6) NOT NULL,
   `doctor_id` smallint(6) NOT NULL,
   `clinic_id` mediumint(9) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `prescript`
+-- إرجاع أو استيراد بيانات الجدول `prescript`
 --
 
 INSERT INTO `prescript` (`id`, `created_date`, `rediscovery_date`, `ser_id`, `patient_id`, `disease_id`, `doctor_id`, `clinic_id`) VALUES
@@ -7616,17 +7616,17 @@ INSERT INTO `prescript` (`id`, `created_date`, `rediscovery_date`, `ser_id`, `pa
 -- --------------------------------------------------------
 
 --
--- Table structure for table `specialist`
+-- بنية الجدول `specialist`
 --
 
 CREATE TABLE `specialist` (
   `id` int(11) NOT NULL,
   `name` varchar(255) NOT NULL,
   `ar_name` varchar(255) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `specialist`
+-- إرجاع أو استيراد بيانات الجدول `specialist`
 --
 
 INSERT INTO `specialist` (`id`, `name`, `ar_name`) VALUES
@@ -7690,17 +7690,17 @@ INSERT INTO `specialist` (`id`, `name`, `ar_name`) VALUES
 -- --------------------------------------------------------
 
 --
--- Table structure for table `video`
+-- بنية الجدول `video`
 --
 
 CREATE TABLE `video` (
   `id` tinyint(4) NOT NULL,
   `video` text NOT NULL,
   `type` varchar(25) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 --
--- Dumping data for table `video`
+-- إرجاع أو استيراد بيانات الجدول `video`
 --
 
 INSERT INTO `video` (`id`, `video`, `type`) VALUES
@@ -7914,7 +7914,7 @@ ALTER TABLE `disease`
 -- AUTO_INCREMENT for table `doctor`
 --
 ALTER TABLE `doctor`
-  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=501;
+  MODIFY `id` smallint(6) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=502;
 
 --
 -- AUTO_INCREMENT for table `medicine`
@@ -7977,25 +7977,25 @@ ALTER TABLE `video`
   MODIFY `id` tinyint(4) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
--- Constraints for dumped tables
+-- قيود الجداول المحفوظة
 --
 
 --
--- Constraints for table `appointment`
+-- القيود للجدول `appointment`
 --
 ALTER TABLE `appointment`
   ADD CONSTRAINT `appoint` FOREIGN KEY (`patient_id`) REFERENCES `patient` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `appoint2` FOREIGN KEY (`clinic_id`) REFERENCES `clinic` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `clinic`
+-- القيود للجدول `clinic`
 --
 ALTER TABLE `clinic`
   ADD CONSTRAINT `clinic1` FOREIGN KEY (`assistant_id`) REFERENCES `assistant` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `clinic__2` FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `disease`
+-- القيود للجدول `disease`
 --
 ALTER TABLE `disease`
   ADD CONSTRAINT `cli_dis` FOREIGN KEY (`clinic_id`) REFERENCES `clinic` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -8003,19 +8003,19 @@ ALTER TABLE `disease`
   ADD CONSTRAINT `doc_dis` FOREIGN KEY (`doctor_id`) REFERENCES `doctor` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `medicine`
+-- القيود للجدول `medicine`
 --
 ALTER TABLE `medicine`
   ADD CONSTRAINT `medicne_prescipt` FOREIGN KEY (`prescript_id`) REFERENCES `prescript` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `pharmacy`
+-- القيود للجدول `pharmacy`
 --
 ALTER TABLE `pharmacy`
   ADD CONSTRAINT `phar_1` FOREIGN KEY (`pharmacist_id`) REFERENCES `pharmacist` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `pharmacy_order`
+-- القيود للجدول `pharmacy_order`
 --
 ALTER TABLE `pharmacy_order`
   ADD CONSTRAINT `patient_order` FOREIGN KEY (`patient_id`) REFERENCES `patient` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
@@ -8023,14 +8023,14 @@ ALTER TABLE `pharmacy_order`
   ADD CONSTRAINT `prescript_order` FOREIGN KEY (`prescript_id`) REFERENCES `prescript` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `pharmacy_prescript`
+-- القيود للجدول `pharmacy_prescript`
 --
 ALTER TABLE `pharmacy_prescript`
   ADD CONSTRAINT `pharmacy1122` FOREIGN KEY (`pharmacy_id`) REFERENCES `pharmacy` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `prescript1122` FOREIGN KEY (`prescript_id`) REFERENCES `prescript` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Constraints for table `prescript`
+-- القيود للجدول `prescript`
 --
 ALTER TABLE `prescript`
   ADD CONSTRAINT `prescript_clinic` FOREIGN KEY (`clinic_id`) REFERENCES `clinic` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
