@@ -1,7 +1,7 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 
-import ProtectedRoute from './pages/ProtectedRoute';
-import Layout from './pages/Layout';
+import ProtectedRoute from "./pages/ProtectedRoute";
+import Layout from "./pages/Layout";
 import {
   Doctor,
   ActivateAccountDoc,
@@ -23,8 +23,8 @@ import {
   Users,
   ViewSingleUser,
   EditSingleUser,
-} from './pages';
-import './App.scss';
+} from "./pages";
+import "./App.scss";
 
 export default function App() {
   return (

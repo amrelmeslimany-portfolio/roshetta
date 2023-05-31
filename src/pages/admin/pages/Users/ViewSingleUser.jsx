@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import { viewUserDetails } from "../../API";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
+import { getUsers, viewUserDetails } from "../../API";
 import images from "../../../../images";
 import { GoVerified } from "react-icons/go";
-
+import { TbEye, TbNurse } from "react-icons/tb";
+import { BsReceiptCutoff } from "react-icons/bs";
+import { SlOptions } from "react-icons/sl";
 import {
   FaDemocrat,
   FaFileMedical,
@@ -11,32 +13,86 @@ import {
   FaLocationArrow,
   FaMailBulk,
   FaPhone,
+  FaPrescription,
 } from "react-icons/fa";
 import { MyLoader } from "../../../../components";
-const Staff = ({ staff }) => {
+const Staff = ({ staff, type }) => {
+  const navigate = useNavigate();
+
+  useEffect(() => {}, []);
+  const handleClick = (name, type) => {
+    getUsers(type, name).then((res) => {
+      console.log(res.Data[0]);
+      // return <Navigate to={`/admin/users/view/${type}/${res.Data[0].id}`} />;
+      navigate(`/admin/users/view/${type}/${res.Data[0].id}`);
+    });
+  };
+  if (staff?.length > 0) {
+    return staff?.map((s, i) => {
+      return (
+        <div key={i} className="my-4">
+          <div className="flex w-72 flex-col items-center justify-center gap-5 rounded-lg bg-gray-300 px-2 py-3">
+            <a onClick={() => handleClick(s.name, s.type)} className="self-end">
+              <TbEye className="mx-1 cursor-pointer text-4xl text-white" />
+              <SlOptions />
+            </a>
+            <div className="h-20 w-20">
+              <img
+                // src={user.image}
+                src={s.image}
+                className="mx-auto block w-full rounded-full"
+                alt="img-info"
+              />
+            </div>
+            <h4 className="text-2xl font-bold text-gray-700">{s.name}</h4>
+            <p>{s.age}</p>
+          </div>
+        </div>
+      );
+    });
+  } else {
+    return (
+      <div className="my-4">
+        <div className="flex w-72 flex-col items-center justify-center gap-5 rounded-lg bg-gray-300 px-2 py-3">
+          <a
+            onClick={() => handleClick(staff?.name, "pharmacist")}
+            className="self-end"
+          >
+            <TbEye className="mx-1 cursor-pointer text-4xl text-white" />
+            <SlOptions />
+          </a>
+          <div className="h-20 w-20">
+            <img
+              // src={user.image}
+              src={staff?.image}
+              className="mx-auto block w-full rounded-full"
+              alt="img-info"
+            />
+          </div>
+          <h4 className="text-2xl font-bold text-gray-700">{staff?.name}</h4>
+          <p>{staff?.age}</p>
+        </div>
+      </div>
+    );
+  }
+};
+
+const AnalyticsCard = ({ logo, title, number }) => {
   return (
     <div className="my-4">
-      {console.log(staff.length)}
-      <div className="flex h-40 w-40 flex-col items-center justify-center gap-5 rounded-lg bg-gray-300">
-        <div className="h-14 w-14">
-          <img
-            // src={user.image}
-            src={staff.image}
-            className="mx-auto block w-full rounded-full"
-            alt="img-info"
-          />
+      <div className="flex items-center justify-between gap-4 rounded-lg bg-gray-300 px-5 py-3">
+        <div className="flex flex-col-reverse items-start justify-center">
+          <h4 className="text-sm text-gray-800">{title}</h4>
+          <p className="text-3xl font-extrabold text-gray-600">{number}</p>
         </div>
 
-        <h4>{staff.name}</h4>
-        <p>{staff.age}</p>
+        <div className="text-7xl text-white">{logo}</div>
       </div>
-      {/* {staff?.map((s) => {
-        return <h3>{s.name}</h3>;
-      })} */}
     </div>
   );
 };
-const ViewPharma = ({ user }) => {
+
+const ViewPharma = ({ user, type, id }) => {
   return (
     <>
       <div className="my-4 flex w-[80vw] flex-col items-start justify-center bg-gray-100 px-10">
@@ -50,7 +106,7 @@ const ViewPharma = ({ user }) => {
           <h2 className="text-2xl text-roshetta ">{user.name}</h2>
           <GoVerified className="mx-2 text-blue-600" />
         </div>
-        <div className="mx-auto text-center">
+        <div className="mx-auto mb-9 text-center">
           <h2 className="m-auto text-xl text-slate-400">{user.ssd}</h2>
           <div className="">{user.ser_id}</div>
         </div>
@@ -92,8 +148,23 @@ const ViewPharma = ({ user }) => {
           </div>
         </div>
         <h4 className="py-4 text-2xl font-bold text-slate-500">طاقم العمل</h4>
-        <div className="flex items-center justify-center">
-          <Staff staff={user.stuff} />
+        <div className="flex items-center justify-center gap-5">
+          <Staff type={type} id={id} staff={user.stuff} />
+        </div>
+        <h4 className="py-4 text-2xl font-bold text-slate-500">احصائية</h4>
+        <div className="flex items-center justify-center gap-5">
+          <AnalyticsCard
+            logo={<TbNurse />}
+            title={"عدد الروشتات"}
+            number={user.number_of_prescript}
+          />
+          {user.type === "pharmacy" && (
+            <AnalyticsCard
+              logo={<BsReceiptCutoff />}
+              title={"عدد الطلبات"}
+              number={user.number_of_orders}
+            />
+          )}
         </div>
       </div>
     </>
@@ -204,7 +275,7 @@ const ViewSingleUser = () => {
       setLoading(false);
       console.log(res.Data);
     });
-  }, []);
+  }, [type, id]);
   if (!user.name) {
     return (
       <>
@@ -214,7 +285,7 @@ const ViewSingleUser = () => {
   }
   if (user.name) {
     if (type === "pharmacy" || type === "clinic") {
-      return <ViewPharma user={user} />;
+      return <ViewPharma type={type} id={id} user={user} />;
     } else {
       return <ViewUser user={user} />;
     }
