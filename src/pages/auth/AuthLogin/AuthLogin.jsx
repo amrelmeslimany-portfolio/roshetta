@@ -32,7 +32,7 @@ const AuthLogin = () => {
   const [password, setPassword] = useState('');
 
   const navigate = useNavigate();
-
+// navigate(0) Make a refresh
   let formData = new FormData();
   const message = JSON.parse(localStorage.getItem('message'));
 

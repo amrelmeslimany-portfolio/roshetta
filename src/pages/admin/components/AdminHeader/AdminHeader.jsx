@@ -36,7 +36,7 @@ const AdminHeader = () => {
       </h1>
       <Space>
         <Badge
-          count={comments.length}
+          count={comments?.length}
           //  dot
         >
           <MailOutlined

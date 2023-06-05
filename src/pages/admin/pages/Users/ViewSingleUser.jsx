@@ -14,12 +14,13 @@ import {
   FaMailBulk,
   FaPhone,
   FaPrescription,
+  FaWeight,
 } from "react-icons/fa";
 import { MyLoader } from "../../../../components";
+import { GiBodyHeight } from "react-icons/gi";
 const Staff = ({ staff, type }) => {
   const navigate = useNavigate();
 
-  useEffect(() => {}, []);
   const handleClick = (name, type) => {
     getUsers(type, name).then((res) => {
       console.log(res.Data[0]);
@@ -34,7 +35,6 @@ const Staff = ({ staff, type }) => {
           <div className="flex w-72 flex-col items-center justify-center gap-5 rounded-lg bg-gray-300 px-2 py-3">
             <a onClick={() => handleClick(s.name, s.type)} className="self-end">
               <TbEye className="mx-1 cursor-pointer text-4xl text-white" />
-              <SlOptions />
             </a>
             <div className="h-20 w-20">
               <img
@@ -59,7 +59,7 @@ const Staff = ({ staff, type }) => {
             className="self-end"
           >
             <TbEye className="mx-1 cursor-pointer text-4xl text-white" />
-            <SlOptions />
+            {/* <SlOptions /> */}
           </a>
           <div className="h-20 w-20">
             <img
@@ -205,13 +205,34 @@ const ViewUser = ({ user }) => {
           </div>
         </div>
         <div className="mx-auto mt-4 flex w-1/2 flex-col items-start justify-start gap-3">
-          <div className="flex items-start justify-start ">
-            <FaFileMedical className="ml-8 text-xl text-slate-400" />{" "}
-            <div className="flex flex-col items-start justify-start">
-              <p className="text-slate-500">التخصص</p>
-              <p className="font-bold text-slate-800">{user.specialist}</p>
+          {user.type === "patient" && (
+            <>
+              <div className="flex items-start justify-start ">
+                <GiBodyHeight className="ml-8 text-xl text-slate-400" />{" "}
+                <div className="flex flex-col items-start justify-start">
+                  <p className="text-slate-500">الطول</p>
+                  <p className="font-bold text-slate-800">{user.height}</p>
+                </div>
+              </div>
+              <div className="flex items-start justify-start ">
+                <FaWeight className="ml-8 text-xl text-slate-400" />{" "}
+                <div className="flex flex-col items-start justify-start">
+                  <p className="text-slate-500">الوزن</p>
+                  <p className="font-bold text-slate-800">{user.weight}</p>
+                </div>
+              </div>
+            </>
+          )}
+          {user.type === "doctor" && (
+            <div className="flex items-start justify-start ">
+              <FaFileMedical className="ml-8 text-xl text-slate-400" />{" "}
+              <div className="flex flex-col items-start justify-start">
+                <p className="text-slate-500">التخصص</p>
+                <p className="font-bold text-slate-800">{user.specialist}</p>
+              </div>
             </div>
-          </div>
+          )}
+
           <div className="flex items-start justify-start">
             <FaMailBulk className="ml-8 text-xl text-slate-400" />{" "}
             <div className="flex flex-col items-start justify-start">
@@ -234,22 +255,74 @@ const ViewUser = ({ user }) => {
             </div>
           </div>
         </div>
-        {/* <div className="mx-auto mt-4 flex w-1/2 items-center justify-around">
-          <div className="flex flex-col items-start justify-start">
-            <p className="text-slate-500">العيادات</p>
-            <p className="font-bold text-slate-800">{user.number_clinic}</p>
+        {user.type === "doctor" && (
+          <div className="mx-auto mt-4 flex w-1/2 items-center justify-around">
+            <div className="flex flex-col items-start justify-start">
+              <p className="text-slate-500">العيادات</p>
+              <p className="font-bold text-slate-800">
+                {user.number_clinic || 0}
+              </p>
+            </div>
+            <div className="flex flex-col items-start justify-start border-x-2 border-slate-300 px-20">
+              <p className="text-slate-500">الروشتات</p>
+              <p className="font-bold text-slate-800">
+                {user.number_prescript || 0}
+              </p>
+            </div>
+            <div className="flex flex-col items-start justify-start">
+              <p className="text-slate-500">المساعدين</p>
+              <p className="font-bold text-slate-800">
+                {user.number_appoint || 0}
+              </p>
+            </div>
           </div>
-          <div className="flex flex-col items-start justify-start border-x-2 border-slate-300 px-20">
-            <p className="text-slate-500">الروشتات</p>
-            <p className="font-bold text-slate-800">
-              {user.number_prescript}
-            </p>
+        )}
+
+        {user.type === "pharmacist" && (
+          <div className="mx-auto mt-4 flex w-1/2 items-center justify-around">
+            <div className="flex flex-col items-start justify-start">
+              <p className="text-slate-500">عدد الطلبات</p>
+              <p className="font-bold text-slate-800">
+                {user.number_order || 0}
+              </p>
+            </div>
+            <div className="flex flex-col items-start justify-start border-x-2 border-slate-300 px-20">
+              <p className="text-slate-500">عدد الصيدليات</p>
+              <p className="font-bold text-slate-800">
+                {user.number_pharmacy || 0}
+              </p>
+            </div>
+            <div className="flex flex-col items-start justify-start">
+              <p className="text-slate-500">عدد الروشتات</p>
+              <p className="font-bold text-slate-800">
+                {user.number_prescript || 0}
+              </p>
+            </div>
           </div>
-          <div className="flex flex-col items-start justify-start">
-            <p className="text-slate-500">المساعدين</p>
-            <p className="font-bold text-slate-800">{user.number_appoint}</p>
+        )}
+
+        {user.type === "assistant" && (
+          <div className="mx-auto mt-4 flex w-1/2 items-center justify-around">
+            <div className="flex flex-col items-start justify-start">
+              <p className="text-slate-500">عدد المواعيد الكلي</p>
+              <p className="font-bold text-slate-800">
+                {user.number_all_appointment || 0}
+              </p>
+            </div>
+            <div className="flex flex-col items-start justify-start border-x-2 border-slate-300 px-20">
+              <p className="text-slate-500">عدد العيادات</p>
+              <p className="font-bold text-slate-800">
+                {user.number_clinic || 0}
+              </p>
+            </div>
+            <div className="flex flex-col items-start justify-start">
+              <p className="text-slate-500">عدد المواعيد اليومية</p>
+              <p className="font-bold text-slate-800">
+                {user.number_today_appoint || 0}
+              </p>
+            </div>
           </div>
-        </div> */}
+        )}
         <div className="mx-auto flex items-center justify-center">
           {/* <button
           onClick={() => buttonMode('edit-info')}
