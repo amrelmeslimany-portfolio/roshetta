@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { Card, Space, Statistic, Table, Typography } from 'antd';
-import { ShoppingCartOutlined } from '@ant-design/icons';
-import { TbCurrencyDollarCanadian } from 'react-icons/tb';
+import React, { useState } from "react";
+import { Card, Space, Statistic, Table, Typography } from "antd";
+import { ShoppingCartOutlined } from "@ant-design/icons";
+import { TbCurrencyDollarCanadian } from "react-icons/tb";
 import {
   MdLocalPharmacy,
   MdOutlineLocalPharmacy,
   MdOutlineSick,
-} from 'react-icons/md';
-import { GiNurseMale, GiPlayerTime } from 'react-icons/gi';
-import { RiAdminLine, RiNurseFill } from 'react-icons/ri';
-import { GrUserAdmin } from 'react-icons/gr';
+} from "react-icons/md";
+import { GiNurseMale, GiPlayerTime } from "react-icons/gi";
+import { RiAdminLine, RiNurseFill } from "react-icons/ri";
+import { GrUserAdmin } from "react-icons/gr";
 
 import {
   getOrders,
   getRevenue,
   viewMessage,
   viewRoshettaNumbers,
-} from '../../API';
-import { useEffect } from 'react';
+} from "../../API";
+import { useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -26,13 +26,13 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
+} from "chart.js";
 // import faker from 'faker';
 
-import { Bar } from 'react-chartjs-2';
-import { MyLoader } from '../../../../components';
-import { FaPrescriptionBottleAlt, FaUserNurse } from 'react-icons/fa';
-import { BiClinic } from 'react-icons/bi';
+import { Bar } from "react-chartjs-2";
+import { MyLoader } from "../../../../components";
+import { FaPrescriptionBottleAlt, FaUserNurse } from "react-icons/fa";
+import { BiClinic } from "react-icons/bi";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -42,8 +42,8 @@ ChartJS.register(
   Legend
 );
 const cardStyles = {
-  color: '#49ce91',
-  backgroundColor: 'rgba(0,255,0,0.15)',
+  color: "#49ce91",
+  backgroundColor: "rgba(0,255,0,0.15)",
   borderRadius: 20,
   fontSize: 40,
   padding: 8,
@@ -124,44 +124,44 @@ const Dashboard = () => {
         <Space direction="horizontal">
           <DashboardCard
             icon={<MdOutlineSick style={cardStyles} />}
-            title={'المرضى'}
+            title={"المرضى"}
             value={patient.all}
           />
           <DashboardCard
             icon={<FaUserNurse style={cardStyles} />}
-            title={'الدكاترة'}
+            title={"الدكاترة"}
             value={doctor.all}
           />
           <DashboardCard
             icon={<RiNurseFill style={cardStyles} />}
-            title={'المساعدين'}
+            title={"المساعدين"}
             value={assistant.all}
           />
           <DashboardCard
             icon={<MdOutlineLocalPharmacy style={cardStyles} />}
-            title={'الصيدليات '}
+            title={"الصيدليات "}
             value={pharmacy.all}
           />
         </Space>
         <Space direction="horizontal">
           <DashboardCard
             icon={<RiAdminLine style={cardStyles} />}
-            title={'الادمنز'}
+            title={"الادمنز"}
             value={admin.all}
           />
           <DashboardCard
             icon={<GiNurseMale style={cardStyles} />}
-            title={'الصيادلة'}
+            title={"الصيادلة"}
             value={pharmacist.all}
           />
           <DashboardCard
             icon={<FaPrescriptionBottleAlt style={cardStyles} />}
-            title={'الروشتات'}
+            title={"الروشتات"}
             value={prescript}
           />
           <DashboardCard
             icon={<BiClinic style={cardStyles} />}
-            title={'العيادات'}
+            title={"العيادات"}
             value={clinic.all}
           />
         </Space>
@@ -198,8 +198,10 @@ const RecentOrders = () => {
 
   useEffect(() => {
     setLoading(true);
-    getOrders().then((res) => {
-      setDataSource(res.products.splice(0, 3));
+    viewMessage().then((res) => {
+      setDataSource(res.Data);
+      console.log(res.Data);
+      // console.log(res.Data.splice(0, 3));
       setLoading(false);
     });
   }, []);
@@ -209,9 +211,9 @@ const RecentOrders = () => {
       <h3>رسائل المرضى</h3>
       <Table
         columns={[
-          { title: 'title', dataIndex: 'title' },
-          { title: 'Quantity', dataIndex: 'quantity' },
-          { title: 'Price', dataIndex: 'discountedPrice' },
+          { title: "Name", dataIndex: "name" },
+          { title: "Email", dataIndex: "email" },
+          { title: "Message", dataIndex: "message" },
         ]}
         loading={loading}
         dataSource={dataSource}
@@ -240,15 +242,15 @@ const DashboardChart = () => {
         labels,
         datasets: [
           {
-            label: 'المريض المتسلخ',
+            label: "المريض المتسلخ",
             data: data,
-            backgroundColor: '#49ce91',
+            backgroundColor: "#49ce91",
           },
 
           {
-            label: 'المريض الكحيان ههه',
+            label: "المريض الكحيان ههه",
             data: data,
-            backgroundColor: 'rgba(0,255,0,0.25)',
+            backgroundColor: "rgba(0,255,0,0.25)",
           },
         ],
       };
@@ -260,18 +262,18 @@ const DashboardChart = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: 'bottom',
+        position: "bottom",
       },
       title: {
         display: true,
-        text: 'احصائيات المرضى',
+        text: "احصائيات المرضى",
       },
     },
   };
 
   return (
     <Card style={{ width: 500, height: 250 }}>
-      {' '}
+      {" "}
       <Bar options={options} data={revenueData} />
     </Card>
   );

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { activateUser, viewActivation } from '../../API';
+import React, { useEffect, useState } from "react";
+import { activateUser, viewActivation } from "../../API";
 
 import {
   Alert,
@@ -10,24 +10,24 @@ import {
   Switch,
   Table,
   Typography,
-} from 'antd';
-import { Input } from 'antd';
+} from "antd";
+import { Input } from "antd";
 const { Search } = Input;
-import { useGlobalContext } from '../../../../context';
-import { motion } from 'framer-motion';
+import { useGlobalContext } from "../../../../context";
+import { motion } from "framer-motion";
 
 const ActivateAccounts = () => {
   const { setAuthUser, alert, setAlert } = useGlobalContext();
 
   const [loading, setLoading] = useState(false);
   const [dataSource, setDataSource] = useState([]);
-  const [radioValue, setRadioValue] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [radioValue, setRadioValue] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [switchValue, setSwitchValue] = useState(0);
   const refreshTableData = (
-    radioValue = '',
-    searchTerm = '',
-    switchValue = ''
+    radioValue = "",
+    searchTerm = "",
+    switchValue = ""
   ) => {
     setLoading(true);
     viewActivation(radioValue, searchTerm, switchValue).then((res) => {
@@ -35,11 +35,11 @@ const ActivateAccounts = () => {
       setLoading(false);
     });
   };
-  const showAlert = (msg = 'حدثت مشكلة', type = 'error') => {
+  const showAlert = (msg = "حدثت مشكلة", type = "error") => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
     setAlert({
       msg: msg,
@@ -72,35 +72,8 @@ const ActivateAccounts = () => {
     refreshTableData(radioValue, searchTerm, switchValue);
   }, []);
 
-  useEffect(() => {
-    const myTimeout = setTimeout(() => {
-      setAlert({ msg: '', show: false, type: '' });
-    }, 3000);
-
-    return () => {
-      clearTimeout(myTimeout);
-    };
-  }, [alert.show]);
-
   return (
     <>
-      {alert.show && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Alert
-            style={{
-              marginBottom: 20,
-            }}
-            message="تنبيه!"
-            description={alert.msg}
-            type={alert.type}
-            showIcon
-          />
-        </motion.div>
-      )}
       <Space direction="vertical" size={20}>
         <h2 className="p-4 text-4xl font-bold text-roshetta">تفعيل الحسابات</h2>
         <h4 className="px-4 text-2xl font-bold text-black">فلترة النتائج</h4>
@@ -109,11 +82,11 @@ const ActivateAccounts = () => {
           <Switch onChange={onChange} />
           <span>اختار النوع:</span>
           <Radio.Group onChange={onRadioChange} value={radioValue}>
-            <Radio value={''}>الكل</Radio>
-            <Radio value={'doctor'}>دكتور</Radio>
-            <Radio value={'pharmacist'}>صيدلي</Radio>
-            <Radio value={'clinic'}>عيادة</Radio>
-            <Radio value={'pharmacy'}>صيدلية</Radio>
+            <Radio value={""}>الكل</Radio>
+            <Radio value={"doctor"}>دكتور</Radio>
+            <Radio value={"pharmacist"}>صيدلي</Radio>
+            <Radio value={"clinic"}>عيادة</Radio>
+            <Radio value={"pharmacy"}>صيدلية</Radio>
           </Radio.Group>
           <span>ابحث عن شخص:</span>
           <Search
@@ -127,16 +100,16 @@ const ActivateAccounts = () => {
         <Table
           columns={[
             {
-              title: 'الصورة الشخصية',
-              dataIndex: 'profile_img',
+              title: "الصورة الشخصية",
+              dataIndex: "profile_img",
               render: (link) => {
                 return <Avatar src={link} />;
               },
             },
-            { title: 'الإسم', dataIndex: 'name' },
+            { title: "الإسم", dataIndex: "name" },
             {
-              title: 'الرقم القومي',
-              dataIndex: 'ssd',
+              title: "الرقم القومي",
+              dataIndex: "ssd",
               render: (value) => <span className="font-bold">{value}</span>,
             },
             // {
@@ -146,11 +119,11 @@ const ActivateAccounts = () => {
             //     return <Rate value={rating} allowHalf />;
             //   },
             // },
-            { title: 'رقم المستخدم', dataIndex: 'user_id', key: 'user_id' },
+            { title: "رقم المستخدم", dataIndex: "user_id", key: "user_id" },
             {
-              title: 'حالة التفعيل',
-              dataIndex: 'status',
-              key: 'status',
+              title: "حالة التفعيل",
+              dataIndex: "status",
+              key: "status",
               render: () => (
                 <>
                   {switchValue ? (
@@ -162,19 +135,19 @@ const ActivateAccounts = () => {
               ),
             },
             {
-              title: 'رقم التفعيل',
-              dataIndex: 'activation_id',
-              key: 'activation_id',
+              title: "رقم التفعيل",
+              dataIndex: "activation_id",
+              key: "activation_id",
             },
             {
-              title: 'نوع الحساب',
-              dataIndex: 'type',
-              key: 'type',
+              title: "نوع الحساب",
+              dataIndex: "type",
+              key: "type",
             },
             {
-              title: 'تفعيل',
-              dataIndex: ['type'],
-              key: 'x',
+              title: "تفعيل",
+              dataIndex: ["type"],
+              key: "x",
               render: (type, userData) => {
                 return (
                   <>
@@ -183,10 +156,10 @@ const ActivateAccounts = () => {
                         setLoading(true);
                         activateUser(type, userData.activation_id, 1).then(
                           (res) => {
-                            if (res.Message === 'الحساب مفعل بالفعل') {
-                              showAlert(res.Message, 'warning');
+                            if (res.Message === "الحساب مفعل بالفعل") {
+                              showAlert(res.Message, "warning");
                             } else {
-                              showAlert(res.Message, 'success');
+                              showAlert(res.Message, "success");
                             }
                             refreshTableData();
                             setLoading(false);
@@ -203,7 +176,7 @@ const ActivateAccounts = () => {
                         type, userData.name, userData.activation_id;
                         activateUser(type, userData.activation_id, -1).then(
                           (res) => {
-                            showAlert(res.Message, 'success');
+                            showAlert(res.Message, "success");
                             refreshTableData();
                             setLoading(false);
                           }

@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 import {
   deleteUser,
   getInventory,
   getUsers,
   viewActivation,
   viewUserDetails,
-} from '../../API';
+} from "../../API";
 import {
   Alert,
   Avatar,
@@ -15,35 +15,35 @@ import {
   Switch,
   Table,
   Typography,
-} from 'antd';
-import { Input } from 'antd';
+} from "antd";
+import { Input } from "antd";
 const { Search } = Input;
-import { TbEye } from 'react-icons/tb';
-import { BsFillPencilFill } from 'react-icons/bs';
-import { FiTrash2 } from 'react-icons/fi';
-import { useGlobalContext } from '../../../../context';
-import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import { TbEye } from "react-icons/tb";
+import { BsFillPencilFill } from "react-icons/bs";
+import { FiTrash2 } from "react-icons/fi";
+import { useGlobalContext } from "../../../../context";
+import { Link } from "react-router-dom";
+import { motion } from "framer-motion";
 
 const Pharmacies = () => {
   const { setAuthUser, alert, setAlert } = useGlobalContext();
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
-  const [radioValue, setRadioValue] = useState('pharmacy');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [radioValue, setRadioValue] = useState("pharmacy");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const refreshTableData = (radioValue = '', searchTerm = '') => {
+  const refreshTableData = (radioValue = "", searchTerm = "") => {
     setLoading(true);
     getUsers(radioValue, searchTerm).then((res) => {
       setUsers(res.Data);
       setLoading(false);
     });
   };
-  const showAlert = (msg = 'حدثت مشكلة', type = 'error') => {
+  const showAlert = (msg = "حدثت مشكلة", type = "error") => {
     window.scrollTo({
       top: 0,
       left: 0,
-      behavior: 'smooth',
+      behavior: "smooth",
     });
     setAlert({
       msg: msg,
@@ -65,35 +65,8 @@ const Pharmacies = () => {
     refreshTableData(radioValue, searchTerm);
   }, []);
 
-  useEffect(() => {
-    const myTimeout = setTimeout(() => {
-      setAlert({ msg: '', show: false, type: '' });
-    }, 3000);
-
-    return () => {
-      clearTimeout(myTimeout);
-    };
-  }, [alert.show]);
-
   return (
     <>
-      {alert.show && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.5 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Alert
-            style={{
-              marginBottom: 20,
-            }}
-            message="تنبيه!"
-            description={alert.msg}
-            type={alert.type}
-            showIcon
-          />
-        </motion.div>
-      )}
       <Space direction="vertical" size={20}>
         <h2 className="p-4 text-4xl font-bold text-roshetta">الصيدليات</h2>
         <h4 className="px-4 text-2xl font-bold text-black">فلترة النتائج</h4>
@@ -105,8 +78,8 @@ const Pharmacies = () => {
             {/* <Radio value={''}>الكل</Radio> */}
             {/* <Radio value={'doctor'}>دكتور</Radio>
             <Radio value={'pharmacist'}>صيدلي</Radio> */}
-            <Radio value={'pharmacy'}>صيدلية</Radio>
-            <Radio value={'clinic'}>عيادة</Radio>
+            <Radio value={"pharmacy"}>صيدلية</Radio>
+            <Radio value={"clinic"}>عيادة</Radio>
           </Radio.Group>
           <span>ابحث عن صيدلية:</span>
           <Search
@@ -121,27 +94,27 @@ const Pharmacies = () => {
           className="w-[80vw]"
           columns={[
             {
-              title: 'الصورة',
-              dataIndex: 'profile_img',
+              title: "الصورة",
+              dataIndex: "profile_img",
               render: (link) => {
                 return <Avatar src={link} />;
               },
-              key: 'image',
+              key: "image",
             },
             {
-              title: 'الإسم',
-              dataIndex: 'name',
-              key: 'name',
+              title: "الإسم",
+              dataIndex: "name",
+              key: "name",
             },
             {
-              title: 'رقم الخدمة',
-              dataIndex: 'ser_id',
+              title: "رقم الخدمة",
+              dataIndex: "ser_id",
               render: (value) => <span className="font-bold">{value}</span>,
-              key: 'ssd',
+              key: "ssd",
             },
             {
-              title: 'الخيارات',
-              dataIndex: ['type'],
+              title: "الخيارات",
+              dataIndex: ["type"],
               render: (type, userData) => {
                 const id = userData.id;
                 return (
@@ -156,7 +129,7 @@ const Pharmacies = () => {
                       className="mx-1 cursor-pointer text-xl text-roshetta"
                       onClick={() => {
                         deleteUser(type, id).then((res) => {
-                          showAlert(res.Message, 'success');
+                          showAlert(res.Message, "success");
                           refreshTableData(radioValue, searchTerm);
                         });
                       }}
@@ -164,7 +137,7 @@ const Pharmacies = () => {
                   </div>
                 );
               },
-              key: 'options',
+              key: "options",
             },
           ]}
           dataSource={users}
