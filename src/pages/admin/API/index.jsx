@@ -1,15 +1,13 @@
 let getToken;
 let token;
 
-if (JSON.parse(localStorage.getItem("userData"))) {
-  getToken = () => {
-    let tokenData;
-    if (JSON.parse(localStorage.getItem("userData"))) {
-      tokenData = JSON.parse(localStorage.getItem("userData"));
-    }
-    token = tokenData.token;
-  };
-}
+getToken = () => {
+  let tokenData;
+  if (JSON.parse(localStorage.getItem("userData"))) {
+    tokenData = JSON.parse(localStorage.getItem("userData"));
+  }
+  token = tokenData.token;
+};
 
 export const getOrders = () => {
   return fetch("https://dummyjson.com/carts/1").then((res) => res.json());

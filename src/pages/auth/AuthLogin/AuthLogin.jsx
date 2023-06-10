@@ -1,97 +1,97 @@
-import React, { useState, useEffect } from 'react';
-import { Link, Navigate, useNavigate } from 'react-router-dom';
-import { LockFilled, IdcardFilled } from '@ant-design/icons';
-import { Alert, Select } from 'antd';
+import React, { useState, useEffect } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { LockFilled, IdcardFilled } from "@ant-design/icons";
+import { Alert, Select } from "antd";
 
-import { useGlobalContext } from '../../../context';
-import images from '../../../images';
-import './AuthLogin.scss';
-import { AppWrapper } from '../../../wrapper';
-import { MyLoader } from '../../../components';
+import { useGlobalContext } from "../../../context";
+import images from "../../../images";
+import "./AuthLogin.scss";
+import { AppWrapper } from "../../../wrapper";
+import { MyLoader } from "../../../components";
 
 const AuthLogin = () => {
   const [loading, setLoading] = useState(false);
-  const userData = JSON.parse(localStorage.getItem('userData'));
+  const userData = JSON.parse(localStorage.getItem("userData"));
 
-  if (JSON.parse(localStorage.getItem('userData'))) {
-    const userData = JSON.parse(localStorage.getItem('userData'));
+  if (JSON.parse(localStorage.getItem("userData"))) {
+    const userData = JSON.parse(localStorage.getItem("userData"));
 
-    if (userData.type === 'doctor') {
+    if (userData.type === "doctor") {
       return <Navigate to="/doctor/personal-info" />;
     }
-    if (userData.type === 'admin') {
+    if (userData.type === "admin") {
       return <Navigate to="/admin/dashboard" />;
     }
   }
   const { setAuthUser, alert, setAlert } = useGlobalContext();
-  const [auth, setAuth] = useState('');
+  const [auth, setAuth] = useState("");
 
-  const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
-  const [ssd, setSsd] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
+  const [ssd, setSsd] = useState("");
+  const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-// navigate(0) Make a refresh
+  // navigate(0) Make a refresh
   let formData = new FormData();
-  const message = JSON.parse(localStorage.getItem('message'));
+  const message = JSON.parse(localStorage.getItem("message"));
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    formData.append('role', role);
-    formData.append('user_id', ssd);
-    formData.append('password', password);
-    formData.append('password_edit', '');
+    formData.append("role", role);
+    formData.append("user_id", ssd);
+    formData.append("password", password);
+    formData.append("password_edit", "");
 
     if (ssd < 14 && password < 6 && role === null) {
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
       setAlert({
-        msg: ' الرقم القومي يجب ان يكون 14 رقم والباسوورد غير خالي',
+        msg: " الرقم القومي يجب ان يكون 14 رقم والباسوورد غير خالي",
         show: true,
-        type: 'error',
+        type: "error",
       });
     } else if (ssd < 14) {
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
       setAlert({
-        msg: 'الرقم القومي يجب ان يكون 14 رقم',
+        msg: "الرقم القومي يجب ان يكون 14 رقم",
         show: true,
-        type: 'error',
+        type: "error",
       });
     } else if (password < 6) {
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
       setAlert({
-        msg: 'ادخل باسوورد مكون من 6 ارقام او اكثر',
+        msg: "ادخل باسوورد مكون من 6 ارقام او اكثر",
         show: true,
-        type: 'error',
+        type: "error",
       });
     } else if (!role) {
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
       setAlert({
-        msg: 'ادخل نوع الحساب لو سمحت',
+        msg: "ادخل نوع الحساب لو سمحت",
         show: true,
-        type: 'error',
+        type: "error",
       });
     } else {
       setLoading(true);
-      fetch('http://localhost:80/roshetta/api/users/login', {
-        method: 'POST',
+      fetch("http://localhost:80/roshetta/api/users/login", {
+        method: "POST",
         // headers: {
         //   'Content-Type': 'application/json',
         // },
@@ -106,20 +106,20 @@ const AuthLogin = () => {
             window.scrollTo({
               top: 0,
               left: 0,
-              behavior: 'smooth',
+              behavior: "smooth",
             });
             setAlert({
               msg: `${message.password_err} \n ${message.type_err} \n ${message.user_id_err} `,
               show: true,
-              type: 'error',
+              type: "error",
             });
           } else {
-            localStorage.setItem('userData', JSON.stringify(data.Data));
+            localStorage.setItem("userData", JSON.stringify(data.Data));
             setLoading(false);
-            if (data.Data.type === 'doctor') {
-              navigate('/doctor/personal-info');
-            } else if (data.Data.type === 'admin') {
-              navigate('/admin/dashboard');
+            if (data.Data.type === "doctor") {
+              navigate("/doctor/personal-info");
+            } else if (data.Data.type === "admin") {
+              navigate("/admin/dashboard");
             }
             // setRole('');
             // setEmail('');
@@ -131,7 +131,7 @@ const AuthLogin = () => {
   };
   useEffect(() => {
     const myTimeout = setTimeout(() => {
-      setAlert({ msg: '', show: false, type: '' });
+      setAlert({ msg: "", show: false, type: "" });
     }, 3000);
 
     return () => {
@@ -140,7 +140,7 @@ const AuthLogin = () => {
   }, [alert.show]);
 
   if (loading) {
-    return <MyLoader text={'جاري تسجيل الدخول...'} loading={loading} />;
+    return <MyLoader text={"جاري تسجيل الدخول..."} loading={loading} />;
   }
 
   return (
@@ -165,7 +165,6 @@ const AuthLogin = () => {
         <form className="auth-login__form" onSubmit={handleSubmit}>
           <div className="auth-login__form--form-custom-input">
             <Select
-              d
               placeholder="اختر نوع الحساب..."
               style={{
                 width: 450,
@@ -175,24 +174,24 @@ const AuthLogin = () => {
               onChange={(value) => setRole(value)}
               options={[
                 {
-                  value: 'patient',
-                  label: 'مريض',
+                  value: "patient",
+                  label: "مريض",
                 },
                 {
-                  value: 'doctor',
-                  label: 'دكتور',
+                  value: "doctor",
+                  label: "دكتور",
                 },
                 {
-                  value: 'assistant',
-                  label: 'مساعد',
+                  value: "assistant",
+                  label: "مساعد",
                 },
                 {
-                  value: 'pharmacist',
-                  label: 'صيدلي',
+                  value: "pharmacist",
+                  label: "صيدلي",
                 },
                 {
-                  value: 'admin',
-                  label: 'ادمن',
+                  value: "admin",
+                  label: "ادمن",
                 },
               ]}
             />
@@ -229,12 +228,12 @@ const AuthLogin = () => {
             تسجيل الدخول
           </button>
           <p className="auth-login__register-btn">
-            <Link to={'/forget-password'}>هل نسيت كلمه المرور ؟</Link>
+            <Link to={"/forget-password"}>هل نسيت كلمه المرور ؟</Link>
           </p>
         </form>
         <div className="auth-login__no-account">
           <p>ليس لديك حساب ؟ </p>
-          <Link to={'/register'}>اضغط هنا لانشاء حساب</Link>
+          <Link to={"/register"}>اضغط هنا لانشاء حساب</Link>
         </div>
       </div>
       <p className="app__footer">

@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useGlobalContext } from '../context';
+import React, { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
+import { useGlobalContext } from "../context";
 const ProtectedRoute = ({ children }) => {
   const [token, setToken] = useState(null);
   const getToken = () => {
     let tokenData;
-    if (JSON.parse(localStorage.getItem('userData'))) {
-      tokenData = JSON.parse(localStorage.getItem('userData'));
+    if (JSON.parse(localStorage.getItem("userData"))) {
+      tokenData = JSON.parse(localStorage.getItem("userData"));
     }
     setToken(tokenData.token);
   };
@@ -16,6 +16,9 @@ const ProtectedRoute = ({ children }) => {
 
   const { auth } = useGlobalContext();
   auth;
+  console.log("Protected router");
+  console.log(auth);
+
   if (!token) {
     return <Navigate to="/login" />;
   }

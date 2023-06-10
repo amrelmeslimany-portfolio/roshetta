@@ -38,6 +38,7 @@ export default function App() {
             <Route path="/register" element={<AuthRegister />} />
             <Route path="/forget-password" element={<ForgetPassword />} />
             {/* ------------------- Admin   ------------------- */}
+            {/* BUG Dont fogot remove this comments on ProtectedRoute  */}
             <Route
               path="admin"
               element={
