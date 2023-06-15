@@ -3,23 +3,26 @@ import {
   ShopOutlined,
   ShoppingCartOutlined,
   UserOutlined,
-} from '@ant-design/icons';
-import { Menu } from 'antd';
-import React, { useEffect, useState } from 'react';
+} from "@ant-design/icons";
+import { Menu } from "antd";
+import React, { useContext, useEffect, useState } from "react";
 import {
   MdAdminPanelSettings,
   MdDashboardCustomize,
   MdEdit,
   MdLocalPharmacy,
   MdOutlineLocalPharmacy,
-} from 'react-icons/md';
-import { TbActivityHeartbeat, TbUsers } from 'react-icons/tb';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { logOut } from '../../API';
+} from "react-icons/md";
+import { TbActivityHeartbeat, TbUsers } from "react-icons/tb";
+import { useLocation, useNavigate } from "react-router-dom";
+import { logout } from "../../../../api/auth";
+import { AuthContext } from "../../../../store/auth/context";
+// import { logOut } from '../../API';
 
 const AdminSideMenu = () => {
+  const { logoutAction } = useContext(AuthContext);
   const location = useLocation();
-  const [selectedKeys, setSelectedKeys] = useState('/');
+  const [selectedKeys, setSelectedKeys] = useState("/");
   useEffect(() => {
     const pathname = location.pathname;
     setSelectedKeys(pathname);
@@ -29,7 +32,7 @@ const AdminSideMenu = () => {
   return (
     <div className="admin__side-menu">
       <Menu
-      className='admin__side-menu--vertical'
+        className="admin__side-menu--vertical"
         mode="vertical"
         onClick={(item) => {
           // item.key
@@ -38,9 +41,9 @@ const AdminSideMenu = () => {
         selectedKeys={[selectedKeys]}
         items={[
           {
-            label: 'الصفحة الرئيسية',
-            icon: <MdDashboardCustomize style={{ color: '#49ce91' }} />,
-            key: '/admin/dashboard',
+            label: "الصفحة الرئيسية",
+            icon: <MdDashboardCustomize style={{ color: "#49ce91" }} />,
+            key: "/admin/dashboard",
           },
           // {
           //   label: 'اضافه ادمن',
@@ -53,30 +56,33 @@ const AdminSideMenu = () => {
           //   key: '/admin/edit-info',
           // },
           {
-            label: 'العيادات',
-            icon: <MdLocalPharmacy style={{ color: '#49ce91' }} />,
-            key: '/admin/clinics',
+            label: "العيادات",
+            icon: <MdLocalPharmacy style={{ color: "#49ce91" }} />,
+            key: "/admin/clinics",
           },
           {
-            label: 'الصيدليات',
-            icon: <MdOutlineLocalPharmacy style={{ color: '#49ce91' }} />,
-            key: '/admin/pharmacies',
+            label: "الصيدليات",
+            icon: <MdOutlineLocalPharmacy style={{ color: "#49ce91" }} />,
+            key: "/admin/pharmacies",
           },
           {
-            label: 'المستخدمين',
-            icon: <TbUsers style={{ color: '#49ce91' }} />,
-            key: '/admin/users',
+            label: "المستخدمين",
+            icon: <TbUsers style={{ color: "#49ce91" }} />,
+            key: "/admin/users",
           },
           {
-            label: 'تفعيل الحسابات',
-            icon: <TbActivityHeartbeat style={{ color: '#49ce91' }} />,
-            key: '/admin/activate-accounts',
+            label: "تفعيل الحسابات",
+            icon: <TbActivityHeartbeat style={{ color: "#49ce91" }} />,
+            key: "/admin/activate-accounts",
           },
           {
-            label: 'تسجيل الخروج',
-            icon: <UserOutlined style={{ color: '#49ce91' }} />,
-            key: '/login',
-            onClick: () => logOut().then((data) => console.log(data)),
+            label: "تسجيل الخروج",
+            icon: <UserOutlined style={{ color: "#49ce91" }} />,
+            key: "/login",
+            onClick: () =>
+              logout()
+                .then((data) => console.log(data))
+                .finally(() => logoutAction()),
           },
         ]}
       ></Menu>

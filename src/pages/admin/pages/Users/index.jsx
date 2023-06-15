@@ -1,7 +1,7 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
-  deleteUser,
-  getUsers,
+  // deleteUser,
+  // getUsers,
   viewActivation,
   viewUserDetails,
 } from "../../API";
@@ -22,8 +22,11 @@ import { BsFillPencilFill } from "react-icons/bs";
 import { FiTrash2 } from "react-icons/fi";
 import { useGlobalContext } from "../../../../context";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../../../../store/auth/context";
+import { deleteUser, getUsers } from "../../../../api/admin";
 
 const Users = () => {
+  const { user } = useContext(AuthContext);
   const { setAuthUser, alert, setAlert } = useGlobalContext();
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
@@ -33,7 +36,7 @@ const Users = () => {
 
   const refreshTableData = (radioValue = "", searchTerm = "") => {
     setLoading(true);
-    getUsers(radioValue, searchTerm).then((res) => {
+    getUsers(radioValue, searchTerm, user.token).then((res) => {
       setUsers(res.Data);
       setLoading(false);
     });
@@ -88,6 +91,7 @@ const Users = () => {
           />
         </Space>
         <Table
+          rowKey="id"
           className="w-[80vw]"
           columns={[
             {
@@ -132,7 +136,7 @@ const Users = () => {
                     <FiTrash2
                       className="mx-1 cursor-pointer text-xl text-roshetta"
                       onClick={() => {
-                        deleteUser(role, id).then((res) => {
+                        deleteUser(role, id, user.token).then((res) => {
                           showAlert(res.Message, "success");
                           refreshTableData(radioValue, searchTerm);
                         });

@@ -1,0 +1,80 @@
+@import "../../styles/vars";
+
+
+.intro-page {
+  background-image: url(../../assets/auth-cover.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+
+  padding: {
+    top: 7vw;
+    bottom: 6vw;
+  }
+
+
+
+  .segment-box {
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.091);
+    min-height: 70vh;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 0 9vw;
+    display: flex;
+    background: linear-gradient(96deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+    backdrop-filter: blur(30px);
+
+    .part {
+
+      flex: 1;
+
+      &.text {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+
+
+
+        .wrap {
+          padding-top: 20px;
+          width: 95%;
+          flex: 1;
+          justify-content: center;
+
+
+          .header {
+            text-align: center;
+
+            .intro-text {
+              color: $lightText;
+            }
+          }
+
+        }
+
+
+
+      }
+
+      &.media {
+
+
+        .media-img {
+          height: 100%;
+          width: 100%;
+          object-fit: cover;
+          object-position: center;
+          border-radius: 10px;
+        }
+
+
+      }
+
+
+    }
+
+  }
+}

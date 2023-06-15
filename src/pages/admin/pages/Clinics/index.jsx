@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import {
-  deleteUser,
+  // deleteUser,
   getInventory,
-  getUsers,
+  // getUsers,
   viewActivation,
   viewUserDetails,
 } from "../../API";
@@ -24,8 +24,11 @@ import { FiTrash2 } from "react-icons/fi";
 import { useGlobalContext } from "../../../../context";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { deleteUser, getUsers } from "../../../../api/admin";
+import { AuthContext } from "../../../../store/auth/context";
 
 const Clinics = () => {
+  const { user } = useContext(AuthContext);
   const { setAuthUser, alert, setAlert } = useGlobalContext();
   const [loading, setLoading] = useState(false);
   const [users, setUsers] = useState([]);
@@ -34,7 +37,7 @@ const Clinics = () => {
 
   const refreshTableData = (radioValue = "", searchTerm = "") => {
     setLoading(true);
-    getUsers(radioValue, searchTerm).then((res) => {
+    getUsers(radioValue, searchTerm, user.token).then((res) => {
       setUsers(res.Data);
       setLoading(false);
     });
@@ -91,6 +94,7 @@ const Clinics = () => {
           />
         </Space>
         <Table
+          rowKey={"id"}
           className="w-[80vw]"
           columns={[
             {
@@ -129,7 +133,7 @@ const Clinics = () => {
                     <FiTrash2
                       className="mx-1 cursor-pointer text-xl text-roshetta"
                       onClick={() => {
-                        deleteUser(type, id).then((res) => {
+                        deleteUser(type, id, user.token).then((res) => {
                           showAlert(res.Message, "success");
                           refreshTableData(radioValue, searchTerm);
                         });

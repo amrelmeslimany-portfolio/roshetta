@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
-import { getUsers, viewUserDetails } from "../../API";
+// import { getUsers, viewUserDetails } from "../../API";
 import images from "../../../../images";
 import { GoVerified } from "react-icons/go";
 import { TbEye, TbNurse } from "react-icons/tb";
@@ -18,11 +18,14 @@ import {
 } from "react-icons/fa";
 import { MyLoader } from "../../../../components";
 import { GiBodyHeight } from "react-icons/gi";
+import { AuthContext } from "../../../../store/auth/context";
+import { getUsers, viewUserDetails } from "../../../../api/admin";
 const Staff = ({ staff, type }) => {
+  const { user } = useContext(AuthContext);
   const navigate = useNavigate();
 
   const handleClick = (name, type) => {
-    getUsers(type, name).then((res) => {
+    getUsers(type, name, user.token).then((res) => {
       console.log(res.Data[0]);
       // return <Navigate to={`/admin/users/view/${type}/${res.Data[0].id}`} />;
       navigate(`/admin/users/view/${type}/${res.Data[0].id}`);
@@ -185,9 +188,7 @@ const ViewUser = ({ user }) => {
           <GoVerified className="mx-2 text-blue-600" />
         </div>
         <div className="mx-auto text-center">
-          <h2 className="m-auto text-xl text-slate-400 text-slate-500">
-            {user.ssd}
-          </h2>
+          <h2 className="m-auto text-xl  text-slate-500">{user.ssd}</h2>
         </div>
 
         <div className="m-auto mt-2 flex w-1/2 items-center justify-evenly gap-20 rounded-2xl bg-white py-2 shadow-lg ">
@@ -338,12 +339,13 @@ const ViewUser = ({ user }) => {
 };
 
 const ViewSingleUser = () => {
+  const { user: auth } = useContext(AuthContext);
   const { type, id } = useParams();
   const [user, setUser] = useState({});
   const [loading, setLoading] = useState(false);
   useEffect(() => {
     setLoading(true);
-    viewUserDetails(type, id).then((res) => {
+    viewUserDetails(type, id, auth.token).then((res) => {
       setUser(res.Data);
       setLoading(false);
       console.log(res.Data);

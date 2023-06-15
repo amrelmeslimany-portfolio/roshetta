@@ -1,0 +1,48 @@
+@import "../../styles/vars";
+
+@mixin link($isBorder : true) {
+    font-size: 14px;
+    height: 32px;
+    padding: 4px 15px;
+    border-radius: 5rem;
+    text-align: center;
+    transition: 0.2s;
+
+    @if $isBorder==true {
+        border: $border;
+    }
+
+    @else {
+
+        border: 1px solid $primary;
+    }
+
+    &:hover,
+    &:active,
+    &:focus {
+        color: $primary;
+        background-color: transparent;
+        border-color: $primary;
+    }
+}
+
+.text-link {
+    color: $primary;
+
+    &:hover,
+    &:active,
+
+    &:focus {
+        color: black;
+    }
+}
+
+.outlined-link {
+    @include link();
+}
+
+.primary-link {
+    @include link(false);
+    color: white;
+    background-color: $primary;
+}

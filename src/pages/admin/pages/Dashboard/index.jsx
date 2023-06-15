@@ -1,5 +1,13 @@
-import React, { useState } from "react";
-import { Card, Space, Statistic, Table, Typography } from "antd";
+import React, { useContext, useState } from "react";
+import {
+  Card,
+  Result,
+  Space,
+  Statistic,
+  Table,
+  Typography,
+  message,
+} from "antd";
 import { ShoppingCartOutlined } from "@ant-design/icons";
 import { TbCurrencyDollarCanadian } from "react-icons/tb";
 import {
@@ -14,8 +22,8 @@ import { GrUserAdmin } from "react-icons/gr";
 import {
   getOrders,
   getRevenue,
-  viewMessage,
-  viewRoshettaNumbers,
+  // viewMessage,
+  // viewRoshettaNumbers,
 } from "../../API";
 import { useEffect } from "react";
 import {
@@ -33,6 +41,12 @@ import { Bar } from "react-chartjs-2";
 import { MyLoader } from "../../../../components";
 import { FaPrescriptionBottleAlt, FaUserNurse } from "react-icons/fa";
 import { BiClinic } from "react-icons/bi";
+import {
+  errorToString,
+  isRequestSuccess,
+} from "../../../../utils/reusedFunctions";
+import { viewMessage, viewRoshettaNumbers } from "../../../../api/admin";
+import { AuthContext } from "../../../../store/auth/context";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -49,41 +63,75 @@ const cardStyles = {
   padding: 8,
   zIndex: 99,
 };
+
+const INITIAL_STATE_USERS = { all: 0, active_now: 0 };
+
 const Dashboard = () => {
+  const { user } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
-  const [admin, setAdmin] = useState({ all: 0, active_now: 0 });
-  const [doctor, setDoctor] = useState({ all: 0, active_now: 0 });
-  const [assistant, setAssistant] = useState({ all: 0, active_now: 0 });
-  const [pharmacy, setPharmacy] = useState({ all: 0, active_now: 0 });
-  const [pharmacist, setPharmacist] = useState({ all: 0, active_now: 0 });
-  const [patient, setPatient] = useState({ all: 0, active_now: 0 });
-  const [clinic, setClinic] = useState({ all: 0, active_now: 0 });
+  const [error, setError] = useState(null);
+  const [admin, setAdmin] = useState(INITIAL_STATE_USERS);
+  const [doctor, setDoctor] = useState(INITIAL_STATE_USERS);
+  const [assistant, setAssistant] = useState(INITIAL_STATE_USERS);
+  const [pharmacy, setPharmacy] = useState(INITIAL_STATE_USERS);
+  const [pharmacist, setPharmacist] = useState(INITIAL_STATE_USERS);
+  const [patient, setPatient] = useState(INITIAL_STATE_USERS);
+  const [clinic, setClinic] = useState(INITIAL_STATE_USERS);
   const [prescript, setPrescript] = useState(0);
 
   useEffect(() => {
-    setLoading(true);
+    const getNumbers = async () => {
+      try {
+        setLoading(true);
+        const response = await viewRoshettaNumbers(user.token);
+        console.log(user.token);
+        // COMMENT If Sucess
+        if (isRequestSuccess(response.Status)) {
+          setAdmin(response.Data.admin);
+          setAssistant(response.Data.assistant);
+          setClinic(response.Data.clinic);
+          setDoctor(response.Data.doctor);
+          setPatient(response.Data.patient);
+          setPharmacist(response.Data.pharmacist);
+          setPharmacy(response.Data.pharmacy);
+          setPrescript(response.Data.prescript);
+        }
+        // COMMENT if Error
+        else throw new Error(errorToString(response.Message));
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-    viewRoshettaNumbers().then((res) => {
-      setAdmin(res.Data.admin);
-      setAssistant(res.Data.assistant);
-      setClinic(res.Data.clinic);
-      setDoctor(res.Data.doctor);
-      setPatient(res.Data.patient);
-      setPharmacist(res.Data.pharmacist);
-      setPharmacy(res.Data.pharmacy);
-      setPrescript(res.Data.prescript);
-    });
+    getNumbers();
+
+    // viewRoshettaNumbers().then((res) => {
+    //   setAdmin(res.Data.admin);
+    //   setAssistant(res.Data.assistant);
+    //   setClinic(res.Data.clinic);
+    //   setDoctor(res.Data.doctor);
+    //   setPatient(res.Data.patient);
+    //   setPharmacist(res.Data.pharmacist);
+    //   setPharmacy(res.Data.pharmacy);
+    //   setPrescript(res.Data.prescript);
+    // });
   }, []);
-  if (!patient && !doctor) {
-    return <MyLoader loading={loading} />;
-  } else {
-    return (
-      <Space size={20} direction="vertical">
-        <h2 className="p-4 text-4xl font-bold text-roshetta">
-          الصفحة الرئيسية
-        </h2>
 
-        {/* <Space direction="horizontal">
+  if (loading) {
+    return <MyLoader loading={loading} />;
+  }
+
+  if (!loading && error) {
+    return <Result status="error" subTitle={error} />;
+  }
+
+  return (
+    <Space size={20} direction="vertical">
+      <h2 className="p-4 text-4xl font-bold text-roshetta">الصفحة الرئيسية</h2>
+
+      {/* <Space direction="horizontal">
           <DashboardCard
             icon={<GiPlayerTime style={cardStyles} />}
             title={'نشط-المرضى'}
@@ -121,57 +169,56 @@ const Dashboard = () => {
           />
         </Space> */}
 
-        <Space direction="horizontal">
-          <DashboardCard
-            icon={<MdOutlineSick style={cardStyles} />}
-            title={"المرضى"}
-            value={patient.all}
-          />
-          <DashboardCard
-            icon={<FaUserNurse style={cardStyles} />}
-            title={"الدكاترة"}
-            value={doctor.all}
-          />
-          <DashboardCard
-            icon={<RiNurseFill style={cardStyles} />}
-            title={"المساعدين"}
-            value={assistant.all}
-          />
-          <DashboardCard
-            icon={<MdOutlineLocalPharmacy style={cardStyles} />}
-            title={"الصيدليات "}
-            value={pharmacy.all}
-          />
-        </Space>
-        <Space direction="horizontal">
-          <DashboardCard
-            icon={<RiAdminLine style={cardStyles} />}
-            title={"الادمنز"}
-            value={admin.all}
-          />
-          <DashboardCard
-            icon={<GiNurseMale style={cardStyles} />}
-            title={"الصيادلة"}
-            value={pharmacist.all}
-          />
-          <DashboardCard
-            icon={<FaPrescriptionBottleAlt style={cardStyles} />}
-            title={"الروشتات"}
-            value={prescript}
-          />
-          <DashboardCard
-            icon={<BiClinic style={cardStyles} />}
-            title={"العيادات"}
-            value={clinic.all}
-          />
-        </Space>
-        <Space>
-          <RecentOrders />
-          <DashboardChart />
-        </Space>
+      <Space direction="horizontal">
+        <DashboardCard
+          icon={<MdOutlineSick style={cardStyles} />}
+          title={"المرضى"}
+          value={patient.all}
+        />
+        <DashboardCard
+          icon={<FaUserNurse style={cardStyles} />}
+          title={"الدكاترة"}
+          value={doctor.all}
+        />
+        <DashboardCard
+          icon={<RiNurseFill style={cardStyles} />}
+          title={"المساعدين"}
+          value={assistant.all}
+        />
+        <DashboardCard
+          icon={<MdOutlineLocalPharmacy style={cardStyles} />}
+          title={"الصيدليات "}
+          value={pharmacy.all}
+        />
       </Space>
-    );
-  }
+      <Space direction="horizontal">
+        <DashboardCard
+          icon={<RiAdminLine style={cardStyles} />}
+          title={"الادمنز"}
+          value={admin.all}
+        />
+        <DashboardCard
+          icon={<GiNurseMale style={cardStyles} />}
+          title={"الصيادلة"}
+          value={pharmacist.all}
+        />
+        <DashboardCard
+          icon={<FaPrescriptionBottleAlt style={cardStyles} />}
+          title={"الروشتات"}
+          value={prescript}
+        />
+        <DashboardCard
+          icon={<BiClinic style={cardStyles} />}
+          title={"العيادات"}
+          value={clinic.all}
+        />
+      </Space>
+      <Space>
+        <RecentOrders />
+        <DashboardChart />
+      </Space>
+    </Space>
+  );
 };
 
 const DashboardCard = ({ title, value, icon }) => {
@@ -193,17 +240,22 @@ const DashboardCard = ({ title, value, icon }) => {
   );
 };
 const RecentOrders = () => {
+  const { user } = useContext(AuthContext);
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    viewMessage().then((res) => {
-      setDataSource(res.Data);
-      console.log(res.Data);
-      // console.log(res.Data.splice(0, 3));
-      setLoading(false);
-    });
+    const messageRequest = async () => {
+      const response = await viewMessage("", "", user.token);
+      if (isRequestSuccess(response.Status)) {
+        setDataSource(response.Data);
+        console.log(response.Data);
+        // console.log(res.Data.splice(0, 3));
+        setLoading(false);
+      }
+    };
+    messageRequest();
   }, []);
 
   return (
@@ -217,6 +269,7 @@ const RecentOrders = () => {
         ]}
         loading={loading}
         dataSource={dataSource}
+        rowKey={"email"}
         pagination={false}
       ></Table>
     </>

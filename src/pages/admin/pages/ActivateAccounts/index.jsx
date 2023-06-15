@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { activateUser, viewActivation } from "../../API";
+import React, { useContext, useEffect, useState } from "react";
+// import { activateUser, viewActivation } from "../../API";
 
 import {
   Alert,
@@ -15,8 +15,12 @@ import { Input } from "antd";
 const { Search } = Input;
 import { useGlobalContext } from "../../../../context";
 import { motion } from "framer-motion";
+import { AuthContext } from "../../../../store/auth/context";
+import { activateUser, viewActivation } from "../../../../api/admin";
+import { initalWindowScroll } from "../../../../utils/reusedFunctions";
 
 const ActivateAccounts = () => {
+  const { user } = useContext(AuthContext);
   const { setAuthUser, alert, setAlert } = useGlobalContext();
 
   const [loading, setLoading] = useState(false);
@@ -30,17 +34,15 @@ const ActivateAccounts = () => {
     switchValue = ""
   ) => {
     setLoading(true);
-    viewActivation(radioValue, searchTerm, switchValue).then((res) => {
-      setDataSource(res.Data);
-      setLoading(false);
-    });
+    viewActivation(radioValue, searchTerm, switchValue, user.token).then(
+      (res) => {
+        setDataSource(res.Data);
+        setLoading(false);
+      }
+    );
   };
   const showAlert = (msg = "حدثت مشكلة", type = "error") => {
-    window.scrollTo({
-      top: 0,
-      left: 0,
-      behavior: "smooth",
-    });
+    initalWindowScroll();
     setAlert({
       msg: msg,
       show: true,
@@ -98,6 +100,7 @@ const ActivateAccounts = () => {
           />
         </Space>
         <Table
+          rowKey="activation_id"
           columns={[
             {
               title: "الصورة الشخصية",
@@ -110,7 +113,9 @@ const ActivateAccounts = () => {
             {
               title: "الرقم القومي",
               dataIndex: "ssd",
-              render: (value) => <span className="font-bold">{value}</span>,
+              render: (value) => (
+                <span className="font-bold">{value ? value : "لايوجد"}</span>
+              ),
             },
             // {
             //   title: 'Rating',
@@ -154,17 +159,20 @@ const ActivateAccounts = () => {
                     <a
                       onClick={() => {
                         setLoading(true);
-                        activateUser(type, userData.activation_id, 1).then(
-                          (res) => {
-                            if (res.Message === "الحساب مفعل بالفعل") {
-                              showAlert(res.Message, "warning");
-                            } else {
-                              showAlert(res.Message, "success");
-                            }
-                            refreshTableData();
-                            setLoading(false);
+                        activateUser(
+                          type,
+                          userData.activation_id,
+                          1,
+                          user.token
+                        ).then((res) => {
+                          if (res.Message === "الحساب مفعل بالفعل") {
+                            showAlert(res.Message, "warning");
+                          } else {
+                            showAlert(res.Message, "success");
                           }
-                        );
+                          refreshTableData();
+                          setLoading(false);
+                        });
                       }}
                       className="m-2 rounded-lg border-2 border-green-400 bg-roshetta p-1 text-white transition-colors hover:bg-transparent hover:text-slate-600  "
                     >
@@ -174,13 +182,16 @@ const ActivateAccounts = () => {
                       onClick={() => {
                         setLoading(true);
                         type, userData.name, userData.activation_id;
-                        activateUser(type, userData.activation_id, -1).then(
-                          (res) => {
-                            showAlert(res.Message, "success");
-                            refreshTableData();
-                            setLoading(false);
-                          }
-                        );
+                        activateUser(
+                          type,
+                          userData.activation_id,
+                          -1,
+                          user.token
+                        ).then((res) => {
+                          showAlert(res.Message, "success");
+                          refreshTableData();
+                          setLoading(false);
+                        });
                       }}
                       className="m-2 rounded-lg border-2 border-green-400 bg-roshetta p-1 text-white transition-colors hover:bg-transparent hover:text-slate-600  "
                     >
