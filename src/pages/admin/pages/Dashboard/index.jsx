@@ -1,7 +1,9 @@
 import React, { useContext, useState } from "react";
 import {
   Card,
+  Col,
   Result,
+  Row,
   Space,
   Statistic,
   Table,
@@ -55,14 +57,9 @@ ChartJS.register(
   Tooltip,
   Legend
 );
-const cardStyles = {
-  color: "#49ce91",
-  backgroundColor: "rgba(0,255,0,0.15)",
-  borderRadius: 20,
-  fontSize: 40,
-  padding: 8,
-  zIndex: 99,
-};
+
+import "./Dashboard.scss";
+import ContentLayout from "../../components/ContentLayout";
 
 const INITIAL_STATE_USERS = { all: 0, active_now: 0 };
 
@@ -128,119 +125,97 @@ const Dashboard = () => {
   }
 
   return (
-    <Space size={20} direction="vertical">
-      <h2 className="p-4 text-4xl font-bold text-roshetta">الصفحة الرئيسية</h2>
-
-      {/* <Space direction="horizontal">
-          <DashboardCard
-            icon={<GiPlayerTime style={cardStyles} />}
-            title={'نشط-المرضى'}
-            value={patient.active_now}
-          />
-          <DashboardCard
-            icon={<MdLocalPharmacy style={cardStyles} />}
-            title={'نشط-الدكاترة'}
-            value={doctor.active_now}
-          />
-          <DashboardCard
-            icon={<MdOutlineLocalPharmacy style={cardStyles} />}
-            title={'نشط-الصيدليات '}
-            value={pharmacy.active_now}
-          />
-          <DashboardCard
-            icon={<TbCurrencyDollarCanadian style={cardStyles} />}
-            title={'نشط-العيادات'}
-            value={clinic.active_now}
-          />
-          <DashboardCard
-            icon={<TbCurrencyDollarCanadian style={cardStyles} />}
-            title={'نشط-الادمنز'}
-            value={admin.active_now}
-          />
-          <DashboardCard
-            icon={<TbCurrencyDollarCanadian style={cardStyles} />}
-            title={'نشط-المساعدين'}
-            value={clinic.active_now}
-          />
-          <DashboardCard
-            icon={<TbCurrencyDollarCanadian style={cardStyles} />}
-            title={'نشط-الصيادلة'}
-            value={pharmacist.active_now}
-          />
-        </Space> */}
-
-      <Space direction="horizontal">
-        <DashboardCard
-          icon={<MdOutlineSick style={cardStyles} />}
-          title={"المرضى"}
-          value={patient.all}
-        />
-        <DashboardCard
-          icon={<FaUserNurse style={cardStyles} />}
-          title={"الدكاترة"}
-          value={doctor.all}
-        />
-        <DashboardCard
-          icon={<RiNurseFill style={cardStyles} />}
-          title={"المساعدين"}
-          value={assistant.all}
-        />
-        <DashboardCard
-          icon={<MdOutlineLocalPharmacy style={cardStyles} />}
-          title={"الصيدليات "}
-          value={pharmacy.all}
-        />
+    <ContentLayout title="الصفحة الرئيسية">
+      <Space direction="vertical" style={{ width: "100%" }}>
+        <Typography.Title level={5}>احصائية عامة</Typography.Title>
+        <Row gutter={[15, 15]} className="static-grid-cards">
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<MdOutlineSick />}
+                title={"المرضى"}
+                value={patient.all}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<FaUserNurse />}
+                title={"الدكاترة"}
+                value={doctor.all}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<RiNurseFill />}
+                title={"المساعدين"}
+                value={assistant.all}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<MdOutlineLocalPharmacy />}
+                title={"الصيدليات "}
+                value={pharmacy.all}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<RiAdminLine />}
+                title={"الادمنز"}
+                value={admin.all}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<GiNurseMale />}
+                title={"الصيادلة"}
+                value={pharmacist.all}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<FaPrescriptionBottleAlt />}
+                title={"الروشتات"}
+                value={prescript}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<BiClinic />}
+                title={"العيادات"}
+                value={clinic.all}
+              />
+            </Card>
+          </Col>
+        </Row>
       </Space>
-      <Space direction="horizontal">
-        <DashboardCard
-          icon={<RiAdminLine style={cardStyles} />}
-          title={"الادمنز"}
-          value={admin.all}
-        />
-        <DashboardCard
-          icon={<GiNurseMale style={cardStyles} />}
-          title={"الصيادلة"}
-          value={pharmacist.all}
-        />
-        <DashboardCard
-          icon={<FaPrescriptionBottleAlt style={cardStyles} />}
-          title={"الروشتات"}
-          value={prescript}
-        />
-        <DashboardCard
-          icon={<BiClinic style={cardStyles} />}
-          title={"العيادات"}
-          value={clinic.all}
-        />
-      </Space>
-      <Space>
-        <RecentOrders />
-        <DashboardChart />
-      </Space>
-    </Space>
+      <Row gutter={15}>
+        <Col span={12}>
+          <RecentOrders user={user} />
+        </Col>
+        <Col span={12}>
+          <DashboardChart />
+        </Col>
+      </Row>
+    </ContentLayout>
   );
 };
 
-const DashboardCard = ({ title, value, icon }) => {
-  return (
-    <>
-      <div className="h-28 w-28 rounded-lg bg-gray-200 p-2 lg:w-36">
-        {icon} <h3 className="text-md font-bold text-black">{title}</h3>
-        <p className="font-extrabold text-gray-700">{value}</p>
-      </div>
-    </>
-  );
-  return (
-    <Card>
-      <Space direction="horizontal">
-        {icon}
-        <Statistic title={title} value={value} />
-      </Space>
-    </Card>
-  );
-};
-const RecentOrders = () => {
-  const { user } = useContext(AuthContext);
+const RecentOrders = ({ user }) => {
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
 
@@ -256,23 +231,23 @@ const RecentOrders = () => {
       }
     };
     messageRequest();
-  }, []);
+  }, [user]);
 
   return (
-    <>
-      <h3>رسائل المرضى</h3>
+    <Space direction="vertical">
+      <Typography.Title level={5}>رسائل المرضي</Typography.Title>
       <Table
         columns={[
-          { title: "Name", dataIndex: "name" },
-          { title: "Email", dataIndex: "email" },
-          { title: "Message", dataIndex: "message" },
+          { title: "الاسم", dataIndex: "name" },
+          { title: "الايميل", dataIndex: "email" },
+          { title: "الرسالة", dataIndex: "message" },
         ]}
         loading={loading}
         dataSource={dataSource}
         rowKey={"email"}
         pagination={false}
       ></Table>
-    </>
+    </Space>
   );
 };
 
@@ -317,18 +292,16 @@ const DashboardChart = () => {
       legend: {
         position: "bottom",
       },
-      title: {
-        display: true,
-        text: "احصائيات المرضى",
-      },
     },
   };
 
   return (
-    <Card style={{ width: 500, height: 250 }}>
-      {" "}
-      <Bar options={options} data={revenueData} />
-    </Card>
+    <Space direction="vertical" style={{ width: "100%" }}>
+      <Typography.Title level={5}>احصائية المرضى</Typography.Title>
+      <Card>
+        <Bar options={options} data={revenueData} />
+      </Card>
+    </Space>
   );
 };
 

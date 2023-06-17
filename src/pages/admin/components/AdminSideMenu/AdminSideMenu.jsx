@@ -4,7 +4,7 @@ import {
   ShoppingCartOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Menu } from "antd";
+import { Layout, Menu } from "antd";
 import React, { useContext, useEffect, useState } from "react";
 import {
   MdAdminPanelSettings,
@@ -17,6 +17,7 @@ import { TbActivityHeartbeat, TbUsers } from "react-icons/tb";
 import { useLocation, useNavigate } from "react-router-dom";
 import { logout } from "../../../../api/auth";
 import { AuthContext } from "../../../../store/auth/context";
+import images from "../../../../images";
 // import { logOut } from '../../API';
 
 const AdminSideMenu = () => {
@@ -30,7 +31,10 @@ const AdminSideMenu = () => {
 
   const navigate = useNavigate();
   return (
-    <div className="admin__side-menu">
+    <Layout.Sider className="admin__side-menu">
+      <div className="slider-logo">
+        <img src={images.logo2} width={100} />
+      </div>
       <Menu
         className="admin__side-menu--vertical"
         mode="vertical"
@@ -86,7 +90,7 @@ const AdminSideMenu = () => {
           },
         ]}
       ></Menu>
-    </div>
+    </Layout.Sider>
   );
 };
 

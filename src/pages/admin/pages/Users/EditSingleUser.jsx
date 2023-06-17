@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   Button,
@@ -10,21 +10,29 @@ import {
   Switch,
   Tabs,
 } from "antd";
-import {
-  editEmailOrSSdDetails,
-  editProfileDetails,
-  editProfilePlaceDetails,
-  viewUserDetails,
-} from "../../API";
+// import {
+//   editEmailOrSSdDetails,
+//   editProfileDetails,
+//   editProfilePlaceDetails,
+//   viewUserDetails,
+// } from "../../API";
 import { MyLoader } from "../../../../components";
 import { useGlobalContext } from "../../../../context";
 import ShowAlert from "../../../../components/ShowAlert";
 import { displayAlert } from "../../../../utils/displayAlert";
 import { editPasswordDetails } from "../../API";
 import SubmitButton from "../../../../components/SubmitButton";
+import { AuthContext } from "../../../../store/auth/context";
+import {
+  editEmailOrSSdDetails,
+  editProfileDetails,
+  editProfilePlaceDetails,
+  viewUserDetails,
+} from "../../../../api/admin";
 
 const dateFormat = "YYYY/MM/DD";
 const EditPersonalInfo = ({ user, id, type }) => {
+  const { user: auth } = useContext(AuthContext);
   const { setAlert } = useGlobalContext();
   const [dataChanged, setDataChanged] = useState(false);
   const navigate = useNavigate();
@@ -43,7 +51,7 @@ const EditPersonalInfo = ({ user, id, type }) => {
     formData.append("specialist", values.specialist);
     formData.append("price", values.price);
     if (type === "pharmacy" || type === "clinic") {
-      editProfilePlaceDetails(type, id, formData).then((res) => {
+      editProfilePlaceDetails(type, id, formData, auth.token).then((res) => {
         console.log(res);
         if (res.Status === 400) {
           setAlert({
@@ -88,7 +96,7 @@ const EditPersonalInfo = ({ user, id, type }) => {
       if (user.type === "patient") {
         formData.append("weight", values.weight);
       }
-      editProfileDetails(type, id, formData).then((res) => {
+      editProfileDetails(type, id, formData, auth.token).then((res) => {
         console.log(res);
         if (res.Status === 400) {
           setAlert({
@@ -418,6 +426,7 @@ const EditPersonalInfo = ({ user, id, type }) => {
 };
 
 const EditEmailAndSsd = ({ user, id, type }) => {
+  const { user: auth } = useContext(AuthContext);
   const { setAlert } = useGlobalContext();
   const [editType, setEditType] = useState("email");
   const navigate = useNavigate();
@@ -433,25 +442,27 @@ const EditEmailAndSsd = ({ user, id, type }) => {
       formData.append("user_q", values.sdd);
     }
     console.log(values.edit);
-    editEmailOrSSdDetails(values.edit, type, id, formData).then((res) => {
-      console.log(res);
-      if (res.Status === 400) {
-        setAlert({
-          msg: "لم تعدل على اي بيانات",
-          show: true,
-          type: "error",
-          headMsg: "تنبيه!",
-        });
-      } else {
-        navigate("/admin/users");
-        setAlert({
-          msg: "تم تعديل الإيميل/الرقم القومي بنجاح",
-          show: true,
-          type: "success",
-          headMsg: "تم بنجاح!",
-        });
+    editEmailOrSSdDetails(values.edit, type, id, formData, auth.token).then(
+      (res) => {
+        console.log(res);
+        if (res.Status === 400) {
+          setAlert({
+            msg: "لم تعدل على اي بيانات",
+            show: true,
+            type: "error",
+            headMsg: "تنبيه!",
+          });
+        } else {
+          navigate("/admin/users");
+          setAlert({
+            msg: "تم تعديل الإيميل/الرقم القومي بنجاح",
+            show: true,
+            type: "success",
+            headMsg: "تم بنجاح!",
+          });
+        }
       }
-    });
+    );
   };
   const onFinishFailed = (errorInfo) => {
     console.log("Failed:", errorInfo);
@@ -650,11 +661,12 @@ const EditPassword = ({ user, id, type }) => {
   );
 };
 const EditSingleUser = () => {
+  const { user: auth } = useContext(AuthContext);
   const [loading, setLoading] = useState(false);
   const { type, id } = useParams();
   const [user, setUser] = useState({});
   useEffect(() => {
-    viewUserDetails(type, id).then((res) => {
+    viewUserDetails(type, id, auth.token).then((res) => {
       setUser(res.Data);
     });
   }, []);

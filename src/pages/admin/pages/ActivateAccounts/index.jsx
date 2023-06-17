@@ -4,6 +4,8 @@ import React, { useContext, useEffect, useState } from "react";
 import {
   Alert,
   Avatar,
+  Button,
+  Divider,
   Radio,
   Rate,
   Space,
@@ -18,6 +20,8 @@ import { motion } from "framer-motion";
 import { AuthContext } from "../../../../store/auth/context";
 import { activateUser, viewActivation } from "../../../../api/admin";
 import { initalWindowScroll } from "../../../../utils/reusedFunctions";
+import ContentLayout from "../../components/ContentLayout";
+import { PrimaryButton } from "../../../../components/Buttons/Primary";
 
 const ActivateAccounts = () => {
   const { user } = useContext(AuthContext);
@@ -76,28 +80,42 @@ const ActivateAccounts = () => {
 
   return (
     <>
-      <Space direction="vertical" size={20}>
-        <h2 className="p-4 text-4xl font-bold text-roshetta">تفعيل الحسابات</h2>
-        <h4 className="px-4 text-2xl font-bold text-black">فلترة النتائج</h4>
-        <Space className="rounded-lg bg-gray-200 px-2 py-4" size={3}>
-          <span>مفعل / غير مفعل</span>
-          <Switch onChange={onChange} />
-          <span>اختار النوع:</span>
-          <Radio.Group onChange={onRadioChange} value={radioValue}>
-            <Radio value={""}>الكل</Radio>
-            <Radio value={"doctor"}>دكتور</Radio>
-            <Radio value={"pharmacist"}>صيدلي</Radio>
-            <Radio value={"clinic"}>عيادة</Radio>
-            <Radio value={"pharmacy"}>صيدلية</Radio>
-          </Radio.Group>
-          <span>ابحث عن شخص:</span>
-          <Search
-            placeholder="اكتب الإسم او الرقم القومي"
-            allowClear
-            enterButton="ابحث"
-            size="large"
-            onChange={onSearch}
-          />
+      <ContentLayout title="تفعيل الحسابات">
+        <Space direction="vertical" className="w-full ">
+          <Typography.Title level={5}>فلترة النتائج</Typography.Title>
+          <Space
+            className="rounded-lg shadow-sm bg-white px-2 py-4 w-full justify-between gap-10"
+            size={3}
+          >
+            <Space size="large">
+              <span className="text-gray-400">مفعل / غير مفعل</span>
+              <Switch onChange={onChange} className="bg-gray-100" />
+            </Space>
+            <Divider type="vertical" className="bg-gray-100 h-8" />
+            <Space size="large">
+              <span className="text-gray-400"> النوع:</span>
+              <Radio.Group onChange={onRadioChange} value={radioValue}>
+                <Radio value={""}>الكل</Radio>
+                <Radio value={"doctor"}>دكتور</Radio>
+                <Radio value={"pharmacist"}>صيدلي</Radio>
+                <Radio value={"clinic"}>عيادة</Radio>
+                <Radio value={"pharmacy"}>صيدلية</Radio>
+              </Radio.Group>
+            </Space>
+            <Divider type="vertical" className="bg-gray-100 h-8" />
+            <Space size="large">
+              <span className="text-gray-400">ابحث عن شخص:</span>
+              <Search
+                className="search-input-group"
+                placeholder="اكتب الإسم او الرقم القومي"
+                allowClear
+                enterButton="ابحث"
+                size="large"
+                bordered={false}
+                onChange={onSearch}
+              />
+            </Space>
+          </Space>
         </Space>
         <Table
           rowKey="activation_id"
@@ -155,8 +173,8 @@ const ActivateAccounts = () => {
               key: "x",
               render: (type, userData) => {
                 return (
-                  <>
-                    <a
+                  <Space>
+                    <PrimaryButton
                       onClick={() => {
                         setLoading(true);
                         activateUser(
@@ -174,11 +192,11 @@ const ActivateAccounts = () => {
                           setLoading(false);
                         });
                       }}
-                      className="m-2 rounded-lg border-2 border-green-400 bg-roshetta p-1 text-white transition-colors hover:bg-transparent hover:text-slate-600  "
                     >
-                      تنشيط الحساب
-                    </a>
-                    <a
+                      تنشيط
+                    </PrimaryButton>
+                    <Button
+                      shape="round"
                       onClick={() => {
                         setLoading(true);
                         type, userData.name, userData.activation_id;
@@ -193,11 +211,11 @@ const ActivateAccounts = () => {
                           setLoading(false);
                         });
                       }}
-                      className="m-2 rounded-lg border-2 border-green-400 bg-roshetta p-1 text-white transition-colors hover:bg-transparent hover:text-slate-600  "
+                      className=""
                     >
-                      رفض الحساب
-                    </a>
-                  </>
+                      رفض
+                    </Button>
+                  </Space>
                 );
               },
             },
@@ -206,7 +224,7 @@ const ActivateAccounts = () => {
           loading={loading}
           pagination={{ pageSize: 5 }}
         ></Table>
-      </Space>
+      </ContentLayout>
     </>
   );
 };

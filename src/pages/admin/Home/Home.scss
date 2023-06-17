@@ -1,35 +1,47 @@
+@import "../../../styles/vars";
+
 * {
   @import url('https://fonts.googleapis.com/css2?family=Cairo&display=swap');
   font-family: 'Cairo', sans-serif;
 }
+
 .admin {
   display: flex;
   flex-direction: column;
   width: 100vw;
   height: 100vh;
 }
+
 .admin__header {
-  height: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 4px 20px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+  background-color: white;
 }
-.admin__footer {
-  height: 50px;
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
-  border-top: 1px solid rgba(0, 0, 0, 0.15);
+
+.main__footer {
+  border-top: 1px solid rgba($color: $borderColor, $alpha: .2);
+  background-color: transparent;
+  padding: 10px;
 }
 
 .admin__side-menu {
-  height: 100%;
+  background-color: white !important;
+  min-height: 100%;
+
+  .slider-logo {
+    padding: 14px 15px;
+  }
 }
-.admin__side-menu--vertical {
-  height: 100%;
+
+.main-content {
+  padding-inline: 50px;
+  padding-block: 25px;
+
+
 }
+
+
 
 .admin__page-content {
   padding-right: 12px;

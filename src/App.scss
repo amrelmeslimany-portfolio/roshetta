@@ -123,7 +123,7 @@ body {
 }
 
 .bold {
-  font-family: bold;
+  font-weight: 800;
 }
 
 .primary_bg {
@@ -136,6 +136,17 @@ body {
   }
 }
 
+
+.search-input-group {
+  .ant-input-affix-wrapper {
+    background-color: #f9f9f9;
+    padding: 8px 11px;
+  }
+
+  .ant-input-group-addon {
+    background-color: var(--primary-color);
+  }
+}
 
 .br-round {
   .ant-select-selector {

@@ -6,9 +6,9 @@ import { AuthContext } from "../../../store/auth/context";
 import { initalWindowScroll } from "../../../utils/reusedFunctions";
 
 const AdminAuthHandler = () => {
-  const { setAuthUser, alert, setAlert } = useGlobalContext();
+  // const { setAuthUser, alert, setAlert } = useGlobalContext();
   const { user, logoutAction } = useContext(AuthContext);
-  const { isExpired, setIsExpired } = useState(false);
+  const [isExpired, setIsExpired] = useState(false);
 
   // let userData;
   // if (JSON.parse(localStorage.getItem('userData'))) {
@@ -25,7 +25,7 @@ const AdminAuthHandler = () => {
 
     if (timeTillExpired <= 0) {
       // NOTE this function for testing
-      localStorage.clear("user");
+      logoutAction();
       setIsExpired(true);
       initalWindowScroll();
       message.error(" يجب ان تعيد تسجيل الدخول مره اخرى !انتهت الجلسة");

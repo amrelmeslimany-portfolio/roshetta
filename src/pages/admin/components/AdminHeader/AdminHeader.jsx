@@ -1,4 +1,4 @@
-import { Badge, Drawer, Image, List, Space, Typography } from "antd";
+import { Badge, Drawer, Image, Layout, List, Space, Typography } from "antd";
 import { MailOutlined, BellFilled } from "@ant-design/icons";
 
 import React, { useContext, useEffect, useState } from "react";
@@ -14,6 +14,7 @@ import { BsFillReplyFill } from "react-icons/bs";
 import { getUsers, replyMessageUser, viewMessage } from "../../../../api/admin";
 import { AuthContext } from "../../../../store/auth/context";
 import { isRequestSuccess } from "../../../../utils/reusedFunctions";
+
 const AdminHeader = () => {
   const { user } = useContext(AuthContext);
   const [comments, setComments] = useState([]);
@@ -57,18 +58,14 @@ const AdminHeader = () => {
   }, []);
 
   return (
-    <div className="admin__header">
-      <Image width={40} src={images.logo1} />
-      <h1 style={{ color: "#49ce91" }} className="text-3xl font-extrabold">
-        ادمن روشتة
-      </h1>
-      <Space>
+    <Layout.Header className="admin__header">
+      <Space style={{ marginRight: "auto" }}>
         <Badge
           count={comments?.length}
           //  dot
         >
           <MailOutlined
-            style={{ fontSize: 24 }}
+            style={{ fontSize: 20 }}
             onClick={() => setCommentsOpen(true)}
           />
         </Badge>
@@ -122,7 +119,7 @@ const AdminHeader = () => {
           }}
         ></List>
       </Drawer>
-    </div>
+    </Layout.Header>
   );
 };
 

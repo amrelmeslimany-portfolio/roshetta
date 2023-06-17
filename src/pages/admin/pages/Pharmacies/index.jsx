@@ -9,6 +9,7 @@ import {
 import {
   Alert,
   Avatar,
+  Divider,
   Radio,
   Rate,
   Space,
@@ -26,6 +27,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AuthContext } from "../../../../store/auth/context";
 import { deleteUser, getUsers } from "../../../../api/admin";
+import ContentLayout from "../../components/ContentLayout";
 
 const Pharmacies = () => {
   const { user } = useContext(AuthContext);
@@ -70,29 +72,41 @@ const Pharmacies = () => {
 
   return (
     <>
-      <Space direction="vertical" size={20}>
-        <h2 className="p-4 text-4xl font-bold text-roshetta">الصيدليات</h2>
-        <h4 className="px-4 text-2xl font-bold text-black">فلترة النتائج</h4>
-        <Space className="rounded-lg bg-gray-200 p-4" size={20}>
-          {/* <span>مفعل / غير مفعل</span>
-          <Switch onChange={onChange} /> */}
-          <span>اختار النوع:</span>
-          <Radio.Group onChange={onRadioChange} value={radioValue}>
-            {/* <Radio value={''}>الكل</Radio> */}
-            {/* <Radio value={'doctor'}>دكتور</Radio>
+      <ContentLayout title="الصيدليات">
+        <Space direction="vertical" className="w-full">
+          <Typography.Title level={5}>نتائج البحث</Typography.Title>
+
+          <Space
+            className="rounded-lg shadow-sm bg-white px-8 py-4 w-full justify-between gap-10"
+            size={3}
+          >
+            <Space size="large">
+              <span className="text-gray-400"> النوع:</span>
+
+              <Radio.Group onChange={onRadioChange} value={radioValue}>
+                {/* <Radio value={''}>الكل</Radio> */}
+                {/* <Radio value={'doctor'}>دكتور</Radio>
             <Radio value={'pharmacist'}>صيدلي</Radio> */}
-            <Radio value={"pharmacy"}>صيدلية</Radio>
-            <Radio value={"clinic"}>عيادة</Radio>
-          </Radio.Group>
-          <span>ابحث عن صيدلية:</span>
-          <Search
-            placeholder="اكتب الإسم"
-            allowClear
-            enterButton="ابحث"
-            size="large"
-            onChange={onSearch}
-          />
+                <Radio value={"pharmacy"}>صيدلية</Radio>
+                <Radio value={"clinic"}>عيادة</Radio>
+              </Radio.Group>
+            </Space>
+            <Divider type="vertical" className="bg-gray-100 h-8" />
+            <Space size="large">
+              <span className="text-gray-400">ابحث عن مكان :</span>
+              <Search
+                className="search-input-group"
+                placeholder="اكتب الإسم"
+                allowClear
+                enterButton="ابحث"
+                size="large"
+                onChange={onSearch}
+                bordered={false}
+              />
+            </Space>
+          </Space>
         </Space>
+
         <Table
           rowKey={"id"}
           className="w-[80vw]"
@@ -100,6 +114,7 @@ const Pharmacies = () => {
             {
               title: "الصورة",
               dataIndex: "profile_img",
+              width: "10%",
               render: (link) => {
                 return <Avatar src={link} />;
               },
@@ -118,11 +133,12 @@ const Pharmacies = () => {
             },
             {
               title: "الخيارات",
+              width: "15%",
               dataIndex: ["type"],
               render: (type, userData) => {
                 const id = userData.id;
                 return (
-                  <div className="flex items-center justify-center  ">
+                  <div className="flex items-center justify-between  ">
                     <Link to={`/admin/users/view/${type}/${id}`}>
                       <TbEye className="mx-1 cursor-pointer text-xl text-roshetta" />
                     </Link>
@@ -148,7 +164,7 @@ const Pharmacies = () => {
           loading={loading}
           pagination={{ pageSize: 5 }}
         ></Table>
-      </Space>
+      </ContentLayout>
     </>
   );
 };

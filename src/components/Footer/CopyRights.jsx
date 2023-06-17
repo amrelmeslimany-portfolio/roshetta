@@ -1,5 +1,6 @@
 import React from "react";
 import { DEFAULT_THEME } from "../../constants/theme";
+import { FaCopyright, FaRegCopyright } from "react-icons/fa";
 
 const CopyRights = (props) => {
   const style = {
