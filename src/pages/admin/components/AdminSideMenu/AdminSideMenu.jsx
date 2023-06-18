@@ -3,72 +3,94 @@ import {
   ShopOutlined,
   ShoppingCartOutlined,
   UserOutlined,
-} from '@ant-design/icons';
-import { Menu } from 'antd';
-import React from 'react';
+} from "@ant-design/icons";
+import { Layout, Menu } from "antd";
+import React, { useContext, useEffect, useState } from "react";
 import {
   MdAdminPanelSettings,
   MdDashboardCustomize,
   MdEdit,
   MdLocalPharmacy,
   MdOutlineLocalPharmacy,
-} from 'react-icons/md';
-import { TbActivityHeartbeat, TbUsers } from 'react-icons/tb';
-import { useNavigate } from 'react-router-dom';
+} from "react-icons/md";
+import { TbActivityHeartbeat, TbUsers } from "react-icons/tb";
+import { useLocation, useNavigate } from "react-router-dom";
+import { logout } from "../../../../api/auth";
+import { AuthContext } from "../../../../store/auth/context";
+import images from "../../../../images";
+// import { logOut } from '../../API';
 
 const AdminSideMenu = () => {
+  const { logoutAction } = useContext(AuthContext);
+  const location = useLocation();
+  const [selectedKeys, setSelectedKeys] = useState("/");
+  useEffect(() => {
+    const pathname = location.pathname;
+    setSelectedKeys(pathname);
+  }, [location.pathname]);
+
   const navigate = useNavigate();
   return (
-    <div className="admin__side-menu">
+    <Layout.Sider className="admin__side-menu">
+      <div className="slider-logo">
+        <img src={images.logo2} width={100} />
+      </div>
       <Menu
+        className="admin__side-menu--vertical"
+        mode="vertical"
         onClick={(item) => {
           // item.key
           navigate(item.key);
         }}
+        selectedKeys={[selectedKeys]}
         items={[
           {
-            label: 'الصفحة الرئيسية',
-            icon: <MdDashboardCustomize style={{ color: '#49ce91' }} />,
-            key: '/admin/dashboard',
+            label: "الصفحة الرئيسية",
+            icon: <MdDashboardCustomize style={{ color: "#49ce91" }} />,
+            key: "/admin/dashboard",
+          },
+          // {
+          //   label: 'اضافه ادمن',
+          //   icon: <MdAdminPanelSettings style={{ color: '#49ce91' }} />,
+          //   key: '/admin/add-admin',
+          // },
+          // {
+          //   label: 'تعديل مباشر',
+          //   icon: <MdEdit style={{ color: '#49ce91' }} />,
+          //   key: '/admin/edit-info',
+          // },
+          {
+            label: "العيادات",
+            icon: <MdLocalPharmacy style={{ color: "#49ce91" }} />,
+            key: "/admin/clinics",
           },
           {
-            label: 'اضافه ادمن',
-            icon: <MdAdminPanelSettings style={{ color: '#49ce91' }} />,
-            key: '/admin/add-admin',
+            label: "الصيدليات",
+            icon: <MdOutlineLocalPharmacy style={{ color: "#49ce91" }} />,
+            key: "/admin/pharmacies",
           },
           {
-            label: 'تعديل مباشر',
-            icon: <MdEdit style={{ color: '#49ce91' }} />,
-            key: '/admin/edit-info',
+            label: "المستخدمين",
+            icon: <TbUsers style={{ color: "#49ce91" }} />,
+            key: "/admin/users",
           },
           {
-            label: 'العيادات',
-            icon: <MdLocalPharmacy style={{ color: '#49ce91' }} />,
-            key: '/admin/clinics',
+            label: "تفعيل الحسابات",
+            icon: <TbActivityHeartbeat style={{ color: "#49ce91" }} />,
+            key: "/admin/activate-accounts",
           },
           {
-            label: 'الصيدليات',
-            icon: <MdOutlineLocalPharmacy style={{ color: '#49ce91' }} />,
-            key: '/admin/pharmacies',
-          },
-          {
-            label: 'المستخدمين',
-            icon: <TbUsers style={{ color: '#49ce91' }} />,
-            key: '/admin/users',
-          },
-          {
-            label: 'تفعيل الحسابات',
-            icon: <TbActivityHeartbeat style={{ color: '#49ce91' }} />,
-            key: '/admin/activate-accounts',
-          },
-          {
-            label: 'تسجيل الخروج',
-            icon: <UserOutlined style={{ color: '#49ce91' }} />,
-            key: '/',
+            label: "تسجيل الخروج",
+            icon: <UserOutlined style={{ color: "#49ce91" }} />,
+            key: "/login",
+            onClick: () =>
+              logout()
+                .then((data) => console.log(data))
+                .finally(() => logoutAction()),
           },
         ]}
       ></Menu>
-    </div>
+    </Layout.Sider>
   );
 };
 

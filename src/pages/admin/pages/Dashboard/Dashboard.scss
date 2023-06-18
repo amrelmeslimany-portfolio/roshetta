@@ -1,0 +1,21 @@
+.static-grid-cards {
+    margin-bottom: 20px;
+
+    .ant-card-body {
+        border: none;
+        padding: 15px 20px;
+        box-shadow: 0 0 10px rgba($color: #000000, $alpha: .02);
+
+
+
+        .ant-statistic-content {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+
+            .ant-statistic-content-prefix {
+                font-size: 25px;
+            }
+        }
+    }
+}

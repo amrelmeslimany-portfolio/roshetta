@@ -15,11 +15,12 @@ import {
 } from 'react-icons/md';
 import { TbActivityHeartbeat, TbUsers } from 'react-icons/tb';
 import { useNavigate } from 'react-router-dom';
+import { logOut } from '../API';
 
 const DoctorSideMenu = () => {
   const navigate = useNavigate();
   return (
-    <div className="admin__side-menu">
+    <div className="doctor__side-menu ">
       <Menu
         onClick={(item) => {
           // item.key
@@ -49,7 +50,8 @@ const DoctorSideMenu = () => {
           {
             label: 'تسجيل الخروج',
             icon: <UserOutlined style={{ color: '#49ce91' }} />,
-            key: '/',
+            key: '/login',
+            onClick: () => logOut().then((data) => console.log(data)),
           },
         ]}
       ></Menu>

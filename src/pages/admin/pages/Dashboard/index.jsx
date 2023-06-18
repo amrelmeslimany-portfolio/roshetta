@@ -1,11 +1,33 @@
-import React, { useState } from 'react';
-import { Card, Space, Statistic, Table, Typography } from 'antd';
-import { ShoppingCartOutlined } from '@ant-design/icons';
-import { TbCurrencyDollarCanadian } from 'react-icons/tb';
-import { MdLocalPharmacy, MdOutlineLocalPharmacy } from 'react-icons/md';
-import { GiPlayerTime } from 'react-icons/gi';
-import { getOrders, getRevenue } from '../../API';
-import { useEffect } from 'react';
+import React, { useContext, useState } from "react";
+import {
+  Card,
+  Col,
+  Result,
+  Row,
+  Space,
+  Statistic,
+  Table,
+  Typography,
+  message,
+} from "antd";
+import { ShoppingCartOutlined } from "@ant-design/icons";
+import { TbCurrencyDollarCanadian } from "react-icons/tb";
+import {
+  MdLocalPharmacy,
+  MdOutlineLocalPharmacy,
+  MdOutlineSick,
+} from "react-icons/md";
+import { GiNurseMale, GiPlayerTime } from "react-icons/gi";
+import { RiAdminLine, RiNurseFill } from "react-icons/ri";
+import { GrUserAdmin } from "react-icons/gr";
+
+import {
+  getOrders,
+  getRevenue,
+  // viewMessage,
+  // viewRoshettaNumbers,
+} from "../../API";
+import { useEffect } from "react";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -14,10 +36,19 @@ import {
   Title,
   Tooltip,
   Legend,
-} from 'chart.js';
+} from "chart.js";
 // import faker from 'faker';
 
-import { Bar } from 'react-chartjs-2';
+import { Bar } from "react-chartjs-2";
+import { MyLoader } from "../../../../components";
+import { FaPrescriptionBottleAlt, FaUserNurse } from "react-icons/fa";
+import { BiClinic } from "react-icons/bi";
+import {
+  errorToString,
+  isRequestSuccess,
+} from "../../../../utils/reusedFunctions";
+import { viewMessage, viewRoshettaNumbers } from "../../../../api/admin";
+import { AuthContext } from "../../../../store/auth/context";
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -26,118 +57,197 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
+import "./Dashboard.scss";
+import ContentLayout from "../../components/ContentLayout";
+
+const INITIAL_STATE_USERS = { all: 0, active_now: 0 };
+
 const Dashboard = () => {
-  return (
-    <Space size={20} direction="vertical">
-      <h2 className="text-3xl p-2">صفحة التحكم</h2>
+  const { user } = useContext(AuthContext);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [admin, setAdmin] = useState(INITIAL_STATE_USERS);
+  const [doctor, setDoctor] = useState(INITIAL_STATE_USERS);
+  const [assistant, setAssistant] = useState(INITIAL_STATE_USERS);
+  const [pharmacy, setPharmacy] = useState(INITIAL_STATE_USERS);
+  const [pharmacist, setPharmacist] = useState(INITIAL_STATE_USERS);
+  const [patient, setPatient] = useState(INITIAL_STATE_USERS);
+  const [clinic, setClinic] = useState(INITIAL_STATE_USERS);
+  const [prescript, setPrescript] = useState(0);
 
-      <Space direction="horizontal">
-        <DashboardCard
-          icon={
-            <GiPlayerTime
-              style={{
-                color: '#49ce91',
-                backgroundColor: 'rgba(0,255,0,0.25)',
-                borderRadius: 20,
-                fontSize: 40,
-                padding: 8,
-              }}
-            />
-          }
-          title={'المرضى'}
-          value={12345}
-        />
-        <DashboardCard
-          icon={
-            <MdLocalPharmacy
-              style={{
-                color: '#49ce91',
-                backgroundColor: 'rgba(0,255,0,0.25)',
-                borderRadius: 20,
-                fontSize: 40,
-                padding: 8,
-              }}
-            />
-          }
-          title={'العيادات'}
-          value={12345}
-        />
-        <DashboardCard
-          icon={
-            <MdOutlineLocalPharmacy
-              style={{
-                color: '#49ce91',
-                backgroundColor: 'rgba(0,255,0,0.25)',
-                borderRadius: 20,
-                fontSize: 40,
-                padding: 8,
-              }}
-            />
-          }
-          title={'الصيدليات المتاحة'}
-          value={12345}
-        />
-        <DashboardCard
-          icon={
-            <TbCurrencyDollarCanadian
-              style={{
-                color: '#49ce91',
-                backgroundColor: 'rgba(0,255,0,0.25)',
-                borderRadius: 20,
-                fontSize: 40,
-                padding: 8,
-              }}
-            />
-          }
-          title={'المرضى الكليين'}
-          value={12345}
-        />
+  useEffect(() => {
+    const getNumbers = async () => {
+      try {
+        setLoading(true);
+        const response = await viewRoshettaNumbers(user.token);
+        console.log(user.token);
+        // COMMENT If Sucess
+        if (isRequestSuccess(response.Status)) {
+          setAdmin(response.Data.admin);
+          setAssistant(response.Data.assistant);
+          setClinic(response.Data.clinic);
+          setDoctor(response.Data.doctor);
+          setPatient(response.Data.patient);
+          setPharmacist(response.Data.pharmacist);
+          setPharmacy(response.Data.pharmacy);
+          setPrescript(response.Data.prescript);
+        }
+        // COMMENT if Error
+        else throw new Error(errorToString(response.Message));
+      } catch (error) {
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    getNumbers();
+
+    // viewRoshettaNumbers().then((res) => {
+    //   setAdmin(res.Data.admin);
+    //   setAssistant(res.Data.assistant);
+    //   setClinic(res.Data.clinic);
+    //   setDoctor(res.Data.doctor);
+    //   setPatient(res.Data.patient);
+    //   setPharmacist(res.Data.pharmacist);
+    //   setPharmacy(res.Data.pharmacy);
+    //   setPrescript(res.Data.prescript);
+    // });
+  }, []);
+
+  if (loading) {
+    return <MyLoader loading={loading} />;
+  }
+
+  if (!loading && error) {
+    return <Result status="error" subTitle={error} />;
+  }
+
+  return (
+    <ContentLayout title="الصفحة الرئيسية">
+      <Space direction="vertical" style={{ width: "100%" }}>
+        <Typography.Title level={5}>احصائية عامة</Typography.Title>
+        <Row gutter={[15, 15]} className="static-grid-cards">
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<MdOutlineSick />}
+                title={"المرضى"}
+                value={patient.all}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<FaUserNurse />}
+                title={"الدكاترة"}
+                value={doctor.all}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<RiNurseFill />}
+                title={"المساعدين"}
+                value={assistant.all}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<MdOutlineLocalPharmacy />}
+                title={"الصيدليات "}
+                value={pharmacy.all}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<RiAdminLine />}
+                title={"الادمنز"}
+                value={admin.all}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<GiNurseMale />}
+                title={"الصيادلة"}
+                value={pharmacist.all}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<FaPrescriptionBottleAlt />}
+                title={"الروشتات"}
+                value={prescript}
+              />
+            </Card>
+          </Col>
+          <Col span={6}>
+            <Card>
+              <Statistic
+                prefix={<BiClinic />}
+                title={"العيادات"}
+                value={clinic.all}
+              />
+            </Card>
+          </Col>
+        </Row>
       </Space>
-      <Space>
-        <RecentOrders />
-        <DashboardChart />
-      </Space>
-    </Space>
+      <Row gutter={15}>
+        <Col span={12}>
+          <RecentOrders user={user} />
+        </Col>
+        <Col span={12}>
+          <DashboardChart />
+        </Col>
+      </Row>
+    </ContentLayout>
   );
 };
 
-const DashboardCard = ({ title, value, icon }) => {
-  return (
-    <Card>
-      <Space direction="horizontal">
-        {icon}
-        <Statistic title={title} value={value} />
-      </Space>
-    </Card>
-  );
-};
-const RecentOrders = () => {
+const RecentOrders = ({ user }) => {
   const [dataSource, setDataSource] = useState([]);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     setLoading(true);
-    getOrders().then((res) => {
-      res.products;
-      setDataSource(res.products.splice(0, 3));
-      setLoading(false);
-    });
-  }, []);
+    const messageRequest = async () => {
+      const response = await viewMessage("", "", user.token);
+      if (isRequestSuccess(response.Status)) {
+        setDataSource(response.Data);
+        console.log(response.Data);
+        // console.log(res.Data.splice(0, 3));
+        setLoading(false);
+      }
+    };
+    messageRequest();
+  }, [user]);
 
   return (
-    <>
-      <h3>المرضى</h3>
+    <Space direction="vertical">
+      <Typography.Title level={5}>رسائل المرضي</Typography.Title>
       <Table
         columns={[
-          { title: 'title', dataIndex: 'title' },
-          { title: 'Quantity', dataIndex: 'quantity' },
-          { title: 'Price', dataIndex: 'discountedPrice' },
+          { title: "الاسم", dataIndex: "name" },
+          { title: "الايميل", dataIndex: "email" },
+          { title: "الرسالة", dataIndex: "message" },
         ]}
         loading={loading}
         dataSource={dataSource}
+        rowKey={"email"}
         pagination={false}
       ></Table>
-    </>
+    </Space>
   );
 };
 
@@ -160,15 +270,15 @@ const DashboardChart = () => {
         labels,
         datasets: [
           {
-            label: 'المريض المتسلخ',
+            label: "المريض المتسلخ",
             data: data,
-            backgroundColor: '#49ce91',
+            backgroundColor: "#49ce91",
           },
 
           {
-            label: 'المريض الكحيان ههه',
+            label: "المريض الكحيان ههه",
             data: data,
-            backgroundColor: 'rgba(0,255,0,0.25)',
+            backgroundColor: "rgba(0,255,0,0.25)",
           },
         ],
       };
@@ -180,20 +290,18 @@ const DashboardChart = () => {
     responsive: true,
     plugins: {
       legend: {
-        position: 'bottom',
-      },
-      title: {
-        display: true,
-        text: 'احصائيات المرضى',
+        position: "bottom",
       },
     },
   };
 
   return (
-    <Card style={{ width: 500, height: 250 }}>
-      {' '}
-      <Bar options={options} data={revenueData} />
-    </Card>
+    <Space direction="vertical" style={{ width: "100%" }}>
+      <Typography.Title level={5}>احصائية المرضى</Typography.Title>
+      <Card>
+        <Bar options={options} data={revenueData} />
+      </Card>
+    </Space>
   );
 };
 

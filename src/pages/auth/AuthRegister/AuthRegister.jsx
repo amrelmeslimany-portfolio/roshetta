@@ -16,10 +16,13 @@ import { DatePicker, Select, Alert } from 'antd';
 import images from '../../../images';
 import { useGlobalContext } from '../../../context';
 import './AuthRegister.scss';
+import { AppWrapper } from '../../../wrapper';
+import { MyLoader } from '../../../components';
 
 const AuthRegister = () => {
   const { setAuthUser, alert, setAlert } = useGlobalContext();
   const [auth, setAuth] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const [role, setRole] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -102,6 +105,7 @@ const AuthRegister = () => {
         type: 'error',
       });
     } else {
+      setLoading(true);
       fetch('http://localhost:80/roshetta/api/users/register', {
         method: 'POST',
         // headers: {
@@ -115,6 +119,7 @@ const AuthRegister = () => {
           console.log(data);
           setAuth(data.Status);
           if (data.Status > 299) {
+            setLoading(false);
             window.scrollTo({
               top: 0,
               left: 0,
@@ -126,6 +131,10 @@ const AuthRegister = () => {
               type: 'error',
             });
           } else {
+            setLoading(false);
+            localStorage.setItem('registerData', JSON.stringify([role, email]));
+            navigate('/active-email');
+
             // setRole('');
             // setFirstName('');
             // setLastName('');
@@ -140,7 +149,6 @@ const AuthRegister = () => {
             // setWeight('');
             // setHeight('');
             // setSpecialist('');
-            // navigate('/admin/dashboard');
           }
         });
     }
@@ -154,6 +162,10 @@ const AuthRegister = () => {
       clearTimeout(myTimeout);
     };
   }, [alert.show]);
+
+  if (loading) {
+    return <MyLoader loading={loading} />;
+  }
 
   return (
     <>
@@ -382,7 +394,7 @@ const AuthRegister = () => {
             </div>
           </div>
           <button
-            className="text-white bg-roshetta text-2xl px-44 py-5 rounded-full hover:px-48 hover:py-6 transition-all "
+            className="foucs:outline-2 mt-6 rounded-full bg-roshetta px-40 py-3 text-2xl text-white hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300  active:bg-green-600"
             type="submit"
           >
             انشاء حساب
@@ -399,4 +411,4 @@ const AuthRegister = () => {
   );
 };
 
-export default AuthRegister;
+export default AppWrapper(AuthRegister);

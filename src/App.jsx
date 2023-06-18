@@ -1,72 +1,13 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
-
-import ProtectedRoute from './pages/ProtectedRoute';
-import Layout from './pages/Layout';
-import {
-  Doctor,
-  ActivateAccountDoc,
-  AddClinic,
-  PersonalData,
-  ViewClinics,
-  AuthLogin,
-  AuthRegister,
-  HomePage,
-  ForgetPassword,
-  Home,
-  ActivateAccounts,
-  AddAdmin,
-  Clinics,
-  Dashboard,
-  EditInfo,
-  Pharmacies,
-  Users,
-} from './pages';
-import './App.scss';
+import { BrowserRouter } from "react-router-dom";
+import RoutesLayout from "./routes/RoutesLayout";
+import "./App.scss";
 
 export default function App() {
   return (
     <>
       <div className="app">
         <BrowserRouter>
-          <Routes>
-            <Route index path="/" element={<HomePage />} />
-            <Route path="/login" element={<AuthLogin />} />
-            <Route path="/register" element={<AuthRegister />} />
-            <Route path="/forget-password" element={<ForgetPassword />} />
-            {/* ------------------- Admin   ------------------- */}
-            <Route
-              path="admin"
-              element={
-                // <ProtectedRoute>
-                <Home />
-                /* </ProtectedRoute> */
-              }
-            >
-              <Route path="dashboard" element={<Dashboard />} />
-              <Route path="activate-accounts" element={<ActivateAccounts />} />
-              <Route path="add-admin" element={<AddAdmin />} />
-              <Route path="clinics" element={<Clinics />} />
-              <Route path="edit-info" element={<EditInfo />} />
-              <Route path="pharmacies" element={<Pharmacies />} />
-              <Route path="users" element={<Users />} />
-            </Route>
-
-            {/* ------------------- Doctor   ------------------- */}
-
-            <Route
-              path="doctor"
-              element={
-                // <ProtectedRoute>
-                <Doctor />
-                /* </ProtectedRoute> */
-              }
-            >
-              <Route path="activate-account" element={<ActivateAccountDoc />} />
-              <Route path="add-clinic" element={<AddClinic />} />
-              <Route path="personal-info" element={<PersonalData />} />
-              <Route path="view-clinics" element={<ViewClinics />} />
-            </Route>
-          </Routes>
+          <RoutesLayout />
         </BrowserRouter>
       </div>
     </>
