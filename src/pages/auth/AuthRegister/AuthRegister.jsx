@@ -1,413 +1,177 @@
-import React from 'react';
-import { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { GiWeight } from 'react-icons/gi';
-import { MdLocationOn } from 'react-icons/md';
-import { TbArrowAutofitHeight } from 'react-icons/tb';
-import { FaHandHoldingMedical } from 'react-icons/fa';
+import React from "react";
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { GiWeight } from "react-icons/gi";
+import { MdLocationOn } from "react-icons/md";
+import { TbArrowAutofitHeight } from "react-icons/tb";
+import { FaHandHoldingMedical, FaRegIdCard } from "react-icons/fa";
 import {
   UserOutlined,
   MailFilled,
   LockFilled,
   PhoneFilled,
   IdcardFilled,
-} from '@ant-design/icons';
-import { DatePicker, Select, Alert } from 'antd';
-import images from '../../../images';
-import { useGlobalContext } from '../../../context';
-import './AuthRegister.scss';
-import { AppWrapper } from '../../../wrapper';
-import { MyLoader } from '../../../components';
+} from "@ant-design/icons";
+import {
+  DatePicker,
+  Select,
+  Alert,
+  Steps,
+  Form,
+  Input,
+  Divider,
+  Row,
+  Col,
+  Button,
+  message,
+} from "antd";
+import images from "../../../images";
+import { useGlobalContext } from "../../../context";
+import "./AuthRegister.scss";
+import { AppWrapper } from "../../../wrapper";
+import { MyLoader } from "../../../components";
+import AuthLayout from "../../../components/Auth/AuthLayout";
+import { Colors } from "chart.js";
+import CustomLink from "../../../components/Buttons/Links";
+import { PrimaryButton } from "../../../components/Buttons/Primary";
+import PresonalFields from "./PresonalFields";
+import AccountFields from "./AccountFields";
+import SecureFields from "./SecureFields";
+import { register } from "../../../api/auth";
+import {
+  errorToString,
+  isRequestSuccess,
+} from "../../../utils/reusedFunctions";
+
+const FORM_STEPS = [
+  {
+    title: "الشخصية",
+    content: <PresonalFields />,
+  },
+  {
+    title: "الحساب",
+    content: <AccountFields />,
+  },
+  {
+    title: "الامان",
+    content: <SecureFields />,
+  },
+];
 
 const AuthRegister = () => {
-  const { setAuthUser, alert, setAlert } = useGlobalContext();
-  const [auth, setAuth] = useState('');
+  const [currentForm, setCurrentForm] = useState(0);
   const [loading, setLoading] = useState(false);
-
-  const [role, setRole] = useState('');
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [governorate, setGovernorate] = useState('');
-  const [gender, setGender] = useState('');
-  const [ssd, setSsd] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
-  const [birthDate, setBirthDate] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [weight, setWeight] = useState('');
-  const [height, setHeight] = useState('');
-  const [specialist, setSpecialist] = useState('');
+  const [formValues, setFormValues] = useState({});
 
   const navigate = useNavigate();
 
-  let formData = new FormData();
+  const [form] = Form.useForm();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const isNext = currentForm < FORM_STEPS.length - 1;
 
-    formData.append('role', role);
-    formData.append('first_name', firstName);
-    formData.append('last_name', lastName);
-    formData.append('email', email);
-    formData.append('governorate', governorate);
-    formData.append('gender', gender);
-    formData.append('ssd', ssd);
-    formData.append('phone_number', phoneNumber);
-    formData.append('birth_date', birthDate);
-    formData.append('password', password);
-    formData.append('confirm_password', confirmPassword);
-    formData.append('weight', weight);
-    formData.append('height', height);
-    formData.append('specialist', specialist);
-    if (password < 6 && confirmPassword < 6) {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth',
-      });
-      setAlert({
-        msg: 'ادخل باسوورد مكون من 6 ارقام او اكثر',
-        show: true,
-        type: 'error',
-      });
-    } else if (password !== confirmPassword) {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth',
-      });
-      setAlert({
-        msg: 'الباسوورد غير متشابة',
-        show: true,
-        type: 'error',
-      });
-    } else if (ssd < 14) {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth',
-      });
-      setAlert({
-        msg: 'الرقم القومي يجب ان يكون 14 رقم',
-        show: true,
-        type: 'error',
-      });
-    } else if (phoneNumber < 11) {
-      window.scrollTo({
-        top: 0,
-        left: 0,
-        behavior: 'smooth',
-      });
-      setAlert({
-        msg: 'رقم الهاتف يجب ان يكون 11 رقم',
-        show: true,
-        type: 'error',
-      });
-    } else {
+  const onNext = () => {
+    setFormValues((prev) => ({ ...prev, ...form.getFieldsValue() }));
+    setCurrentForm(currentForm + 1);
+  };
+
+  const onPrevious = () => {
+    setCurrentForm(currentForm - 1);
+  };
+
+  const onSubmit = async (values) => {
+    const formData = new FormData();
+    const newuser = { ...formValues, ...values };
+
+    formData.append("role", newuser.role);
+    formData.append("first_name", newuser.username);
+    formData.append("last_name", newuser.username);
+    formData.append("email", newuser.email);
+    formData.append("governorate", newuser.governorate);
+    formData.append("gender", newuser.gender);
+    formData.append("ssd", newuser.ssdNumber);
+    formData.append("phone_number", newuser.phoneNumber);
+    formData.append("birth_date", newuser.birthday);
+    formData.append("password", newuser.password);
+    formData.append("confirm_password", newuser.repassword);
+    formData.append("weight", newuser.weight || "");
+    formData.append("height", newuser.height || "");
+    formData.append("specialist", newuser.specialist || "");
+
+    try {
       setLoading(true);
-      fetch('http://localhost:80/roshetta/api/users/register', {
-        method: 'POST',
-        // headers: {
-        //   'content-type': 'multipart/form-data',
-        //   // 'Content-Type': 'application/json',
-        // },
-        body: formData,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setAuth(data.Status);
-          if (data.Status > 299) {
-            setLoading(false);
-            window.scrollTo({
-              top: 0,
-              left: 0,
-              behavior: 'smooth',
-            });
-            setAlert({
-              msg: 'يوجد خطأ في تسجيل الحساب',
-              show: true,
-              type: 'error',
-            });
-          } else {
-            setLoading(false);
-            localStorage.setItem('registerData', JSON.stringify([role, email]));
-            navigate('/active-email');
-
-            // setRole('');
-            // setFirstName('');
-            // setLastName('');
-            // setEmail('');
-            // setPassword('');
-            // setConfirmPassword('');
-            // setGovernorate('');
-            // setGender('');
-            // setSsd('');
-            // setPhoneNumber('');
-            // setBirthDate('');
-            // setWeight('');
-            // setHeight('');
-            // setSpecialist('');
-          }
-        });
+      const response = await register(formData);
+      // COMMENT If Back-End response OK
+      if (isRequestSuccess(response.Status)) {
+        localStorage.setItem(
+          "registerData",
+          JSON.stringify([newuser.role, newuser.email])
+        );
+        message.success("تم انشاء حساب بنجاح");
+        navigate("/active-email");
+      }
+      // COMMENT IF Back-End response Error ex: password incorrect
+      else throw new Error(errorToString(response.Message));
+    } catch (error) {
+      message.error(error.message, 5);
+    } finally {
+      setLoading(false);
     }
   };
-  useEffect(() => {
-    const myTimeout = setTimeout(() => {
-      setAlert({ msg: '', show: false, type: '' });
-    }, 3000);
-
-    return () => {
-      clearTimeout(myTimeout);
-    };
-  }, [alert.show]);
-
-  if (loading) {
-    return <MyLoader loading={loading} />;
-  }
 
   return (
-    <>
-      <div className="auth-register">
-        {alert.show && (
-          <Alert
-            style={{
-              marginBottom: 20,
-            }}
-            message="حدثت مشكلة"
-            description={alert.msg}
-            type={alert.type}
-            showIcon
-          />
-        )}
-        <div className="auth-register__img">
-          <img src={images.logo1} alt="logo" />
-        </div>
-        <h2 className="auth-register__title">انشاء حساب جديد</h2>
-        <p className="auth-register__text">
-          يرجي مليء البيانات لانشاء حساب جديد
-        </p>
-        <form className="auth-register__form" onSubmit={handleSubmit}>
-          <div className="auth-register__form--container">
-            <div className="auth-register__form-right">
-              <div className="auth-register__form--form-input">
-                <span>
-                  <UserOutlined />
-                </span>
-                <input
-                  name="firstName"
-                  type="text"
-                  placeholder="ادخل الاسم الاول..."
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
-              </div>
-              <div className="auth-register__form--form-input">
-                <span>
-                  <UserOutlined />
-                </span>
-                <input
-                  name="lastName"
-                  type="text"
-                  placeholder="ادخل الاسم الاخير..."
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
-              </div>
-              <div className="auth-register__form--form-input">
-                <span>
-                  <MailFilled />
-                </span>
-                <input
-                  name="email"
-                  type="text"
-                  placeholder="ادخل البريد الالكتروني..."
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </div>
-              <div className="auth-register__form--form-input">
-                <span>
-                  <IdcardFilled />
-                </span>
-                <input
-                  name="ssd"
-                  type="text"
-                  placeholder="ادخل الرقم القومي..."
-                  value={ssd}
-                  onChange={(e) => setSsd(e.target.value)}
-                />
-              </div>
-              <div className="auth-register__form--form-input">
-                <span>
-                  <PhoneFilled />
-                </span>
-                <input
-                  name="phoneNumber"
-                  type="text"
-                  placeholder="ادخل رقم التليفون..."
-                  value={phoneNumber}
-                  onChange={(e) => setPhoneNumber(e.target.value)}
-                />
-              </div>
-              <div className="auth-register__form--form-custom-input">
-                <DatePicker
-                  size="large"
-                  style={{
-                    width: 450,
-                    marginBottom: 15,
-                  }}
-                  onChange={(value, stringDate) => setBirthDate(stringDate)}
-                />
-              </div>
-              <div className="auth-register__form--form-input">
-                <span>
-                  <MdLocationOn />
-                </span>
-                <input
-                  name="governorate"
-                  type="text"
-                  placeholder="ادخل المحافظة..."
-                  value={governorate}
-                  onChange={(e) => setGovernorate(e.target.value)}
-                />
-              </div>
-            </div>
-            <div className="auth-register__form-left">
-              <div className="auth-register__form--form-custom-input">
-                <Select
-                  placeholder="اختر النوع..."
-                  style={{
-                    width: 450,
-                    marginTop: 5,
-                    marginBottom: 35,
-                  }}
-                  onChange={(value) => setGender(value)}
-                  options={[
-                    {
-                      value: 'male',
-                      label: 'ذكر',
-                    },
-                    {
-                      value: 'female',
-                      label: 'انثى',
-                    },
-                  ]}
-                />
-              </div>
-              <div className="auth-register__form--form-custom-input">
-                <Select
-                  d
-                  placeholder="اختر نوع الحساب..."
-                  style={{
-                    width: 450,
-                    marginTop: 5,
-                    marginBottom: 35,
-                  }}
-                  onChange={(value) => setRole(value)}
-                  options={[
-                    {
-                      value: 'patient',
-                      label: 'مريض',
-                    },
-                    {
-                      value: 'doctor',
-                      label: 'دكتور',
-                    },
-                    {
-                      value: 'assistant',
-                      label: 'مساعد',
-                    },
-                    {
-                      value: 'pharmacist',
-                      label: 'صيدلي',
-                    },
-                    {
-                      value: 'admin',
-                      label: 'ادمن',
-                    },
-                  ]}
-                />
-              </div>
-              <div className="auth-register__form--form-input">
-                <span>
-                  <FaHandHoldingMedical />
-                </span>
-                <input
-                  disabled={role === 'doctor' ? false : true}
-                  name="specialist"
-                  type="text"
-                  placeholder="اختر تخصصك الطبي..."
-                  value={specialist}
-                  onChange={(e) => setSpecialist(e.target.value)}
-                />
-              </div>
-              <div className="auth-register__form--form-input">
-                <span>
-                  <GiWeight />
-                </span>
-                <input
-                  name="weight"
-                  type="text"
-                  placeholder="ادخل وزنك..."
-                  value={weight}
-                  onChange={(e) => setWeight(e.target.value)}
-                />
-              </div>
-              <div className="auth-register__form--form-input">
-                <span>
-                  <TbArrowAutofitHeight />
-                </span>
-                <input
-                  name="height"
-                  type="text"
-                  placeholder="ادخل ارتفاعك..."
-                  value={height}
-                  onChange={(e) => setHeight(e.target.value)}
-                />
-              </div>
-              <div className="auth-register__form--form-input">
-                <span>
-                  <LockFilled />
-                </span>
-                <input
-                  name="password"
-                  type="password"
-                  placeholder="ادخل كلمة المرور..."
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
-              </div>
-              <div className="auth-register__form--form-input">
-                <span>
-                  <LockFilled />
-                </span>
-                <input
-                  name="confirmPassword"
-                  type="password"
-                  placeholder="اعد ادخال كلمة المرور..."
-                  value={confirmPassword}
-                  onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
-          <button
-            className="foucs:outline-2 mt-6 rounded-full bg-roshetta px-40 py-3 text-2xl text-white hover:bg-green-500 focus:outline-none focus:ring focus:ring-green-300  active:bg-green-600"
-            type="submit"
-          >
-            انشاء حساب
-          </button>
-        </form>
-        <p className="auth-register__login-btn">
-          لديك حساب بالفعل ؟ <Link to={'/login'}>اضغط هنا لتسجيل الدخول</Link>
-        </p>
-      </div>
-      <p className="app__footer">
-        برمجه فريق <span>روشتة</span> 2023
-      </p>
-    </>
+    <AuthLayout text="  يرجي مليء البيانات لانشاء حساب جديد">
+      <Steps className="w-[410px]" current={currentForm} items={FORM_STEPS} />
+      <Form
+        className="customed-form form-gap"
+        form={form}
+        onFinish={onSubmit}
+        // onFinishFailed={onSubmitFail}
+        initialValues={{ remember: true }}
+        autoComplete="off"
+      >
+        {FORM_STEPS[currentForm].content}
+
+        <Form.Item className="mt-4">
+          <Row className="justify-between">
+            {currentForm > 0 && (
+              <Col>
+                <Form.Item>
+                  <Button
+                    disabled={loading}
+                    shape="round"
+                    htmlType="button"
+                    onClick={onPrevious}
+                    block
+                  >
+                    للخلف
+                  </Button>
+                </Form.Item>
+              </Col>
+            )}
+            <Col className="ms-auto">
+              {!isNext && (
+                <Form.Item>
+                  <PrimaryButton htmlType="submit" loading={loading} block>
+                    {loading ? "جارى التحميل" : "انشاء حساب"}
+                  </PrimaryButton>
+                </Form.Item>
+              )}
+              {isNext && (
+                <Form.Item>
+                  <PrimaryButton htmlType="button" onClick={onNext} block>
+                    التالي
+                  </PrimaryButton>
+                </Form.Item>
+              )}
+            </Col>
+          </Row>
+          <Divider className="font-14px">أو</Divider>
+          <CustomLink.Outlined to="/login" className="block">
+            تسجيل الدخول
+          </CustomLink.Outlined>
+        </Form.Item>
+      </Form>
+    </AuthLayout>
   );
 };
 

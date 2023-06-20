@@ -2,6 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import { AppProvider } from "./context";
 import { ConfigProvider } from "antd";
+import local from "antd/locale/ar_EG";
 import App from "./App";
 import "./index.css";
 import { DEFAULT_THEME } from "./constants/theme";
@@ -11,7 +12,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AppProvider>
       <AuthProvider>
-        <ConfigProvider theme={DEFAULT_THEME} direction="rtl">
+        <ConfigProvider theme={DEFAULT_THEME} locale={local} direction="rtl">
           <App />
         </ConfigProvider>
       </AuthProvider>

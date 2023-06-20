@@ -20,3 +20,14 @@ export const USER_ROLES = [
     label: "صيدلي",
   },
 ];
+
+export const GENDERS = [
+  {
+    value: "male",
+    label: "ذكر",
+  },
+  {
+    value: "female",
+    label: "انثي",
+  },
+];

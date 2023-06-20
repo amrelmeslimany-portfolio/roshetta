@@ -8,6 +8,14 @@ export const login = (data) => {
   return request("/users/login", options);
 };
 
+export const register = (data) => {
+  const options = {
+    method: "POST",
+    body: data,
+  };
+  return request("/users/register", options);
+};
+
 export const logout = (token) => {
   const options = {
     method: "GET",

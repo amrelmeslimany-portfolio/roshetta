@@ -1,22 +1,22 @@
-import { useState, useEffect } from 'react';
-import './ActiveEmail.scss';
-import { MdEmail } from 'react-icons/md';
-import { Alert } from 'antd';
-import { useGlobalContext } from '../../../context';
-import { Navigate, useNavigate } from 'react-router-dom';
-import { AppWrapper } from '../../../wrapper';
-import { MyLoader } from '../../../components';
+import { useState, useEffect } from "react";
+import "./ActiveEmail.scss";
+import { MdEmail } from "react-icons/md";
+import { Alert, message } from "antd";
+import { useGlobalContext } from "../../../context";
+import { Navigate, useNavigate } from "react-router-dom";
+import { AppWrapper } from "../../../wrapper";
+import { MyLoader } from "../../../components";
 
 const ActiveEmail = () => {
   const { setAuthUser, alert, setAlert } = useGlobalContext();
 
   const navigate = useNavigate();
 
-  const [code, setCode] = useState('');
-  const [role, setRole] = useState('');
-  const [email, setEmail] = useState('');
+  const [code, setCode] = useState("");
+  const [role, setRole] = useState("");
+  const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
-  const registerData = JSON.parse(localStorage.getItem('registerData'));
+  const registerData = JSON.parse(localStorage.getItem("registerData"));
 
   let formData = new FormData();
 
@@ -26,23 +26,23 @@ const ActiveEmail = () => {
     console.log(registerData);
     setRole(registerData[0]);
     setEmail(registerData[1]);
-    formData.append('role', registerData[0]);
-    formData.append('email', registerData[1]);
-    formData.append('code', code);
+    formData.append("role", registerData[0]);
+    formData.append("email", registerData[1]);
+    formData.append("code", code);
     if (!code) {
       window.scrollTo({
         top: 0,
         left: 0,
-        behavior: 'smooth',
+        behavior: "smooth",
       });
       setAlert({
-        msg: 'الرجاء ادخال الكود',
+        msg: "الرجاء ادخال الكود",
         show: true,
-        type: 'error',
+        type: "error",
       });
     } else {
-      fetch('http://localhost:80/roshetta/api/users/active_email', {
-        method: 'POST',
+      fetch("http://localhost:80/roshetta/api/users/active_email", {
+        method: "POST",
         // headers: {
         //   'content-type': 'multipart/form-data',
         //   // 'Content-Type': 'application/json',
@@ -56,26 +56,26 @@ const ActiveEmail = () => {
             window.scrollTo({
               top: 0,
               left: 0,
-              behavior: 'smooth',
+              behavior: "smooth",
             });
             setAlert({
-              msg: 'يوجد خطأ في تفعيل الحساب',
+              msg: "يوجد خطأ في تفعيل الحساب",
               show: true,
-              type: 'error',
+              type: "error",
             });
             setLoading(false);
           } else {
             console.log(data);
-            localStorage.setItem('message', JSON.stringify([data.Message]));
+            message.success("تم التفعيل");
             setLoading(false);
-            navigate('/login');
+            navigate("/login");
           }
         });
     }
   };
   useEffect(() => {
     const myTimeout = setTimeout(() => {
-      setAlert({ msg: '', show: false, type: '' });
+      setAlert({ msg: "", show: false, type: "" });
     }, 3000);
 
     return () => {
@@ -84,7 +84,7 @@ const ActiveEmail = () => {
   }, [alert.show]);
   loading;
   if (loading) {
-    return <MyLoader text={'جاري تفعيل الحساب...'} loading={loading} />;
+    return <MyLoader text={"جاري تفعيل الحساب..."} loading={loading} />;
   }
   return (
     <>

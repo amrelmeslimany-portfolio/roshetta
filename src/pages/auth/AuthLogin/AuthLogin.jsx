@@ -29,110 +29,12 @@ import {
 import { AuthContext } from "../../../store/auth/context";
 
 const AuthLogin = () => {
-  const [loading, setLoading] = useState(false);
-  // const userData = JSON.parse(localStorage.getItem("userData"));
-
-  // if (JSON.parse(localStorage.getItem("userData"))) {
-  //   const userData = JSON.parse(localStorage.getItem("userData"));
-
-  //   if (userData.type === "doctor") {
-  //     return <Navigate to="/doctor/personal-info" />;
-  //   }
-  //   if (userData.type === "admin") {
-  //     return <Navigate to="/admin/dashboard" />;
-  //   }
-  // }
-  // const { setAuthUser, alert, setAlert } = useGlobalContext();
-  // const [auth, setAuth] = useState("");
-
-  // const [email, setEmail] = useState("");
-  const [role, setRole] = useState("");
-  // const [ssd, setSsd] = useState("");
-  // const [password, setPassword] = useState("");
-
-  const navigate = useNavigate();
-  // navigate(0) Make a refresh
-
-  // const message = JSON.parse(localStorage.getItem("message"));
-
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-
-  //   formData.append("role", role);
-  //   formData.append("user_id", ssd);
-  //   formData.append("password", password);
-  //   formData.append("password_edit", "");
-
-  //   if (ssd < 14 && password < 6 && role === null) {
-  //     setAlert({
-  //       msg: " الرقم القومي يجب ان يكون 14 رقم والباسوورد غير خالي",
-  //       show: true,
-  //       type: "error",
-  //     });
-  //   } else if (ssd < 14) {
-  //     initScroll();
-  //     setAlert({
-  //       msg: "الرقم القومي يجب ان يكون 14 رقم",
-  //       show: true,
-  //       type: "error",
-  //     });
-  //   } else if (password < 6) {
-  //     initScroll();
-  //     setAlert({
-  //       msg: "ادخل باسوورد مكون من 6 ارقام او اكثر",
-  //       show: true,
-  //       type: "error",
-  //     });
-  //   } else if (!role) {
-  //     initScroll();
-  //     setAlert({
-  //       msg: "ادخل نوع الحساب لو سمحت",
-  //       show: true,
-  //       type: "error",
-  //     });
-  //   } else {
-  //     setLoading(true);
-  //     fetch("http://localhost:80/roshetta/api/users/login", {
-  //       method: "POST",
-  //       // headers: {
-  //       //   'Content-Type': 'application/json',
-  //       // },
-  //       body: formData,
-  //     })
-  //       .then((res) => res.json())
-  //       .then((data) => {
-  //         console.log(data.Message);
-  //         let message = data.Message;
-  //         if (data.Status > 299) {
-  //           setLoading(false);
-  //           initScroll();
-  //           setAlert({
-  //             msg: `${message.password_err} \n ${message.type_err} \n ${message.user_id_err} `,
-  //             show: true,
-  //             type: "error",
-  //           });
-  //         } else {
-  //           localStorage.setItem("userData", JSON.stringify(data.Data));
-  //           setLoading(false);
-  //           if (data.Data.type === "doctor") {
-  //             navigate("/doctor/personal-info");
-  //           } else if (data.Data.type === "admin") {
-  //             navigate("/admin/dashboard");
-  //           }
-  //           // setRole('');
-  //           // setEmail('');
-  //           // setPassword('');
-  //           // setSsd('');
-  //         }
-  //       });
-  //   }
-  // };
-
   const { loginAction } = useContext(AuthContext);
-
+  const [role, setRole] = useState(null);
+  const [userID, setUserID] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
   const [form] = Form.useForm();
-
-  const onRoleChange = (value) => setRole(value);
 
   const onSubmitFail = ({ errorFields }) => {
     // COMMENT scroll page to first input
@@ -167,6 +69,16 @@ const AuthLogin = () => {
     }
   };
 
+  useEffect(() => {
+    const isRegistered = localStorage.getItem("registerData");
+    if (isRegistered) {
+      const temp = JSON.parse(isRegistered);
+      console.log(temp);
+      setRole(temp[0]);
+      setUserID(temp[1]);
+    }
+  }, []);
+
   return (
     <>
       <AuthLayout text="قم بادخال البيانات الخاصه بتسجيل الدخول">
@@ -175,6 +87,10 @@ const AuthLogin = () => {
           form={form}
           onFinish={onSubmit}
           onFinishFailed={onSubmitFail}
+          initialValues={{
+            userID,
+            role,
+          }}
           autoComplete="off"
         >
           <Form.Item
@@ -189,7 +105,6 @@ const AuthLogin = () => {
             <Select
               className="br-round "
               placeholder="نوع الحساب"
-              onChange={onRoleChange}
               options={USER_ROLES}
             />
           </Form.Item>
