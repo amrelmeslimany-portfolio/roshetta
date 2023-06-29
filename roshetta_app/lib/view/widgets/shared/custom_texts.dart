@@ -93,7 +93,8 @@ class CustomText extends StatelessWidget {
                     fontWeight: fontWeight ?? FontWeight.w800),
           ));
 
-  RichText copyrightText(BuildContext context) {
+  RichText copyrightText(BuildContext context,
+      {Color? color, Color? boldColor}) {
     return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(children: [
@@ -102,17 +103,18 @@ class CustomText extends StatelessWidget {
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
-                  ?.copyWith(color: AppColors.lightTextColor)),
+                  ?.copyWith(color: color ?? AppColors.lightTextColor)),
           TextSpan(
               text: " روشتة ",
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.primaryColor, fontWeight: FontWeight.w900)),
+                  color: boldColor ?? AppColors.primaryColor,
+                  fontWeight: FontWeight.w900)),
           TextSpan(
               text: DateTime.now().year.toString(),
               style: Theme.of(context)
                   .textTheme
                   .bodySmall
-                  ?.copyWith(color: AppColors.lightTextColor))
+                  ?.copyWith(color: color ?? AppColors.lightTextColor))
         ]));
   }
 }

@@ -65,6 +65,17 @@ class CustomDrawer extends StatelessWidget {
                                         Get.toNamed(AppRoutes.home);
                                       }),
                                   const Divider(),
+                                  pageItem(
+                                      icon: Icons.document_scanner,
+                                      text: "قراءة روشته",
+                                      iconSize: 26,
+                                      isActive: Get.currentRoute ==
+                                          AppRoutes.readPrescript,
+                                      onTap: () {
+                                        bottomNavbar.onChangePage(1);
+                                        Get.toNamed(AppRoutes.readPrescript);
+                                      }),
+                                  const Divider(),
                                   ...drawerController.linkList
                                       .map((element) => pageItem(
                                           isActive: Get.currentRoute ==
@@ -165,6 +176,7 @@ class CustomDrawer extends StatelessWidget {
 
   Widget pageItem(
           {bool isActive = false,
+          double iconSize = 20,
           required IconData icon,
           required String text,
           required Function() onTap}) =>
@@ -173,7 +185,7 @@ class CustomDrawer extends StatelessWidget {
           child: ListTile(
             leading: FaIcon(
               icon,
-              size: 20,
+              size: iconSize,
               color: isActive ? AppColors.primaryColor : null,
             ),
             minLeadingWidth: 30,

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/assistant/editclinic_controller.dart';
+import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/shared/custom_appbar.dart';
 import 'package:roshetta_app/view/widgets/clinics/clinic_form.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
 import 'package:roshetta_app/view/widgets/home/body.dart';
 import 'package:roshetta_app/view/widgets/home/home_layout.dart';
+import 'package:roshetta_app/view/widgets/shared/floating_button.dart';
 
 class EditClinicAssistant extends StatelessWidget {
   EditClinicAssistant({super.key});
@@ -18,6 +21,17 @@ class EditClinicAssistant extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeLayout(
       scaffoldKey: scaffoldKey,
+      floatingButton: Obx(
+        () => CustomFloatingIcon(
+            isLoading: addclinicController.addClinicStatus.value ==
+                RequestStatus.loading,
+            icon: FontAwesomeIcons.pencil,
+            onPressed: () {
+              if (addclinicController.isEdit.value) {
+                addclinicController.onEditSubmit(context);
+              }
+            }),
+      ),
       body: BodyLayout(
           appbar: CustomAppBar(onPressed: () {
             toggleDrawer(scaffoldKey);
@@ -50,13 +64,6 @@ class EditClinicAssistant extends StatelessWidget {
                         addclinicController.onSpecialistChange(value),
                     onSelectStartTime: () =>
                         addclinicController.onSelectStartTime(),
-                    onSubmit: () {
-                      if (addclinicController.isEdit.value) {
-                        addclinicController.onEditSubmit(context);
-                      } else {
-                        addclinicController.onEditSubmit(context);
-                      }
-                    },
                   ));
             }),
             const SizedBox(height: 50)

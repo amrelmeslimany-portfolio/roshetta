@@ -12,13 +12,13 @@ import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/functions/validator_function.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
 import 'package:roshetta_app/core/shared/custom_appbar.dart';
-import 'package:roshetta_app/core/shared/custom_buttons.dart';
 import 'package:roshetta_app/core/shared/custom_fields.dart';
 
 import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
 import 'package:roshetta_app/view/widgets/home/body.dart';
 import 'package:roshetta_app/view/widgets/home/home_layout.dart';
+import 'package:roshetta_app/view/widgets/shared/floating_button.dart';
 
 class EditProfile extends StatelessWidget {
   const EditProfile({super.key});
@@ -30,6 +30,12 @@ class EditProfile extends StatelessWidget {
     return GetBuilder<EditProfileControllerImp>(
         builder: (editprofile) => HomeLayout(
               scaffoldKey: scaffold,
+              floatingButton: CustomFloatingIcon(
+                  isLoading: editprofile.userStatus == RequestStatus.loading,
+                  icon: FontAwesomeIcons.pencil,
+                  onPressed: () {
+                    editprofile.onEdit();
+                  }),
               body: BodyLayout(
                   appbar: CustomAppBar(onPressed: () {
                     toggleDrawer(scaffold);
@@ -102,11 +108,6 @@ class EditProfile extends StatelessWidget {
                                         ),
                                       ),
                                     ),
-                                    const SizedBox(height: 15),
-                                    BGButton(context, text: "تعديل",
-                                        onPressed: () async {
-                                      await editprofile.onEdit(context);
-                                    }).button,
                                   ],
                                 )),
                           )

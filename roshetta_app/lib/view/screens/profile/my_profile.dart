@@ -21,6 +21,7 @@ class MyProfile extends StatelessWidget {
     final profile = Get.put(MyProfileController());
 
     return BodyLayout(
+      onRefresh: () async => profile.getProfileData(),
       appbar: CustomAppBar(
               onPressed: () => toggleDrawer(drawerState), isBack: false)
           .init,

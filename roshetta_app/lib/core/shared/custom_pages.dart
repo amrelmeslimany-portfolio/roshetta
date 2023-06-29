@@ -19,11 +19,13 @@ import 'package:roshetta_app/view/screens/doctor/add_clinic.dart';
 import 'package:roshetta_app/view/screens/doctor/add_prescript.dart';
 import 'package:roshetta_app/view/screens/doctor/appointments.dart';
 import 'package:roshetta_app/view/screens/doctor/assistant.dart';
+import 'package:roshetta_app/view/screens/doctor/chat.dart';
 import 'package:roshetta_app/view/screens/doctor/clinic_details.dart';
 import 'package:roshetta_app/view/screens/doctor/clinics.dart';
 import 'package:roshetta_app/view/screens/doctor/pateint_details.dart';
 import 'package:roshetta_app/view/screens/doctor/prescriptions.dart';
 import 'package:roshetta_app/view/screens/doctor_pharmacy/verify_accounts.dart';
+import 'package:roshetta_app/view/screens/global/read_prescript.dart';
 import 'package:roshetta_app/view/screens/patient/appointments.dart';
 import 'package:roshetta_app/view/screens/patient/clinic_details.dart';
 import 'package:roshetta_app/view/screens/patient/clinics.dart';
@@ -31,7 +33,6 @@ import 'package:roshetta_app/view/screens/patient/diseases.dart';
 import 'package:roshetta_app/view/screens/patient/orders.dart';
 import 'package:roshetta_app/view/screens/patient/pharmacy_details.dart';
 import 'package:roshetta_app/view/screens/patient/pharmacys.dart';
-import 'package:roshetta_app/view/screens/patient/prescript_details.dart';
 import 'package:roshetta_app/view/screens/patient/prescriptions.dart';
 import 'package:roshetta_app/view/screens/pharmacist/add_pharmacy.dart';
 import 'package:roshetta_app/view/screens/pharmacist/pharmacy_details.dart';
@@ -39,17 +40,23 @@ import 'package:roshetta_app/view/screens/pharmacist/pharmacys.dart';
 import 'package:roshetta_app/view/screens/pharmacist/prescriptions.dart';
 import 'package:roshetta_app/view/screens/profile/edit_password.dart';
 import 'package:roshetta_app/view/screens/profile/edit_profile.dart';
+import 'package:roshetta_app/view/screens/temporary_api_change.dart';
 import 'package:roshetta_app/view/widgets/home/home_layout.dart';
 import 'package:roshetta_app/view/widgets/pharmacist/sell_prescripts/sell_prescript_form.dart';
 
 List<GetPage<dynamic>>? routes = [
   // Auth
+  // TODO Will remove it after change domain
+  // GetPage(
+  //     name: "/",
+  //     page: () => const AuthIntro(),
+  //     middlewares: [AuthMiddleware()]),
+  GetPage(name: "/", page: () => APIChanger()),
+
   GetPage(
-      name: "/",
+      name: AppRoutes.intro,
       page: () => const AuthIntro(),
       middlewares: [AuthMiddleware()]),
-
-  GetPage(name: AppRoutes.intro, page: () => const AuthIntro()),
   GetPage(name: AppRoutes.login, page: () => const Login()),
   GetPage(name: AppRoutes.createAccount, page: () => const CreateAccount()),
   GetPage(name: AppRoutes.verifyEmailCode, page: () => const VerifyEmailCode()),
@@ -60,6 +67,8 @@ List<GetPage<dynamic>>? routes = [
   GetPage(name: AppRoutes.resetForgotPass, page: () => const ResetPassword()),
 
   // Global Pages
+  GetPage(name: AppRoutes.tempAPIChanger, page: () => APIChanger()),
+  GetPage(name: AppRoutes.readPrescript, page: () => ReadPrescript()),
   GetPage(
       name: AppRoutes.home,
       page: () => HomeLayout(scaffoldKey: GlobalKey<ScaffoldState>()),
@@ -87,7 +96,8 @@ List<GetPage<dynamic>>? routes = [
   GetPage(
       name: AppRoutes.patientPrescripts,
       page: () => PatientPrescripts(),
-      middlewares: [AuthGuard(), PatientMiddleware()]),
+      middlewares: [AuthGuard(), PatientMiddleware()],
+      binding: PatientBindings()),
   GetPage(
       name: AppRoutes.patientDiseases,
       page: () => PatientDiseases(),
@@ -155,6 +165,10 @@ List<GetPage<dynamic>>? routes = [
   GetPage(
       name: AppRoutes.doctorAddPrescript,
       page: () => AddPrescript(),
+      middlewares: [AuthGuard(), DocotorMiddleware()]),
+  GetPage(
+      name: AppRoutes.doctorChat,
+      page: () => DoctorsChat(),
       middlewares: [AuthGuard(), DocotorMiddleware()]),
 
   // Assistant

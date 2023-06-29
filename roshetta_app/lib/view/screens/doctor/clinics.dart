@@ -7,7 +7,6 @@ import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/shared/bottom_sheets.dart';
 import 'package:roshetta_app/core/shared/custom_appbar.dart';
-import 'package:roshetta_app/core/shared/custom_buttons.dart';
 import 'package:roshetta_app/view/screens/doctor_pharmacy/verify_place.dart';
 import 'package:roshetta_app/view/widgets/clinics/clinics_list.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
@@ -24,6 +23,7 @@ class DoctorClinics extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return HomeLayout(
+      onRefresh: () async => await clinicsController.getClinics(),
       scaffoldKey: scaffoldKey,
       body: BodyLayout(
           appbar: CustomAppBar(onPressed: () {
@@ -105,15 +105,11 @@ class DoctorClinics extends StatelessWidget {
         textType: 3,
         color: AppColors.lightTextColor,
       ),
-      const SizedBox(height: 10),
-      UnconstrainedBox(
-          child:
-              BGButton(context, text: "توثيق الان", small: true, onPressed: () {
-        Get.back();
-        Get.to(() => VerifyPlace(
-            type: "clinic", placeID: item["id"], placeName: item["name"]));
-      }).button)
-    ], height: 180));
+    ], height: 200, buttonText: "توثيق الان", onSubmit: () {
+      if (Get.isBottomSheetOpen == true) Get.back();
+      Get.to(() => VerifyPlace(
+          type: "clinic", placeID: item["id"], placeName: item["name"]));
+    }));
   }
 
   onWaitingVerifyClinic(BuildContext context) {

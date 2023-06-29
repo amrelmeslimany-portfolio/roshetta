@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:lottie/lottie.dart';
 import 'package:roshetta_app/controllers/profile/editpassword_controller.dart';
 import 'package:roshetta_app/core/class/fields_interface.dart';
-import 'package:roshetta_app/core/constants/app_routes.dart';
+import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/functions/validator_function.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
@@ -14,8 +13,7 @@ import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
 import 'package:roshetta_app/view/widgets/home/body.dart';
 import 'package:roshetta_app/view/widgets/home/home_layout.dart';
 import 'package:roshetta_app/view/widgets/profile/header.dart';
-
-import '../../../core/shared/custom_buttons.dart';
+import 'package:roshetta_app/view/widgets/shared/floating_button.dart';
 
 class EditPassword extends StatelessWidget {
   const EditPassword({super.key});
@@ -27,10 +25,18 @@ class EditPassword extends StatelessWidget {
     return GetBuilder<EditPasswordControllerImp>(builder: (editpassword) {
       return HomeLayout(
         scaffoldKey: scaffold,
+        floatingButton: CustomFloatingIcon(
+            isLoading: editpassword.status == RequestStatus.loading,
+            icon: FontAwesomeIcons.solidFloppyDisk,
+            onPressed: () {
+              editpassword.onSubmit();
+            }),
         body: BodyLayout(
-            appbar: CustomAppBar(onPressed: () {
-              toggleDrawer(scaffold);
-            }).init,
+            appbar: CustomAppBar(
+                isBack: true,
+                onPressed: () {
+                  toggleDrawer(scaffold);
+                }).init,
             content: [
               ProfileHeader(
                   title: editpassword.auth.localUser.value!.name!,
@@ -78,10 +84,6 @@ class EditPassword extends StatelessWidget {
                             editpassword.onPasswordVisibleChange();
                           },
                         ).textfield,
-                        const SizedBox(height: 15),
-                        BGButton(context, text: "تغيير", onPressed: () {
-                          editpassword.onSubmit(context);
-                        }).button,
                       ],
                     ),
                   )),

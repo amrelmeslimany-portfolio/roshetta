@@ -74,9 +74,4 @@ class VerifyForgotPassControllerImp extends VerifyForgotPassController {
 
     update();
   }
-
-  @override
-  void onClose() {
-    super.onClose();
-  }
 }

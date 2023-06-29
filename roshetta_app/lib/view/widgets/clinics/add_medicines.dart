@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/doctor/doctorpatient_controller.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/functions/quick_functions.dart';
-import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/functions/validator_function.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
 import 'package:roshetta_app/core/shared/bottom_sheets.dart';
@@ -130,7 +129,7 @@ class AddMedicinesForm extends StatelessWidget {
                             onConfirm: () => controller.onSubmitPrescript());
                       } else {
                         snackbar(
-                            color: Colors.red,
+                            isError: true,
                             title: "مشكله ما",
                             content: "يجب ادخال دواء علي الاقل");
                       }
@@ -191,23 +190,16 @@ class AddMedicinesForm extends StatelessWidget {
                             "المقصود بوصف الدواء: ان تشرح للمريض متي سياخذ الدواء بالتحديد.")
                     .init,
               ),
-              const SizedBox(height: 15),
-              BGButton(
-                context,
-                text: formType == "add" ? "اضافة" : "تعديل",
-                onPressed: () {
-                  if (medicineForm.currentState!.validate()) {
-                    controller.onAddMedicine(
-                        formType: formType, itemIndex: itemIndex);
-                    if (Get.isBottomSheetOpen == true) {
-                      Get.back();
-                    }
-                  }
-                },
-              ).button
             ],
           )),
-    ], height: 380))
-        .then((value) => controller.onClearMedicineInputs());
+    ], height: 380, buttonText: formType == "add" ? "اضافة" : "تعديل",
+        onSubmit: () {
+      if (medicineForm.currentState!.validate()) {
+        controller.onAddMedicine(formType: formType, itemIndex: itemIndex);
+        if (Get.isBottomSheetOpen == true) {
+          Get.back();
+        }
+      }
+    })).then((value) => controller.onClearMedicineInputs());
   }
 }

@@ -6,7 +6,6 @@ import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/class/users_interfaces.dart';
 import 'package:roshetta_app/core/functions/validator_function.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
-import 'package:roshetta_app/core/shared/custom_buttons.dart';
 import 'package:roshetta_app/core/shared/custom_fields.dart';
 import 'package:roshetta_app/view/widgets/auth/label_divider.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
@@ -29,7 +28,6 @@ class ClinicForm extends StatelessWidget {
   final TextEditingController rangeTimeController;
   final Function() onPickImage;
   final Function() onSelectStartTime;
-  final Function() onSubmit;
   final Function(String)? onSpecialistChange;
   final Function(String) onGovernmentChange;
   const ClinicForm({
@@ -45,7 +43,6 @@ class ClinicForm extends StatelessWidget {
     required this.rangeTimeController,
     required this.onPickImage,
     required this.onSelectStartTime,
-    required this.onSubmit,
     required this.onGovernmentChange,
     this.placeType = Users.doctor,
     this.priceController,
@@ -167,10 +164,6 @@ class ClinicForm extends StatelessWidget {
                   hintText: "تفاصيل العنوان",
                   icon: FontAwesomeIcons.locationDot)
               .textfield,
-          const SizedBox(height: 15),
-          BGButton(context,
-                  text: isEdit ? "تعديل" : "اضافة", onPressed: onSubmit)
-              .button
         ],
       ),
     );

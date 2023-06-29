@@ -108,9 +108,13 @@ class LoginControllerImp extends LoginController {
           update();
           return;
         }
+        // TODO handle this
+        update();
         DialogRequestMessages(Get.context!,
             status: requestStatus, failureText: response["Message"]);
       } else {
+        // TODO handle this
+        update();
         DialogRequestMessages(Get.context!, status: requestStatus);
       }
     }

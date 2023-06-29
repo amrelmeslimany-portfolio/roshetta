@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
 import 'package:roshetta_app/core/class/crud.dart';
@@ -9,7 +8,6 @@ import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
 import 'package:roshetta_app/data/models/pharmacy.modal.dart';
 import 'package:roshetta_app/data/source/remote/patient/pharmacy_data.dart';
-import 'package:roshetta_app/view/widgets/auth/auth_dialogs.dart';
 
 class PatientPharmacysController extends GetxController {
   final auth = Get.find<AuthenticationController>();
@@ -38,13 +36,20 @@ class PatientPharmacysController extends GetxController {
         pharmacysStatus.value = RequestStatus.empty;
         return;
       }
+      if (pharmacys.isNotEmpty) pharmacys.clear();
       pharmacys.addAll(response["Data"].toList());
     } else {
       snackbar(title: "حدثت مشكلة", content: response["Message"]);
     }
   }
 
+  onClearOrderId() => orderId.value = "";
+
   setOrderId(String id) {
+    if (id == orderId.value) {
+      orderId.value = "";
+      return;
+    }
     orderId.value = id;
   }
 
@@ -63,14 +68,14 @@ class PatientPharmacysController extends GetxController {
       }
     } else {
       snackbar(
-          color: Colors.red, title: "حدثت مشكلة", content: response["Message"]);
+          isError: true, title: "حدثت مشكلة", content: response["Message"]);
     }
   }
 
   onSendPrescript() async {
     if (orderId.isEmpty) {
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "حدثت مشكلة",
           content: "يجب اختيار روشته واحده");
       return;
@@ -95,7 +100,22 @@ class PatientPharmacysController extends GetxController {
       snackbar(title: "ارسال الروشته", content: response["Message"]);
     } else {
       snackbar(
-          color: Colors.red, title: "حدثت مشكلة", content: response["Message"]);
+          isError: true, title: "حدثت مشكلة", content: response["Message"]);
     }
+  }
+
+  bool isPrescripts(List prescripts) {
+    bool isItems =
+        prescripts.every((element) => element["prescriptStatus"] != "isOrder");
+
+    if (!isItems) {
+      snackbar(
+          isError: true,
+          title: "ارسال الروشته",
+          content:
+              "ربما لا يوجد روشتات او الروشتات في الطلبات الان لا يمكن ارسالها مرة اخري");
+      return false;
+    }
+    return true;
   }
 }

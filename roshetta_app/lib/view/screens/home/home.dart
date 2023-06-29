@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/home/home_controller.dart';
@@ -86,6 +85,7 @@ class Home extends StatelessWidget {
 
   verifyAlert(LocalUser user) {
     if (user.isVerify == null ||
+        user.isVerify == "none" ||
         user.isVerify == "success" ||
         user.isVerify == "waiting") {
       return [const SizedBox()].toList();

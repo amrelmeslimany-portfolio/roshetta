@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/class/users_interfaces.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';

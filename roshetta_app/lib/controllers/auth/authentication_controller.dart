@@ -77,6 +77,8 @@ class AuthenticationController extends GetxController {
   }
 
   logout() async {
+    // NOTE Related to temporary page
+    isAuth.value = false;
     Get.offAllNamed(AppRoutes.intro);
     var response = await requests.logout(localUser.value!.token!);
     removeUser();

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
+import 'package:roshetta_app/core/shared/custom_buttons.dart';
 
 class ButtonSheetItem {
   late IconData icon;
@@ -36,15 +38,47 @@ class CustomBottomSheets {
     ], height: height));
   }
 
-  Container sheet(List<Widget> children, {double? height = 200}) {
+  Container sheet(List<Widget> children,
+      {double? height = 200,
+      String? buttonText = "ارسال",
+      RequestStatus? isLoading = RequestStatus.none,
+      Function()? onSubmit}) {
     return Container(
       height: height,
-      padding: const EdgeInsets.all(15),
+      padding: const EdgeInsets.fromLTRB(15, 15, 15, 10),
       decoration: const BoxDecoration(
           color: AppColors.whiteColor,
           borderRadius: BorderRadius.vertical(top: Radius.circular(20))),
-      child: ListView(
-        children: children,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(15, 5, 15, 15),
+            child: Container(
+              alignment: Alignment.center,
+              width: Get.width / 6,
+              height: 8,
+              decoration: const BoxDecoration(
+                  color: AppColors.lightenWhiteColor,
+                  borderRadius: BorderRadius.all(Radius.circular(10))),
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              shrinkWrap: true,
+              children: [
+                ...children,
+                if (onSubmit != null) const SizedBox(height: 15)
+              ],
+            ),
+          ),
+          if (onSubmit != null && isLoading != RequestStatus.loading)
+            BGButton(Get.context!,
+                    text: buttonText!, small: true, onPressed: onSubmit)
+                .button
+        ],
       ),
     );
   }
@@ -53,7 +87,7 @@ class CustomBottomSheets {
     return Text(
       text,
       textAlign: TextAlign.center,
-      style: const TextStyle(color: AppColors.lightTextColor, fontSize: 18),
+      style: const TextStyle(color: AppColors.greyColor, fontSize: 18),
     );
   }
 

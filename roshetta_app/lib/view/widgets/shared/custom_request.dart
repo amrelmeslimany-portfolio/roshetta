@@ -14,13 +14,15 @@ class CustomRequest extends StatelessWidget {
   final Widget widget;
   final bool? sameContent;
   final String? errorText;
+  final Color? loadingColor;
 
   const CustomRequest(
       {super.key,
       required this.status,
       required this.widget,
       this.sameContent,
-      this.errorText});
+      this.errorText,
+      this.loadingColor});
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +36,12 @@ class CustomRequest extends StatelessWidget {
   Widget _sameContentWidget(BuildContext context) {
     switch (status) {
       case RequestStatus.loading:
-        return _lottieAndText(AssetPaths.loading, "جاري التحميل",
-            repeat: true, size: 100);
+        return _lottieAndText(
+          AssetPaths.loading,
+          "جاري التحميل",
+          repeat: true,
+          size: 100,
+        );
       default:
         return widget;
     }
@@ -67,7 +73,7 @@ class CustomRequest extends StatelessWidget {
   }
 
   Widget _lottieAndText(String src, String content,
-      {bool? repeat, double? size}) {
+      {bool? repeat, double? size, Color? txtColor}) {
     return Center(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -76,7 +82,7 @@ class CustomRequest extends StatelessWidget {
               repeat: repeat ?? false, width: size ?? 200, height: size ?? 200),
           CustomText(
             text: content,
-            color: AppColors.lightTextColor,
+            color: loadingColor ?? AppColors.lightTextColor,
             textType: 3,
           )
         ],

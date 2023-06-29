@@ -8,17 +8,20 @@ import 'package:roshetta_app/core/shared/custom_fields.dart';
 
 class AccountTypeWidget extends StatelessWidget {
   final String accountType;
+  final String? specialistValue;
   final TextEditingController patientWeight;
   final TextEditingController patientHeight;
   final List<DropdownMenuItem<String>> specialistsList;
   final Function(String?) onSpecialistChange;
-  const AccountTypeWidget(
-      {super.key,
-      required this.accountType,
-      required this.specialistsList,
-      required this.onSpecialistChange,
-      required this.patientWeight,
-      required this.patientHeight});
+  const AccountTypeWidget({
+    super.key,
+    required this.accountType,
+    required this.specialistsList,
+    required this.onSpecialistChange,
+    required this.patientWeight,
+    required this.patientHeight,
+    this.specialistValue,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +32,7 @@ class AccountTypeWidget extends StatelessWidget {
               context: context,
               onValidator: (value) => dropdownValidator(value),
               hintText: "التخصص الطبي",
+              initalVal: specialistValue!.isNotEmpty ? specialistValue : null,
               items: specialistsList,
               onChange: (value) {
                 onSpecialistChange(value!);

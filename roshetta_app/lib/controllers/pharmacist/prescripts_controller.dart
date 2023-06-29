@@ -36,6 +36,8 @@ class PharmacyPrescriptsController extends GetxController {
     return false;
   }
 
+  String get searchText => search.text.trim();
+
   bool _checkPrescriptStatus() =>
       prescript.value!.prescriptStatus != PrescriptStatus.done;
 
@@ -59,17 +61,26 @@ class PharmacyPrescriptsController extends GetxController {
     }
   }
 
+  onClearSearch() {
+    search.clear();
+    checkTypeOrdersRequest();
+  }
+
+  checkTypeOrdersRequest() {
+    if (isOrders) {
+      requestPrescripts();
+    } else {
+      requestPaidPrescripts();
+    }
+  }
+
   onSearchPrescripts() {
-    if (search.text.trim().isNotEmpty) {
-      if (isOrders) {
-        requestPrescripts();
-      } else {
-        requestPaidPrescripts();
-      }
+    if (searchText.trim().isNotEmpty) {
+      checkTypeOrdersRequest();
     } else {
       if (Get.isSnackbarOpen) return;
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "البحث",
           content:
               "يجب ادخال اسم المريض او الرقم القومي للمريض او سيريال الروشته للبحث");
@@ -93,7 +104,7 @@ class PharmacyPrescriptsController extends GetxController {
     prescriptStatus.value = RequestStatus.loading;
     var response = await requests.getPrescripts(
         getToken(auth)!, getCookie(auth)!, pharmacyId.value,
-        filter: search.text);
+        filter: searchText);
     prescriptStatus.value = checkResponseStatus(response);
     print(response);
     if (prescriptStatus.value == RequestStatus.success) {

@@ -25,6 +25,7 @@ class PharmacistPharmacys extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeLayout(
       scaffoldKey: scaffoldKey,
+      onRefresh: () async => await pharmacysController.getPharmacys(),
       body: BodyLayout(
           appbar: CustomAppBar(onPressed: () {
             toggleDrawer(scaffoldKey);

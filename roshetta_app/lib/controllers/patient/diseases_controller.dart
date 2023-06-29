@@ -28,6 +28,7 @@ class PatientDiseasesController extends GetxController {
         diseasesStatus.value = RequestStatus.empty;
         return;
       }
+      if (diseases.isNotEmpty) diseases.clear();
       diseases.addAll(response["Data"].toList());
     } else {
       handleSnackErrors(response);

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
-import 'package:roshetta_app/core/functions/widget_functions.dart';
 import 'package:roshetta_app/core/shared/custom_buttons.dart';
 
 abstract class Fields {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/patient/orders_controller.dart';
+import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
 import 'package:roshetta_app/core/shared/custom_appbar.dart';
@@ -23,6 +24,7 @@ class PatientOrders extends StatelessWidget {
     ordersController.getOrders();
     return HomeLayout(
         scaffoldKey: scaffoldKey,
+        onRefresh: () async => await ordersController.getOrders(),
         body: BodyLayout(
             appbar: CustomAppBar(onPressed: () {
               toggleDrawer(scaffoldKey);
@@ -52,10 +54,13 @@ class PatientOrders extends StatelessWidget {
                               orders: ordersController.orders,
                               isPaied: true,
                               isPatient: true,
-                              onDelete: (orderId) {
+                              isLoading: ordersController.prescriptsController
+                                      .prescriptStatus.value ==
+                                  RequestStatus.loading,
+                              onDelete: (Map item) {
                                 confirmDialog(context,
                                     text: "هل تريد حذف الطلب ؟", onConfirm: () {
-                                  ordersController.onDeleteOrder(orderId);
+                                  ordersController.onDeleteOrder(item);
                                 });
                               },
                               onOrderPress: (item) => _onOrder(item)))
@@ -68,6 +73,6 @@ class PatientOrders extends StatelessWidget {
   }
 
   _onOrder(Map item) {
-    print(item["prescript_id"]);
+    ordersController.onOrderClick(item["prescript_id"]);
   }
 }

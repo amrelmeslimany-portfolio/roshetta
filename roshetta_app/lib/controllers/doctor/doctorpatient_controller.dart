@@ -95,8 +95,9 @@ class DoctorPatientDetailsController extends GetxController {
       }
 
       patient.value = Patient.fromJson(response["Data"]["patient"]);
-      List? diseasesResponse = response["Data"]["disease"];
-      if (diseasesResponse != null) {
+
+      var diseasesResponse = response["Data"]["disease"];
+      if (diseasesResponse != null && diseasesResponse is List) {
         diseases.addAll(response["Data"]["disease"].toList());
       }
     } else {

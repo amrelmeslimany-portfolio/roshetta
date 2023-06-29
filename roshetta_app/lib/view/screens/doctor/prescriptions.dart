@@ -30,7 +30,6 @@ class DoctorPrescript extends StatelessWidget {
         floatingButton: Obx(
           () => SizedBox(
             height: 40,
-            // TODO change to 1
             child: patientController.patient.value != null &&
                     patientController.patient.value!.appointCase == "1"
                 ? FloatingActionButton.extended(

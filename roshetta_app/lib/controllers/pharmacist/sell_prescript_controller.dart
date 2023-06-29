@@ -49,7 +49,7 @@ class SellPrescriptPharmacy extends GetxController {
   onSubmit() async {
     if (pharmacyId.isEmpty) {
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "حدثت مشكله",
           content: "يجب اختيار صيدليه لصرف الروشته منها");
       return;

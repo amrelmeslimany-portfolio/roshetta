@@ -27,7 +27,7 @@ class AuthGuard extends GetMiddleware {
   RouteSettings? redirect(String? route) {
     if (!auth.isAuth.value) {
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "تم تسجيل الخروج",
           content:
               "تم الانتهاء من مده تسجيل الدخول, برجاء تسجيل الدخول مرة اخري.");

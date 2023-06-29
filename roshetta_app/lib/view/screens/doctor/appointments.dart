@@ -27,6 +27,7 @@ class DoctorAppointments extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeLayout(
       scaffoldKey: scaffoldKey,
+      onRefresh: () async => await appointmentController.getAppointments(),
       body: BodyLayout(
           appbar: CustomAppBar(
               onPressed: () {

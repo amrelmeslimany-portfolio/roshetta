@@ -1,16 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
-import 'package:roshetta_app/controllers/patient/appointments_controllers.dart';
 import 'package:roshetta_app/core/class/crud.dart';
 import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/core/functions/quick_functions.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
-import 'package:roshetta_app/core/shared/bottom_sheets.dart';
 import 'package:roshetta_app/data/models/clinic.modal.dart';
 import 'package:roshetta_app/data/source/remote/auth/createaccount_data.dart';
 import 'package:roshetta_app/data/source/remote/patient/clinics_data.dart';
@@ -95,6 +93,7 @@ class PatientClinicsController extends GetxController {
         clinicssStatus.value = RequestStatus.empty;
         return;
       }
+      if (clinics.isNotEmpty) clinics.clear();
       clinics.addAll(response["Data"].toList());
     } else {
       snackbar(title: "حدثت مشكلة", content: response["Message"]);
@@ -126,11 +125,10 @@ class PatientClinicsController extends GetxController {
   }
 
   displayAppointment(item) {
-    print("display date : ${item["appoint_date"]}");
     Get.defaultDialog(
         contentPadding: const EdgeInsets.fromLTRB(15, 15, 15, 0),
         content: AuthDiologs(
-            icon: Icons.date_range,
+            icon: FontAwesomeIcons.solidCalendarDays,
             title: appointDate.text.isNotEmpty
                 ? appointDate.text
                 : item["appoint_date"],
@@ -169,13 +167,11 @@ class PatientClinicsController extends GetxController {
         snackbar(title: "تم الحجز", content: response["Message"]);
       } else {
         snackbar(
-            color: Colors.red,
-            title: "حدثت مشكلة",
-            content: response["Message"]);
+            isError: true, title: "حدثت مشكلة", content: response["Message"]);
       }
     } else {
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "حدثت مشكله",
           content: "يجب اختيار تاريخ محدد اولا للحجز");
     }
@@ -196,7 +192,7 @@ class PatientClinicsController extends GetxController {
       }
     } else {
       snackbar(
-          color: Colors.red, title: "حدثت مشكلة", content: response["Message"]);
+          isError: true, title: "حدثت مشكلة", content: response["Message"]);
     }
   }
 }

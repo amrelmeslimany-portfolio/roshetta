@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
 import 'package:roshetta_app/controllers/profile/myprofile_controller.dart';
-import 'package:roshetta_app/core/class/auth.dart';
 import 'package:roshetta_app/core/class/crud.dart';
 import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/class/users_interfaces.dart';
@@ -19,7 +18,7 @@ import 'package:roshetta_app/data/source/static/static_data.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
 
 abstract class EditProfileController extends GetxController {
-  Future<void> onEdit(context);
+  Future<void> onEdit();
   Future<void> onUploadImage();
   void goToEditPassword();
 }
@@ -106,7 +105,7 @@ class EditProfileControllerImp extends EditProfileController {
   }
 
   @override
-  Future<void> onEdit(context) async {
+  Future<void> onEdit() async {
     if (formkey.currentState!.validate()) {
       formkey.currentState!.save();
       userStatus = RequestStatus.loading;
@@ -127,11 +126,11 @@ class EditProfileControllerImp extends EditProfileController {
         snackbar(
             content: "تم تعديل بياناتك الشخصية بنجاح", title: "تم التعديل");
       } else if (userStatus == RequestStatus.userFailure) {
-        DialogRequestMessages(context,
+        DialogRequestMessages(Get.context!,
             status: userStatus, failureText: response["Message"]);
         logoutError401(response["Status"], auth, 5);
       } else {
-        DialogRequestMessages(context, status: userStatus);
+        DialogRequestMessages(Get.context!, status: userStatus);
       }
       update();
     }

@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
+import 'package:roshetta_app/controllers/patient/prescripts_controller.dart';
 import 'package:roshetta_app/core/class/crud.dart';
 import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/functions/quick_functions.dart';
@@ -11,6 +12,8 @@ class PatientOrdersController extends GetxController {
   final auth = Get.find<AuthenticationController>();
   late Rx<RequestStatus> ordersStatus = RequestStatus.none.obs;
   PatientPharmacyData requests = PatientPharmacyData(Get.find<Crud>());
+  PatientPrescriptsController prescriptsController =
+      Get.put(PatientPrescriptsController());
   final orders = [].obs;
 
   getOrders() async {
@@ -30,14 +33,15 @@ class PatientOrdersController extends GetxController {
     }
   }
 
-  onDeleteOrder(String orderId) async {
+  onDeleteOrder(Map item) async {
     if (Get.isDialogOpen == true) Get.back();
     ordersStatus.value = RequestStatus.loading;
-    var response = await requests.deleteOrder(getToken(auth)!, orderId);
+    var response =
+        await requests.deleteOrder(getToken(auth)!, item["order_id"]);
     ordersStatus.value = checkResponseStatus(response);
     print(response);
     if (ordersStatus.value == RequestStatus.success) {
-      removeOrderFromOrders(orderId);
+      removeOrderFromOrders(item);
       handleSuccessDialoge(response);
       if (orders.isEmpty) {
         ordersStatus.value = RequestStatus.empty;
@@ -50,8 +54,10 @@ class PatientOrdersController extends GetxController {
     }
   }
 
-  removeOrderFromOrders(id) =>
-      orders.removeWhere((element) => element["order_id"] == id);
+  removeOrderFromOrders(Map item) {
+    print(item);
+    orders.removeWhere((element) => element["order_id"] == item["order_id"]);
+  }
 
   handleSuccessDialoge(response) {
     successDialog(Get.context!,
@@ -63,5 +69,9 @@ class PatientOrdersController extends GetxController {
     Future.delayed(const Duration(seconds: 2), () {
       if (Get.isDialogOpen == true) Get.back();
     });
+  }
+
+  onOrderClick(String id) {
+    prescriptsController.getPrescriptDetails(id);
   }
 }

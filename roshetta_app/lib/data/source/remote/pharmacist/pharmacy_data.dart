@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:roshetta_app/core/class/crud.dart';
-import 'package:roshetta_app/core/class/enums.dart';
 import 'package:roshetta_app/core/constants/app_api_urls.dart';
 import 'package:roshetta_app/data/models/pharmacy.modal.dart';
 

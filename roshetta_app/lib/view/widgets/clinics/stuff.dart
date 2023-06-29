@@ -14,6 +14,7 @@ class Stuff extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    _sordItemsRole();
     return HeaderContent(
         header: "طاقم العمل",
         spacer: 0,
@@ -34,6 +35,7 @@ class Stuff extends StatelessWidget {
 
   Container _item(Map item, BuildContext context) {
     String type = usersAR[item["type"]]!;
+
     return Container(
       height: double.minPositive,
       width: 180,
@@ -60,7 +62,7 @@ class Stuff extends StatelessWidget {
             children: [
               Expanded(
                 child: CustomText(
-                    text: type,
+                    text: type.split(' ')[0],
                     color: item["type"] == "doctor"
                         ? AppColors.primaryColor
                         : null,
@@ -86,5 +88,13 @@ class Stuff extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  _sordItemsRole() {
+    items.sort((a, b) {
+      if (a["type"] == b["type"]) return 0;
+      if (a["type"] == Users.doctor.name) return -1;
+      return 1;
+    });
   }
 }

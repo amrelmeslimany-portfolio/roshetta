@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
-import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
 
 import '../home/header_content.dart';
@@ -87,7 +86,7 @@ class CustomBadge extends StatelessWidget {
       backgroundColor: badgeColor ?? AppColors.primaryColor,
       textColor: badgeTextColor,
       textStyle: TextStyle(fontSize: fontSize ?? 14, fontFamily: "Cairo"),
-      largeSize: 24,
+      largeSize: 27,
       padding: const EdgeInsets.symmetric(horizontal: 8),
     );
   }

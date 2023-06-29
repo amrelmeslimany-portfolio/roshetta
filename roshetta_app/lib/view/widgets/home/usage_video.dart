@@ -1,7 +1,7 @@
-import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:video_player/video_player.dart';
 import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';
@@ -28,14 +28,14 @@ class UsageVideo extends StatefulWidget {
 }
 
 class _UsageVideoState extends State<UsageVideo> {
-  late CachedVideoPlayerController controller;
+  late VideoPlayerController controller;
 
   @override
   void initState() {
     super.initState();
     controller = widget.isNetwork != null || widget.isNetwork == true
-        ? CachedVideoPlayerController.network(widget.src)
-        : CachedVideoPlayerController.asset(widget.src);
+        ? VideoPlayerController.network(widget.src)
+        : VideoPlayerController.asset(widget.src);
     controller
       ..addListener(() => setState(() {}))
       ..initialize();
@@ -76,8 +76,6 @@ class _UsageVideoState extends State<UsageVideo> {
         ),
       );
     } else {
-      print(controller.value);
-      print("videoooooooo loading");
       return SizedBox(
         height: widget.height ?? 300,
         width: Get.width,
@@ -94,7 +92,7 @@ class _UsageVideoState extends State<UsageVideo> {
 
   Widget buildVideo() => AspectRatio(
       aspectRatio: controller.value.aspectRatio,
-      child: CachedVideoPlayer(controller));
+      child: VideoPlayer(controller));
 
   Widget overlayStopped() => GestureDetector(
         behavior: HitTestBehavior.opaque,

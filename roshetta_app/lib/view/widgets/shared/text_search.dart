@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/shared/custom_buttons.dart';
@@ -20,8 +19,11 @@ class TextSearchField extends StatelessWidget {
     return Stack(
       children: [
         CustomTextField(
-            controller: controller,
             context: context,
+            controller: controller,
+            onFieldSubmitted: (_) {
+              onSearch();
+            },
             hintText: placeholder!,
             icon: Icons.search_outlined,
             onValidator: (value) => validateField(value!)).textfield,

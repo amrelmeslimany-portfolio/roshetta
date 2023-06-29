@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,8 +34,8 @@ checkInternet() async {
   try {
     dynamic response;
 
-    response = await http.get(Uri.parse(ApiUrls.domain)).timeout(
-        Duration(seconds: 20),
+    response = await http.get(Uri.parse(dotenv.get(ApiUrls.clientAPI))).timeout(
+        const Duration(seconds: 20),
         onTimeout: () => http.Response("وصل السيرفر", 404));
     if (response.statusCode == 200) return true;
     response = await InternetAddress.lookup("google.com");
@@ -84,7 +85,7 @@ String handleNumbers(int? number, {String emptyText = "فارغ"}) {
 handleSnackErrors(response) {
   Map? messages = response["Message"] is Map ? response["Message"] : null;
   snackbar(
-      color: Colors.red,
+      isError: true,
       title: "حدثت مشكلة",
       content: messages?.values.join(" - ") ?? response["Message"]);
 }

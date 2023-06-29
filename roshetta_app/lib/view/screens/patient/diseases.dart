@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/patient/diseases_controller.dart';
-import 'package:roshetta_app/controllers/patient/prescripts_controller.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
@@ -26,6 +25,9 @@ class PatientDiseases extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeLayout(
         scaffoldKey: scaffoldKey,
+        onRefresh: () async {
+          await diseasesController.getDiseases();
+        },
         body: BodyLayout(
             appbar: CustomAppBar(onPressed: () {
               toggleDrawer(scaffoldKey);

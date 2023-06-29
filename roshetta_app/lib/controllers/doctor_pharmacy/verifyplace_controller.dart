@@ -59,9 +59,7 @@ class VerifyPlaceController extends GetxController {
         snackbar(content: response["Message"], title: "تتم المراجعه");
       } else {
         snackbar(
-            content: response["Message"],
-            title: "حدثت  مشكله",
-            color: Colors.red);
+            content: response["Message"], title: "حدثت  مشكله", isError: true);
       }
     }
   }

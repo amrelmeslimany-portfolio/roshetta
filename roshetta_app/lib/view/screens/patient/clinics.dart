@@ -26,6 +26,9 @@ class PatientClinics extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeLayout(
       scaffoldKey: scaffoldKey,
+      onRefresh: () async {
+        await patient.getClinics();
+      },
       body: BodyLayout(
           appbar: CustomAppBar(
               onPressed: () {

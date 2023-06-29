@@ -73,6 +73,11 @@ class StaticData {
         "page": AppRoutes.doctorClinics
       },
       {
+        "icon": FontAwesomeIcons.solidComments,
+        "title": "الدردشة",
+        "page": AppRoutes.doctorChat
+      },
+      {
         "icon": FontAwesomeIcons.solidSquarePlus,
         "title": "اضافة عياده",
         "page": AppRoutes.doctorAddClinic
@@ -88,6 +93,11 @@ class StaticData {
         "icon": FontAwesomeIcons.houseMedical,
         "title": "الصيدليات",
         "page": AppRoutes.pharmacistPharmacys
+      },
+      {
+        "icon": FontAwesomeIcons.circlePlus,
+        "title": "اضافة صيدلية",
+        "page": AppRoutes.addPharmacy
       },
     ],
   };

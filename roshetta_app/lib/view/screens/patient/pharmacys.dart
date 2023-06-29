@@ -1,20 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
-import 'package:roshetta_app/controllers/patient/clinics_controller.dart';
 import 'package:roshetta_app/controllers/patient/pharmacy_controller.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/core/functions/quick_functions.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
-import 'package:roshetta_app/core/functions/validator_function.dart';
 import 'package:roshetta_app/core/shared/custom_appbar.dart';
-import 'package:roshetta_app/core/shared/custom_fields.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_listtile.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
-import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
 import 'package:roshetta_app/view/widgets/home/body.dart';
-import 'package:roshetta_app/view/widgets/home/header_content.dart';
 import 'package:roshetta_app/view/widgets/home/home_layout.dart';
 import 'package:roshetta_app/view/widgets/shared/header_badge.dart';
 
@@ -28,6 +23,9 @@ class PatientPharmacys extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeLayout(
       scaffoldKey: scaffoldKey,
+      onRefresh: () async {
+        await patient.getPharmacys();
+      },
       body: BodyLayout(
           appbar: CustomAppBar(
             onPressed: () {

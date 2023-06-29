@@ -40,6 +40,7 @@ class DoctorClinicsController extends GetxController {
         status.value = RequestStatus.empty;
         return;
       }
+      if (clinics.isNotEmpty) clinics.clear();
       clinics.addAll(response["Data"].toList());
     }
   }
@@ -108,7 +109,7 @@ class DoctorClinicsController extends GetxController {
     } else {
       loginStatus.value = RequestStatus.success;
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "فشل تسجيل الدخول",
           content: response["Message"]);
     }
@@ -131,7 +132,7 @@ class DoctorClinicsController extends GetxController {
     } else {
       loginStatus.value = RequestStatus.success;
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "فشل تسجيل الخروج",
           content: response["Message"]);
     }

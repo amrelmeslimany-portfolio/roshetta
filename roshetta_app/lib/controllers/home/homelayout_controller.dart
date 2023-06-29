@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
-import 'package:roshetta_app/core/class/auth.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/view/screens/home/home.dart';
 import 'package:roshetta_app/view/screens/profile/my_profile.dart';

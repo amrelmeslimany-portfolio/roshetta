@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
 import 'package:roshetta_app/core/class/crud.dart';
@@ -12,16 +11,10 @@ import 'package:roshetta_app/view/screens/patient/prescript_details.dart';
 
 class PatientPrescriptsController extends GetxController {
   final auth = Get.find<AuthenticationController>();
-  late Rx<RequestStatus> prescriptStatus = RequestStatus.none.obs;
+  Rx<RequestStatus> prescriptStatus = RequestStatus.none.obs;
   PatientPrescriptsData requests = PatientPrescriptsData(Get.find<Crud>());
   final prescripts = [].obs;
   final RxBool isAll = false.obs;
-
-  @override
-  void onInit() async {
-    super.onInit();
-    await getPrescripts();
-  }
 
   int sortingPrescripts(a, b) {
     int statusCOM = b["prescriptStatus"]
@@ -32,6 +25,7 @@ class PatientPrescriptsController extends GetxController {
         .compareTo(getParsedDate(a["created_date"]));
   }
 
+// BUG error here
   getPrescripts({bool? isAll = false}) async {
     prescriptStatus.value = RequestStatus.loading;
     var response = await requests.getPrescripts(getToken(auth)!,
@@ -63,7 +57,7 @@ class PatientPrescriptsController extends GetxController {
         prescriptStatus.value = RequestStatus.success;
 
         snackbar(
-            color: Colors.red,
+            isError: true,
             title: "هناك مشكله",
             content: "تفاصيل الروشته فارغة او غير موجوده");
         return;

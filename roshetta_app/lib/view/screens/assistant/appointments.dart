@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/assistant/appointments_controller.dart';
+import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
 import 'package:roshetta_app/core/shared/bottom_sheets.dart';
@@ -26,6 +27,7 @@ class AssistantAppointments extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeLayout(
       scaffoldKey: scaffoldKey,
+      onRefresh: () async => await appointmentController.getAppointments(),
       body: BodyLayout(
           appbar: CustomAppBar(
               onPressed: () {
@@ -39,24 +41,28 @@ class AssistantAppointments extends StatelessWidget {
                     const CustomText(
                         text: "فلتر ", textType: 2, color: Colors.white),
                     const SizedBox(height: 10),
-                    Obx(() => CustomRequest(
-                        sameContent: true,
-                        status: appointmentController.appointmentStatus.value,
-                        widget: FilterAppointment(
-                          searchController: appointmentController.search,
-                          onWordSearch: () {
-                            appointmentController.onFilterWord();
-                          },
-                          onFilterDate: () {
-                            appointmentController.onFilterDate(context);
-                          },
-                          onStatusSheet: () {
-                            _openFilterSheet(context);
-                          },
-                          onStatusChange: (choosed) {
-                            appointmentController.onStatusChange(choosed);
-                          },
-                        ))),
+                    Obx(() {
+                      if (appointmentController.appointmentStatus.value ==
+                          RequestStatus.loading) {
+                        return const CircularProgressIndicator(
+                            color: Colors.white);
+                      }
+                      return FilterAppointment(
+                        searchController: appointmentController.search,
+                        onWordSearch: () {
+                          appointmentController.onFilterWord();
+                        },
+                        onFilterDate: () {
+                          appointmentController.onFilterDate(context);
+                        },
+                        onStatusSheet: () {
+                          _openFilterSheet(context);
+                        },
+                        onStatusChange: (choosed) {
+                          appointmentController.onStatusChange(choosed);
+                        },
+                      );
+                    }),
                   ],
                 ),
               )).init,
@@ -99,7 +105,7 @@ class AssistantAppointments extends StatelessWidget {
                                   } else {
                                     if (Get.isSnackbarOpen) return;
                                     snackbar(
-                                        color: Colors.red,
+                                        isError: true,
                                         title: "لا يوجد اعدادات",
                                         content:
                                             "لا يمكن التحكم في الموعد الا اذا كان حالته الانتظار فقط");

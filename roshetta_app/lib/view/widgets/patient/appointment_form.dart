@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/functions/validator_function.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
 import 'package:roshetta_app/core/shared/bottom_sheets.dart';
-import 'package:roshetta_app/core/shared/custom_buttons.dart';
 import 'package:roshetta_app/core/shared/custom_fields.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
@@ -60,14 +58,13 @@ class PatientAppointmentForm extends StatelessWidget {
                       .textfield,
                 ),
               ),
-              const SizedBox(height: 15),
-              UnconstrainedBox(
-                  child: BGButton(context,
-                          text: buttonText ?? "حجز", onPressed: onSubmit)
-                      .button)
             ],
           ))
-    ], height: 220);
+    ],
+        height: 230,
+        buttonText: buttonText ?? "حجز",
+        isLoading: status,
+        onSubmit: onSubmit);
   }
 
   onShowDatePicker(BuildContext context) async {

@@ -1,9 +1,7 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
 import 'package:roshetta_app/core/class/crud.dart';
 import 'package:roshetta_app/core/class/request_status.dart';
-import 'package:roshetta_app/core/class/users_interfaces.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/core/functions/quick_functions.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
@@ -36,6 +34,7 @@ class PharmacistPharmacyController extends GetxController {
         status.value = RequestStatus.empty;
         return;
       }
+      if (pharmacys.isNotEmpty) pharmacys.clear();
       pharmacys.addAll(response["Data"].toList());
     }
   }
@@ -103,7 +102,7 @@ class PharmacistPharmacyController extends GetxController {
     } else {
       loginStatus.value = RequestStatus.success;
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "فشل تسجيل الدخول",
           content: response["Message"]);
     }
@@ -126,7 +125,7 @@ class PharmacistPharmacyController extends GetxController {
     } else {
       loginStatus.value = RequestStatus.success;
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "فشل تسجيل الخروج",
           content: response["Message"]);
     }

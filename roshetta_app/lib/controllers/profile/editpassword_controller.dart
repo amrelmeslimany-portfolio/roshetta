@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
-import 'package:roshetta_app/core/class/auth.dart';
 import 'package:roshetta_app/core/class/crud.dart';
 import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/functions/quick_functions.dart';
@@ -13,13 +12,13 @@ import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
 abstract class EditPasswordController extends GetxController {
   void onPasswordVisibleChange();
   bool? checkPasswordEquals();
-  void onSubmit(context);
+  void onSubmit();
 }
 
 class EditPasswordControllerImp extends EditPasswordController {
   GlobalKey<FormState> form = GlobalKey<FormState>();
-  late TextEditingController password = TextEditingController();
-  late TextEditingController repassword = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController repassword = TextEditingController();
   bool isVisiblePassword = true;
   AuthenticationController auth = Get.find<AuthenticationController>();
   RequestStatus status = RequestStatus.none;
@@ -41,7 +40,7 @@ class EditPasswordControllerImp extends EditPasswordController {
   }
 
   @override
-  void onSubmit(context) async {
+  void onSubmit() async {
     if (form.currentState!.validate()) {
       form.currentState!.save();
       status = RequestStatus.loading;
@@ -54,10 +53,10 @@ class EditPasswordControllerImp extends EditPasswordController {
         Get.back(closeOverlays: true);
         snackbar(title: "تم التغيير", content: response["Message"]);
       } else if (status == RequestStatus.userFailure) {
-        DialogRequestMessages(context,
+        DialogRequestMessages(Get.context!,
             status: status, failureText: response["Message"]);
       } else {
-        DialogRequestMessages(context, status: status);
+        DialogRequestMessages(Get.context!, status: status);
       }
       update();
     }

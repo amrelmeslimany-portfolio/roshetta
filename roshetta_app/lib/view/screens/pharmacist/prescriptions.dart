@@ -8,6 +8,7 @@ import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/shared/custom_appbar.dart';
 import 'package:roshetta_app/core/shared/custom_notes.dart';
+import 'package:roshetta_app/view/widgets/auth/label_divider.dart';
 import 'package:roshetta_app/view/widgets/home/body.dart';
 import 'package:roshetta_app/view/widgets/home/home_layout.dart';
 import 'package:roshetta_app/view/widgets/patient/prescripts/prescripts_list.dart';
@@ -15,6 +16,7 @@ import 'package:roshetta_app/view/widgets/pharmacist/prescripts_order.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
 import 'package:roshetta_app/view/widgets/shared/header_badge.dart';
+import 'package:roshetta_app/view/widgets/shared/header_button.dart';
 import 'package:roshetta_app/view/widgets/shared/text_search.dart';
 
 class PharmacistPrescripts extends StatelessWidget {
@@ -28,6 +30,7 @@ class PharmacistPrescripts extends StatelessWidget {
     prescriptsController.getPrescripts();
     return HomeLayout(
         scaffoldKey: scaffoldKey,
+        onRefresh: () async => await prescriptsController.getPrescripts(),
         body: BodyLayout(
             appbar: CustomAppBar(
                     onPressed: () {
@@ -94,6 +97,17 @@ class PharmacistPrescripts extends StatelessWidget {
                           description:
                               "سيتم عرض التفاصيل الخاصه بالروشته عند الضغط عليها"),
                       const SizedBox(height: 15),
+                      if (prescriptsController.isOrders &&
+                          prescriptsController.searchText.isNotEmpty)
+                        HeaderButtonFilter(
+                            onClear: () {
+                              prescriptsController.onClearSearch();
+                            },
+                            child: DividerText(
+                                text:
+                                    "البحث: ${prescriptsController.searchText}",
+                                size: 14,
+                                width: double.infinity)),
                       if (!prescriptsController.isOrders)
                         Notes(
                                 icon: FontAwesomeIcons.circleExclamation,

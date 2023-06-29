@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/navigator.dart';
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
-import 'package:roshetta_app/core/class/auth.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
 
@@ -21,7 +19,7 @@ class DocotorPharmacistMiddleware extends GetMiddleware {
       snackbar(
           title: "غير مسموح لك",
           content: "غير مسموح لك بالدخول الي هذة الصفحة",
-          color: Colors.red);
+          isError: true);
       return const RouteSettings(name: AppRoutes.home);
     }
     return null;
@@ -42,7 +40,7 @@ class DocotorPharmacistPatientMiddleware extends GetMiddleware {
       snackbar(
           title: "غير مسموح لك",
           content: "غير مسموح لك بالدخول الي هذة الصفحة",
-          color: Colors.red);
+          isError: true);
       return const RouteSettings(name: AppRoutes.home);
     }
     return null;
@@ -58,11 +56,12 @@ class DocotorMiddleware extends GetMiddleware {
   @override
   RouteSettings? redirect(String? route) {
     if (auth.localUser.value?.type != null &&
-        Authentication().getUser!.type != Users.doctor.name) {
+        auth.localUser.value?.type != Users.doctor.name) {
       snackbar(
-          title: "غير مسموح لك",
-          content: "غير مسموح لك بالدخول الي هذة الصفحة",
-          color: Colors.red);
+        title: "غير مسموح لك",
+        content: "غير مسموح لك بالدخول الي هذة الصفحة",
+        isError: true,
+      );
       return const RouteSettings(name: AppRoutes.home);
     }
     return null;
@@ -79,9 +78,10 @@ class PharmacistMiddleware extends GetMiddleware {
     if (auth.localUser.value?.type != null &&
         auth.localUser.value!.type != Users.pharmacist.name) {
       snackbar(
-          title: "غير مسموح لك",
-          content: "غير مسموح لك بالدخول الي هذة الصفحة",
-          color: Colors.red);
+        title: "غير مسموح لك",
+        content: "غير مسموح لك بالدخول الي هذة الصفحة",
+        isError: true,
+      );
       return const RouteSettings(name: AppRoutes.home);
     }
     return null;
@@ -98,9 +98,10 @@ class AssistantMiddleware extends GetMiddleware {
     if (auth.localUser.value?.type != null &&
         auth.localUser.value!.type != Users.assistant.name) {
       snackbar(
-          title: "غير مسموح لك",
-          content: "غير مسموح لك بالدخول الي هذة الصفحة",
-          color: Colors.red);
+        title: "غير مسموح لك",
+        content: "غير مسموح لك بالدخول الي هذة الصفحة",
+        isError: true,
+      );
       return const RouteSettings(name: AppRoutes.home);
     }
     return null;
@@ -117,9 +118,10 @@ class PatientMiddleware extends GetMiddleware {
     if (auth.localUser.value?.type != null &&
         auth.localUser.value!.type != Users.patient.name) {
       snackbar(
-          title: "غير مسموح لك",
-          content: "غير مسموح لك بالدخول الي هذة الصفحة",
-          color: Colors.red);
+        title: "غير مسموح لك",
+        content: "غير مسموح لك بالدخول الي هذة الصفحة",
+        isError: true,
+      );
       return const RouteSettings(name: AppRoutes.home);
     }
     return null;

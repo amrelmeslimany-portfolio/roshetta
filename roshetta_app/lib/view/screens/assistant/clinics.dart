@@ -3,14 +3,11 @@ import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/assistant/clinics_controller.dart';
 import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/class/users_interfaces.dart';
-import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/shared/bottom_sheets.dart';
 import 'package:roshetta_app/core/shared/custom_appbar.dart';
 import 'package:roshetta_app/view/widgets/home/body.dart';
-import 'package:roshetta_app/view/widgets/home/header_content.dart';
 import 'package:roshetta_app/view/widgets/home/home_layout.dart';
-import 'package:roshetta_app/view/widgets/shared/custom_texts.dart';
 import 'package:roshetta_app/view/widgets/shared/header_badge.dart';
 import '../../widgets/clinics/clinics_list.dart';
 
@@ -24,6 +21,7 @@ class AssistantClinics extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeLayout(
       scaffoldKey: scaffoldKey,
+      onRefresh: () async => await clinicsController.getClinics(),
       body: BodyLayout(
           appbar: CustomAppBar(onPressed: () {
             toggleDrawer(scaffoldKey);
@@ -47,7 +45,9 @@ class AssistantClinics extends StatelessWidget {
                       status: clinicsController.status,
                       loginStatus: clinicsController.loginStatus,
                       clinics: clinicsController.clinics,
-                      onLogin: clinicsController.onLogin,
+                      onLogin: (id) {
+                        clinicsController.onLogin(id);
+                      },
                       onButtonPressed: (item) {
                         onSettingsCliked(item);
                       })

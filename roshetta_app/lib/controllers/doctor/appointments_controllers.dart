@@ -51,10 +51,11 @@ class DoctorAppointmentsController extends GetxController {
         appointmentStatus.value = RequestStatus.empty;
         return;
       }
+      if (appointments.isNotEmpty) appointments.clear();
       appointments.addAll(response["Data"].toList());
     } else {
       snackbar(
-          color: Colors.red, title: "حدثت مشكلة", content: response["Message"]);
+          isError: true, title: "حدثت مشكلة", content: response["Message"]);
     }
   }
 

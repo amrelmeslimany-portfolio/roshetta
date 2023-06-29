@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:intl/intl.dart';
 import 'package:roshetta_app/core/functions/quick_functions.dart';
 
 class User {

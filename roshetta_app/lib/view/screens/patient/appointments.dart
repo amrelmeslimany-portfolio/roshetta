@@ -31,6 +31,9 @@ class PatientAppointments extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeLayout(
       scaffoldKey: scaffoldKey,
+      onRefresh: () async {
+        await appointmentController.getAppointments();
+      },
       floatingButton: CustomFloatingIcon(
         icon: Icons.add_alarm,
         onPressed: () => Get.offNamed(AppRoutes.patientClinics),

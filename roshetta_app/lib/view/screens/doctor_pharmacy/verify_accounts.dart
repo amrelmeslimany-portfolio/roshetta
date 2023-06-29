@@ -4,7 +4,6 @@ import 'package:lottie/lottie.dart';
 import 'package:roshetta_app/controllers/doctor_pharmacy/verifyaccounts_controller.dart';
 import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';
-import 'package:roshetta_app/core/constants/app_themes.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/shared/custom_appbar.dart';
 import 'package:roshetta_app/core/shared/custom_buttons.dart';
@@ -107,19 +106,6 @@ class VerifyAccount extends StatelessWidget {
             const SizedBox(height: 50)
           ],
         ));
-  }
-
-  BoxDecoration _errorDecoration() {
-    return BoxDecoration(
-        border: Border.all(color: Colors.red, width: 1),
-        color: AppColors.whiteColor,
-        borderRadius: const BorderRadius.all(Radius.circular(15)),
-        boxShadow: [
-          BoxShadow(
-              spreadRadius: 1,
-              color: Colors.black.withOpacity(0.06),
-              blurRadius: 8)
-        ]);
   }
 
   Column getIMGText(String img, String content) {

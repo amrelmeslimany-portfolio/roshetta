@@ -1,7 +1,6 @@
 import 'package:get/get.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
-import 'package:roshetta_app/core/class/auth.dart';
 import 'package:roshetta_app/core/class/crud.dart';
 import 'package:roshetta_app/core/class/request_status.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';

@@ -8,6 +8,7 @@ import 'package:roshetta_app/controllers/doctor/clinics_controller.dart';
 import 'package:roshetta_app/controllers/patient/clinics_controller.dart';
 import 'package:roshetta_app/controllers/patient/orders_controller.dart';
 import 'package:roshetta_app/controllers/patient/pharmacy_controller.dart';
+import 'package:roshetta_app/controllers/patient/prescripts_controller.dart';
 import 'package:roshetta_app/controllers/pharmacist/pharmacys_controller.dart';
 import 'package:roshetta_app/controllers/pharmacist/prescripts_controller.dart';
 import 'package:roshetta_app/core/class/crud.dart';
@@ -58,6 +59,7 @@ class PatientBindings extends Bindings {
   void dependencies() {
     Get.lazyPut(() => PatientClinicsController());
     Get.lazyPut(() => PatientPharmacysController());
+    Get.lazyPut(() => PatientPrescriptsController());
     Get.lazyPut(() => PatientOrdersController());
   }
 }

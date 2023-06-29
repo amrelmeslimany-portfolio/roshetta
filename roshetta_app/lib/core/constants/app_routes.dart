@@ -1,4 +1,7 @@
 class AppRoutes {
+  // [ ] Temporary
+  static const String tempAPIChanger = "/temp_api_changer";
+
   // Auth
   static const String intro = "/intro";
   static const String login = "/login";
@@ -7,13 +10,14 @@ class AppRoutes {
   static const String forgotPassword = "/forgot_password";
   static const String verifyForgotPassCode = "/verify_forgotpass_code";
   static const String resetForgotPass = "/reset_forgot_pass";
-// Pages
+  // Pages
   static const String home = "/home";
   static const String myProfile = "/my_profile";
   static const String editProfile = "/edit_profile";
   static const String editPassword = "/edit_password";
   static const String settings = "/settings";
   static const String appointments = "/appointments";
+  static const String readPrescript = "/readprescript";
 
   // Doctor & Pharmcay
   static const String verifyDPAccount = "/verify_docotor_pharmacy_account";
@@ -38,6 +42,7 @@ class AppRoutes {
   static const String doctorPatient = "/doctor/pateint";
   static const String doctorDiseasePrescripts = "/doctor/patient/prescripts";
   static const String doctorAddPrescript = "/doctor/prescript/add";
+  static const String doctorChat = "/doctor/chat";
 
   // Assistant
   static const String assistantClinics = "/assistant/clinics";
@@ -76,7 +81,8 @@ class AssetPaths {
       "https://www.namepros.com/attachments/empty-png.89209/";
 
   // Auth
-  static const String introAuth = '$_assetsPathIMGS/intro_auth.svg';
+  // static const String introAuth = '$_assetsPathIMGS/intro_auth.svg';
+  static const String introAuth = '$_assetsPathIMGS/intro.png';
   // Logo
   static const String logoIcon = '$_assetsPathIMGS/lg-icon.png';
 

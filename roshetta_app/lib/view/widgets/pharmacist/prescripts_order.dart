@@ -13,16 +13,19 @@ class PrescriptOrders extends StatelessWidget {
   final bool? withStatus;
   final bool? isPaied;
   final bool? isPatient;
+  final bool? isLoading;
   final Function(Map) onOrderPress;
-  final Function(String)? onDelete;
-  const PrescriptOrders(
-      {super.key,
-      required this.orders,
-      required this.onOrderPress,
-      this.withStatus = false,
-      this.isPaied = false,
-      this.isPatient = false,
-      this.onDelete});
+  final Function(Map)? onDelete;
+  const PrescriptOrders({
+    super.key,
+    required this.orders,
+    required this.onOrderPress,
+    this.withStatus = false,
+    this.isPaied = false,
+    this.isPatient = false,
+    this.isLoading = false,
+    this.onDelete,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,32 +41,35 @@ class PrescriptOrders extends StatelessWidget {
 
         return CustomListTile(
           onTilePressed: () {
+            if (isLoading!) return;
             onOrderPress(item);
           },
           widget: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Center(
-              child: isPaied!
-                  ? FaIcon(
-                      isPatient!
-                          ? FontAwesomeIcons.cartShopping
-                          : FontAwesomeIcons.solidCircleCheck,
-                      color: AppColors.primaryColor,
-                      size: 28,
-                    )
-                  : Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                          CustomText(
-                              text: DateFormat("a", "Ar")
-                                  .format(getParesedDTFRString(item["time"])),
-                              color: AppColors.primaryColor,
-                              textType: 4),
-                          _bigText(DateFormat("h:mm")
-                              .format(getParesedDTFRString(item["time"])))
-                        ]),
-            ),
+            child: isLoading!
+                ? const CircularProgressIndicator(color: AppColors.primaryColor)
+                : Center(
+                    child: isPaied!
+                        ? FaIcon(
+                            isPatient!
+                                ? FontAwesomeIcons.cartShopping
+                                : FontAwesomeIcons.solidCircleCheck,
+                            color: AppColors.primaryColor,
+                            size: 28,
+                          )
+                        : Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                                CustomText(
+                                    text: DateFormat("a", "Ar").format(
+                                        getParesedDTFRString(item["time"])),
+                                    color: AppColors.primaryColor,
+                                    textType: 4),
+                                _bigText(DateFormat("h:mm")
+                                    .format(getParesedDTFRString(item["time"])))
+                              ]),
+                  ),
           ),
           smallTitle: item["ser_id"] ?? item["prescript_ser_id"],
           title: item[isPatient! ? "pharmacy_name" : "patient_name"],
@@ -83,7 +89,8 @@ class PrescriptOrders extends StatelessWidget {
           buttonIcon: isPatient! ? Icons.delete_outlined : null,
           onButtonPressed: isPatient!
               ? () {
-                  onDelete!(item["order_id"]);
+                  if (isLoading!) return;
+                  onDelete!(item);
                 }
               : null,
         );

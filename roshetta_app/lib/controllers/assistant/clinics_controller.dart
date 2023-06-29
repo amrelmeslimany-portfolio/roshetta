@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:roshetta_app/controllers/auth/authentication_controller.dart';
 import 'package:roshetta_app/core/class/crud.dart';
@@ -37,6 +36,7 @@ class AssistantClinicsController extends GetxController {
         status.value = RequestStatus.empty;
         return;
       }
+      if (clinics.isNotEmpty) clinics.clear();
       clinics.addAll(response["Data"].toList());
     }
   }
@@ -76,10 +76,11 @@ class AssistantClinicsController extends GetxController {
     if (Get.isBottomSheetOpen == true) {
       Get.back();
     }
+
     if (clinic.value != null &&
         clinic.value!.id == id &&
         clinic.value!.status == "1") {
-      Get.toNamed(AppRoutes.assistantClinicDetails, preventDuplicates: true);
+      Get.toNamed(AppRoutes.assistantClinicDetails);
       return;
     }
     loginStatus.value = RequestStatus.loading;
@@ -89,7 +90,6 @@ class AssistantClinicsController extends GetxController {
 
     loginStatus.value = checkResponseStatus(response);
 
-    print(response);
     if (loginStatus.value == RequestStatus.success) {
       Get.toNamed(AppRoutes.assistantClinicDetails, preventDuplicates: true);
       if (response["Data"] == null) {
@@ -102,7 +102,7 @@ class AssistantClinicsController extends GetxController {
     } else {
       loginStatus.value = RequestStatus.success;
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "فشل تسجيل الدخول",
           content: response["Message"]);
     }
@@ -127,7 +127,7 @@ class AssistantClinicsController extends GetxController {
     } else {
       loginStatus.value = RequestStatus.success;
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "فشل تسجيل الخروج",
           content: response["Message"]);
     }

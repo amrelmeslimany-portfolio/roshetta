@@ -10,7 +10,6 @@ import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/core/functions/reused_functions.dart';
 import 'package:roshetta_app/core/shared/bottom_sheets.dart';
 import 'package:roshetta_app/core/shared/custom_appbar.dart';
-import 'package:roshetta_app/core/shared/custom_buttons.dart';
 import 'package:roshetta_app/view/widgets/patient/pharmacy_prescripts_list.dart';
 import 'package:roshetta_app/view/widgets/shared/custom_request.dart';
 import 'package:roshetta_app/view/widgets/home/body.dart';
@@ -29,6 +28,8 @@ class PatientPharmacyDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeLayout(
       scaffoldKey: scaffoldKey,
+      onRefresh: () async => await patientControllers
+          .goToPharmacyDetails(patientControllers.pharmacy.value?.id ?? ""),
       floatingButton: SizedBox(
         height: 50,
         width: 50,
@@ -104,38 +105,38 @@ class PatientPharmacyDetails extends StatelessWidget {
     // Init prescripts
     prescriptsController.getPrescripts(isAll: true);
 
-    // Widget
-    Get.bottomSheet(CustomBottomSheets().sheet([
-      CustomBottomSheets().header("ارسل روشته للصيدلية"),
-      const SizedBox(height: 5),
-      _prescriptsListWidget(prescriptsController)
-    ], height: 340))
-        .then((value) => patientControllers.setOrderId(""));
+    if (patientControllers.isPrescripts(prescriptsController.prescripts)) {
+      // Widget
+      Get.bottomSheet(Obx(() => CustomBottomSheets().sheet([
+            CustomBottomSheets().header("ارسل روشته للصيدلية"),
+            const SizedBox(height: 5),
+            _prescriptsListWidget(prescriptsController),
+          ], height: 340, isLoading: patientControllers.ordersStatus.value,
+              onSubmit: () {
+            patientControllers.onSendPrescript();
+          }))).then((value) => patientControllers.setOrderId(""));
+    }
   }
 
   Widget _prescriptsListWidget(PatientPrescriptsController prescriptsCon) {
-    return Obx(() {
-      return CustomRequest(
-          sameContent: true,
-          status: patientControllers.ordersStatus.value,
-          widget: Column(
-            children: [
-              CustomRequest(
-                  sameContent: false,
-                  status: prescriptsCon.prescriptStatus.value,
-                  widget: PharmacyPrescriptsList(
-                      prescripts: prescriptsCon.prescripts
-                          .where((item) => item["prescriptStatus"] != "isOrder")
-                          .toList(),
-                      onItemPressed: (id) {
-                        patientControllers.setOrderId(id);
-                      })),
-              const SizedBox(height: 10),
-              BGButton(Get.context!, text: "ارسال", small: true, onPressed: () {
-                patientControllers.onSendPrescript();
-              }).button
-            ],
-          ));
-    });
+    return CustomRequest(
+        sameContent: true,
+        status: patientControllers.ordersStatus.value,
+        widget: Column(
+          children: [
+            CustomRequest(
+                sameContent: false,
+                status: prescriptsCon.prescriptStatus.value,
+                widget: PharmacyPrescriptsList(
+                    onClear: () => patientControllers.onClearOrderId(),
+                    selected: patientControllers.orderId.value,
+                    prescripts: prescriptsCon.prescripts
+                        .where((item) => item["prescriptStatus"] != "isOrder")
+                        .toList(),
+                    onItemPressed: (id) {
+                      patientControllers.setOrderId(id);
+                    })),
+          ],
+        ));
   }
 }

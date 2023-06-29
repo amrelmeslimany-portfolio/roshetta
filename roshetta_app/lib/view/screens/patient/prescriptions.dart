@@ -17,12 +17,16 @@ class PatientPrescripts extends StatelessWidget {
   PatientPrescripts({super.key});
 
   final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-  final prescriptsController = Get.put(PatientPrescriptsController());
+  final prescriptsController = Get.find<PatientPrescriptsController>();
 
   @override
   Widget build(BuildContext context) {
+    prescriptsController.getPrescripts();
     return HomeLayout(
         scaffoldKey: scaffoldKey,
+        onRefresh: () async {
+          await prescriptsController.getPrescripts();
+        },
         body: BodyLayout(
             appbar: CustomAppBar(onPressed: () {
               toggleDrawer(scaffoldKey);

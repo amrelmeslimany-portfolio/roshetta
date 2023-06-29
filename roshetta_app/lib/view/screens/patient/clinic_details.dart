@@ -24,6 +24,8 @@ class PatientClinicDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeLayout(
       scaffoldKey: scaffoldKey,
+      onRefresh: () async => await patientControllers
+          .goToClinicDetails(patientControllers.clinic.value?.id ?? ""),
       floatingButton: Obx(() {
         if (patientControllers.clinic.value == null) {
           return Container();

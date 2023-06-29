@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:roshetta_app/view/widgets/auth/label_divider.dart';
 import 'package:roshetta_app/view/widgets/clinics/appointments/list.dart';
+import 'package:roshetta_app/view/widgets/shared/header_button.dart';
 
 class FilterAppointHeader extends StatelessWidget {
   final Function() onClearFilter;
@@ -20,27 +21,13 @@ class FilterAppointHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return _checkSearchWord().isEmpty
         ? const DividerText(text: "اليوم", width: double.infinity)
-        : Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  children: _checkSearchWord(),
-                ),
-              ),
-              TextButton.icon(
-                style: const ButtonStyle(
-                    padding: MaterialStatePropertyAll(
-                        EdgeInsets.symmetric(horizontal: 5, vertical: 0))),
-                icon: const Icon(Icons.filter_alt_off, size: 14),
-                label: const Text("حذف الفلتر", style: TextStyle(fontSize: 14)),
-                onPressed: () async {
-                  await onClearFilter();
-                },
-              )
-            ],
-          );
+        : HeaderButtonFilter(
+            onClear: () {
+              onClearFilter();
+            },
+            child: Column(
+              children: _checkSearchWord(),
+            ));
   }
 
   List<Widget> _checkSearchWord() {

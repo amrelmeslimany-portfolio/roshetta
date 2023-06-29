@@ -33,8 +33,11 @@ class PatientAppointmentsController extends GetxController {
         appointmentStatus.value = RequestStatus.empty;
         return;
       }
+      if (appointmentsDone.isNotEmpty) appointmentsDone.clear();
+      if (appointmentsPending.isNotEmpty) appointmentsPending.clear();
+
       for (var element in response["Data"]) {
-        if (element["appoint_case"] == "1") {
+        if (element["appoint_case"] == "1" || element["appoint_case"] == "2") {
           appointmentsDone.add(element);
         } else if (element["appoint_case"] == "0") {
           appointmentsPending.add(element);
@@ -42,7 +45,7 @@ class PatientAppointmentsController extends GetxController {
       }
     } else {
       snackbar(
-          color: Colors.red, title: "حدثت مشكلة", content: response["Message"]);
+          isError: true, title: "حدثت مشكلة", content: response["Message"]);
     }
   }
 
@@ -72,7 +75,7 @@ class PatientAppointmentsController extends GetxController {
       updateAppointments(id, date: appointDate.text);
     } else {
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "حدثت مشكلة",
           content: "هناك مشكله حدثت اثناء التعديل");
     }
@@ -91,7 +94,7 @@ class PatientAppointmentsController extends GetxController {
       updateAppointments(id, delete: true);
     } else {
       snackbar(
-          color: Colors.red,
+          isError: true,
           title: "حدثت مشكلة",
           content: "هناك مشكله حدثت اثناء الحذف");
     }

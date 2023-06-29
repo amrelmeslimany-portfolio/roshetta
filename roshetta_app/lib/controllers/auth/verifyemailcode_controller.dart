@@ -3,10 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import 'package:get/get.dart';
 import 'package:otp_text_field/otp_text_field.dart';
-import 'package:roshetta_app/controllers/auth/login_controller.dart';
 import 'package:roshetta_app/core/class/crud.dart';
 import 'package:roshetta_app/core/class/request_status.dart';
-import 'package:roshetta_app/core/constants/app_colors.dart';
 import 'package:roshetta_app/core/constants/app_routes.dart';
 import 'package:roshetta_app/core/functions/widget_functions.dart';
 
@@ -73,10 +71,5 @@ class VerifyEmailCodeControllerImp extends VerifyEmailCodeController {
     }
 
     update();
-  }
-
-  @override
-  void onClose() {
-    super.onClose();
   }
 }

@@ -46,6 +46,6 @@ class StatusSheet extends StatelessWidget {
   }
 
   sheet() {
-    return CustomBottomSheets().sheet([this], height: 220);
+    return CustomBottomSheets().sheet([this], height: 250);
   }
 }

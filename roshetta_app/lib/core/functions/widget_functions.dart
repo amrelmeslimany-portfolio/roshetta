@@ -92,44 +92,52 @@ Positioned overlayImag(String img) => Positioned.fill(
     ));
 
 // Avatars
-Container shadowCircleAvatar(String img,
-        {List<BoxShadow>? shadow,
-        Color? color,
-        double? radius,
-        BoxBorder? border,
-        bool isNetwork = true}) =>
-    Container(
-      decoration: BoxDecoration(
-          border: border,
-          shape: BoxShape.circle,
-          boxShadow: shadow ??
-              [
-                BoxShadow(
-                    color: Colors.black.withOpacity(0.08),
-                    spreadRadius: 2,
-                    blurRadius: 8)
-              ]),
-      child: CircleAvatar(
-        backgroundColor: color ?? AppColors.whiteColor,
-        radius: radius ?? 45,
-        child: ClipOval(
-            child: isNetwork
-                ? CachedNetworkImage(
-                    imageUrl: img,
-                    errorWidget: (context, url, error) =>
-                        Image.network(AssetPaths.emptyIMG, fit: BoxFit.cover),
-                    fit: BoxFit.cover,
-                    width: double.maxFinite,
-                    height: double.maxFinite,
-                  )
-                : Image.asset(
-                    img,
-                    fit: BoxFit.cover,
-                    width: double.maxFinite,
-                    height: double.maxFinite,
-                  )),
-      ),
-    );
+Container shadowCircleAvatar(
+  String img, {
+  List<BoxShadow>? shadow,
+  Color? color,
+  double? radius,
+  BoxBorder? border,
+  bool isNetwork = true,
+  bool isCached = true,
+}) {
+  Widget imgProvider = isCached
+      ? CachedNetworkImage(
+          imageUrl: img,
+          errorWidget: (context, url, error) =>
+              Image.network(AssetPaths.emptyIMG, fit: BoxFit.cover),
+          fit: BoxFit.cover,
+          filterQuality: FilterQuality.low,
+          width: 500,
+          height: 500,
+        )
+      : Image.network(img, fit: BoxFit.cover);
+  return Container(
+    decoration: BoxDecoration(
+        border: border,
+        shape: BoxShape.circle,
+        boxShadow: shadow ??
+            [
+              BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  spreadRadius: 2,
+                  blurRadius: 8)
+            ]),
+    child: CircleAvatar(
+      backgroundColor: color ?? AppColors.whiteColor,
+      radius: radius ?? 45,
+      child: ClipOval(
+          child: isNetwork
+              ? imgProvider
+              : Image.asset(
+                  img,
+                  fit: BoxFit.cover,
+                  width: double.maxFinite,
+                  height: double.maxFinite,
+                )),
+    ),
+  );
+}
 
 CircleAvatar iconAvatar(IconData icon,
         {Color? color, Color? iconColor, double? size}) =>
@@ -138,7 +146,7 @@ CircleAvatar iconAvatar(IconData icon,
       radius: size ?? 22,
       child: FaIcon(
         icon,
-        size: size ?? 22,
+        size: size != null ? size - 2 : 22 - 2,
         color: iconColor ?? AppColors.primaryColor,
       ),
     );
@@ -191,12 +199,16 @@ successDialog(BuildContext context,
           .button);
 }
 
-snackbar({String? title, String? content, Color? color}) {
+snackbar({String? title, String? content, bool? isError = false}) {
+  double opacity = 0.85;
+
   Get.snackbar(title ?? "تم بنجاح", content ?? "تم تسجيل الدخول بنجاح",
       margin: const EdgeInsets.all(15),
       snackPosition: SnackPosition.BOTTOM,
-      backgroundColor: color?.withOpacity(0.65) ??
-          AppColors.primaryAColor.withOpacity(0.65));
+      icon: Icon(isError! ? Icons.error_sharp : Icons.check_circle, size: 30),
+      backgroundColor: isError
+          ? AppColors.red
+          : AppColors.primaryAColor.withOpacity(opacity));
 }
 
 // Components

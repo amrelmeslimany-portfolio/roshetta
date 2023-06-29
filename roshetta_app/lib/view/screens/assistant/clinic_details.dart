@@ -20,24 +20,28 @@ class AssistantClinicDetails extends StatelessWidget {
   Widget build(BuildContext context) {
     return HomeLayout(
       scaffoldKey: scaffoldKey,
-      floatingButton: SizedBox(
-        height: 40,
-        child: FloatingActionButton.extended(
-          elevation: 3,
-          extendedPadding: const EdgeInsets.all(10),
-          label: const Text("الحجوزات",
-              style:
-                  TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
-          icon:
-              const Icon(Icons.list_alt_rounded, size: 19, color: Colors.white),
-          backgroundColor: AppColors.primaryColor,
-          onPressed: () {
-            Get.toNamed(AppRoutes.assistantAppointments,
-                arguments: {"clinic_id": clinicsController.clinic.value!.id},
-                preventDuplicates: true);
-          },
-        ),
-      ),
+      floatingButton: clinicsController.clinic.value != null
+          ? SizedBox(
+              height: 40,
+              child: FloatingActionButton.extended(
+                elevation: 3,
+                extendedPadding: const EdgeInsets.all(10),
+                label: const Text("الحجوزات",
+                    style: TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.w600)),
+                icon: const Icon(Icons.list_alt_rounded,
+                    size: 19, color: Colors.white),
+                backgroundColor: AppColors.primaryColor,
+                onPressed: () {
+                  Get.toNamed(AppRoutes.assistantAppointments,
+                      arguments: {
+                        "clinic_id": clinicsController.clinic.value!.id
+                      },
+                      preventDuplicates: true);
+                },
+              ),
+            )
+          : null,
       body: BodyLayout(
           appbar: CustomAppBar(onPressed: () {
             toggleDrawer(scaffoldKey);
