@@ -1,17 +1,51 @@
-# Getting Started with Vite
+# Roshetta Graduation Project
+it uses for electronic prescriptions and handle clinics and pharmacys processes.
+**please go to every branches to see the code.**
 
-## بعدين هتكتب الامرين دول
+## Github Branches
+- Frontend for **Web**
+- Application for **Android**
+- UI UX for **Designing**
+- AI for **IMG to TEXT**
+- Backend for **Server**
+- Database for **Database and ERD**
 
-### `npm install`
+## Interfaces
+1. Website (Admin)
+2. Androind App
 
-عشان يثبت كل الحاجات المطلوبة عشان الموقع يشتغل
+## Programming Langs and Tools
+- PHP for Backend
+- React for Web
+- Flutter for android app
+- Figma for UI UX
+- Python for ML
 
-### `npm run dev`
+## Users Class
+- Admin
+- Patient
+- Doctor
+- Assistant
+- Pharmcist
 
-هيشتغل الموقع معاك في ثواني . Vite دي
+## Logo and Colors
+![the main logo without text](https://github.com/amrelmeslimany-portfolio/roshetta/blob/main/src/assets/lg-icon.png)
 
-### ``
+### the colors
+- The main color `#49ce91`
+  
+## The main Functions
+- Authentication
+- Authenetiction Guards
+- Booking
+- Adding prescription
+- Dispense Prescription
+- Convert Img to Text
 
-الموقع هيشتغل معاك .
-
-متنساش تفتح ال سيرفر ال `PHP` Back-end وال `MySQL Server`
+## Future Ideas
+- Adding healthcare system
+- Delivery medicines
+- Payement Gateway
+- Fasting processe of adding prescription
+- More security for users
+- Deploying
